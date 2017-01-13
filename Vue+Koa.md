@@ -2,7 +2,7 @@
 
 ## 简介
 
-本文从一名新手的角度（默认对Vue有了解，对Koa或者Express有了解）出发，从0开始构建一个数据通过Koa提供API的形式获取，页面通过Vue渲染的完整的前端项目。可以了解到Vue构建单页面的一些知识以及前端路由的使用、Koa如何提供API接口，如何进行访问引导过滤（路由）、验证（JSON-WEB-TOKEN）以及Sequelize操作Mysql数据库踩的一些小坑，希望能够作为一篇入门全栈开发的文章吧。
+本文从一名新手的角度（默认对Vue有了解，对Koa或者Express有了解）出发，从0开始构建一个数据通过Koa提供API的形式获取，页面通过Vue渲染的完整的前端项目。可以了解到Vue构建单页面的一些知识以及前端路由的使用、Koa如何提供API接口，如何进行访问过滤（路由）、验证（JSON-WEB-TOKEN）以及Sequelize操作MySQL数据库的一些体会，希望能够作为一篇入门全栈开发的文章吧。
 
 ## 写在前面
 
@@ -62,7 +62,7 @@
 - Vue-Router(v2.1.1)
 - Element(v1.1.2)
 - Koa.js(v1.2.4) // 没采用Koa2
-- Koa-Router\Koa-jwt\Koa-static等一系列Koa中间件
+- Koa-Router@5.4\Koa-jwt\Koa-static等一系列Koa中间件
 - Mysql(v2.12.0) // nodejs的mysql驱动，并不是mysql本身版本（项目采用mysql5.6）
 - Sequelize(v3.28.0) // 操作数据库的ORM
 - yarn(v0.19.0) // 比起npm更快一些
@@ -83,7 +83,7 @@ Nodejs与npm的安装不再叙述（希望大家装上的node版本大于等于6
 
 然后进行一些基本配置选择之后，你就可以得到一个基本的`vue-cli`生成的项目结构。
 
-接着我们进入`vue-cli`生成的目录，安装`Vue`的项目依赖并安装`Koa`的项目依赖：`yarn && yarn add koa koa-router koa-logger koa-json koa-bodyparser`，然后进行一些基本目录建立：
+接着我们进入`vue-cli`生成的目录，安装`Vue`的项目依赖并安装`Koa`的项目依赖：`yarn && yarn add koa koa-router@5.4 koa-logger koa-json koa-bodyparser`，（注意是安装`koa-router`的5.4版，因为7.X版本是支持Koa2的）然后进行一些基本目录建立：
 
 在`vue-cli`生成的`demo`目录下，建立`server`文件夹以及子文件夹：
 
@@ -104,28 +104,26 @@ Nodejs与npm的安装不再叙述（希望大家装上的node版本大于等于6
 const app = require('koa')()
   , koa = require('koa-router')()
   , json = require('koa-json')
-  , logger = require('koa-logger');
+  , logger = require('koa-logger'); // 引入各种依赖
 
 app.use(require('koa-bodyparser')());
 app.use(json());
 app.use(logger());
 
-app.use(function *(next){
-  var start = new Date;
+app.use(function* (next){
+  let start = new Date;
   yield next;
-  var ms = new Date - start;
-  console.log('%s %s - %s', this.method, this.url, ms);
+  let ms = new Date - start;
+  console.log('%s %s - %s', this.method, this.url, ms); // 显示执行的时间
 });
 
 app.on('error', function(err, ctx){
   console.log('server error', err);
 });
 
-app.use(koa.routes());
-
-console.log('Koa is listening in 8889');
-
-app.listen(8889);
+app.listen(8889,() => {
+  console.log('Koa is listening in 8889');
+});
 
 module.exports = app;
 ```
@@ -283,6 +281,8 @@ export default {
 
 也就是把`Login`这个组件注册到`Vue`下，同时你再看浏览器，已经不再是`vue-cli`默认生成的`Hello`欢迎界面了。
 
+![Login](http://7xog0l.com1.z0.glb.clouddn.com/vue-koa-demo/login.png "Login")
+
 接着我们写一下登录成功后的界面。
 
 ### TodoList页面
@@ -431,15 +431,19 @@ export default {
 
 2. 计算属性对于直接的数据比如`a: 2`这样的数据变动可以直接检测到。但是如果是本例中的`list`的某一项的`isDone`这个属性变化了，如果我们直接使用`list[index].isDone = true`这样的写法的话，Vue将无法检测到数据变动。替代地，可以使用`set`方法（全局是`Vue.set()`，实例中是`this.$set()`)，通过`set`方法可以让数据的变动变得可以被检测到。从而让计算属性能够捕捉到变化。可以参考官方文档对于响应式原理的[描述](https://cn.vuejs.org/v2/guide/reactivity.html)。
 
+![Todolist](http://7xog0l.com1.z0.glb.clouddn.com/vue-koa-demo/todolist.gif "Todolist")
+
 写完`TodoList`之后，我们需要将它和`vue-router`配合起来，从而使这个单页应用能够进行页面跳转。
 
 ### 页面路由
 
 由于不采用服务端渲染，所以页面路由走的是前端路由。安装一下`vue-router`：`yarn add vue-router`。
 
-安装好后，我们挂载一下路由。打开`APP.vue`文件改写如下：
+安装好后，我们挂载一下路由。打开`main.js`文件改写如下：
 
 ```js
+// src/main.js
+
 import Vue from 'vue'
 import App from './App'
 import ElementUI from 'element-ui'
@@ -481,6 +485,7 @@ const app = new Vue({
 这样就把路由挂载好了，但是你打开页面发现好像还是没有什么变化。这是因为我们没有把路由视图放到页面上。现在我们改写一下`APP.vue`：
 
 ```html
+<!-- APP.vue -->
 
 <template>
   <div id="app">
@@ -515,36 +520,452 @@ export default {
 只需要给登录的`button`加一个方法即可：
 
 ```html
-  ······
+<!-- Login.vue -->
+······
 
-  <!-- 增加一个click方法 loginToDo -->
-  <el-button type="primary" @click="loginToDo">登录</el-button>
+<!-- 增加一个click方法 loginToDo -->
+<el-button type="primary" @click="loginToDo">登录</el-button>
 
-  ······
+······
 
-  <script>
-  export default {
-    data () {
-      return {
-        account: '',
-        password: ''
-      };
-    },
-    methods: {
-      loginToDo() {
-        this.$router.push('/todolist') // 编程式路由，通过push方法，改变路由。
-      }
+<script>
+export default {
+  data () {
+    return {
+      account: '',
+      password: ''
+    };
+  },
+  methods: {
+    loginToDo() {
+      this.$router.push('/todolist') // 编程式路由，通过push方法，改变路由。
     }
-  };
-  </script>
+  }
+};
+</script>
 
 ```
 
 然后你就可以通过点击`登录`按钮进行页面跳转了。并且你可以发现，页面地址从`localhost:8080`变成了`localhost:8080/todolist`，长得跟正常的url跳转一样。（但是实际上我们是单页应用，只是在应用内进行页面跳转而已，没有向后端额外请求）
 
+![login2todolist](http://7xog0l.com1.z0.glb.clouddn.com/vue-koa-demo/login2todolist.gif "login2todolist")
+
 至此，我们已经完成了一个纯前端的单页应用，能够进行页面跳转，能够做简单的ToDoList的添加和删除和还原。当然这个东西只能算是个能看不能用的东西——因为登录系统有名无实、ToDoList只要页面刷新一下就没了。
 
 于是我们可以先把前端放一放。开启我们的后端之旅。
+
+## 后端环境搭建
+
+### MySQL
+
+之所以没有用Node界大家普遍喜爱的`Mongodb`主要是因为之前我用过它，而没有用过`MySQL`，本着学习的态度，我决定用用`MySQL`。还有就是`Express + Mongodb`的教程其实很早之前就已经满大街都是了。所以如果你觉得`Mongodb`更合你的胃口，看完本文你完全可以用`Mongodb`构建一个类似的应用。
+
+去`MySQL`的[官网](http://dev.mysql.com/downloads/)下载安装对应平台`MySQL`的`Community Server`。
+
+通常来说安装的步骤都是比较简单的。对于`MySQL`的基本安装、开启步骤可以参考这篇[文章](http://www.rathishkumar.in/2016/01/how-to-install-mysql-server-on-windows.html)，这篇是windows的。当然其他平台的安装也是很方便的，都有相应的包管理工具可以获取。值得注意的就是，安装完`MySQL`之后你需要设定一下`root`账户的密码。保证安全性。如果你漏了设定，或者你不知道怎么设定，可以参考这篇[文章](https://www.howtoforge.com/setting-changing-resetting-mysql-root-passwords)
+
+因为我对`MySQL`的SQL语句不是很熟悉，所以我需要一个可视化的工具来操作`MySQL`。Windows上我用的是[HediSQL](http://www.heidisql.com/)，macOS上我用的是[Sequel Pro](https://www.sequelpro.com/)。它们都是免费的。
+
+然后我们可以用这些可视化工具连上MySQL的server（默认端口是3306）之后，创建一个新的数据库，叫做`todolist`。（当然你也可以用SQL语句:`CREATE DATABASE todolist`，之后不再赘述）。
+
+接着我们可以来开始创建数据表了。
+
+我们需要创建两张表，一张是用户表，一张是待办事项表。用户表用于登录、验证，待办事项表用于展示我们的待办事项。
+
+创建一张`user`表，其中`password`我们稍后会进行`md5`加密（取32位）。
+
+| 字段 | 类型 | 说明|
+| --- | --- | --- |
+| id | int（自增） | 用户的id |
+| user_name | CHAR(50) | 用户的名字 |
+| password | CHAR(32) | 用户的密码 |
+
+创建一张`list`表，所需的字段是`id`、`user_id`、`content`、`status`即可。
+
+| 字段 | 类型 | 说明|
+| --- | --- | --- |
+| id | int（自增） | list的id |
+| user_id | int(11) | 用户的id |
+| content | CHAR(255) | list的内容 |
+| status | CHAR(20) | list的状态 |
+
+直接跟数据库打交道的部分基本就是这样了。
+
+### Sequelize
+
+跟数据库打交道的时候我们都需要一个好的操作数据库的工具，能够让我们用比较简单的方法来对数据库进行增删改查。对于`Mongodb`来说大家熟悉的是[`Mongoose`](http://mongoosejs.com/)以及我用过一个相对更简单点的[`Monk`](https://github.com/Automattic/monk)。对于`MySQL`，我选用的是[`Sequelize`](https://github.com/sequelize/sequelize)，它支持多种关系型数据库（`Sqlite`、`MySQL`、`Postgres`等），它的操作基本都能返回一个`Promise`对象，这样在Koa里面我们能够很方便地进行"同步"操作。
+
+> 更多关于Sequelize的用法，可以参考[官方文档](http://docs.sequelizejs.com/en/latest/)，以及这两篇文章——[Sequelize中文API文档](http://itbilu.com/nodejs/npm/VkYIaRPz-.html)、[Sequelize和MySQL对照](https://segmentfault.com/a/1190000003987871)
+
+在用`Sequelize`连接数据库之前我们需要把数据库的表结构用`sequelize-auto`导出来。
+
+> 更多关于`sequelize-auto`的使用可以参考[官方介绍](https://github.com/sequelize/sequelize-auto)或者[这篇文章](http://itbilu.com/nodejs/npm/41mRdls_Z.html)
+
+由此我们需要分别安装这几个依赖：`yarn global add sequelize-auto && yarn add sequelize mysql`。 
+
+> 注：上面用yarn安装的mysql是nodejs环境下的mysql驱动。
+
+进入`server`的目录，执行如下语句`sequelize-auto -o "./schema" -d todolist -h 127.0.0.1 -u root -p 3306 -x XXXXX -e mysql`，（其中 -o 参数后面的是输出的文件夹目录， -d 参数后面的是数据库名， -h 参数后面是数据库地址， -u 参数后面是数据库用户名， -p 参数后面是端口号， -x 参数后面是数据库密码，这个要根据自己的数据库密码来！ -e 参数后面指定数据库为mysql）
+
+然后就会在`schema`文件夹下自动生成两个文件：
+
+```js
+// user.js
+
+module.exports = function(sequelize, DataTypes) {
+  return sequelize.define('user', {
+    id: {
+      type: DataTypes.INTEGER(11), // 字段类型
+      allowNull: false, // 是否允许为NULL
+      primaryKey: true, // 主键
+      autoIncrement: true // 是否自增
+    },
+    user_name: {
+      type: DataTypes.CHAR(50), // 最大长度为50的字符串
+      allowNull: false
+    },
+    password: {
+      type: DataTypes.CHAR(32),
+      allowNull: false
+    }
+  }, {
+    tableName: 'user' // 表名
+  });
+};
+```
+
+```js
+// list.js
+
+module.exports = function(sequelize, DataTypes) {
+  return sequelize.define('list', {
+    id: {
+      type: DataTypes.INTEGER(11),
+      allowNull: false,
+      primaryKey: true
+    },
+    user_id: {
+      type: DataTypes.INTEGER(11),
+      allowNull: false
+    },
+    content: {
+      type: DataTypes.CHAR(255),
+      allowNull: false
+    },
+    status: {
+      type: DataTypes.CHAR(20),
+      allowNull: false
+    }
+  }, {
+    tableName: 'list'
+  });
+};
+```
+
+自动化工具省去了很多我们手动定义表结构的时间。同时注意到生成的数据库表结构文件都自动帮我们`module.exports`出来了，所以很方便我们之后的引入。
+
+在`server`目录下的`config`目录下我们新建一个`db.js`，用于初始化`Sequelize`和数据库的连接。
+
+```js
+// db.js
+
+const Sequelize = require('sequelize'); // 引入sequelize
+
+// 使用url连接的形式进行连接，注意将root: 后面的XXXX改成自己数据库的密码
+const Todolist = new Sequelize('mysql://root:XXXX@localhost/todolist',{
+  define: {
+    timestamps: false // 取消Sequelzie自动给数据表加入时间戳（createdAt以及updatedAt）
+  }
+}) 
+
+module.exports = {
+  Todolist // 将Todolist暴露出接口方便Model调用
+}
+```
+
+接着我们去`models`文件夹里将数据库和表结构文件连接起来。在这个文件夹下新建一个`user.js`的文件。我们先来写一个查询用户`id`的东西。
+
+为此我们可以先在数据库里随意加一条数据：
+
+![test](http://7xog0l.com1.z0.glb.clouddn.com/vue-koa-demo/database-1.png "test")
+
+通常我们要查询一个用户id为1的数据，会很自然的想到类似如下的写法：
+
+```js
+
+const userInfo = User.findOne({ where: { id: 1} }); // 查询
+console.log(userInfo); // 输出结果
+
+```
+
+但是上面的写法实际上是行不通的。因为JS的特性让它的IO操作是异步的。而上面的写法，`userInfo`将是返回的一个`Promise`对象，而不是最终的`userInfo`。如果又想用同步的写法获取异步IO操作得到的数据的话，通常情况下是不能直接得到的。但是在Koa里，由于有[`co`](https://github.com/tj/co)的存在，让这一切变得十分简单。改写如下：
+
+```js
+// models/user.js
+const db = require('../config/db.js'), 
+      userModel = '../schema/user.js'; // 引入user的表结构
+const TodolistDb = db.Todolist; // 引入数据库
+
+const User = TodolistDb.import(userModel); // 用sequelize的import方法引入表结构，实例化了User。
+
+const getUserById = function* (id){ // 注意是function* 而不是function 对于需要yield操作的函数都需要这种generator函数。
+  const userInfo = yield User.findOne({ // 用yield控制异步操作，将返回的Promise对象里的数据返回出来。也就实现了“同步”的写法获取异步IO操作的数据
+    where: {
+      id: id
+    }
+  });
+
+  return userInfo // 返回数据
+}
+
+module.exports = {
+  getUserById  // 导出getUserById的方法，将会在controller里调用
+}
+```
+
+接着我们在`controllers`写一个user的controller，来执行这个方法，并返回结果。
+
+```js
+// controllers/user.js 
+
+const user = require('../models/user.js');
+
+const getUserInfo = function* (){
+  const id = this.params.id; // 获取url里传过来的参数里的id
+  const result = yield user.getUserById(id);  // 通过yield “同步”地返回查询结果
+  this.body = result // 将请求的结果放到response的body里返回
+}
+
+module.exports = {
+  auth: (router) => {
+    router.get('/user/:id', getUserInfo); // 定义url的参数是id
+  }
+}
+```
+
+写完这个还不能直接请求，因为我们还没有定义路由，请求经过`Koa`找不到这个路径是没有反应的。
+
+在`routes`文件夹下写一个`auth.js`的文件。（其实`user`表是用于登录的，所以走`auth`）
+
+```js
+// routes/auth.js
+
+const user = require('../controllers/user.js'); 
+const router = require('koa-router')();
+
+user.auth(router); // 用user的auth方法引入router
+
+module.exports = router; // 把router规则暴露出去
+```
+
+至此我们已经接近完成我们的第一个API了，还缺最后一步，将这个路由规则“挂载”到Koa上去。
+
+回到根目录的`app.js`，改写如下：
+
+```js
+const app = require('koa')()
+  , koa = require('koa-router')()
+  , json = require('koa-json')
+  , logger = require('koa-logger')
+  , auth = require('./server/routes/auth.js'); // 引入auth
+
+app.use(require('koa-bodyparser')());
+app.use(json());
+app.use(logger());
+
+app.use(function* (next){
+  let start = new Date;
+  yield next;
+  let ms = new Date - start;
+  console.log('%s %s - %s', this.method, this.url, ms);
+});
+
+app.on('error', function(err, ctx){
+  console.log('server error', err);
+});
+
+koa.use('/auth', auth.routes()); // 挂载到koa-router上，同时会让所有的auth的请求路径前面加上'/auth'的请求路径。
+
+app.use(koa.routes()); // 将路由规则挂载到Koa上。
+
+app.listen(8889,() => {
+  console.log('Koa is listening in 8889');
+});
+
+module.exports = app;
+```
+
+打开你的控制台，输入`node app.js`，一切运行正常没有报错的话，大功告成，我们的第一个API已经构建完成！
+
+如何测试呢？
+
+### API Test
+
+接口在跟跟前端对接之前，我们应该先进行一遍测试，防止出现问题。在测试接口的工具上，我推荐[`Postman`](https://www.getpostman.com/)，这个工具能够很好的模拟发送的各种请求，方便的查看响应结果，用来进行测试是最好不过了。
+
+![Postman](http://7xog0l.com1.z0.glb.clouddn.com/vue-koa-demo/postman-1.png)
+
+测试成功，我发送了正确的url请求，返回的结果也是我想看到的。我们看到返回的结果实际上是个JSON，这对于我们前后端来说都是十分方便处理的数据格式。
+
+但是如果我们代码出了问题，返回error了我们该怎么测试呢？如果说控制台能够反馈一定的信息，但是绝对不充分，并且我们很可能不知道哪步出错了导致最终结果出问题。
+
+所以我推荐用[VSCode](https://code.visualstudio.com/)这个工具来帮我们调试nodejs后端的代码。它能够添加断点，能够很方便地查看请求的信息。并且配合上[`nodemon`](https://github.com/remy/nodemon)这类的工具，调试简直不要更舒服。
+
+关于`VSCode`的nodejs调试，可以参考官方的这篇[文章](https://code.visualstudio.com/docs/editor/node-debugging)
+
+> 我自己是用Sublime写代码，用VSCode调试，哈哈。
+
+### 登录系统的实现
+
+刚才实现的不过是一个简单的用户信息查询的接口，但是我们要实现的是一个登录系统，所以还需要做一些工作。
+
+#### JSON-WEB-TOKEN
+
+基于cookie或者session的登录验证已经屡见不鲜，前段时间`JSON-WEB-TOKEN`出来后很是风光了一把。引入了它之后，能够实现真正无状态的请求，而不是基于session和cookie的存储式的有状态验证。
+
+关于JSON-WEB-TOKEN的描述可以参考这篇[文章](http://blog.leapoahead.com/2015/09/07/user-authentication-with-jwt/?utm_source=tuicool&utm_medium=referral)比较简单，我还推荐一篇[文章](https://segmentfault.com/a/1190000005783306)，将如何使用JSON-WEB-TOKEN写得很清楚。
+
+另外可以在JSON-WEB-TOKEN的[官网](https://jwt.io/)上感受一下。
+
+简单来说，运用了JSON-WEB-TOKEN的登录系统应该是这样的：
+
+1. 用户在登录页输入账号密码，将账号密码（密码进行md5加密）发送请求给后端
+2. 后端验证一下用户的账号和密码的信息，如果符合，就下发一个TOKEN返回给客户端。如果不符合就不发送TOKEN回去，返回验证错误信息。
+3. 如果登录成功，客户端将TOKEN用某种方式存下来（SessionStorage、LocalStorage）,之后要请求其他资源的时候，在请求头（Header）里带上这个TOKEN进行请求。
+4. 后端收到请求信息，先验证一下TOKEN是否有效，有效则下发请求的资源，无效则返回验证错误。
+
+通过这个TOKEN的方式，客户端和服务端之间的访问，是`无状态`的：也就是服务端不知道你这个用户到底还在不在线，只要你发送的请求头里的TOKEN是正确的我就给你返回你想要的资源。这样能够不占用服务端宝贵的空间资源，而且如果涉及到服务器集群，如果服务器进行维护或者迁移或者需要CDN节点的分配的话，`无状态`的设计显然维护成本更低。
+
+话不多说，我们来把`JSON-WEB-TOKEN`用到我们的项目中。
+
+`yarn add koa-jwt`，安装`Koa`的`JSON-WEB-TOKEN`库。
+
+我们需要在`models`里的`user.js`加一个方法，通过用户名查找用户：
+
+```js
+// models/user.js
+// ......
+// 前面的省略了
+
+
+// 新增一个方法，通过用户名查找
+const getUserByName = function* (name){
+  const userInfo = yield User.findOne({
+    where: {
+      user_name: name
+    }
+  })
+
+  return userInfo
+}
+
+module.exports = {
+  getUserById, // 导出getUserById的方法，将会在controller里调用
+  getUserByName
+}
+
+```
+
+然后我们写一下`controllers`里的`user.js`：
+
+```js
+// controllers/user.js
+
+const user = require('../models/user.js');
+const jwt = require('koa-jwt'); // 引入koa-jwt
+
+const getUserInfo = function* (){
+  const id = this.params.id; // 获取url里传过来的参数里的id
+  const result = yield user.getUserById(id);  // 通过yield “同步”地返回查询结果
+  this.body = result // 将请求的结果放到response的body里返回
+}
+
+const postUserAuth = function* (){
+  const data = this.request.body; // post过来的数据存在request.body里
+  const userInfo = yield user.getUserByName(data.name);
+
+  if(userInfo != null){ // 如果查无此用户会返回null
+    if(userInfo.password != data.password){
+      this.body = {
+        success: false, // success标志位是方便前端判断返回是正确与否
+        info: '密码错误！'
+      }
+    }else{ // 如果密码正确
+      const userInfo = {
+        name: userInfo.user_name
+      }
+      const secret = 'vue-koa-demo'; // 指定密钥，这是之后用来判断token合法性的标志
+      const token = jwt.sign(userInfo,secret); // 签发token
+      this.body = {
+        success: true,
+        token: token, // 返回token
+      }
+    }
+  }else{
+    this.body = {
+      success: false,
+      info: '用户不存在！' // 如果用户不存在返回用户不存在
+    }
+  }
+}
+
+module.exports = {
+  auth: (router) => {
+    router.get('/user/:id', getUserInfo); // 定义url的参数是id
+    router.post('/user', postUserAuth);
+  }
+}
+```
+
+由此我们写完了用户认证的部分。接下去我们要改写一下前端登录的方法。
+
+#### 密码md5加密
+
+首当其冲的是，前端向后端发送的密码应当进行`md5`加密。
+
+所以我们需要安装一下md5的库： `yarn add md5`
+
+然后在`Login.vue`下把`loginToDo`的方法修改一下：
+
+```js
+// Login.vue
+// 省略前面的部分
+
+ methods: {
+    loginToDo() {
+      let obj = {
+        name: this.account,
+        password: this.password
+      } 
+      this.$http.post('/auth/user', obj) // 将信息发送给后端
+        .then((res) => {
+          if(res.body.success){ // 如果成功
+            sessionStorage.setItem('demo-token',res.body.token); // 用sessionStorage把token存下来
+            this.$message({ // 登录成功，显示提示语
+              type: 'success',
+              message: '登录成功！'
+            }); 
+            this.$router.push('/todolist') // 进入todolist页面，登录成功
+          }else{
+            this.$message.error(res.body.info); // 登录失败，显示提示语
+          }
+        }, (err) => {
+            this.$message.error('请求错误！')
+        })
+    }
+  }
+```
+
+还没有大功告成，因为我们的界面跑在`8080`端口，但是Koa提供的API跑在`8889`端口，所以如果直接通过`/auth/user`这个url去post是请求不到的。就算写成`localhost:8889/auth/user`也会因为跨域问题导致请求失败。
+
+这个时候有两种最方便的解决办法：
+
+1. 如果是跨域，服务端只要在请求头上加上[`CORS`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS)，客户端即可跨域发送请求。
+2. 变成同域，即可解决跨域请求问题。
+
+第一种也很方便，采用[`kcors`](https://github.com/koajs/cors)即可解决。
+不过为了之后部署方便，我们采用第二种，变成同域请求。
+
 
 
 
