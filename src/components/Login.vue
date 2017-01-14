@@ -31,7 +31,25 @@ export default {
   },
   methods: {
     loginToDo() {
-      this.$router.push('/todolist')
+      let obj = {
+        name: this.account,
+        password: this.password
+      } 
+      this.$http.post('/auth/user', obj) // 将信息发送给后端
+        .then((res) => {
+          if(res.body.success){ // 如果成功
+            sessionStorage.setItem('demo-token',res.body.token); // 用sessionStorage把token存下来
+            this.$message({ // 登录成功，显示提示语
+              type: 'success',
+              message: '登录成功！'
+            }); 
+            this.$router.push('/todolist') // 进入todolist页面，登录成功
+          }else{
+            this.$message.error(res.body.info); // 登录失败，显示提示语
+          }
+        }, (err) => {
+            this.$message.error('请求错误！')
+        })
     }
   }
 };
