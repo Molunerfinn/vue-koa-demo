@@ -19,7 +19,7 @@ const getUserByName = function* (name){
     where: {
       user_name: name
     }
-  })
+  });
 
   return userInfo
 }

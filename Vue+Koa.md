@@ -1,4 +1,4 @@
-# 用Vue+Koa开发完整的前后端项目-全栈开发
+# 用Vue2+Koa开发完整的前后端项目-全栈开发
 
 ## 简介
 
@@ -60,6 +60,7 @@
 
 - Vue.js(v2.1.8)
 - Vue-Router(v2.1.1)
+- Axios(v0.15.3)
 - Element(v1.1.2)
 - Koa.js(v1.2.4) // 没采用Koa2
 - Koa-Router@5.4\Koa-jwt\Koa-static等一系列Koa中间件
@@ -523,6 +524,13 @@ export default {
 <!-- Login.vue -->
 ······
 
+<!-- 给input增加键盘事件，当输入完密码回车也执行loginToDo方法 -->
+<el-input 
+  v-model="password" 
+  placeholder="密码"
+  type="password"
+  @keyup.enter.native="loginToDo">
+</el-input>
 <!-- 增加一个click方法 loginToDo -->
 <el-button type="primary" @click="loginToDo">登录</el-button>
 
@@ -919,13 +927,26 @@ module.exports = {
 
 由此我们写完了用户认证的部分。接下去我们要改写一下前端登录的方法。
 
-#### 密码md5加密
+#### 引入Axios
 
-首当其冲的是，前端向后端发送的密码应当进行`md5`加密。
+之前在学`Vue`的时候一直用的是[`vue-resource`](https://github.com/pagekit/vue-resource)，不过后来`Vue2`出来之后，Vue官方不再默认推荐它为官方的`ajax`网络请求库了。替代地推荐了一些其他的库，比如就有我们今天要用的[`axios`](https://github.com/mzabriskie/axios)。我之前也没有用过它，不过看完它的star和简要介绍`Promise based HTTP client for the browser and node.js`，能够同时支持node和浏览器端的ajax请求工具（还是基于Promised的！），我想就有必要用一用啦。
 
-所以我们需要安装一下md5的库： `yarn add md5`
+`yarn add axios`，安装`axios`。然后我们在`src/main.js`里面引入`axios`：
 
-然后在`Login.vue`下把`loginToDo`的方法修改一下：
+```js
+
+// scr/main.js
+
+// ...
+
+import Axios from 'axios'
+
+Vue.prototype.$http = Axios // 类似于vue-resource的调用方法，之后可以在实例里直接用this.$http.get()等
+
+// ...
+
+
+```
 
 ```js
 // Login.vue
@@ -938,22 +959,69 @@ module.exports = {
         password: this.password
       } 
       this.$http.post('/auth/user', obj) // 将信息发送给后端
-        .then((res) => {
-          if(res.body.success){ // 如果成功
-            sessionStorage.setItem('demo-token',res.body.token); // 用sessionStorage把token存下来
+        .then((res) => { // axios返回的数据都在res.data里
+          if(res.data.success){ // 如果成功
+            sessionStorage.setItem('demo-token',res.data.token); // 用sessionStorage把token存下来
             this.$message({ // 登录成功，显示提示语
               type: 'success',
               message: '登录成功！'
             }); 
             this.$router.push('/todolist') // 进入todolist页面，登录成功
           }else{
-            this.$message.error(res.body.info); // 登录失败，显示提示语
+            this.$message.error(res.data.info); // 登录失败，显示提示语
           }
         }, (err) => {
             this.$message.error('请求错误！')
         })
     }
   }
+```
+
+
+
+#### 密码md5加密
+
+同时，前端向后端发送的密码应当进行`md5`加密。
+
+所以我们需要安装一下md5的库： `yarn add md5`
+
+然后在`Login.vue`下把`loginToDo`的方法修改一下：
+
+```js
+import md5 from 'md5'
+
+export default {
+  data () {
+    return {
+      account: '',
+      password: ''
+    };
+  },
+  methods: {
+    loginToDo() {
+      let obj = {
+        name: this.account,
+        password: md5(this.password) // md5加密
+      } 
+      this.$http.post('/auth/user', obj) // 将信息发送给后端
+        .then((res) => {
+          console.log(res);
+          if(res.data.success){ // 如果成功
+            sessionStorage.setItem('demo-token',res.data.token); // 用sessionStorage把token存下来
+            this.$message({ // 登录成功，显示提示语
+              type: 'success',
+              message: '登录成功！'
+            }); 
+            this.$router.push('/todolist') // 进入todolist页面，登录成功
+          }else{
+            this.$message.error(res.data.info); // 登录失败，显示提示语
+          }
+        }, (err) => {
+            this.$message.error('请求错误！')
+        })
+    }
+  }
+};
 ```
 
 还没有大功告成，因为我们的界面跑在`8080`端口，但是Koa提供的API跑在`8889`端口，所以如果直接通过`/auth/user`这个url去post是请求不到的。就算写成`localhost:8889/auth/user`也会因为跨域问题导致请求失败。
@@ -965,6 +1033,31 @@ module.exports = {
 
 第一种也很方便，采用[`kcors`](https://github.com/koajs/cors)即可解决。
 不过为了之后部署方便，我们采用第二种，变成同域请求。
+
+打开根目录下的`config/index.js`，找到`dev`下的`proxyTable`，利用这个`proxyTable`我们能够将外部的请求通过`webpack`转发给本地，也就能够将跨域请求变成同域请求了。
+
+将`proxyTable`改写如下:
+
+```js
+ proxyTable: {
+  '/auth':{
+    target: 'http://localhost:8889',
+    changeOrigin: true
+  },
+  '/api':{
+    target: 'http://localhost:8889',
+    changeOrigin: true
+  }
+}
+```
+
+上面的意思是，我们在组件里请求的地址如果是`/api/xxxx`实际上请求的是`http://localhost:8889/api/xxxx`，但是由于`webpack`帮我们代理了localhost的8889端口的服务，所以我们可以把实际是跨域的请求当做是同域下的接口来调用。
+
+此时重新启动一下`webpack`：先`ctrl+c`退出当前进程，然后`npm run dev`。
+
+一切都万事了之后，我们可以看到如下激动人心的画面：
+
+![login2todolist](http://7xog0l.com1.z0.glb.clouddn.com/vue-koa-demo/login2todolist-2.gif "login2todolist")
 
 
 

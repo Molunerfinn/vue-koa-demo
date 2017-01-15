@@ -4,6 +4,7 @@ const jwt = require('koa-jwt');
 const getUserInfo = function* (){
   const id = this.params.id; // 获取url里传过来的参数里的id
   const result = yield user.getUserById(id);  // 通过yield “同步”地返回查询结果
+  console.log(result);
   this.body = result // 将请求的结果放到response的body里返回
 }
 
@@ -18,11 +19,11 @@ const postUserAuth = function* (){
         info: '密码错误！'
       }
     }else{
-      const userInfo = {
+      const userName = {
         name: userInfo.user_name
       }
       const secret = 'vue-koa-demo'; // 指定密钥
-      const token = jwt.sign(userInfo,secret); // 签发token
+      const token = jwt.sign(userName,secret); // 签发token
       this.body = {
         success: true,
         token: token, // 返回token
