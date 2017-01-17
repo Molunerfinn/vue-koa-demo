@@ -2,7 +2,7 @@
 
 A fullstack demo used Vue2 & Koa1.
 
-![Todolist](http://7xog0l.com1.z0.glb.clouddn.com/vue-koa-demo/todolist-5.gif todolist)
+![Todolist](http://7xog0l.com1.z0.glb.clouddn.com/vue-koa-demo/todolist-5.gif 'todolist')
 
 View the [article](https://molunerfinn.com/Vue+Koa/) for more details.
 
