@@ -1,14 +1,14 @@
-# 用Vue2+Koa开发完整的前后端项目-全栈开发
+# 全栈开发实战：用Vue2+Koa1开发完整的前后端项目
 
 ## 简介
 
-本文从一名新手的角度（默认对Vue有了解，对Koa或者Express有了解）出发，从0开始构建一个数据通过Koa提供API的形式获取，页面通过Vue渲染的完整的前端项目。可以了解到Vue构建单页面的一些知识以及前端路由的使用、Koa如何提供API接口，如何进行访问过滤（路由）、验证（JSON-WEB-TOKEN）以及Sequelize操作MySQL数据库的一些体会，希望能够作为一篇入门全栈开发的文章吧。
+本文从一名新手的角度（默认对Vue有了解，对Koa或者Express有了解）出发，从0开始构建一个数据通过Koa提供API的形式获取，页面通过Vue渲染的完整的前端项目。可以了解到Vue构建单页面的一些知识以及前端路由的使用、Koa如何提供API接口，如何进行访问过滤（路由）、验证（JSON-WEB-TOKEN）以及Sequelize操作MySQL数据库的一些知识和技巧，希望能够作为一篇入门全栈开发的文章吧。
 
 ## 写在前面
 
 我曾经写过一篇[文章](https://molunerfinn.com/nodejs-2/)，是用express和mongodb入门Nodejs的前后端开发，这篇文章里简单的做了一个小demo，能够让你读写mongodb数据库，并且从数据库里将数据读取出来显示到页面上。算是一个简单的读写小demo吧，也算是服务端渲染的一次初尝试。并且我还写过用nodejs写简单小爬虫的[文章](https://molunerfinn.com/nodejs-1/)，用爬虫来获取数据写入数据库。通过以上的的方法我用express写了一个小网站，记录并显示北邮人论坛每天的十大的[内容](http://topten.piegg.cn)。挺好玩的对吧，可以把想要做的事用代码来实现。
 
-后来我接触到了Koa，并开始了学习，从express迁移到Koa其实曲线还算是比较平滑的。不过用Koa的方式也还是采用服务端渲染页面的方式。而且我发现目前网络上少有写过用Koa构建的前后端分离的应用、网站文章，我最近做的一个项目里需要用到的方式就是用Vue构建页面，数据的获取全部走后端API的形式，也就是所谓的前后端分离吧。正好在这过程中走了不少的坑，包括数据库的使用上也算是个新手，所以写篇文章记录一下，欢迎讨论，轻拍~
+后来我接触到了Koa，并开始了学习，从express迁移到Koa其实曲线还算是比较平滑的。不过用Koa的方式也还是采用服务端渲染页面的方式。而且我发现目前网络上少有写过用Koa构建的前后端分离的应用、网站文章，我最近做的一个项目里需要用到的方式就是用Vue构建页面，数据的获取全部走后端API的形式，也就是所谓的前后端分离吧。正好在这过程中走了不少的坑，包括数据库的使用上也算是个新手，所以写篇文章记录一下，用同样的思路和方法构建一个简单的Todolist，欢迎讨论，轻拍~
 
 ## 项目架构
 
@@ -66,7 +66,7 @@
 - Koa-Router@5.4\Koa-jwt\Koa-static等一系列Koa中间件
 - Mysql(v2.12.0) // nodejs的mysql驱动，并不是mysql本身版本（项目采用mysql5.6）
 - Sequelize(v3.28.0) // 操作数据库的ORM
-- yarn(v0.19.0) // 比起npm更快一些
+- Yarn(v0.18.1) // 比起npm更快一些
 
 剩下依赖可以参考本文最后给出的项目demo仓库。
 
@@ -305,7 +305,7 @@ export default {
           <el-col :xs="24">
             <template v-if="!Done"> <!--v-if和v-for不能同时在一个元素内使用，因为Vue总会先执行v-for-->
               <template v-for="(item, index) in list">
-                <div class="todo-list" v-if="item.isDone == false">
+                <div class="todo-list" v-if="item.status == false">
                   <span class="item">
                     {{ index + 1 }}. {{ item.content }}
                   </span>
@@ -324,7 +324,7 @@ export default {
         <el-tab-pane label="已完成事项" name="second">
           <template v-if="count > 0">
             <template v-for="(item, index) in list">
-              <div class="todo-list" v-if="item.isDone == true">
+              <div class="todo-list" v-if="item.status == true">
                 <span class="item finished">
                   {{ index + 1 }}. {{ item.content }}
                 </span>
@@ -359,7 +359,7 @@ export default {
       let count = 0;
       let length = this.list.length;
       for(let i in this.list){
-        this.list[i].isDone == true ? count += 1 : '';
+        this.list[i].status == true ? count += 1 : '';
       }
       this.count = count;
       if(count == length || length == 0){
@@ -375,14 +375,14 @@ export default {
       if(this.todos == '')
         return
       let obj = {
-        isDone: false,
+        status: false,
         content: this.todos
       }
       this.list.push(obj);
       this.todos = '';
     },
     finished(index) {
-      this.$set(this.list[index],'isDone',true) // 通过set的方法让数组的变动能够让Vue检测到
+      this.$set(this.list[index],'status',true) // 通过set的方法让数组的变动能够让Vue检测到
       this.$message({
         type: 'success',
         message: '任务完成'
@@ -396,7 +396,7 @@ export default {
       })
     },
     restore(index) {
-      this.$set(this.list[index],'isDone',false)
+      this.$set(this.list[index],'status',false)
       this.$message({
         type: 'info',
         message: '任务还原'
@@ -428,9 +428,9 @@ export default {
 
 页面构建其实没有什么特别好说的，但是因为我自己有踩点坑，所以还是专门讲一下：
 
-1. `v-if`和`v-for`放在一个元素内同时使用，因为Vue总会先执行`v-for`，替代地，你可以使用一个额外的`template`元素用来放置`v-if`或者`v-for`从而达到同样的目的。这是相关的[issue](https://github.com/vuejs/vue/issues/3106)。
+1. `v-if`和`v-for`放在一个元素内同时使用，因为Vue总会先执行`v-for`，所以导致`v-if`不会被执行。替代地，你可以使用一个额外的`template`元素用来放置`v-if`或者`v-for`从而达到同样的目的。这是相关的[issue](https://github.com/vuejs/vue/issues/3106)。
 
-2. 计算属性对于直接的数据比如`a: 2`这样的数据变动可以直接检测到。但是如果是本例中的`list`的某一项的`isDone`这个属性变化了，如果我们直接使用`list[index].isDone = true`这样的写法的话，Vue将无法检测到数据变动。替代地，可以使用`set`方法（全局是`Vue.set()`，实例中是`this.$set()`)，通过`set`方法可以让数据的变动变得可以被检测到。从而让计算属性能够捕捉到变化。可以参考官方文档对于响应式原理的[描述](https://cn.vuejs.org/v2/guide/reactivity.html)。
+2. 计算属性对于直接的数据比如`a: 2` -> `a: 3`这样的数据变动可以直接检测到。但是如果是本例中的`list`的某一项的`status`这个属性变化了，如果我们直接使用`list[index].status = true`这样的写法的话，Vue将无法检测到数据变动。替代地，可以使用`set`方法（全局是`Vue.set()`，实例中是`this.$set()`），通过`set`方法可以让数据的变动变得可以被检测到。从而让计算属性能够捕捉到变化。可以参考官方文档对于响应式原理的[描述](https://cn.vuejs.org/v2/guide/reactivity.html)。
 
 ![Todolist](http://7xog0l.com1.z0.glb.clouddn.com/vue-koa-demo/todolist.gif "Todolist")
 
@@ -595,7 +595,7 @@ export default {
 | id | int（自增） | list的id |
 | user_id | int(11) | 用户的id |
 | content | CHAR(255) | list的内容 |
-| status | CHAR(20) | list的状态 |
+| status | tinyint(1) | list的状态 |
 
 直接跟数据库打交道的部分基本就是这样了。
 
@@ -650,7 +650,8 @@ module.exports = function(sequelize, DataTypes) {
     id: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
     user_id: {
       type: DataTypes.INTEGER(11),
@@ -661,13 +662,14 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false
     },
     status: {
-      type: DataTypes.CHAR(20),
+      type: DataTypes.INTEGER(1),
       allowNull: false
     }
   }, {
     tableName: 'list'
   });
 };
+
 ```
 
 自动化工具省去了很多我们手动定义表结构的时间。同时注意到生成的数据库表结构文件都自动帮我们`module.exports`出来了，所以很方便我们之后的引入。
@@ -835,6 +837,8 @@ module.exports = app;
 
 另外可以在JSON-WEB-TOKEN的[官网](https://jwt.io/)上感受一下。
 
+> Tips：JSON-WEB-TOKEN分三部分，头部信息+主体信息+密钥信息，其中主体传递的信息（是我们存放我们需要的信息的部分）是用BASE64编码的，所以很容易被解码，一定不能存放明文密码这种关键信息！替代地可以存放一些不是特别关键的信息，比如用户名这样能够做区分的信息。
+
 简单来说，运用了JSON-WEB-TOKEN的登录系统应该是这样的：
 
 1. 用户在登录页输入账号密码，将账号密码（密码进行md5加密）发送请求给后端
@@ -899,11 +903,12 @@ const postUserAuth = function* (){
         info: '密码错误！'
       }
     }else{ // 如果密码正确
-      const userInfo = {
-        name: userInfo.user_name
+      const userToken = {
+        name: userInfo.user_name,
+        id: userInfo.id
       }
       const secret = 'vue-koa-demo'; // 指定密钥，这是之后用来判断token合法性的标志
-      const token = jwt.sign(userInfo,secret); // 签发token
+      const token = jwt.sign(userToken,secret); // 签发token
       this.body = {
         success: true,
         token: token, // 返回token
@@ -969,9 +974,11 @@ Vue.prototype.$http = Axios // 类似于vue-resource的调用方法，之后可�
             this.$router.push('/todolist') // 进入todolist页面，登录成功
           }else{
             this.$message.error(res.data.info); // 登录失败，显示提示语
+            sessionStorage.setItem('demo-token',null); // 将token清空
           }
         }, (err) => {
             this.$message.error('请求错误！')
+            sessionStorage.setItem('demo-token',null); // 将token清空
         })
     }
   }
@@ -1015,14 +1022,18 @@ export default {
             this.$router.push('/todolist') // 进入todolist页面，登录成功
           }else{
             this.$message.error(res.data.info); // 登录失败，显示提示语
+            sessionStorage.setItem('demo-token',null); // 将token清空
           }
         }, (err) => {
             this.$message.error('请求错误！')
+            sessionStorage.setItem('demo-token',null); // 将token清空
         })
     }
   }
 };
 ```
+
+因为我们数据库里还是存着明文的`123`作为密码，现在要先将它md5化，32位md5加密后变为：`202cb962ac59075b964b07152d234b70`，将其替换掉数据库里的`123`。不做这步我们将无法登录。
 
 还没有大功告成，因为我们的界面跑在`8080`端口，但是Koa提供的API跑在`8889`端口，所以如果直接通过`/auth/user`这个url去post是请求不到的。就算写成`localhost:8889/auth/user`也会因为跨域问题导致请求失败。
 
@@ -1058,6 +1069,738 @@ export default {
 一切都万事了之后，我们可以看到如下激动人心的画面：
 
 ![login2todolist](http://7xog0l.com1.z0.glb.clouddn.com/vue-koa-demo/login2todolist-2.gif "login2todolist")
+
+#### 跳转拦截
+
+虽然我们现在能够成功登录系统了，但是还是存在一个问题：我在地址栏手动将地址改为`localhost:8080/todolist`我还是能够成功跳转到登录后的界面啊。于是这就需要一个跳转拦截，当没有登录的时候，不管地址栏输入什么地址，最终都重新定向回登录页。
+
+这个时候，从后端给我们传回来的`token`就派上大用处。有`token`就说明我们的身份是经过验证的，否则就是非法的。
+
+`vue-router`提供了页面跳转的钩子，我们可以在`router`跳转前进行验证，如果`token`存在就跳转，如果不存在就返回登录页。
+
+参考路由的[导航钩子](https://router.vuejs.org/zh-cn/advanced/navigation-guards.html)
+
+打开`src/main.js`，修改如下：
+
+```js
+// src/main.js
+
+// ...
+
+const router = new VueRouter({....}) // 省略
+
+router.beforeEach((to,from,next) =>{
+  const token = sessionStorage.getItem('demo-token');
+  if(to.path == '/'){ // 如果是跳转到登录页的
+    if(token != 'null' && token != null){
+      next('/todolist') // 如果有token就转向todolist不返回登录页
+    }
+    next(); // 否则跳转回登录页
+  }else{
+    if(token != 'null' && token != null){
+      next() // 如果有token就正常转向
+    }else{
+      next('/') // 否则跳转回登录页
+    }
+  }
+})
+
+const app = new Vue({...}) // 省略
+
+```
+
+> **注意：一定要确保要调用 `next()` 方法，否则钩子就不会被 resolved。**如果纯粹调用`next(path)`这样的方法最终还是会回到`.beforeEach()`这个钩子里面来，如果没有写对条件就有可能出现死循环，栈溢出的情况。
+
+然后我们就可以看到如下效果：
+
+![login2todolist](http://7xog0l.com1.z0.glb.clouddn.com/vue-koa-demo/login2todolist-3.gif "login2todolist")
+
+> Tips：这种只判断token存不存在就通过的验证是很不安全的，此例只是做了一个演示，实际上还应该进行更深一层的判断，比如从token解包出来的信息里包含我们想要的信息才可以作为有效token，才可以登录。等等。本文只是做一个简要介绍。
+
+#### 解析token
+
+注意到我们在签发`token`的时候，写过这样几句话：
+
+```js
+
+// server/controllers/user.js
+
+// ...
+
+const userToken = {
+  name: userInfo.user_name,
+  id: userInfo.id
+}
+const secret = 'vue-koa-demo'; // 指定密钥，这是之后用来判断token合法性的标志
+const token = jwt.sign(userInfo,secret); // 签发token
+
+// ...
+```
+
+我们将用户名和id打包进JWT的主体部分，同时我们解密的密钥是`vue-koa-demo`。所以我们可以通过这个信息，来进行登录后的用户名显示，以及用来区别这个用户是谁，这个用户有哪些`Todolist`。
+
+接下来在`Todolist`页面进行token解析，从而让用户名显示为登录用户名。
+
+```js
+
+// src/components/TodoList.vue
+
+// ...
+
+import jwt from 'jsonwebtoken' // 我们安装koa-jwt的时候会自动下载这个依赖
+
+export default {
+
+  created(){ // 组件创建时调用
+    const userInfo = this.getUserInfo(); // 新增一个获取用户信息的方法
+    if(userInfo != null){
+      this.id = userInfo.id;
+      this.name = userInfo.name;
+    }else{
+      this.id = '';
+      this.name = ''
+    }
+  },
+
+  data () {
+    return {
+      name: '', // 用户名改为空
+      todos: '',
+      activeName: 'first',
+      list:[],
+      count: 0,
+      id: '' // 新增用户id属性，用于区别用户
+    };
+  },
+  computed: {...}, //省略
+
+  methods: {
+    addTodos() {...}, // 省略
+    finished(index) {...},
+    remove(index) {...},
+    restore(index) {...},
+    getUserInfo(){ // 获取用户信息
+      const token = sessionStorage.getItem('demo-token');
+      if(token != null && token != 'null'){
+        let decode = jwt.verify(token,'vue-koa-demo'); // 解析token
+        return decode // decode解析出来实际上就是{name: XXX,id: XXX}
+      }else {
+        return null
+      }
+    }
+  }
+};
+
+// ...
+```
+
+于是你就可以看到：
+
+![todolist](http://7xog0l.com1.z0.glb.clouddn.com/vue-koa-demo/todolist-1.png "todolist")
+
+用户名已经不是我们之前默认的`Molunerfinn`而是登录名`molunerfinn`了。
+
+## Todolist 增删改查的实现
+
+这个部分就是前后端协作了。我们要实现之前在纯前端部分实现的内容。我以最基本的两个方法来举例子：获取`Todolist`以及增加`Todolist`，剩下其实思路大同小异，我就提供代码和注释了，我相信也很容易懂。
+
+### Token的发送
+
+之前说了，用JSON-WEB-TOKEN之后，这个系统的验证就完全依靠token了。如果token正确就下发资源，如果资源不正确，就返回错误信息。
+
+因为我们用了`koa-jwt`，所以只需要在每条请求头上加上`Authorization`属性，值是`Bearer {token值}`，然后让`Koa`在接收请求之前验证一下token即可。但是如果每发一条请求就要手动写一句这个，太累了。于是我们可以做到全局`Header`设定。
+
+打开`src/main.js`，在路由跳转的钩子里加上这句：
+
+```js
+
+// scr/main.json
+
+router.beforeEach((to,from,next) =>{
+  const token = sessionStorage.getItem('demo-token');
+  if(to.path == '/'){ 
+    if(token != 'null' && token != null){
+      next('/todolist') 
+    }
+    next(); 
+  }else{
+    if(token != 'null' && token != null){
+      Vue.prototype.$http.defaults.headers.common['Authorization'] = 'Bearer ' + token; // 全局设定header的token验证，注意Bearer后有个空格
+      next() 
+    }else{
+      next('/') 
+    }
+  }
+})
+
+```
+
+这样就完成了token的客户端发送设定。
+
+### Koa端对Token的验证
+
+接着我们实现两个简单的api，这两个api请求的路径就不是`/auth/xxx`而是`/api/xxx`了。我们还需要实现，访问`/api/*`路径的请求都需要经过`koa-jwt`的验证，而`/auth/*`的请求不需要。
+
+首先去`models`目录下新建一个`todolist.js`的文件：
+
+```js
+
+// server/models/todolist.js
+
+const db = require('../config/db.js'), 
+      todoModel = '../schema/list.js'; // 引入todolist的表结构
+const TodolistDb = db.Todolist; // 引入数据库
+
+const Todolist = TodolistDb.import(todoModel); 
+
+const getTodolistById = function* (id){  // 获取某个用户的全部todolist
+  const todolist = yield Todolist.findAll({ // 查找全部的todolist
+    where: {
+      user_id: id
+    },
+    attributes: ['id','content','status'] // 只需返回这三个字段的结果即可
+  });
+
+  return todolist // 返回数据
+}
+
+const createTodolist = function* (data){ // 给某个用户创建一条todolist
+  yield Todolist.create({
+    user_id: data.id, // 用户的id，用来确定给哪个用户创建
+    content: data.content,
+    status: data.status 
+  })
+  return true
+}
+
+module.exports = {
+  getTodolistById,
+  createTodolist
+}
+```
+
+接着去`controllers`目录下新建一个`todolist.js`的文件：
+
+```js
+// server/controllers/todolist
+
+const todolist = require('../models/todolist.js');
+
+const getTodolist = function* (){ // 获取某个用户的所有todolist
+  const id = this.params.id; // 获取url里传过来的参数里的id
+  const result = yield todolist.getTodolistById(id);  // 通过yield “同步”地返回查询结果
+  this.body = result // 将请求的结果放到response的body里返回
+}
+
+const createTodolist = function* (){ // 给某个用户创建一条todolist
+  const data = this.request.body; // post请求，数据是在request.body里的
+  const result = yield todolist.createTodolist(data);
+
+  this.body = {
+    success: true
+  }
+}
+
+
+module.exports = (router) => {
+  router.get('/todolist/:id', getTodolist),
+  router.post('/todolist', createTodolist)
+}
+```
+
+然后去`routes`文件夹里新建一个`api.js`文件：
+
+```js
+
+// server/routes/api.js
+
+const todolist = require('../controllers/todolist.js');
+const router = require('koa-router')();
+
+todolist(router); // 引入koa-router
+
+module.exports = router; // 导出router规则
+
+```
+
+最后，去根目录下的`app.js`，给koa加上新的路由规则：
+
+```js
+
+// app.js
+
+const app = require('koa')()
+  , koa = require('koa-router')()
+  , json = require('koa-json')
+  , logger = require('koa-logger')
+  , auth = require('./server/routes/auth.js')
+  , api = require('./server/routes/api.js')
+  , jwt = require('koa-jwt');
+
+// ..... 省略
+
+app.use(function* (next){
+  let start = new Date;
+  yield next;
+  let ms = new Date - start;
+  console.log('%s %s - %s', this.method, this.url, ms);
+});
+
+app.use(function *(next){  //  如果JWT验证失败，返回验证失败信息
+  try {
+    yield next;
+  } catch (err) {
+    if (401 == err.status) {
+      this.status = 401;
+      this.body = {
+        success: false,
+        token: null,
+        info: 'Protected resource, use Authorization header to get access'
+      };
+    } else {
+      throw err;
+    }
+  }
+});
+
+app.on('error', function(err, ctx){
+  console.log('server error', err);
+});
+
+koa.use('/auth', auth.routes()); // 挂载到koa-router上，同时会让所有的auth的请求路径前面加上'/auth'的请求路径。
+koa.use("/api",jwt({secret: 'vue-koa-demo'}),api.routes()) // 所有走/api/打头的请求都需要经过jwt中间件的验证。secret密钥必须跟我们当初签发的secret一致
+
+app.use(koa.routes()); // 将路由规则挂载到Koa上。
+
+// ...省略
+
+```
+
+至此，后端的两个api已经构建完成。
+
+初始化配置相对复杂一些，涉及到`model`、`controllers`、`routes`和`app.js`，可能会让人望而却步。实际上第一次构建完成之后，后续要添加api，基本上只需要在`model`和`controllers`写好方法，定好接口即可，十分方便。
+
+### 前端对接接口
+
+后端接口已经开放，接下来要把前端和后端进行对接。主要有两个对接接口：
+
+1. 获取某个用户的所有todolist
+2. 创建某个用户的一条todolist
+
+接下来就是改写`Todolist.vue`里的方法了：
+
+```js
+
+// todolist.js
+
+// ... 省略
+
+created(){
+  const userInfo = this.getUserInfo();
+  if(userInfo != null){
+    this.id = userInfo.id;
+    this.name = userInfo.name;
+  }else{
+    this.id = '';
+    this.name = ''
+  }
+  this.getTodolist(); // 新增：在组件创建时获取todolist
+},
+
+// ... 省略
+
+methods: {
+  addTodos() {
+    if(this.todos == '')
+      return
+    let obj = {
+      status: false,
+      content: this.todos,
+      id: this.id
+    }
+    this.$http.post('/api/todolist', obj) // 新增创建请求
+      .then((res) => {
+        if(res.status == 200){ // 当返回的状态为200成功时
+          this.$message({
+            type: 'success',
+            message: '创建成功！' 
+          })
+          this.getTodolist(); // 获得最新的todolist
+        }else{
+          this.$message.error('创建失败！') // 当返回不是200说明处理出问题
+        }
+      }, (err) => {
+        this.$message.error('创建失败！') // 当没有返回值说明服务端错误或者请求没发送出去
+        console.log(err)
+      })
+    this.todos = ''; // 将当前todos清空
+  },
+  // ... 省略一些方法
+  getTodolist(){
+    this.$http.get('/api/todolist/' + this.id) // 向后端发送获取todolist的请求
+      .then((res) => {
+        if(res.status == 200){
+          this.list = res.data // 将获取的信息塞入实例里的list
+        }else{
+          this.$message.error('获取列表失败！')
+        }
+      }, (err) => {
+        this.$message.error('获取列表失败！')
+        console.log(err)
+      })
+  }
+}
+
+```
+
+至此，前后端的部分已经完整构建。让我们来看看效果：
+
+![todolist](http://7xog0l.com1.z0.glb.clouddn.com/vue-koa-demo/login2todolist-4.gif "todolist")
+
+做到这一步的时候其实我们的应用已经基本完成了。最后的收尾工作，让我们来收一下。
+
+原本的前端版本还有`完成`、`删除`、`还原`三种状态，其中`完成`和`还原`只是状态的切换（更新），所以可以算是一个api，然后就是删除是单独一个api。于是我们就能算是完成了增、删、改、查了。接下去的部分就提供代码就行，其实思路跟之前的是一样的，只不过操作的函数不一样罢了。
+
+### Todolist的改、删
+
+```js
+
+// server/models/todolist.js
+
+// ...省略
+
+const removeTodolist = function* (id,user_id){
+  yield Todolist.destroy({
+    where: {
+      id,
+      user_id
+    }
+  })
+  return true
+}
+
+const updateTodolist = function* (id,user_id,status){
+  yield Todolist.update(
+    {
+      status
+    },
+    {
+      where: {
+        id,
+        user_id
+      }
+    }
+  )
+  return true
+}
+
+module.exports = {
+  getTodolistById,
+  createTodolist,
+  removeTodolist,
+  updateTodolist
+}
+
+```
+
+
+```js
+
+// server/controllers/todolist.js
+
+// ... 省略
+
+const removeTodolist = function* (){
+  const id = this.params.id;
+  const user_id = this.params.userId;
+  const result = yield todolist.removeTodolist(id,user_id);
+
+  this.body = {
+    success: true
+  }
+}
+
+const updateTodolist = function* (){
+  const id = this.params.id;
+  const user_id = this.params.userId;
+  let status = this.params.status; 
+  status == '0' ? status = true : status =  false;// 状态反转（更新）
+
+  const result = yield todolist.updateTodolist(id,user_id,status);
+
+  this.body = {
+    success: true
+  }
+}
+
+module.exports = (router) => {
+  router.get('/todolist/:id', getTodolist),
+  router.post('/todolist', createTodolist),
+  router.delete('/todolist/:userId/:id', removeTodolist),
+  router.put('/todolist/:userId/:id/:status', updateTodolist)
+}
+
+```
+
+```html
+ <!-- src/components/TodoList.vue -->
+
+....
+
+<!-- 把完成和还原的方法替换成了update -->
+<el-button size="small" type="primary" @click="update(index)">完成</el-button>
+....
+<el-button size="small" type="primary" @click="update(index)">还原</el-button>
+....
+<script>
+// ....省略
+  methods:{
+    // ... 省略
+    update(index) {
+      this.$http.put('/api/todolist/'+ this.id + '/' + this.list[index].id + '/' + this.list[index].status)
+        .then((res) => {
+          if(res.status == 200){
+            this.$message({
+              type: 'success',
+              message: '任务状态更新成功！'
+            })
+            this.getTodolist();
+          }else{
+            this.$message.error('任务状态更新失败！')
+          }
+        }, (err) => {
+          this.$message.error('任务状态更新失败！')
+          console.log(err)
+        })
+    },
+    remove(index) {
+      this.$http.delete('/api/todolist/'+ this.id + '/' + this.list[index].id)
+        .then((res) => {
+          if(res.status == 200){
+            this.$message({
+              type: 'success',
+              message: '任务删除成功！'
+            })
+            this.getTodolist();
+          }else{
+            this.$message.error('任务删除失败！')
+          }
+        }, (err) => {
+          this.$message.error('任务删除失败！')
+          console.log(err)
+        })
+    },
+  }
+// ... 省略
+</script>
+....
+```
+
+让我们来看看最后99%成品的效果吧：
+
+![Todolist](http://7xog0l.com1.z0.glb.clouddn.com/vue-koa-demo/todolist-5.gif todolist)
+
+## 项目部署
+
+很多教程到类似于我上面的部分就结束了。但是实际上我们做一个项目最想要的就是部署给大家用不是么？
+
+在部署这块有些坑，需要让大家也一起知道一下。这个项目是个全栈项目（虽然是个很简单的。。。），所以就涉及到前后端通信的问题，也就会涉及到是同域请求还是跨域请求。
+
+我们也说过，要解决这个问题有两种方便的解决办法，第一种，服务端加上`cors`，客户端就可以随意的跨域请求。但是这样会有个问题，因为我们是以同域的形式开发，请求的地址也是写的相对地址：`/api/*`、`auth/*`这样的路径，访问的路径的自然是同域。如果要在服务端加上`cors`，我们还需要将我们的所有请求地址改成`localhost:8889/api/*`，`localhost:8889/auth/*`，这样的话，如果服务端的端口号一变，我们还需要重新修改前端所有的请求地址。这样很不方便也很不科学。
+
+因此，要将请求变为同域才是最好的解决办法——不管服务端端口号怎么变，只要是同域都可以请求到。
+
+于是要把Vue和Koa结合起来变成一个完整的项目（之前实际上都是在开发模式下，webpack帮我们进行请求的代理转发，所以看起来像是同域请求，而Vue和Koa并没有完全结合起来），就得在生产模式下，将Vue的静态文件交给Koa“托管”，所有访问前端的请求全部走Koa端，包括静态文件资源的请求，也走Koa端，把Koa作为一个Vue项目的静态资源服务器，这样就可以让Vue里的请求走的都是同域了。（相当于，之前开发模式是webpack开启了一个服务器托管了Vue的资源和请求，现在生产模式下改成Koa托管Vue的资源和请求）
+
+要在开发和生产模式改变不同的托管服务器，其实也很简单，只需要在生产模式下，用Koa的静态资源服务中间件托管构建好的Vue文件即可。
+
+### Webpack打包
+
+部署之前我们要用Webpack将我们的前端项目打包输出一下。但是如果直接用`npm run build`，你会发现打包出来的文件太大了：
+
+```bash
+
+                                                  Asset       Size  Chunks             Chunk Names
+    static/css/app.d9034fc06fd57ce00d6e75ed49f0dafe.css     120 kB    2, 0  [emitted]  app
+                 static/fonts/element-icons.a61be9c.eot    13.5 kB          [emitted]
+                   static/img/element-icons.09162bc.svg    17.4 kB          [emitted]
+             static/js/manifest.8ea250834bdc80e4d73b.js  832 bytes       0  [emitted]  manifest
+               static/js/vendor.75bbe7ecea37b0d4c62d.js     623 kB    1, 0  [emitted]  vendor
+                  static/js/app.e2d125562bfc4c57f9cb.js    16.5 kB    2, 0  [emitted]  app
+                 static/fonts/element-icons.b02bdc1.ttf    13.2 kB          [emitted]
+         static/js/manifest.8ea250834bdc80e4d73b.js.map    8.86 kB       0  [emitted]  manifest
+           static/js/vendor.75bbe7ecea37b0d4c62d.js.map    3.94 MB    1, 0  [emitted]  vendor
+              static/js/app.e2d125562bfc4c57f9cb.js.map    64.8 kB    2, 0  [emitted]  app
+static/css/app.d9034fc06fd57ce00d6e75ed49f0dafe.css.map     151 kB    2, 0  [emitted]  app
+                                             index.html  563 bytes          [emitted]
+```
+
+竟然有3.94MB的map文件。这肯定是不能接受的。于是要修改一下webpack的输出的设置，取消输出map文件。
+
+找到根目录下的`config/index.js`：把`productionSourceMap: true`这句话改成`productionSourceMap: false`。然后再执行一遍`npm run build`。
+
+```bash
+                                              Asset       Size  Chunks             Chunk Names
+             static/fonts/element-icons.a61be9c.eot    13.5 kB          [emitted]
+             static/fonts/element-icons.b02bdc1.ttf    13.2 kB          [emitted]
+               static/img/element-icons.09162bc.svg    17.4 kB          [emitted]
+         static/js/manifest.3ba218c80028a707a728.js  774 bytes       0  [emitted]  manifest
+           static/js/vendor.75bbe7ecea37b0d4c62d.js     623 kB    1, 0  [emitted]  vendor
+              static/js/app.b6acaca2531fc0baa447.js    16.5 kB    2, 0  [emitted]  app
+static/css/app.d9034fc06fd57ce00d6e75ed49f0dafe.css     120 kB    2, 0  [emitted]  app
+                                         index.html  563 bytes          [emitted]
+```
+
+把sourceMap去掉了之后，体积就小下来了。虽然600+kb的大小还是有点大，不过放到服务端，gzip之后只剩150+kb的体积勉强还是可以接受。当然，对于webpack输出的优化，不是本文讨论的范围，有很多更好的文章讲述了这个东西，故本文不再详细展开。
+
+打包好后就是相当于输出了一堆静态文件，当然这堆静态文件需要放在服务端才可以访问。我们要将这堆静态资源用Koa托管。
+
+### Koa serve静态资源
+
+`yarn add koa-static`
+
+打开`app.js`，引入两个新依赖，其中`path`是nodejs原生自带。
+
+```js
+// app.js
+
+// .... 
+const path =require('path')
+    , serve = require('koa-static');
+// ....
+
+// 静态文件serve在koa-router的其他规则之上 
+app.use(serve(path.resolve('dist'))); // 将webpack打包好的项目目录作为Koa静态文件服务的目录
+
+// 下面这些是之前就有的。。。为了方便找位置故标示出来
+koa.use('/auth', auth.routes());
+koa.use("/api",jwt({secret: 'vue-koa-demo'}),api.routes()) 
+
+// ...
+```
+
+然后重新运行一遍`node app.js`，看到输出`Koa is listening in 8889`后，你可以打开浏览器`localhost:8889`就可以看到如下情景：
+
+![vue-koa](http://7xog0l.com1.z0.glb.clouddn.com/vue-koa-demo/vue-koa.png)
+
+至此已经基本上接近尾声，不过还存在一个问题：如果我们登录进去之后，在todolist页面一刷新，就会出现：
+
+![404](http://7xog0l.com1.z0.glb.clouddn.com/vue-koa-demo/404.png '404')
+
+为什么会出现这种情况？简单来说是因为我们使用了前端路由，用了HTML5 的History模式，如果没有做其他任何配置的话，刷新页面，那么浏览器将会去服务端访问这个页面地址，因为服务端并没有配置这个地址的路由，所以自然就返回404 Not Found了。
+
+详细可以参考vue-router的[这篇文档](https://router.vuejs.org/zh-cn/essentials/history-mode.html)
+
+该怎么解决？其实也很简单，多加一个中间件：`koa-history-api-fallback`即可.
+
+`yarn add koa-history-api-fallback`
+
+```js
+
+//... 省略
+
+const historyApiFallback = require('koa-history-api-fallback'); // 引入依赖
+
+app.use(require('koa-bodyparser')());
+app.use(json());
+app.use(logger());
+app.use(historyApiFallback()); // 在这个地方加入。一定要加在静态文件的serve之前，否则会失效。
+
+// ... 
+```
+
+这个时候，你再重新启动一下koa，登录之后再刷新页面，就不会再出现404 Not Found了。
+
+### API Test
+
+本来写到上面基本本文已经算是结束了。但是由于我在开发的过程中遇到了一些问题，所以还需要做一些微调。
+
+我们知道koa的use方法是有顺序只差的。
+
+```js
+const app = require('koa');
+app.use(A);
+app.use(B);
+```
+
+```js
+const app = require('koa');
+app.use(B);
+app.use(A);
+```
+
+这二者是有区别的，谁先被use，谁的规则就放到前面先执行。
+
+因此如果我们将静态文件的serve以及`historyApiFallback`放在了api的请求之前，那么用postman测试api的时候总会先返回完整的页面：
+
+![postman](http://7xog0l.com1.z0.glb.clouddn.com/vue-koa-demo/postman.png)
+
+因此正确的做法，应该是将它们放到我们写的api的规则之后：
+
+```js
+
+// app.js
+// ...
+
+koa.use('/auth', auth.routes()); // 挂载到koa-router上，同时会让所有的auth的请求路径前面加上'/auth'的请求路径。
+koa.use("/api",jwt({secret: 'vue-koa-demo'}),api.routes()) // 所有走/api/打头的请求都需要经过jwt验证。
+
+app.use(koa.routes()); // 将路由规则挂载到Koa上。
+
+app.use(historyApiFallback()); // 将这两个中间件挂载在api的路由之后
+app.use(serve(path.resolve('dist'))); // 将webpack打包好的项目目录作为Koa静态文件服务的目录
+
+```
+
+这样就能正常返回数据了。
+
+### Nginx配置
+
+真正部署到服务器的时候，我们肯定不会让大家输入`域名:8889`这样的方式让大家访问。所以需要用Nginx监听80端口，把访问我们指定域名的请求引导转发给Koa服务端。
+
+大致的`nginx.conf`如下：
+
+```nginx
+http {
+
+  # ....
+  upstream koa.server{
+    server 127.0.0.1:8889;
+  }
+
+  server {
+    listen   80;
+    server_name xxx.xxx.com;
+
+    location / {
+      proxy_pass http://koa.server;
+      proxy_redirect off;
+    }
+
+    #....
+  }
+  #....
+}
+```
+
+如果有精力还可以配置一下Nginx的Gzip，能让请求的JS\CSS\HTML等静态文件更小，响应速度更快些。
+
+## 写在最后
+
+至此，我们已经完成了一个从前端到后端，从本地到服务器的完整项目。虽然它真的是个很简单的小东西，被大家也已经用其他的方式写烂了（比如用localStorage做存储）。但是它作为一个完整的前后端的DEMO，我觉得让大家入门也相对更容易一些，能够体会到全栈开发也不是想象中的“那么难”（入门的难度还是可以接受的嘛）。有了Nodejs之后我们能够做的事真的好多！
+
+当然，由于篇幅有限，本文能够讲述东西毕竟不够多，而且讲的东西也不可能面面俱到，很多东西都是点到即止，让大家能够自己发挥。其实还想讲讲`Event Bus`的简单使用，还有分页的基本实现等等，东西太多了，一时间大家消化不了。
+
+实际上我在做前段时间的项目的时候，也是完全不知道怎么把Vue和Koa结合起来开发。我甚至不知道怎么用Koa来提供API，我只会用Koa来做服务端渲染，比如那些JADE\EJS等模板引擎渲染的页面。所以之前那个项目做完让我自己学到良多东西，故而也分享给大家。
+
+实际上本文的Koa的api提供的形式也尽量和RESTful靠拢了，因此你也可以学会如何通过Koa提供RESTful形式的API了。
+
+最后放上本文项目的Github[地址]()，如果这个项目对你有帮助，希望大家可以fork，给我提建议，如果再有时间，可以点个Star那就更好啦~
+
+新年前的最后一篇文章了吧，提前祝大家新年快乐233。
+
+
+
 
 
 

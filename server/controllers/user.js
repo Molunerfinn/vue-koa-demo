@@ -11,7 +11,7 @@ const getUserInfo = function* (){
 const postUserAuth = function* (){
   const data = this.request.body; // post过来的数据存在request.body里
   const userInfo = yield user.getUserByName(data.name);
-
+  console.log(this.request)
   if(userInfo != null){ // 如果查无此用户会返回null
     if(userInfo.password != data.password){
       this.body = {
@@ -19,11 +19,12 @@ const postUserAuth = function* (){
         info: '密码错误！'
       }
     }else{
-      const userName = {
-        name: userInfo.user_name
+      const userToken = {
+        name: userInfo.user_name,
+        id: userInfo.id
       }
       const secret = 'vue-koa-demo'; // 指定密钥
-      const token = jwt.sign(userName,secret); // 签发token
+      const token = jwt.sign(userToken,secret); // 签发token
       this.body = {
         success: true,
         token: token, // 返回token

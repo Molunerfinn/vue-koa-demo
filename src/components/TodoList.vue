@@ -10,12 +10,12 @@
           <el-col :xs="24">
             <template v-if="!Done">
               <template v-for="(item, index) in list">
-                <div class="todo-list" v-if="item.isDone == false">
+                <div class="todo-list" v-if="item.status == false">
                   <span class="item">
                     {{ index + 1 }}. {{ item.content }}
                   </span>
                   <span class="pull-right">
-                    <el-button size="small" type="primary" @click="finished(index)">完成</el-button>
+                    <el-button size="small" type="primary" @click="update(index)">完成</el-button>
                     <el-button size="small" :plain="true" type="danger" @click="remove(index)">删除</el-button>
                   </span>
                 </div>
@@ -29,12 +29,12 @@
         <el-tab-pane label="已完成事项" name="second">
           <template v-if="count > 0">
             <template v-for="(item, index) in list">
-              <div class="todo-list" v-if="item.isDone == true">
+              <div class="todo-list" v-if="item.status == true">
                 <span class="item finished">
                   {{ index + 1 }}. {{ item.content }}
                 </span>
                 <span class="pull-right">
-                  <el-button size="small" type="primary" @click="restore(index)">还原</el-button>
+                  <el-button size="small" type="primary" @click="update(index)">还原</el-button>
                 </span>
               </div>
             </template> 
@@ -49,14 +49,31 @@
 </template>
 
 <script>
+
+import jwt from 'jsonwebtoken'
+
 export default {
+
+  created(){
+    const userInfo = this.getUserInfo();
+    if(userInfo != null){
+      this.id = userInfo.id;
+      this.name = userInfo.name;
+    }else{
+      this.id = '';
+      this.name = ''
+    }
+    this.getTodolist();
+  },
+
   data () {
     return {
-      name: 'Molunerfinn',
+      name: '',
       todos: '',
       activeName: 'first',
       list:[],
-      count: 0
+      count: 0,
+      id: ''
     };
   },
   computed: {
@@ -64,7 +81,7 @@ export default {
       let count = 0;
       let length = this.list.length;
       for(let i in this.list){
-        this.list[i].isDone == true ? count += 1 : '';
+        this.list[i].status == true ? count += 1 : '';
       }
       this.count = count;
       if(count == length || length == 0){
@@ -80,32 +97,82 @@ export default {
       if(this.todos == '')
         return
       let obj = {
-        isDone: false,
-        content: this.todos
+        status: false,
+        content: this.todos,
+        id: this.id
       }
-      this.list.push(obj);
+      this.$http.post('/api/todolist', obj)
+        .then((res) => {
+          if(res.status == 200){
+            this.$message({
+              type: 'success',
+              message: '创建成功！'
+            })
+            this.getTodolist();
+          }else{
+            this.$message.error('创建失败！')
+          }
+        }, (err) => {
+          this.$message.error('创建失败！')
+          console.log(err)
+        })
       this.todos = '';
     },
-    finished(index) {
-      this.$set(this.list[index],'isDone',true)
-      this.$message({
-        type: 'success',
-        message: '任务完成'
-      })
+    update(index) {
+      this.$http.put('/api/todolist/'+ this.id + '/' + this.list[index].id + '/' + this.list[index].status)
+        .then((res) => {
+          if(res.status == 200){
+            this.$message({
+              type: 'success',
+              message: '任务状态更新成功！'
+            })
+            this.getTodolist();
+          }else{
+            this.$message.error('任务状态更新失败！')
+          }
+        }, (err) => {
+          this.$message.error('任务状态更新失败！')
+          console.log(err)
+        })
     },
     remove(index) {
-      this.list.splice(index,1);
-      this.$message({
-        type: 'info',
-        message: '任务删除'
-      })
+      this.$http.delete('/api/todolist/'+ this.id + '/' + this.list[index].id)
+        .then((res) => {
+          if(res.status == 200){
+            this.$message({
+              type: 'success',
+              message: '任务删除成功！'
+            })
+            this.getTodolist();
+          }else{
+            this.$message.error('任务删除失败！')
+          }
+        }, (err) => {
+          this.$message.error('任务删除失败！')
+          console.log(err)
+        })
     },
-    restore(index) {
-      this.$set(this.list[index],'isDone',false)
-      this.$message({
-        type: 'info',
-        message: '任务还原'
-      })
+    getUserInfo(){
+      const token = sessionStorage.getItem('demo-token');
+      if(token != null && token != 'null'){
+        let decode = jwt.verify(token,'vue-koa-demo');
+        return decode
+      }else {
+        return null
+      }
+    },
+    getTodolist(){
+      this.$http.get('/api/todolist/' + this.id)
+        .then((res) => {
+          if(res.status == 200){
+            this.list = res.data
+          }else{
+            this.$message.error('获取列表失败！')
+          }
+        }, (err) => {
+          this.$message.error('获取列表失败！')
+          console.log(err)
+        })
     }
   }
 };

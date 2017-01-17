@@ -45,7 +45,7 @@ ansi-styles@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/ansi-styles/-/ansi-styles-2.2.1.tgz#b432dd3358b634cf75e1e4664368240533c1ddbe"
 
-any-promise@^1.1.0:
+any-promise@^1.0.0, any-promise@^1.1.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/any-promise/-/any-promise-1.3.0.tgz#abc6afeedcea52e809cdc0376aed3ce39635d17f"
 
@@ -934,7 +934,7 @@ co-body@^4.2.0:
     raw-body "~2.1.2"
     type-is "~1.6.6"
 
-co@^4.0.2, co@^4.4.0:
+co@^4.0.2, co@^4.4.0, co@^4.6.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/co/-/co-4.6.0.tgz#6ea6bdf3d853ae54ccb8e47bfa0bf3f9031fb184"
 
@@ -2155,6 +2155,10 @@ koa-compose@^2.3.0:
   version "2.5.1"
   resolved "https://registry.yarnpkg.com/koa-compose/-/koa-compose-2.5.1.tgz#726cfb17694de5cb9fbf03c0adf172303f83f156"
 
+koa-history-api-fallback@^0.1.3:
+  version "0.1.3"
+  resolved "http://registry.npm.taobao.org/koa-history-api-fallback/download/koa-history-api-fallback-0.1.3.tgz#94eb35b481914d682634f9911021187667f02b39"
+
 koa-is-json@1, koa-is-json@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/koa-is-json/-/koa-is-json-1.0.0.tgz#273c07edcdcb8df6a2c1ab7d59ee76491451ec14"
@@ -2191,6 +2195,22 @@ koa-router@5.4:
     http-errors "^1.3.1"
     methods "^1.0.1"
     path-to-regexp "^1.1.1"
+
+koa-send@~3.1.0:
+  version "3.1.1"
+  resolved "http://registry.npm.taobao.org/koa-send/download/koa-send-3.1.1.tgz#ef0af0f9a531ec817e88056b52b8e32d2e0ba91a"
+  dependencies:
+    co "^4.6.0"
+    debug "*"
+    mz "^2.3.1"
+    resolve-path "^1.3.1"
+
+koa-static@^2.0.0:
+  version "2.0.0"
+  resolved "http://registry.npm.taobao.org/koa-static/download/koa-static-2.0.0.tgz#2693482e1a4c0219e6d926be1703a2658b754f26"
+  dependencies:
+    debug "*"
+    koa-send "~3.1.0"
 
 koa-unless@0.0.1:
   version "0.0.1"
@@ -2591,6 +2611,14 @@ mysql@^2.12.0:
     readable-stream "1.1.14"
     sqlstring "2.2.0"
 
+mz@^2.3.1:
+  version "2.6.0"
+  resolved "http://registry.npm.taobao.org/mz/download/mz-2.6.0.tgz#c8b8521d958df0a4f2768025db69c719ee4ef1ce"
+  dependencies:
+    any-promise "^1.0.0"
+    object-assign "^4.0.1"
+    thenify-all "^1.0.0"
+
 nan@^2.3.0:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.5.0.tgz#aa8f1e34531d807e9e27755b234b4a6ec0c152a8"
@@ -2816,7 +2844,7 @@ path-exists@^2.0.0:
   dependencies:
     pinkie-promise "^2.0.0"
 
-path-is-absolute@^1.0.0:
+path-is-absolute@1.0.1, path-is-absolute@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/path-is-absolute/-/path-is-absolute-1.0.1.tgz#174b9268735534ffbc7ace6bf53a5a9e1b5c5f5f"
 
@@ -3375,6 +3403,13 @@ requires-port@1.x.x:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/requires-port/-/requires-port-1.0.0.tgz#925d2601d39ac485e091cf0da5c6e694dc3dcaff"
 
+resolve-path@^1.3.1:
+  version "1.3.3"
+  resolved "http://registry.npm.taobao.org/resolve-path/download/resolve-path-1.3.3.tgz#4d83aba6468c2b8e632a575e3f52b0fa0dbe1a5c"
+  dependencies:
+    http-errors "~1.5.0"
+    path-is-absolute "1.0.1"
+
 resolve@^1.1.6:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.2.0.tgz#9589c3f2f6149d1417a40becc1663db6ec6bc26c"
@@ -3719,6 +3754,18 @@ terraformer-wkt-parser@^1.1.0:
 terraformer@~1.0.5:
   version "1.0.7"
   resolved "http://registry.npm.taobao.org/terraformer/download/terraformer-1.0.7.tgz#d8a19a56fbf25966ea062d21f515b93589702d69"
+
+thenify-all@^1.0.0:
+  version "1.6.0"
+  resolved "http://registry.npm.taobao.org/thenify-all/download/thenify-all-1.6.0.tgz#1a1918d402d8fc3f98fbf234db0bcc8cc10e9726"
+  dependencies:
+    thenify ">= 3.1.0 < 4"
+
+"thenify@>= 3.1.0 < 4":
+  version "3.2.1"
+  resolved "http://registry.npm.taobao.org/thenify/download/thenify-3.2.1.tgz#251fd1c80aff6e5cf57cb179ab1fcb724269bd11"
+  dependencies:
+    any-promise "^1.0.0"
 
 throttle-debounce@^1.0.1:
   version "1.0.1"
