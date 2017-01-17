@@ -1,4 +1,13 @@
-# 全栈开发实战：用Vue2+Koa1开发完整的前后端项目
+title: 全栈开发实战：用Vue2+Koa1开发完整的前后端项目
+tags: 
+  - 前端
+  - Nodejs
+categories:
+  - Web
+  - 开发
+  - Nodejs
+date: 2017-01-17 15:06:00
+---
 
 ## 简介
 
@@ -1598,7 +1607,7 @@ module.exports = (router) => {
 
 让我们来看看最后99%成品的效果吧：
 
-![Todolist](http://7xog0l.com1.z0.glb.clouddn.com/vue-koa-demo/todolist-5.gif todolist)
+![Todolist](http://7xog0l.com1.z0.glb.clouddn.com/vue-koa-demo/todolist-5.gif 'todolist')
 
 ## 项目部署
 
@@ -1795,7 +1804,7 @@ http {
 
 实际上本文的Koa的api提供的形式也尽量和RESTful靠拢了，因此你也可以学会如何通过Koa提供RESTful形式的API了。
 
-最后放上本文项目的Github[地址]()，如果这个项目对你有帮助，希望大家可以fork，给我提建议，如果再有时间，可以点个Star那就更好啦~
+最后放上本文项目的Github[地址](https://github.com/Molunerfinn/vue-koa-demo)，如果这个项目对你有帮助，希望大家可以fork，给我提建议，如果再有时间，可以点个Star那就更好啦~
 
 新年前的最后一篇文章了吧，提前祝大家新年快乐233。
 
