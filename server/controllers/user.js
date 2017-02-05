@@ -1,5 +1,6 @@
 const user = require('../models/user.js');
 const jwt = require('koa-jwt');
+const bcrypt = require('bcryptjs');
 
 const getUserInfo = function* (){
   const id = this.params.id; // 获取url里传过来的参数里的id
@@ -13,7 +14,7 @@ const postUserAuth = function* (){
   const userInfo = yield user.getUserByName(data.name);
   console.log(this.request)
   if(userInfo != null){ // 如果查无此用户会返回null
-    if(userInfo.password != data.password){
+    if(!bcrypt.compareSync(data.password, userInfo.password)){
       this.body = {
         success: false, // success标志位是方便前端判断返回是正确与否
         info: '密码错误！'

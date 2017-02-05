@@ -13,7 +13,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false
     },
     password: {
-      type: DataTypes.CHAR(32),
+      type: DataTypes.CHAR(128),
       allowNull: false
     }
   }, {
