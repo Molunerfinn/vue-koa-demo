@@ -20,15 +20,17 @@ USE `todolist`;
 CREATE TABLE IF NOT EXISTS `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_name` char(50) NOT NULL,
-  `password` char(32) NOT NULL,
+  `password` char(128) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- 正在导出表  todolist.user 的数据：~0 rows (大约)
 DELETE FROM `user`;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` (`id`, `user_name`, `password`) VALUES
-	(1, 'molunerfinn', '202cb962ac59075b964b07152d234b70');
+INSERT INTO `user` (`user_name`, `password`) VALUES
+	('molunerfinn', '$2a$10$x3f0Y2SNAmyAfqhKVAV.7uE7RHs3FDGuSYw.LlZhOFoyK7cjfZ.Q6');
+INSERT INTO `user` (`user_name`, `password`) VALUES
+  ('admin', '$2a$10$x3f0Y2SNAmyAfqhKVAV.7uE7RHs3FDGuSYw.LlZhOFoyK7cjfZ.Q6');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
