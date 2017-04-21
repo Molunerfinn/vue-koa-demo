@@ -1,6 +1,6 @@
 # vue-koa-demo
 
-A fullstack demo used Vue2 & Koa(Both Koa1 & Koa2 version is completed. Koa1 version is [here](https://github.com/Molunerfinn/vue-koa-demo/tree/koa1) )
+A fullstack demo used Vue2 & Koa2(Koa1 version is [here](https://github.com/Molunerfinn/vue-koa-demo/tree/koa1))
 
 ![Todolist](http://7xog0l.com1.z0.glb.clouddn.com/vue-koa-demo/todolist-5.gif 'todolist')
 
