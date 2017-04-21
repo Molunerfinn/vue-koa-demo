@@ -1,4 +1,4 @@
-const app = require('koa')()
+const Koa = require('koa')
   , koa = require('koa-router')()
   , json = require('koa-json')
   , logger = require('koa-logger')
@@ -7,26 +7,28 @@ const app = require('koa')()
   , jwt = require('koa-jwt')
   , path =require('path')
   , serve = require('koa-static')
-  , historyApiFallback = require('koa-history-api-fallback');
+  , historyApiFallback = require('koa2-history-api-fallback');
+
+const app = new Koa();
 
 app.use(require('koa-bodyparser')());
 app.use(json());
 app.use(logger());
 
-app.use(function* (next){
+app.use(async function(ctx, next){
   let start = new Date;
-  yield next;
+  await next();
   let ms = new Date - start;
-  console.log('%s %s - %s', this.method, this.url, ms);
+  console.log('%s %s - %s', ctx.method, ctx.url, ms);
 });
 
-app.use(function *(next){  //  如果JWT验证失败，返回验证失败信息
+app.use(async function(ctx, next){  //  如果JWT验证失败，返回验证失败信息
   try {
-    yield next;
+    await next();
   } catch (err) {
     if (401 == err.status) {
-      this.status = 401;
-      this.body = {
+      ctx.status = 401;
+      ctx.body = {
         success: false,
         token: null,
         info: 'Protected resource, use Authorization header to get access'

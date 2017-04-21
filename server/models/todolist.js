@@ -4,8 +4,8 @@ const TodolistDb = db.Todolist; // 引入数据库
 
 const Todolist = TodolistDb.import(todoModel); 
 
-const getTodolistById = function* (id){ 
-  const todolist = yield Todolist.findAll({ // 查找全部的todolist
+const getTodolistById = async function(id){ 
+  const todolist = await Todolist.findAll({ // 查找全部的todolist
     where: {
       user_id: id
     },
@@ -15,8 +15,8 @@ const getTodolistById = function* (id){
   return todolist // 返回数据
 }
 
-const createTodolist = function* (data){
-  yield Todolist.create({
+const createTodolist = async function(data){
+  await Todolist.create({
     user_id: data.id,
     content: data.content,
     status: data.status 
@@ -24,8 +24,8 @@ const createTodolist = function* (data){
   return true
 }
 
-const removeTodolist = function* (id,user_id){
-  yield Todolist.destroy({
+const removeTodolist = async function(id,user_id){
+  await Todolist.destroy({
     where: {
       id,
       user_id
@@ -34,8 +34,8 @@ const removeTodolist = function* (id,user_id){
   return true
 }
 
-const updateTodolist = function* (id,user_id,status){
-  yield Todolist.update(
+const updateTodolist = async function(id,user_id,status){
+  await Todolist.update(
     {
       status
     },
