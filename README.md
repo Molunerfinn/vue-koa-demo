@@ -10,6 +10,8 @@ View the [article](https://molunerfinn.com/Vue+Koa/) for more details.
 
 `git clone https://github.com/Molunerfinn/vue-koa-demo.git`
 
+`git checkout koa1`
+
 `npm install` or `yarn`
 
 Also you need to install MySQL & create a database named `todolist`,and execute 2 sql files `list.sql` & `user.sql`.Their are in `sql/`
