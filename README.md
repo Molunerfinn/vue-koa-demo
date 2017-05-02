@@ -20,6 +20,10 @@ find `mysql://root:XXXX@localhost/todolist` and change the `XXXX` into your own 
 
 ### Run
 
+### Node.js
+
+Beacuse of using Koa2, `Node.js >= v7.6.0` is needed.
+
 #### Development: 
 
 `npm run dev` && `node app.js`
