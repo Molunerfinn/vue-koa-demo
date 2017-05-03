@@ -40,8 +40,6 @@ const postUserAuth = function* (){
 }
 
 module.exports = {
-  auth: (router) => {
-    router.get('/user/:id', getUserInfo); // 定义url的参数是id
-    router.post('/user', postUserAuth);
-  }
+  getUserInfo,
+  postUserAuth
 }
