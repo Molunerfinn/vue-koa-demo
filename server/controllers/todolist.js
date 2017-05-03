@@ -38,9 +38,9 @@ const updateTodolist = async function (ctx){
   }
 }
 
-module.exports = (router) => {
-  router.get('/todolist/:id', getTodolist),
-  router.post('/todolist', createTodolist),
-  router.delete('/todolist/:userId/:id', removeTodolist),
-  router.put('/todolist/:userId/:id/:status', updateTodolist)
+module.exports = {
+  getTodolist,
+  createTodolist,
+  removeTodolist,
+  updateTodolist
 }
