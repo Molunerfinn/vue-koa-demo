@@ -11,6 +11,11 @@ var cssSourceMapProd = (env === 'production' && config.build.productionSourceMap
 var useCssSourceMap = cssSourceMapDev || cssSourceMapProd
 
 module.exports = {
+  node: {
+    net: 'empty',
+    tls: 'empty',
+    dns: 'empty'
+  },
   entry: {
     app: './src/main.js'
   },
