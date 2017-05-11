@@ -1,4 +1,4 @@
-title: 全栈开发实战：用Vue2+Koa1开发完整的前后端项目
+title: 全栈开发实战：用Vue2+Koa1开发完整的前后端项目（更新Koa2）
 tags: 
   - 前端
   - Nodejs
@@ -6,12 +6,16 @@ categories:
   - Web
   - 开发
   - Nodejs
-date: 2017-01-17 15:06:00
+date: 2017-05-03 14:09:00
 ---
 
 ## 简介
 
 本文从一名新手的角度（默认对Vue有了解，对Koa或者Express有了解）出发，从0开始构建一个数据通过Koa提供API的形式获取，页面通过Vue渲染的完整的前端项目。可以了解到Vue构建单页面的一些知识以及前端路由的使用、Koa如何提供API接口，如何进行访问过滤（路由）、验证（JSON-WEB-TOKEN）以及Sequelize操作MySQL数据库的一些知识和技巧，希望能够作为一篇入门全栈开发的文章吧。
+
+**更新**：文末给出的github仓库已经更新Koa2版本。请使用Node.js v7.6.0及以上版本体验~
+
+<!-- more -->
 
 ## 写在前面
 
@@ -291,7 +295,7 @@ export default {
 
 也就是把`Login`这个组件注册到`Vue`下，同时你再看浏览器，已经不再是`vue-cli`默认生成的`Hello`欢迎界面了。
 
-![Login](http://7xog0l.com1.z0.glb.clouddn.com/vue-koa-demo/login.png "Login")
+![Login](https://img.piegg.cn/vue-koa-demo/login.png "Login")
 
 接着我们写一下登录成功后的界面。
 
@@ -441,7 +445,7 @@ export default {
 
 2. 计算属性对于直接的数据比如`a: 2` -> `a: 3`这样的数据变动可以直接检测到。但是如果是本例中的`list`的某一项的`status`这个属性变化了，如果我们直接使用`list[index].status = true`这样的写法的话，Vue将无法检测到数据变动。替代地，可以使用`set`方法（全局是`Vue.set()`，实例中是`this.$set()`），通过`set`方法可以让数据的变动变得可以被检测到。从而让计算属性能够捕捉到变化。可以参考官方文档对于响应式原理的[描述](https://cn.vuejs.org/v2/guide/reactivity.html)。
 
-![Todolist](http://7xog0l.com1.z0.glb.clouddn.com/vue-koa-demo/todolist.gif "Todolist")
+![Todolist](https://img.piegg.cn/vue-koa-demo/todolist.gif "Todolist")
 
 写完`TodoList`之后，我们需要将它和`vue-router`配合起来，从而使这个单页应用能够进行页面跳转。
 
@@ -565,7 +569,7 @@ export default {
 
 然后你就可以通过点击`登录`按钮进行页面跳转了。并且你可以发现，页面地址从`localhost:8080`变成了`localhost:8080/todolist`，长得跟正常的url跳转一样。（但是实际上我们是单页应用，只是在应用内进行页面跳转而已，没有向后端额外请求）
 
-![login2todolist](http://7xog0l.com1.z0.glb.clouddn.com/vue-koa-demo/login2todolist.gif "login2todolist")
+![login2todolist](https://img.piegg.cn/vue-koa-demo/login2todolist.gif "login2todolist")
 
 至此，我们已经完成了一个纯前端的单页应用，能够进行页面跳转，能够做简单的ToDoList的添加和删除和还原。当然这个东西只能算是个能看不能用的东西——因为登录系统有名无实、ToDoList只要页面刷新一下就没了。
 
@@ -589,13 +593,13 @@ export default {
 
 我们需要创建两张表，一张是用户表，一张是待办事项表。用户表用于登录、验证，待办事项表用于展示我们的待办事项。
 
-创建一张`user`表，其中`password`我们稍后会进行`md5`加密（取32位）。
+创建一张`user`表，其中`password`我们稍后会进行`bcrypt`加密（取128位）。
 
 | 字段 | 类型 | 说明|
 | --- | --- | --- |
 | id | int（自增） | 用户的id |
 | user_name | CHAR(50) | 用户的名字 |
-| password | CHAR(32) | 用户的密码 |
+| password | CHAR(128) | 用户的密码 |
 
 创建一张`list`表，所需的字段是`id`、`user_id`、`content`、`status`即可。
 
@@ -706,7 +710,7 @@ module.exports = {
 
 为此我们可以先在数据库里随意加一条数据：
 
-![test](http://7xog0l.com1.z0.glb.clouddn.com/vue-koa-demo/database-1.png "test")
+![test](https://img.piegg.cn/vue-koa-demo/database-1.png "test")
 
 通常我们要查询一个用户id为1的数据，会很自然的想到类似如下的写法：
 
@@ -756,9 +760,7 @@ const getUserInfo = function* (){
 }
 
 module.exports = {
-  auth: (router) => {
-    router.get('/user/:id', getUserInfo); // 定义url的参数是id
-  }
+  getUserInfo // 把获取用户信息的方法暴露出去 
 }
 ```
 
@@ -769,10 +771,10 @@ module.exports = {
 ```js
 // routes/auth.js
 
-const user = require('../controllers/user.js'); 
+const auth = require('../controllers/user.js'); 
 const router = require('koa-router')();
 
-user.auth(router); // 用user的auth方法引入router
+router.get('/user/:id', auth.getUserInfo); // 定义url的参数是id,用user的auth方法引入router
 
 module.exports = router; // 把router规则暴露出去
 ```
@@ -822,7 +824,7 @@ module.exports = app;
 
 接口在跟跟前端对接之前，我们应该先进行一遍测试，防止出现问题。在测试接口的工具上，我推荐[`Postman`](https://www.getpostman.com/)，这个工具能够很好的模拟发送的各种请求，方便的查看响应结果，用来进行测试是最好不过了。
 
-![Postman](http://7xog0l.com1.z0.glb.clouddn.com/vue-koa-demo/postman-1.png)
+![Postman](https://img.piegg.cn/vue-koa-demo/postman-1.png)
 
 测试成功，我发送了正确的url请求，返回的结果也是我想看到的。我们看到返回的结果实际上是个JSON，这对于我们前后端来说都是十分方便处理的数据格式。
 
@@ -932,11 +934,23 @@ const postUserAuth = function* (){
 }
 
 module.exports = {
-  auth: (router) => {
-    router.get('/user/:id', getUserInfo); // 定义url的参数是id
-    router.post('/user', postUserAuth);
-  }
+  getUserInfo,
+  postUserAuth
 }
+```
+
+再把`routes`里的路由规则更新一下：
+
+```js
+// routes/auth.js
+
+const auth = require('../controllers/user.js'); 
+const router = require('koa-router')();
+
+router.get('/user/:id', auth.getUserInfo); // 定义url的参数是id,用user的auth方法引入router
+router.post('/user', auth.postUserAuth);
+
+module.exports = router; // 把router规则暴露出去
 ```
 
 由此我们写完了用户认证的部分。接下去我们要改写一下前端登录的方法。
@@ -995,54 +1009,62 @@ Vue.prototype.$http = Axios // 类似于vue-resource的调用方法，之后可�
 
 
 
-#### 密码md5加密
+#### 密码bcrypt加密
 
-同时，前端向后端发送的密码应当进行`md5`加密。
+最早的时候我是在前端用了md5加密，但是后来经过提醒这种方式并不安全。md5加密的容易被破解。所以就采用了`bcrypt`的加密方式。全部走后端加密。也许你会问这样明文给后端发送密码安全吗？没问题，只要用上HTTPS，这将不是问题。
 
-所以我们需要安装一下md5的库： `yarn add md5`
-
-然后在`Login.vue`下把`loginToDo`的方法修改一下：
+`yarn add bcryptjs`安装bcryptjs。
 
 ```js
-import md5 from 'md5'
+// controllers/user.js
 
-export default {
-  data () {
-    return {
-      account: '',
-      password: ''
-    };
-  },
-  methods: {
-    loginToDo() {
-      let obj = {
-        name: this.account,
-        password: md5(this.password) // md5加密
-      } 
-      this.$http.post('/auth/user', obj) // 将信息发送给后端
-        .then((res) => {
-          console.log(res);
-          if(res.data.success){ // 如果成功
-            sessionStorage.setItem('demo-token',res.data.token); // 用sessionStorage把token存下来
-            this.$message({ // 登录成功，显示提示语
-              type: 'success',
-              message: '登录成功！'
-            }); 
-            this.$router.push('/todolist') // 进入todolist页面，登录成功
-          }else{
-            this.$message.error(res.data.info); // 登录失败，显示提示语
-            sessionStorage.setItem('demo-token',null); // 将token清空
-          }
-        }, (err) => {
-            this.$message.error('请求错误！')
-            sessionStorage.setItem('demo-token',null); // 将token清空
-        })
+const user = require('../models/user.js');
+const jwt = require('koa-jwt'); // 引入koa-jwt
+const bcrypt = require('bcryptjs');
+
+const getUserInfo = function* (){
+  const id = this.params.id; // 获取url里传过来的参数里的id
+  const result = yield user.getUserById(id);  // 通过yield “同步”地返回查询结果
+  this.body = result // 将请求的结果放到response的body里返回
+}
+
+const postUserAuth = function* (){
+  const data = this.request.body; // post过来的数据存在request.body里
+  const userInfo = yield user.getUserByName(data.name);
+
+  if(userInfo != null){ // 如果查无此用户会返回null
+    if(!bcrypt.compareSync(data.password, userInfo.password)){ // 验证密码是否正确
+      this.body = {
+        success: false, // success标志位是方便前端判断返回是正确与否
+        info: '密码错误！'
+      }
+    }else{ // 如果密码正确
+      const userToken = {
+        name: userInfo.user_name,
+        id: userInfo.id
+      }
+      const secret = 'vue-koa-demo'; // 指定密钥，这是之后用来判断token合法性的标志
+      const token = jwt.sign(userToken,secret); // 签发token
+      this.body = {
+        success: true,
+        token: token, // 返回token
+      }
+    }
+  }else{
+    this.body = {
+      success: false,
+      info: '用户不存在！' // 如果用户不存在返回用户不存在
     }
   }
-};
+}
+
+module.exports = {
+  getUserInfo,
+  postUserAuth
+}
 ```
 
-因为我们数据库里还是存着明文的`123`作为密码，现在要先将它md5化，32位md5加密后变为：`202cb962ac59075b964b07152d234b70`，将其替换掉数据库里的`123`。不做这步我们将无法登录。
+因为我们数据库里还是存着明文的`123`作为密码，现在要先将它bcrypt化，加密后变为：`$2a$10$x3f0Y2SNAmyAfqhKVAV.7uE7RHs3FDGuSYw.LlZhOFoyK7cjfZ.Q6`，将其替换掉数据库里的`123`。不做这步我们将无法登录。
 
 还没有大功告成，因为我们的界面跑在`8080`端口，但是Koa提供的API跑在`8889`端口，所以如果直接通过`/auth/user`这个url去post是请求不到的。就算写成`localhost:8889/auth/user`也会因为跨域问题导致请求失败。
 
@@ -1077,7 +1099,7 @@ export default {
 
 一切都万事了之后，我们可以看到如下激动人心的画面：
 
-![login2todolist](http://7xog0l.com1.z0.glb.clouddn.com/vue-koa-demo/login2todolist-2.gif "login2todolist")
+![login2todolist](https://img.piegg.cn/vue-koa-demo/login2todolist-2.gif "login2todolist")
 
 #### 跳转拦截
 
@@ -1122,7 +1144,7 @@ const app = new Vue({...}) // 省略
 
 然后我们就可以看到如下效果：
 
-![login2todolist](http://7xog0l.com1.z0.glb.clouddn.com/vue-koa-demo/login2todolist-3.gif "login2todolist")
+![login2todolist](https://img.piegg.cn/vue-koa-demo/login2todolist-3.gif "login2todolist")
 
 > Tips：这种只判断token存不存在就通过的验证是很不安全的，此例只是做了一个演示，实际上还应该进行更深一层的判断，比如从token解包出来的信息里包含我们想要的信息才可以作为有效token，才可以登录。等等。本文只是做一个简要介绍。
 
@@ -1141,7 +1163,7 @@ const userToken = {
   id: userInfo.id
 }
 const secret = 'vue-koa-demo'; // 指定密钥，这是之后用来判断token合法性的标志
-const token = jwt.sign(userInfo,secret); // 签发token
+const token = jwt.sign(userToken,secret); // 签发token
 
 // ...
 ```
@@ -1149,6 +1171,8 @@ const token = jwt.sign(userInfo,secret); // 签发token
 我们将用户名和id打包进JWT的主体部分，同时我们解密的密钥是`vue-koa-demo`。所以我们可以通过这个信息，来进行登录后的用户名显示，以及用来区别这个用户是谁，这个用户有哪些`Todolist`。
 
 接下来在`Todolist`页面进行token解析，从而让用户名显示为登录用户名。
+
+**注意：** 前端直接暴露`secret-key`的做法其实并不安全。正确的做法应该是把token跟用户名和其他不是很重要的信息一起传过来，token只用于验证，而其他信息作为返回值正常返回。这样就不会暴露`secret-key`了。当然本文只是为了方便说明，给出的一个不恰当的获取用户信息的例子。
 
 ```js
 
@@ -1205,7 +1229,7 @@ export default {
 
 于是你就可以看到：
 
-![todolist](http://7xog0l.com1.z0.glb.clouddn.com/vue-koa-demo/todolist-1.png "todolist")
+![todolist](https://img.piegg.cn/vue-koa-demo/todolist-1.png "todolist")
 
 用户名已经不是我们之前默认的`Molunerfinn`而是登录名`molunerfinn`了。
 
@@ -1311,9 +1335,9 @@ const createTodolist = function* (){ // 给某个用户创建一条todolist
 }
 
 
-module.exports = (router) => {
-  router.get('/todolist/:id', getTodolist),
-  router.post('/todolist', createTodolist)
+module.exports = {
+  getTodolist,
+  createTodolist
 }
 ```
 
@@ -1464,7 +1488,7 @@ methods: {
 
 至此，前后端的部分已经完整构建。让我们来看看效果：
 
-![todolist](http://7xog0l.com1.z0.glb.clouddn.com/vue-koa-demo/login2todolist-4.gif "todolist")
+![todolist](https://img.piegg.cn/vue-koa-demo/login2todolist-4.gif "todolist")
 
 做到这一步的时候其实我们的应用已经基本完成了。最后的收尾工作，让我们来收一下。
 
@@ -1543,10 +1567,10 @@ const updateTodolist = function* (){
 }
 
 module.exports = (router) => {
-  router.get('/todolist/:id', getTodolist),
-  router.post('/todolist', createTodolist),
-  router.delete('/todolist/:userId/:id', removeTodolist),
-  router.put('/todolist/:userId/:id/:status', updateTodolist)
+  getTodolist,
+  createTodolist,
+  removeTodolist,
+  updateTodolist
 }
 
 ```
@@ -1607,7 +1631,7 @@ module.exports = (router) => {
 
 让我们来看看最后99%成品的效果吧：
 
-![Todolist](http://7xog0l.com1.z0.glb.clouddn.com/vue-koa-demo/todolist-5.gif 'todolist')
+![Todolist](https://img.piegg.cn/vue-koa-demo/todolist-5.gif 'todolist')
 
 ## 项目部署
 
@@ -1690,11 +1714,11 @@ koa.use("/api",jwt({secret: 'vue-koa-demo'}),api.routes())
 
 然后重新运行一遍`node app.js`，看到输出`Koa is listening in 8889`后，你可以打开浏览器`localhost:8889`就可以看到如下情景：
 
-![vue-koa](http://7xog0l.com1.z0.glb.clouddn.com/vue-koa-demo/vue-koa.png)
+![vue-koa](https://img.piegg.cn/vue-koa-demo/vue-koa.png)
 
 至此已经基本上接近尾声，不过还存在一个问题：如果我们登录进去之后，在todolist页面一刷新，就会出现：
 
-![404](http://7xog0l.com1.z0.glb.clouddn.com/vue-koa-demo/404.png '404')
+![404](https://img.piegg.cn/vue-koa-demo/404.png '404')
 
 为什么会出现这种情况？简单来说是因为我们使用了前端路由，用了HTML5 的History模式，如果没有做其他任何配置的话，刷新页面，那么浏览器将会去服务端访问这个页面地址，因为服务端并没有配置这个地址的路由，所以自然就返回404 Not Found了。
 
@@ -1742,7 +1766,7 @@ app.use(A);
 
 因此如果我们将静态文件的serve以及`historyApiFallback`放在了api的请求之前，那么用postman测试api的时候总会先返回完整的页面：
 
-![postman](http://7xog0l.com1.z0.glb.clouddn.com/vue-koa-demo/postman.png)
+![postman](https://img.piegg.cn/vue-koa-demo/postman.png)
 
 因此正确的做法，应该是将它们放到我们写的api的规则之后：
 
@@ -1806,10 +1830,14 @@ http {
 
 最后放上本文项目的Github[地址](https://github.com/Molunerfinn/vue-koa-demo)，如果这个项目对你有帮助，希望大家可以fork，给我提建议，如果再有时间，可以点个Star那就更好啦~
 
-新年前的最后一篇文章了吧，提前祝大家新年快乐233。
+另外，本文的版本是用Koa1写成的。仓库已经更新Koa2。从Koa1->Koa2并没有什么难度，其实很关键的两点是：
 
+1. 用`async await`替代`yield generation`
+2. 用`koa2`的中间件替代`koa1`的中间件，原因同上一条
 
+互相学习，如果能从这个项目里学到东西我就很开心啦~
 
+> 注： 转载需经过同意，必须署名
 
 
 
