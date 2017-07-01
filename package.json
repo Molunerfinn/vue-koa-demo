@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "node build/dev-server.js",
     "build": "node build/build.js",
-    "server": "node app.js"
+    "server": "nodemon -w app.js -w server server-entry.js",
+    "start": "concurrently -k \"npm run server\" \"npm run dev\""
   },
   "dependencies": {
     "axios": "^0.15.3",
@@ -29,7 +30,7 @@
     "vue-router": "^2.3.1"
   },
   "devDependencies": {
-     "autoprefixer": "^6.7.2",
+    "autoprefixer": "^6.7.2",
     "babel-core": "^6.22.1",
     "babel-loader": "^6.2.10",
     "babel-plugin-transform-runtime": "^6.22.0",
@@ -47,6 +48,8 @@
     "friendly-errors-webpack-plugin": "^1.1.3",
     "html-webpack-plugin": "^2.28.0",
     "http-proxy-middleware": "^0.17.3",
+    "nodemon": "^1.11.0",
+    "concurrently": "^3.5.0",
     "webpack-bundle-analyzer": "^2.2.1",
     "semver": "^5.3.0",
     "shelljs": "^0.7.6",

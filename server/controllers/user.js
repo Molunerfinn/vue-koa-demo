@@ -1,6 +1,6 @@
-const user = require('../models/user.js');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
+import user from '../models/user.js';
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
 
 const getUserInfo = async function(ctx){
   const id = ctx.params.id; // 获取url里传过来的参数里的id
@@ -39,7 +39,7 @@ const postUserAuth = async function(ctx){
   }
 }
 
-module.exports = {
+export default {
   getUserInfo,
   postUserAuth
-}
+};

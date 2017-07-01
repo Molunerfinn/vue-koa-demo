@@ -1,5 +1,5 @@
-const db = require('../config/db.js'), 
-      userModel = '../schema/user.js'; // 引入user的表结构
+import db from '../config/db.js'; // 引入user的表结构
+const userModel = '../schema/user.js';
 const TodolistDb = db.Todolist; // 引入数据库
 
 const User = TodolistDb.import(userModel); // 用sequelize的import方法引入表结构，实例化了User。
@@ -24,10 +24,10 @@ const getUserByName = async function (name){
   return userInfo
 }
 
-module.exports = {
+export default {
   getUserById, // 导出getUserById的方法，将会在controller里调用
   getUserByName
-}
+};
 
 
 

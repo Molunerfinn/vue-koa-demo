@@ -1,4 +1,4 @@
-const todolist = require('../models/todolist.js');
+import todolist from '../models/todolist.js';
 
 const getTodolist = async function (ctx){
   const id = ctx.params.id; // 获取url里传过来的参数里的id
@@ -38,9 +38,9 @@ const updateTodolist = async function (ctx){
   }
 }
 
-module.exports = {
+export default {
   getTodolist,
   createTodolist,
   removeTodolist,
   updateTodolist
-}
+};

@@ -1,8 +1,8 @@
-const db = require('../config/db.js'), 
-      todoModel = '../schema/list.js'; // 引入todolist的表结构
+import db from '../config/db.js'; // 引入todolist的表结构
+const todoModel = '../schema/list.js';
 const TodolistDb = db.Todolist; // 引入数据库
 
-const Todolist = TodolistDb.import(todoModel); 
+const Todolist = TodolistDb.import(todoModel);
 
 const getTodolistById = async function(id){ 
   const todolist = await Todolist.findAll({ // 查找全部的todolist
@@ -49,9 +49,9 @@ const updateTodolist = async function(id,user_id,status){
   return true
 }
 
-module.exports = {
+export default {
   getTodolistById,
   createTodolist,
   removeTodolist,
   updateTodolist
-}
+};
