@@ -1,6 +1,6 @@
 /* jshint indent: 2 */
 
-export default function(sequelize, DataTypes) {
+export default function (sequelize, DataTypes) {
   return sequelize.define('list', {
     id: {
       type: DataTypes.INTEGER(11),
@@ -22,5 +22,5 @@ export default function(sequelize, DataTypes) {
     }
   }, {
     tableName: 'list'
-  });
+  })
 };

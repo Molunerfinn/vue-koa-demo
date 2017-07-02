@@ -1,6 +1,6 @@
 /* jshint indent: 2 */
 
-export default function(sequelize, DataTypes) {
+export default function (sequelize, DataTypes) {
   return sequelize.define('user', {
     id: {
       type: DataTypes.INTEGER(11), // 字段类型
@@ -18,5 +18,5 @@ export default function(sequelize, DataTypes) {
     }
   }, {
     tableName: 'user'
-  });
+  })
 };
