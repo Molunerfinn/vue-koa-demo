@@ -34,7 +34,7 @@ open browser: `localhost:8080`
 
 #### Production:
 
-`npm run build` and then `node app.js`
+`npm run build` and then `npm run server`
 
 open browser: `localhost:8889`
 
