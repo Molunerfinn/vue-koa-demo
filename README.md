@@ -26,7 +26,7 @@ Beacuse of using Koa2, `Node.js >= v7.6.0` is needed.
 
 #### Development: 
 
-`npm run dev` && `node app.js`
+`npm run dev` && `npm run server`
 
 open browser: `localhost:8080`
 
