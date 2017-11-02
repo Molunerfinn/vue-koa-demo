@@ -24,17 +24,17 @@ const createTodolist = async function (data) {
   return true
 }
 
-const removeTodolist = async function (id, user_id) {
+const removeTodolist = async function (id, userId) {
   await Todolist.destroy({
     where: {
       id,
-      user_id
+      user_id: userId
     }
   })
   return true
 }
 
-const updateTodolist = async function (id, user_id, status) {
+const updateTodolist = async function (id, userId, status) {
   await Todolist.update(
     {
       status
@@ -42,7 +42,7 @@ const updateTodolist = async function (id, user_id, status) {
     {
       where: {
         id,
-        user_id
+        user_id: userId
       }
     }
   )

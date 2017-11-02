@@ -8,7 +8,7 @@ const getTodolist = async function (ctx) {
 
 const createTodolist = async function (ctx) {
   const data = ctx.request.body
-  const result = await todolist.createTodolist(data)
+  await todolist.createTodolist(data)
 
   ctx.body = {
     success: true
@@ -17,8 +17,8 @@ const createTodolist = async function (ctx) {
 
 const removeTodolist = async function (ctx) {
   const id = ctx.params.id
-  const user_id = ctx.params.userId
-  const result = await todolist.removeTodolist(id, user_id)
+  const userId = ctx.params.userId
+  await todolist.removeTodolist(id, userId)
 
   ctx.body = {
     success: true
@@ -27,11 +27,11 @@ const removeTodolist = async function (ctx) {
 
 const updateTodolist = async function (ctx) {
   const id = ctx.params.id
-  const user_id = ctx.params.userId
+  const userId = ctx.params.userId
   let status = ctx.params.status
   status === '0' ? status = true : status = false// 状态反转（更新）
 
-  const result = await todolist.updateTodolist(id, user_id, status)
+  await todolist.updateTodolist(id, userId, status)
 
   ctx.body = {
     success: true
