@@ -8,7 +8,7 @@
     "dev": "node build/dev-server.js",
     "build": "node build/build.js",
     "server": "nodemon --delay 2000ms -w app.js -w server server-entry.js",
-    "start": "concurrently -k \"npm run server\" \"npm run dev\""
+    "test": "jest --forceExit"
   },
   "dependencies": {
     "axios": "^0.15.3",
@@ -26,6 +26,7 @@
     "sequelize": "^3.29.0",
     "stylus": "^0.54.5",
     "stylus-loader": "^2.4.0",
+    "supertest": "^3.0.0",
     "vue": "2.5.2",
     "vue-router": "^2.3.1"
   },
@@ -33,6 +34,7 @@
     "autoprefixer": "^7.1.2",
     "babel-core": "^6.22.1",
     "babel-eslint": "^7.1.1",
+    "babel-jest": "^21.2.0",
     "babel-loader": "^7.1.1",
     "babel-plugin-transform-runtime": "^6.22.0",
     "babel-preset-env": "^1.3.2",
@@ -58,6 +60,7 @@
     "friendly-errors-webpack-plugin": "^1.6.1",
     "html-webpack-plugin": "^2.30.1",
     "http-proxy-middleware": "^0.17.3",
+    "jest": "^21.2.1",
     "nodemon": "1.12.1",
     "opn": "^5.1.0",
     "optimize-css-assets-webpack-plugin": "^3.2.0",
@@ -79,5 +82,21 @@
   "engines": {
     "node": ">= 4.0.0",
     "npm": ">= 3.0.0"
+  },
+  "jest": {
+    "verbose": true,
+    "moduleFileExtensions": [
+      "js"
+    ],
+    "transform": {
+      "^.+\\.js?$": "babel-jest"
+    },
+    "coverageDirectory": "coverage",
+    "mapCoverage": true,
+    "collectCoverage": true,
+    "coverageReporters": [
+      "lcov",
+      "text"
+    ]
   }
 }

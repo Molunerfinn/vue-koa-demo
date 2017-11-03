@@ -13,6 +13,8 @@ import koaBodyparser from 'koa-bodyparser'
 const app = new Koa()
 const router = koaRouter()
 
+let port = process.env.NODE_ENV === 'test' ? 8888 : 8889
+
 app.use(koaBodyparser())
 app.use(json())
 app.use(logger())
@@ -52,8 +54,6 @@ app.use(router.routes()) // 将路由规则挂载到Koa上。
 app.use(historyApiFallback())
 app.use(serve(path.resolve('dist'))) // 将webpack打包好的项目目录作为Koa静态文件服务的目录
 
-app.listen(8889, () => {
+export default app.listen(port, () => {
   console.log('Koa is listening in 8889')
 })
-
-export default app

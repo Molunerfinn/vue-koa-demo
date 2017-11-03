@@ -8,6 +8,7 @@ module.exports = {
   },
   env: {
     browser: true,
+    jest: true
   },
   // https://github.com/standard/standard/blob/master/docs/RULES-en.md
   extends: 'standard',

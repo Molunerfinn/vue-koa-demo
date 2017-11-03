@@ -3,5 +3,5 @@ node_modules/
 dist/
 npm-debug.log
 img/
-.vscode/
 .idea/
+coverage/
