@@ -16,7 +16,19 @@ Also you need to install MySQL & create a database named `todolist`,and execute 
 
 After that, You need to change the password for mysql user. -> `server/config/db.js`
 
-find `mysql://root:XXXX@localhost/todolist` and change the `XXXX` into your own password.
+After that, create a `.env` file and set the database username & password:
+
+```env
+DB_USER=XXXX # your database username
+DB_PASSWORD=YYYY # your database 
+port=8889 # Koa is listening to this port
+```
+
+If you want to run the test for the Project, please create a `.env.test` file to face this situation:
+
+```env
+port=8888 # The port which is listened by koa in the test environment 
+```
 
 ### Run
 
