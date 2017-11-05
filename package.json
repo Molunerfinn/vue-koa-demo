@@ -7,8 +7,8 @@
   "scripts": {
     "dev": "node build/dev-server.js",
     "build": "node build/build.js",
-    "server": "nodemon --delay 2000ms -w app.js -w server server-entry.js",
-    "test": "jest --forceExit"
+    "server": "nodemon -w app.js -w server server-entry.js",
+    "test": "cross-env NODE_ENV=test jest --forceExit"
   },
   "dependencies": {
     "axios": "^0.15.3",
@@ -43,7 +43,9 @@
     "chalk": "^2.0.1",
     "connect-history-api-fallback": "^1.3.0",
     "copy-webpack-plugin": "^4.0.1",
+    "cross-env": "^5.1.1",
     "css-loader": "^0.28.0",
+    "dotenv": "^4.0.0",
     "eslint": "^3.19.0",
     "eslint-config-standard": "^10.2.1",
     "eslint-friendly-formatter": "^3.0.0",

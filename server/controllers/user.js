@@ -5,14 +5,12 @@ import bcrypt from 'bcryptjs'
 const getUserInfo = async function (ctx) {
   const id = ctx.params.id // 获取url里传过来的参数里的id
   const result = await user.getUserById(id) // 通过await “同步”地返回查询结果
-  console.log(result)
   ctx.body = result // 将请求的结果放到response的body里返回
 }
 
 const postUserAuth = async function (ctx) {
   const data = ctx.request.body // post过来的数据存在request.body里
   const userInfo = await user.getUserByName(data.name)
-  console.log(ctx.request)
   if (userInfo != null) { // 如果查无此用户会返回null
     if (!bcrypt.compareSync(data.password, userInfo.password)) {
       ctx.body = {

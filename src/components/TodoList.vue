@@ -164,7 +164,7 @@ export default {
       this.$http.get('/api/todolist/' + this.id)
         .then((res) => {
           if (res.status === 200) {
-            this.list = res.data
+            this.list = res.data.result
           } else {
             this.$message.error('获取列表失败！')
           }

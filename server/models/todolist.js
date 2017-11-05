@@ -25,17 +25,17 @@ const createTodolist = async function (data) {
 }
 
 const removeTodolist = async function (id, userId) {
-  await Todolist.destroy({
+  const result = await Todolist.destroy({
     where: {
       id,
       user_id: userId
     }
   })
-  return true
+  return result === 1 // 如果成功删除了记录，返回1，否则返回0
 }
 
 const updateTodolist = async function (id, userId, status) {
-  await Todolist.update(
+  const result = await Todolist.update(
     {
       status
     },
@@ -46,7 +46,7 @@ const updateTodolist = async function (id, userId, status) {
       }
     }
   )
-  return true
+  return result[0] === 1 // 返回一个数组，更新成功的条目为1否则为0。由于只更新一个条目，所以只返回一个元素
 }
 
 export default {

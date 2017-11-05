@@ -5,7 +5,7 @@ afterEach(() => {
   server.close()
 })
 
-test('Login fail if typing Molunerfinn & 1234', async () => {
+test('Get userinfo fail if typing Molunerfinn & 1234', async () => {
   const response = await request(server)
                     .post('/auth/user')
                     .send({
@@ -33,4 +33,16 @@ test('Login fail if typing MARK & 123', async () => {
                       password: '123'
                     })
   expect(response.body.info).toBe('用户不存在！')
+})
+
+test('Get user info -> null if the url is /auth/user/10', async () => {
+  const response = await request(server)
+                    .get('/auth/user/10')
+  expect(response.body).toEqual({})
+})
+
+test('Get user info successfully if the url is /auth/user/2', async () => {
+  const response = await request(server)
+                    .get('/auth/user/2')
+  expect(response.body.user_name).toBe('molunerfinn')
 })

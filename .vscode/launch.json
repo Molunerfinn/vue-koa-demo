@@ -29,6 +29,9 @@
     {
       "type": "node",
       "request": "launch",
+      "env": {
+        "NODE_ENV": "development"
+      },
       "name": "nodemon",
       "runtimeExecutable": "nodemon",
       "program": "${workspaceFolder}/server-entry.js",

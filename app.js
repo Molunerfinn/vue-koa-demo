@@ -9,11 +9,12 @@ import serve from 'koa-static'
 import historyApiFallback from 'koa2-history-api-fallback'
 import koaRouter from 'koa-router'
 import koaBodyparser from 'koa-bodyparser'
+require('dotenv').config({path: `.env.${process.env.NODE_ENV}`, silent: true})
 
 const app = new Koa()
 const router = koaRouter()
 
-let port = process.env.NODE_ENV === 'test' ? 8888 : 8889
+let port = process.env.port
 
 app.use(koaBodyparser())
 app.use(json())
@@ -55,5 +56,5 @@ app.use(historyApiFallback())
 app.use(serve(path.resolve('dist'))) // 将webpack打包好的项目目录作为Koa静态文件服务的目录
 
 export default app.listen(port, () => {
-  console.log('Koa is listening in 8889')
+  console.log(`Koa is listening in ${port}`)
 })
