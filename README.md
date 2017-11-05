@@ -14,8 +14,6 @@ View the [article](https://molunerfinn.com/Vue+Koa/) for more details.
 
 Also you need to install MySQL & create a database named `todolist`,and execute 2 sql files `list.sql` & `user.sql`.Their are in `sql/`
 
-After that, You need to change the password for mysql user. -> `server/config/db.js`
-
 After that, create a `.env` file and set the database username & password:
 
 ```env
