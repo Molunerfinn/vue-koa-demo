@@ -65,7 +65,7 @@ test('Remove todolist successfully if set the JWT & correct todoId', async () =>
   expect(response.body.success).toBe(true)
 })
 
-test('Post todolist successfully if set the JWT & correct user', async () => {
+test('Post todolist failed if not give the params', async () => {
   const response = await request(server)
             .post('/api/todolist')
             .set('Authorization', 'Bearer ' + token)
