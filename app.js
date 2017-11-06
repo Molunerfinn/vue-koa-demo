@@ -1,3 +1,4 @@
+import './env'
 import Koa from 'koa'
 import json from 'koa-json'
 import logger from 'koa-logger'
@@ -9,12 +10,13 @@ import serve from 'koa-static'
 import historyApiFallback from 'koa2-history-api-fallback'
 import koaRouter from 'koa-router'
 import koaBodyparser from 'koa-bodyparser'
-require('dotenv').config({path: `.env.${process.env.NODE_ENV}`, silent: true})
 
 const app = new Koa()
 const router = koaRouter()
 
 let port = process.env.port
+
+console.log(process.env.DB_USER, process.env.NODE_ENV, process.env.port, `.env.${process.env.NODE_ENV}`)
 
 app.use(koaBodyparser())
 app.use(json())

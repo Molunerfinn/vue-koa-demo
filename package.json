@@ -8,7 +8,7 @@
     "dev": "node build/dev-server.js",
     "build": "node build/build.js",
     "server": "nodemon -w app.js -w server server-entry.js",
-    "test": "cross-env NODE_ENV=test jest --forceExit"
+    "test": "cross-env NODE_ENV=test jest --forceExit --runInBand"
   },
   "dependencies": {
     "axios": "^0.15.3",
@@ -99,6 +99,7 @@
     "coverageReporters": [
       "lcov",
       "text"
-    ]
+    ],
+    "collectCoverageFrom": ["!env.js", "server/**/*.js", "app.js"]
   }
 }
