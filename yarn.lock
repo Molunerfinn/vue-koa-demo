@@ -533,7 +533,7 @@ babel-helpers@^6.24.1:
 
 babel-jest@^21.2.0:
   version "21.2.0"
-  resolved "https://registry.npmjs.org/babel-jest/-/babel-jest-21.2.0.tgz#2ce059519a9374a2c46f2455b6fbef5ad75d863e"
+  resolved "https://registry.yarnpkg.com/babel-jest/-/babel-jest-21.2.0.tgz#2ce059519a9374a2c46f2455b6fbef5ad75d863e"
   dependencies:
     babel-plugin-istanbul "^4.0.0"
     babel-preset-jest "^21.2.0"

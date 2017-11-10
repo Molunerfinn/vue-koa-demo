@@ -90,9 +90,6 @@
     "moduleFileExtensions": [
       "js"
     ],
-    "transform": {
-      "^.+\\.js?$": "babel-jest"
-    },
     "coverageDirectory": "coverage",
     "mapCoverage": true,
     "collectCoverage": true,
@@ -100,6 +97,10 @@
       "lcov",
       "text"
     ],
-    "collectCoverageFrom": ["!env.js", "server/**/*.js", "app.js"]
+    "collectCoverageFrom": [
+      "!env.js",
+      "server/**/*.js",
+      "app.js"
+    ]
   }
 }

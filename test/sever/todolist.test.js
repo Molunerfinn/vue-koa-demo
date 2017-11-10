@@ -9,7 +9,7 @@ let todoId = null
 
 const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoibW9sdW5lcmZpbm4iLCJpZCI6MiwiaWF0IjoxNTA5ODAwNTg2fQ.JHHqSDNUgg9YAFGWtD0m3mYc9-XR3Gpw9gkZQXPSavM'
 
-test('To get todolist should 401 if not set the JWT', async () => {
+test('Getting todolist should return 401 if not set the JWT', async () => {
   const response = await request(server)
                     .get('/api/todolist/2')
   expect(response.status).toBe(401)
@@ -44,7 +44,7 @@ test('Get todolist successfully if set the JWT & correct user', async () => {
   expect(response.body.success).toBe(true)
 })
 
-test('Update todolist failed if not update the status of todolist', async () => {
+test('Failed to update todolist if not update the status of todolist', async () => {
   const response = await request(server)
                     .put(`/api/todolist/2/${todoId}/1`)
                     .set('Authorization', 'Bearer ' + token)
@@ -65,7 +65,7 @@ test('Remove todolist successfully if set the JWT & correct todoId', async () =>
   expect(response.body.success).toBe(true)
 })
 
-test('Post todolist failed if not give the params', async () => {
+test('Failed to post todolist if not give the params', async () => {
   const response = await request(server)
             .post('/api/todolist')
             .set('Authorization', 'Bearer ' + token)

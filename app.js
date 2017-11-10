@@ -14,7 +14,7 @@ import koaBodyparser from 'koa-bodyparser'
 const app = new Koa()
 const router = koaRouter()
 
-let port = process.env.port
+let port = process.env.PORT
 
 console.log(process.env.DB_USER, process.env.NODE_ENV, process.env.port, `.env.${process.env.NODE_ENV}`)
 
