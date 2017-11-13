@@ -63,6 +63,9 @@
     "html-webpack-plugin": "^2.30.1",
     "http-proxy-middleware": "^0.17.3",
     "jest": "^21.2.1",
+    "jest-serializer-vue": "^0.3.0",
+    "jest-vue": "^0.8.2",
+    "mock-local-storage": "^1.0.5",
     "nodemon": "1.12.1",
     "opn": "^5.1.0",
     "optimize-css-assets-webpack-plugin": "^3.2.0",
@@ -75,6 +78,7 @@
     "vue-loader": "^13.3.0",
     "vue-style-loader": "^3.0.1",
     "vue-template-compiler": "2.5.2",
+    "vue-test-utils": "^1.0.0-beta.4",
     "webpack": "^3.6.0",
     "webpack-bundle-analyzer": "^2.9.0",
     "webpack-dev-middleware": "^1.12.0",
@@ -90,6 +94,10 @@
     "moduleFileExtensions": [
       "js"
     ],
+    "transform": {
+      ".*\\.(vue)$": "<rootDir>/node_modules/jest-vue",
+      "^.+\\.js$": "<rootDir>/node_modules/babel-jest"
+    },
     "coverageDirectory": "coverage",
     "mapCoverage": true,
     "collectCoverage": true,
@@ -97,6 +105,10 @@
       "lcov",
       "text"
     ],
+    "moduleNameMapper": {
+      "@/(.*)$": "<rootDir>/src/$1"
+    },
+    "setupTestFrameworkScriptFile":"mock-local-storage",
     "collectCoverageFrom": [
       "!env.js",
       "server/**/*.js",

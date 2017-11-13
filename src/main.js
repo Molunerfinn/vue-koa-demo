@@ -5,11 +5,11 @@ import App from './App'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
 import VueRouter from 'vue-router'
-import Axios from 'axios'
+import axios from 'axios'
 import Login from './components/Login'
 import TodoList from './components/TodoList'
 
-Vue.prototype.$http = Axios // 类似于vue-resource的调用方法
+Vue.prototype.$http = axios // 类似于vue-resource的调用方法
 
 Vue.use(ElementUI)
 Vue.use(VueRouter)

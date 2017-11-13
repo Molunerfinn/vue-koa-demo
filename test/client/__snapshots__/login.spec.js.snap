@@ -1,0 +1,64 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Should have the expected html structure 1`] = `
+<div
+  class="el-row content"
+>
+  <div
+    class="el-col el-col-24 el-col-xs-24 el-col-sm-6 el-col-sm-offset-9"
+  >
+    <span
+      class="title"
+    >
+      
+     欢迎登录
+    
+    </span>
+     
+    <div
+      class="el-row"
+    >
+      <div
+        class="el-input"
+      >
+        <!---->
+        <!---->
+        <input
+          autocomplete="off"
+          class="el-input__inner"
+          placeholder="账号"
+          type="text"
+        />
+        <!---->
+        <!---->
+      </div>
+       
+      <div
+        class="el-input"
+      >
+        <!---->
+        <!---->
+        <input
+          autocomplete="off"
+          class="el-input__inner"
+          placeholder="密码"
+          type="password"
+        />
+        <!---->
+        <!---->
+      </div>
+       
+      <button
+        class="el-button el-button--primary"
+        type="button"
+      >
+        <!---->
+        <!---->
+        <span>
+          登录
+        </span>
+      </button>
+    </div>
+  </div>
+</div>
+`;
