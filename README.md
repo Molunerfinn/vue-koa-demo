@@ -19,13 +19,15 @@ After that, create a `.env` file and set the database username & password:
 ```env
 DB_USER=XXXX # your database username
 DB_PASSWORD=YYYY # your database 
-port=8889 # Koa is listening to this port
+PORT=8889 # Koa is listening to this port
 ```
 
 If you want to run the test for the Project, please create a `.env.test` file to face this situation:
 
 ```env
-port=8888 # The port which is listened by koa in the test environment 
+DB_USER=XXXX # your database username
+DB_PASSWORD=YYYY # your database 
+PORT=8888 # The port which is listened by koa in the test environment 
 ```
 
 ### Run
@@ -49,6 +51,10 @@ open browser: `localhost:8080`
 open browser: `localhost:8889`
 
 > tips: login password is 123
+
+#### Test:
+
+`npm run test` and find the coverage report in the `coverage/lcov/index.html`
 
 ## License
 
