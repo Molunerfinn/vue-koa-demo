@@ -16,8 +16,6 @@ const router = koaRouter()
 
 let port = process.env.PORT
 
-console.log(process.env.DB_USER, process.env.NODE_ENV, process.env.port, `.env.${process.env.NODE_ENV}`)
-
 app.use(koaBodyparser())
 app.use(json())
 app.use(logger())

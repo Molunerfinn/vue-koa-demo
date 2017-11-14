@@ -32,10 +32,6 @@ Vue.prototype.$http = axios
 
 let wrapper
 
-const $route = {
-  path: '/'
-}
-
 const $router = {
   push: jest.fn()
 }
@@ -43,7 +39,6 @@ const $router = {
 beforeEach(() => {
   wrapper = mount(Login, {
     mocks: {
-      $route,
       $router
     }
   })

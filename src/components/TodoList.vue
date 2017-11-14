@@ -11,12 +11,12 @@
             <template v-if="!Done">
               <template v-for="(item, index) in list">
                 <div class="todo-list" v-if="item.status == false" :key="index">
-                  <span class="item">
+                  <span class="item no-finished">
                     {{ index + 1 }}. {{ item.content }}
                   </span>
                   <span class="pull-right">
-                    <el-button size="small" type="primary" @click="update(index)">完成</el-button>
-                    <el-button size="small" :plain="true" type="danger" @click="remove(index)">删除</el-button>
+                    <el-button size="small" class="finish-item" type="primary" @click="update(index)">完成</el-button>
+                    <el-button class="remove-item" size="small" :plain="true" type="danger" @click="remove(index)">删除</el-button>
                   </span>
                 </div>
               </template> 
@@ -34,7 +34,7 @@
                   {{ index + 1 }}. {{ item.content }}
                 </span>
                 <span class="pull-right">
-                  <el-button size="small" type="primary" @click="update(index)">还原</el-button>
+                  <el-button size="small" class="restore-item" type="primary" @click="update(index)">还原</el-button>
                 </span>
               </div>
             </template> 
@@ -154,14 +154,15 @@ export default {
     getUserInfo () {
       const token = sessionStorage.getItem('demo-token')
       if (token !== null && token !== 'null') {
-        let decode = jwt.verify(token, 'vue-koa-demo')
+        let decode = jwt.decode(token)
         return decode
       } else {
         return null
       }
     },
     getTodolist () {
-      this.$http.get('/api/todolist/' + this.id)
+      const getTodolist = this.$http.get('/api/todolist/' + this.id)
+      getTodolist
         .then((res) => {
           if (res.status === 200) {
             this.list = res.data.result
@@ -172,6 +173,7 @@ export default {
           this.$message.error('获取列表失败！')
           console.log(err)
         })
+      return getTodolist
     }
   }
 }
