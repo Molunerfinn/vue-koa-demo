@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import elementUI from 'element-ui'
 import { mount } from 'vue-test-utils'
-import Login from '../../src/components/todolist.vue'
+import Todolist from '../../src/components/Todolist.vue'
 import axios from 'axios'
 
 Vue.use(elementUI)
@@ -117,7 +117,7 @@ Vue.prototype.$http = axios
 let wrapper
 
 beforeEach(() => {
-  wrapper = mount(Login)
+  wrapper = mount(Todolist)
   wrapper.setData({
     name: 'Molunerfinn',
     id: 2

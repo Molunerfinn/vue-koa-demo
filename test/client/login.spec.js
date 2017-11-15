@@ -46,7 +46,7 @@ beforeEach(() => {
 
 test('Should have two input & one button', () => {
   const inputs = wrapper.findAll('.el-input')
-  const loginButton = wrapper.find('.el-button')
+  const loginButton = wrapper.contains('.el-button')
   expect(inputs.length).toBe(2)
   expect(loginButton).toBeTruthy()
 })

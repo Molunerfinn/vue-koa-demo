@@ -110,6 +110,9 @@
     "moduleNameMapper": {
       "@/(.*)$": "<rootDir>/src/$1"
     },
+    "snapshotSerializers": [
+      "<rootDir>/node_modules/jest-serializer-vue"
+    ],
     "setupTestFrameworkScriptFile": "mock-local-storage",
     "collectCoverageFrom": [
       "!env.js",

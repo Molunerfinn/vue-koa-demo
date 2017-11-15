@@ -6,3 +6,4 @@ img/
 .idea/
 coverage/
 .env*
+.coveralls.yml

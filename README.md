@@ -15,11 +15,16 @@ A fullstack demo used Vue2 & Koa2(Koa1 version is [here](https://github.com/Molu
   <a href="https://github.com/facebook/jest">
     <img src="https://img.shields.io/badge/tested_with-jest-99424f.svg" alt="">
   </a>
+  <a href='https://coveralls.io/github/Molunerfinn/vue-koa-demo?branch=master'>
+    <img src='https://coveralls.io/repos/github/Molunerfinn/vue-koa-demo/badge.svg?branch=master' alt='Coverage Status' />
+  </a>
 </p>
 
 ![Todolist](http://7xog0l.com1.z0.glb.clouddn.com/vue-koa-demo/todolist-5.gif 'todolist')
 
 View the [article](https://molunerfinn.com/Vue+Koa/) for more details.
+
+If you want to check the info of the test, view the [article](https://molunerfinn.com/Use-Jest-To-Test-Vue-Koa/) for more details.
 
 ## Install
 
