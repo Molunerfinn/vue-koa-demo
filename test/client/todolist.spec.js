@@ -89,6 +89,12 @@ jest.mock('axios', () => ({
               }
             ]
           }
+        }))
+        // for test 7
+        .mockImplementationOnce(() => Promise.resolve({ status: 200,
+          data: {
+            result: []
+          }
         })),
   put: jest.fn()
         // for test 4
@@ -213,4 +219,9 @@ test('Should finish a todo if click the finish button', async () => {
   wrapper.find('.finish-item').trigger('click')
   await wrapper.update()
   expect(wrapper.contains('.no-finished')).not.toBeTruthy()
+})
+
+// test 7
+test('Should have the expected html structure', () => {
+  expect(wrapper.element).toMatchSnapshot()
 })
