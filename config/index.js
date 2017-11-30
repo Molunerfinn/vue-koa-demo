@@ -28,11 +28,11 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/auth':{
+      '/auth': {
         target: 'http://localhost:8889',
         changeOrigin: true
       },
-      '/api':{
+      '/api': {
         target: 'http://localhost:8889',
         changeOrigin: true
       }

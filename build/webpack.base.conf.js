@@ -14,7 +14,7 @@ module.exports = {
     dns: 'empty'
   },
   entry: {
-    app: './src/main.js'
+    app: './src/entry-client.js'
   },
   output: {
     path: config.build.assetsRoot,
@@ -58,6 +58,10 @@ module.exports = {
           limit: 10000,
           name: utils.assetsPath('img/[name].[hash:7].[ext]')
         }
+      },
+      {
+        test: /\.css$/,
+        loader: ['vue-style-loader', 'css-loader']
       },
       {
         test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,

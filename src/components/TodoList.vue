@@ -53,7 +53,7 @@
 import jwt from 'jsonwebtoken'
 
 export default {
-  created () {
+  mounted () {
     const userInfo = this.getUserInfo()
     if (userInfo !== null) {
       this.id = userInfo.id
