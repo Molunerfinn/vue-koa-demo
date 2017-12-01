@@ -17,6 +17,7 @@
     "element-ui": "^1.2.9",
     "koa": "^2.2.0",
     "koa-bodyparser": "^4.2.0",
+    "koa-favicon": "^2.0.0",
     "koa-json": "^2.0.2",
     "koa-jwt": "^3.2.1",
     "koa-logger": "^2.0.1",

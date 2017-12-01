@@ -8,10 +8,10 @@ import jwt from 'koa-jwt'
 import path from 'path'
 import fs from 'fs'
 import serve from 'koa-static'
-// import historyApiFallback from 'koa2-history-api-fallback'
 import koaRouter from 'koa-router'
 import koaBodyparser from 'koa-bodyparser'
 import { createBundleRenderer } from 'vue-server-renderer'
+import favicon from 'koa-favicon'
 
 const isProd = process.env.NODE_ENV === 'production'
 const app = new Koa()
@@ -20,7 +20,6 @@ const resolve = file => path.resolve(__dirname, file)
 
 function createRenderer (bundle, options) {
   return createBundleRenderer(bundle, Object.assign(options, {
-    basedir: resolve('./dist'),
     runInNewContext: false
   }))
 }
@@ -41,13 +40,14 @@ if (isProd) {
   app.use(serve(path.resolve('dist')))
 } else {
   require('./build/setup-dev-server')(app, (bundle, template) => {
-    renderer = createRenderer(bundle, template)
+    renderer = createRenderer(bundle, { template })
   })
 }
 
 app.use(koaBodyparser())
 app.use(json())
 app.use(logger())
+app.use(favicon(path.resolve(__dirname, 'src/assets/logo.png')))
 
 app.use(async function (ctx, next) {
   let start = new Date()
@@ -93,9 +93,8 @@ router.get('*', async (ctx, next) => {
     ctx.type = 'html'
     const s = Date.now()
     let context = { url: req.url }
-    console.log('req url:', req.url)
-    ctx.body = await renderToStringPromise(context, s)
-    // return next()
+    const html = await renderToStringPromise(context, s)
+    ctx.body = html
   }
 })
 

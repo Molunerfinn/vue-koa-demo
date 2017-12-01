@@ -13,14 +13,18 @@ module.exports = (compiler, opts = {}, callback) => {
     callback && callback()
   })
   const devServer = async (ctx, next) => {
-    await middleware(ctx.req, {
-      end: (content) => {
-        ctx.body = content
-      },
-      setHeader: (...args) => {
-        ctx.set.apply(ctx, args)
-      }
-    }, next)
+    if (ctx.req.url === '/') {
+      return next()
+    } else {
+      await middleware(ctx.req, {
+        end: (content) => {
+          ctx.body = content
+        },
+        setHeader: (...args) => {
+          ctx.set.apply(ctx, args)
+        }
+      }, next)
+    }
   }
   devServer.fileSystem = middleware.fileSystem
   return devServer

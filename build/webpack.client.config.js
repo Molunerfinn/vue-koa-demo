@@ -34,6 +34,7 @@ const config = merge(base, {
       name: 'manifest'
     }),
     new HTMLPlugin({
+      filename: 'index.html',
       template: 'index.html'
     }),
     new VueSSRClientPlugin()

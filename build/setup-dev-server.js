@@ -34,7 +34,7 @@ module.exports = function setupDevServer (app, cb) {
   })
 
   // hot middleware
-  // app.use(require('../config/hotMiddleware.js')(clientCompiler))
+  app.use(require('../config/hotMiddleware.js')(clientCompiler))
 
   // watch and update server renderer
   const serverCompiler = webpack(serverConfig)

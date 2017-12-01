@@ -4177,6 +4177,12 @@ koa-convert@^1.2.0:
     co "^4.6.0"
     koa-compose "^3.0.0"
 
+koa-favicon@^2.0.0:
+  version "2.0.0"
+  resolved "http://registry.npm.taobao.org/koa-favicon/download/koa-favicon-2.0.0.tgz#1c4e5023e71fcbfa64c59def00ae10e6942e5a6e"
+  dependencies:
+    mz "^2.0.0"
+
 koa-is-json@1, koa-is-json@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/koa-is-json/-/koa-is-json-1.0.0.tgz#273c07edcdcb8df6a2c1ab7d59ee76491451ec14"
@@ -4706,6 +4712,14 @@ mysql@^2.12.0:
     bignumber.js "2.4.0"
     readable-stream "1.1.14"
     sqlstring "2.2.0"
+
+mz@^2.0.0:
+  version "2.7.0"
+  resolved "http://registry.npm.taobao.org/mz/download/mz-2.7.0.tgz#95008057a56cafadc2bc63dde7f9ff6955948e32"
+  dependencies:
+    any-promise "^1.0.0"
+    object-assign "^4.0.1"
+    thenify-all "^1.0.0"
 
 mz@^2.3.1:
   version "2.6.0"
