@@ -8,6 +8,8 @@ A fullstack demo used Vue2 & Koa2(Koa1 version is [here](https://github.com/Molu
 
 :rocket: Instant feedback 
 
+:stuck_out_tongue_winking_eye: Vue SSR Support in the [ssr](https://github.com/Molunerfinn/vue-koa-demo/tree/ssr) branch
+
 <p align="left">
   <a href="https://github.com/feross/standard">
     <img src="https://img.shields.io/badge/code%20style-standard-green.svg?style=flat-square" alt="">
@@ -52,13 +54,15 @@ PORT=8888 # The port which is listened by koa in the test environment
 
 ### Run
 
+**Notice**: this branch is the ssr branch which is made by vue ssr. So you should find some differences with the master branch & koa1 branch to run it.
+
 ### Node.js
 
 Beacuse of using Koa2, `Node.js >= v7.6.0` is needed.
 
 #### Development: 
 
-`npm run dev` && `npm run server`
+`npm run server`
 
 open browser: `localhost:8080`
 
@@ -66,7 +70,7 @@ open browser: `localhost:8080`
 
 #### Production:
 
-`npm run build` and then `npm run server`
+`npm run build` and then `npm run start`
 
 open browser: `localhost:8889`
 
