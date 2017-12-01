@@ -37,7 +37,9 @@ if (isProd) {
     template,
     clientManifest
   })
-  app.use(serve(path.resolve('dist')))
+  app.use(serve(path.resolve('dist'), {
+    hidden: 'index.html'
+  }))
 } else {
   require('./build/setup-dev-server')(app, (bundle, template) => {
     renderer = createRenderer(bundle, { template })
@@ -82,9 +84,13 @@ router.use('/api', jwt({secret: 'vue-koa-demo'}), api.routes()) // 所有走/api
 
 app.use(router.routes()) // 将路由规则挂载到Koa上。
 // app.use(historyApiFallback())
-app.use(serve(path.resolve('dist'))) // 将webpack打包好的项目目录作为Koa静态文件服务的目录
+// app.use(serve(path.resolve('dist'))) // 将webpack打包好的项目目录作为Koa静态文件服务的目录
 
 router.get('*', async (ctx, next) => {
+  return render(ctx, next)
+})
+
+const render = async (ctx, next) => {
   if (!renderer) {
     ctx.body = 'waiting for compilation... refresh in a moment.'
     return ctx.body
@@ -93,10 +99,10 @@ router.get('*', async (ctx, next) => {
     ctx.type = 'html'
     const s = Date.now()
     let context = { url: req.url }
-    const html = await renderToStringPromise(context, s)
-    ctx.body = html
+    ctx.body = await renderToStringPromise(context, s)
+    return ctx.body
   }
-})
+}
 
 function renderToStringPromise (context, s) {
   return new Promise((resolve, reject) => {

@@ -3,6 +3,8 @@ const merge = require('webpack-merge')
 const nodeExternals = require('webpack-node-externals')
 const baseConfig = require('./webpack.base.conf.js')
 const VueSSRServerPlugin = require('vue-server-renderer/server-plugin')
+const utils = require('./utils')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
 module.exports = merge(baseConfig, {
   // 将 entry 指向应用程序的 server entry 文件
   entry: './src/entry-server.js',
@@ -34,6 +36,9 @@ module.exports = merge(baseConfig, {
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
       'process.env.VUE_ENV': '"server"'
+    }),
+    new ExtractTextPlugin({
+      filename: utils.assetsPath('css/[name].[hash:8].css')
     }),
     new VueSSRServerPlugin()
   ]
