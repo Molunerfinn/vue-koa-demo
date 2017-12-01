@@ -8,6 +8,8 @@ A fullstack demo used Vue2 & Koa2(Koa1 version is [here](https://github.com/Molu
 
 :rocket: Instant feedback 
 
+:stuck_out_tongue_winking_eye: Vue SSR Support in the [ssr](https://github.com/Molunerfinn/vue-koa-demo/tree/ssr) branch
+
 <p align="left">
   <a href="https://github.com/feross/standard">
     <img src="https://img.shields.io/badge/code%20style-standard-green.svg?style=flat-square" alt="">
