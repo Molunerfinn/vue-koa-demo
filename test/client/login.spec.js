@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import elementUI from 'element-ui'
-import { mount } from 'vue-test-utils'
+import { mount } from '@vue/test-utils'
 import Login from '../../src/components/Login.vue'
 import axios from 'axios'
 

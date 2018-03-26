@@ -1,0 +1,41 @@
+version: "3"
+
+volumes:
+  mysqlstorage:
+
+services:
+  node:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - ./.env
+    volumes:
+      - ./:/www
+    ports:
+      - ${PORT}:${PORT}
+    command: "npm run start"
+    environment:
+      DB_URL: mysql
+    links:
+      - mysql
+    depends_on:
+      - mysql
+  
+  mysql:
+    image: 'mysql:5.7'
+    env_file:
+      - ./.env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USER}
+    build:
+      context: .
+      dockerfile: mysql.dockerfile
+      args:
+        MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+    restart: always
+    volumes:
+      - mysqlstorage:/data/db
+    ports:
+      - "3306:3306"

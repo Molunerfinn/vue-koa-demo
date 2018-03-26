@@ -60,6 +60,8 @@ PORT=8888
 
 ### Run
 
+> Node.js & Docker support. **You need to create a `.env` file as above**.
+
 ### Node.js
 
 Beacuse of using Koa2, `Node.js >= v7.6.0` is needed.
@@ -74,7 +76,7 @@ open browser: `localhost:8080`
 
 #### Production:
 
-`npm run build` and then `npm run server`
+`npm run start` 
 
 open browser: `localhost:8889`
 
@@ -83,6 +85,16 @@ open browser: `localhost:8889`
 #### Test:
 
 `npm run test` and find the coverage report in the `coverage/lcov/index.html`
+
+### Docker
+
+`docker-compose build` && `docker-compose up`
+
+> mysql in docker use 3306 port inside & outside.
+
+open browser: `localhost:8889`
+
+> tips: login password is 123
 
 ## License
 

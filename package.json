@@ -10,7 +10,9 @@
     "server": "nodemon -w app.js -w server server-entry.js",
     "test": "cross-env NODE_ENV=test jest --forceExit --runInBand",
     "coverage": "cat ./coverage/lcov.info | coveralls",
-    "start": "cross-env NODE_ENV=production pm2 start pm2.json"
+    "prod": "cross-env NODE_ENV=production node server-entry.js",
+    "start": "npm run build && npm run prod",
+    "start:pm2": "cross-env NODE_ENV=production pm2 start pm2.json"
   },
   "dependencies": {
     "axios": "^0.15.3",
@@ -31,10 +33,10 @@
     "stylus-loader": "^2.4.0",
     "supertest": "^3.0.0",
     "vue": "2.5.2",
-    "vue-jest": "^1.0.3",
     "vue-router": "^2.3.1"
   },
   "devDependencies": {
+    "@vue/test-utils": "^1.0.0-beta.12",
     "autoprefixer": "^7.1.2",
     "babel-core": "^6.22.1",
     "babel-eslint": "^7.1.1",
@@ -79,10 +81,11 @@
     "semver": "^5.3.0",
     "shelljs": "^0.7.6",
     "url-loader": "^0.5.8",
+    "vue-jest": "^2.3.0",
     "vue-loader": "^13.3.0",
+    "vue-server-renderer": "^2.5.16",
     "vue-style-loader": "^3.0.1",
     "vue-template-compiler": "2.5.2",
-    "vue-test-utils": "^1.0.0-beta.4",
     "webpack": "^3.6.0",
     "webpack-bundle-analyzer": "^2.9.0",
     "webpack-dev-middleware": "^1.12.0",
