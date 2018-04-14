@@ -39,17 +39,23 @@ Also you need to install MySQL & create a database named `todolist`,and execute 
 After that, create a `.env` file and set the database username & password:
 
 ```env
-DB_USER=XXXX # your database username
-DB_PASSWORD=YYYY # your database 
-PORT=8889 # Koa is listening to this port
+# your database username
+DB_USER=XXXX
+# your database
+DB_PASSWORD=YYYY 
+# Koa is listening to this port
+PORT=8889
 ```
 
 If you want to run the test for the Project, please create a `.env.test` file to face this situation:
 
 ```env
-DB_USER=XXXX # your database username
-DB_PASSWORD=YYYY # your database 
-PORT=8888 # The port which is listened by koa in the test environment 
+# your database username
+DB_USER=XXXX
+# your database
+DB_PASSWORD=YYYY 
+# The port which is listened by koa in the test environment
+PORT=8888 
 ```
 
 ### Run
