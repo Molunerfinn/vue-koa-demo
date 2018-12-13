@@ -24,7 +24,7 @@ A fullstack demo used Vue2 & Koa2(Koa1 version is [here](https://github.com/Molu
   </a>
 </p>
 
-![Todolist](http://7xog0l.com1.z0.glb.clouddn.com/vue-koa-demo/todolist-5.gif 'todolist')
+![Todolist](https://i.loli.net/2018/12/13/5c123b40a1baa.gif 'todolist')
 
 View the [article](https://molunerfinn.com/Vue+Koa/) for more details.
 
@@ -36,7 +36,19 @@ If you want to check the info of the test, view the [article](https://molunerfin
 
 `npm install` or `yarn`
 
-Also you need to install MySQL & create a database named `todolist`,and execute 2 sql files `list.sql` & `user.sql`.Their are in `sql/`
+if you are using yarn & meet this error:
+
+```bash
+error upath@1.0.4: The engine "node" is incompatible with this module. Expected version ">=4 <=9".
+```
+
+please use
+
+```
+yarn --ignore-engines
+```
+
+Also you need to install MySQL & create a database named `todolist`,and execute 2 sql files `list.sql` & `user.sql`.They are in `sql/`
 
 After that, create a `.env` file and set the database username & password:
 
