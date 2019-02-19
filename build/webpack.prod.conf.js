@@ -8,6 +8,8 @@ var CopyWebpackPlugin = require('copy-webpack-plugin')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
 var OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
+//引入多页面支持
+var multipageHelper = require('./multipage-helper')
 
 var env = config.build.env
 
@@ -116,5 +118,8 @@ if (config.build.bundleAnalyzerReport) {
   var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
   webpackConfig.plugins.push(new BundleAnalyzerPlugin())
 }
+
+// 添加Html模板集合
+Array.prototype.push.apply(webpackConfig.plugins,multipageHelper.getProdHtmlWebpackPluginList())
 
 module.exports = webpackConfig

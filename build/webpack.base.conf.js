@@ -2,6 +2,7 @@ var path = require('path')
 var utils = require('./utils')
 var config = require('../config')
 var vueLoaderConfig = require('./vue-loader.conf')
+var multipageHelper = require('./multipage-helper')
 
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
@@ -70,3 +71,6 @@ module.exports = {
     ]
   }
 }
+
+
+module.exports.entry = multipageHelper.getEntries()
