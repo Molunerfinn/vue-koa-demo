@@ -1,4 +1,3 @@
-const crypto = require('crypto');  //加载crypto库
 
 
 module.exports = (sequelize, DataTypes) => {
@@ -7,7 +6,6 @@ module.exports = (sequelize, DataTypes) => {
     const model = sequelize.define('game_players', {
         openid: {type:DataTypes.STRING, allowNull: false, defaultValue: ''  },//
         game_round_id: { type: DataTypes.BIGINT(11), allowNull: false, defaultValue: '0' },
-        wechat_account_id: DataTypes.BIGINT(11),
         nickname: DataTypes.STRING(128),
         rank: { type: DataTypes.BIGINT(11), allowNull: false, defaultValue: '0' },
         score: { type: DataTypes.BIGINT(11), allowNull: false, defaultValue: '0' },

@@ -1,7 +1,6 @@
+import crypto from 'crypto'  //加载crypto库
 import { Sequelize, game_players  } from '../schema'
 
-
-console.log( " Sequelize, game_players ",  Sequelize, game_players)
 const Model = game_players
 
 // 不要使用openid作为token，*希望游戏可以在微信、支付宝，网页等打开*

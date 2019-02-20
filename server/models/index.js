@@ -1,4 +1,5 @@
 import GameRound from './GameRound'
+import GameRoundBargain from './GameRoundBargain'
 import GamePlayer from './GamePlayer'
 import GameResult from './GameResult'
 import GameDay from './GameDay'
@@ -6,7 +7,6 @@ import GameDay from './GameDay'
 import { Sequelize } from '../schema'
 
 
+GameResult.belongsTo( GamePlayer, {foreignKey: 'game_player_id'})
 
-
-
-export default { Sequelize, GameRound, GamePlayer,GameResult, GameDay }
+export  { Sequelize, GameRound, GameRoundBargain, GamePlayer,GameResult, GameDay }

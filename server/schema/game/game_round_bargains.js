@@ -2,19 +2,10 @@ const {GameRoundStates} = require('../constant')
 var moment = require('moment')
 
 module.exports = (sequelize, DataTypes) => {
-    return sequelize.define('game_rounds', {
+    return sequelize.define('game_round_bargains', {
         game_id: DataTypes.BIGINT(11),
         name: DataTypes.STRING,
-        creator_id: DataTypes.BIGINT(11),
-        /* created	   0 created	新建
-            open	     1 open	开始签到
-            ready	     2 ready	结束签到，准备开始
-            starting	 3 starting	开始前倒计时中
-            started	   4 started	游戏已开始
-            completed	 5 completed	游戏已结束
-            disabled	 6 disabled	游戏已关闭
-        */
-        state: { type: DataTypes.BIGINT(11), defaultValue: GameRoundStates.created },
+        creator_id: DataTypes.BIGINT(11),         
         start_at: DataTypes.DATE,
         end_at: DataTypes.DATE,
         desc: DataTypes.TEXT,
@@ -24,10 +15,13 @@ module.exports = (sequelize, DataTypes) => {
         code: { type: DataTypes.STRING(24), allowNull: false, defaultValue: '' },
         appid: { type: DataTypes.STRING(64), allowNull: false, defaultValue: '' },
         contact_required:{ type:  DataTypes.BOOLEAN, allowNull: false, defaultValue: true },
-        number: { type: DataTypes.STRING(24), allowNull: false, defaultValue: '' }      
+        initial_score: { type: DataTypes.BIGINT(11), defaultValue: '0' }, // 砍价开始额度
+        final_score: { type: DataTypes.BIGINT(11), defaultValue: '0' },   // 砍价最终额度
+        unit_score: { type: DataTypes.BIGINT(11), defaultValue: '0' },   // 每次砍价最高额度
 
     }, {
       createdAt: 'created_at', updatedAt:'updated_at',
+      tableName: 'game_rounds',
       getterMethods: {
         displayStartAt() {
           let mo = moment(this.start_at)

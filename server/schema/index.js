@@ -21,8 +21,7 @@ fs
         var model = sequelize.import(path.join(__dirname, 'game', modelfile))
         db[model.name] = model
     })
-db.game_results.belongsTo( db.game_players, {foreignKey: 'game_player_id'})
 
-let { game_rounds, game_players }  = db
+let { game_rounds, game_players, game_results, game_days, game_round_bargains }  = db
 
-export { sequelize, Sequelize, game_rounds, game_players }
+export { sequelize, Sequelize, game_rounds, game_round_bargains, game_players, game_results, game_days }
