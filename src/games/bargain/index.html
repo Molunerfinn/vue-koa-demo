@@ -6,8 +6,6 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="viewport" content="width=device-width,initial-scale=1,  minimum-scale=1, maximum-scale=1, user-scalable=no" />
 <meta http-equiv="Cache-Control" content="must-revalidate">
-<link rel="stylesheet" type="text/css" href="/game-bargain-assets/app/css/common-wx.css">
-<link rel="stylesheet" type="text/css" href="/game-bargain-assets/app/css/game-wx.css">
 
 <script>
     setRem();
@@ -21,10 +19,10 @@
     }
 
 DGAME={
-  game_round: {{{toJSON game_round }}},
-  game_player: {{{toJSON game_player }}},
-  game_round_base_url: {{{toJSON game_round_base_url}}},
-  to_game_player: {{{toJSON to_game_player}}},
+  game_round: { },
+  game_player: { },
+  game_round_base_url: '',
+  to_game_player: { },
   routes: {}
 };
 DGAME.routes.game_info_path = DGAME.game_round_base_url+'/game-info-wx';
@@ -325,16 +323,10 @@ select{-webkit-border-radius:0;border-radius:0;-webkit-border-image:none;-webkit
 <body>
 
   <div id="app">
- 
+
   </div>
 
-  <script src="/game-bargain-assets/lib/js/jquery.min.js"></script>
-  <script src="/game-bargain-assets/lib/js/bscroll.min.js"></script>
-  <script src="/game-bargain-assets/lib/js/vue.2.5.21.min.js"></script>
-  <script src="/game-bargain-assets/lib/js/jweixin-1.4.0.js"></script>
-  <script src="/game-bargain-assets/lib/js/vue-lazyload.js"></script>
-  <script src="/game-bargain-assets/lib/js/qrcode.min.js"></script>
-  <script src="/game-bargain-assets/app/js/game-bargain-wx4.js"></script>
+
   <!-- <script src="../wechat.js"></script> -->
 
 

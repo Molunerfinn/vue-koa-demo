@@ -1,0 +1,184 @@
+.ellipsis {  text-overflow: ellipsis;   overflow: hidden;    white-space: nowrap; }
+.soundIcon {
+	position:absolute;
+	top:20px;
+	width:40px;
+	height:40px;
+	background:url('../images/wx/musicOn.png') no-repeat;
+	background-size:100%;
+	z-index: 10;
+	right: 20px;
+}
+.soundIconHide {
+	display:none!important
+}
+.soundIconPlay {
+	animation:bgRotate 1.2s infinite linear;
+	-o-animation:bgRotate 1.2s infinite linear;
+	-moz-animation:bgRotate 1.2s infinite linear;
+	-webkit-animation:bgRotate 1.2s infinite linear
+}
+.soundIconOff {
+	background-image:url('../images/wx/musicOff.png');
+	animation:initial;
+	-o-animation:initial;
+	-moz-animation:initial;
+	-webkit-animation:initial
+}
+
+#jinnangWrap{
+	position: absolute;
+	right: 0;
+	top: 60px;
+	z-index: 11;
+}
+#jinnangWrap .jinnang-open-btn{
+	background-repeat: no-repeat;
+	background-size: contain;
+	width: 80px;
+	height: 45px;
+	display: inline-block;
+	color: #EBEBEB;
+	text-align: center;
+	line-height: 40px;
+}
+
+.poupInfoBox {
+	position:fixed; left:0; top:0;
+	width:100%;
+	height:100%;
+	border: none;
+	color: #fff;
+	background-color: gray;
+}
+.poupTab{
+	position: relative;
+}
+.poupTab .ranking .players{
+
+}
+.poupTab .ranking .players:first-child .score{
+		font-size: 120%;
+}
+.poupTab .ranking .players:nth-child(2) .score{
+	font-size: 110%;
+}
+.poupTab .ranking .players:nth-child(3) .score{
+		font-size: 110%;
+}
+.poupInfoBox	.strong{
+		font-weight: bold;
+}
+
+.poupInfoBox	.player{
+		height: 60px;
+    border-bottom: 1px solid #cccccc;
+    padding: 5px;
+}
+.poupInfoBox	.player	div{
+		height: 50px;
+		line-height: 50px;
+}
+.poupInfoBox	.player	.avatar	{float:left;width:60%;text-align:left; display: flex;}
+.poupInfoBox	.player	.avatar	img{ width: 45px; height: 45px; border-radius: 100%; }
+.poupInfoBox	.player	.avatar	span{max-width: 150px;display: inline-block;padding: 0 0 0 5px; }
+.poupInfoBox	.player	.rank{	float:left;width:10%;text-align:left; }
+.poupInfoBox	.player	.score{	float:left;width:30%;text-align:right; }
+.poupInfoBox	.award{
+		.djq
+		{
+			position: absolute;
+			left: 0;
+			top: 0;
+			background: image-url('game/djq.png') no-repeat;
+			width: 30px;
+			height: 30px;
+		}
+	}
+
+.poupClose {
+		position: absolute;
+		right: 0;
+		width: 1.0rem;
+		height: 1.0rem;
+		background: url('../images/wx/close.png') no-repeat;
+		background-size: 70%;
+		background-position: center;
+		z-index: 1000;
+}
+
+.poupInfoBox	.poupTitle {
+		font-size: 12px;
+		padding: 0 0 8px 0;
+		color: #fff;
+		background-color:inherit;
+		line-height: normal;
+		position: relative;
+    display: block;
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+    text-align: center
+		/*&:after {
+			display: none;
+		}*/
+	}
+.poupInfoBox	.poupTitle .innerText{
+	display: block;
+	border-right: 1px solid #ccc;
+}
+.poupInfoBox	.poupTitle:last-child .innerText{ border: none; }
+
+.poupInfoBox	.poupHead {
+	    padding: 20px 40px 0 40px;
+			background-color: transparent;
+			display: -webkit-box;
+			display: -webkit-flex;
+			display: flex;
+			position: absolute;
+			z-index: 500;
+			top: 0;
+			left: 0;
+			width: 100%;
+			border-bottom:1px solid #ccc;
+}
+.poupInfoBox	.poupMain{
+		position: relative;
+		/*padding: 12px 8px 0 8px; use padding instead of margin, or overflow*/
+		height: 100%;
+}
+.poupInfoBox	.poupMain .popuBody{
+		position: absolute;
+    bottom: 0;
+    top: 60px;
+    left: 8px;
+    right: 8px;
+    bottom: 0;
+}
+.poupInfoBox	.poupMain .poupSection{ 				margin:  0 0 9px; }
+.poupInfoBox	.poupMain .poupSection .title span{
+	display: inline-block;
+	background-color: #fff;
+	color:#000;
+	padding: 4px 8px; }
+.poupInfoBox	.poupMain .poupSection .desc{ 	padding: 8px 0; }
+
+.poupInfoBox	.weui-tab__bd-item{display:none;height:100%;overflow:auto}
+.poupInfoBox	.weui-tab__bd-item.weui-tab__bd-item_on{display:block}
+.poupInfoBox	.weui-bar__item_on{	border-bottom: 3px solid #fff; }
+.logoWrap { position: absolute; left: 10px; top: 10px; z-index: 10;}
+.logoWrap  .logo{ width: 100px; }
+#rankingTab{
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	overflow-y: auto;
+}
+
+.mf-loading-container img{
+	width: 20px;
+	height: 20px;
+	display: block;
+}

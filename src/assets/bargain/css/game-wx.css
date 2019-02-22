@@ -1,0 +1,188 @@
+
+.titlebg{padding-top: 100px;overflow: hidden; text-align: center;}
+.titlebg .gamelogo{width: 5.8rem; position: relative;}
+.futitle{text-align: center;position: relative;color: #fff;font-size: 0.4rem;font-weight: bold; margin: 0.6rem auto 0; width: 6rem;}
+.futitle img{ width: 100%; }
+.heng{overflow: hidden;text-align: center;width: 100%;margin-top:0.4rem; height: 1.3rem; padding-top: 0.1rem;}
+.heng1{width: 5rem;height: 0.1rem;background: #fff;position: relative;display: inline-block;}
+.heng2{width: 2.5rem;height: 0.1rem;background: #55cdf5;position: absolute;left: 0;display: inline-block;}
+.yuan{width: 0.3rem; height: 0.3rem; background: #fff; border-radius: 100%; position: absolute; top: -0.1rem;}
+.yuan1{width: 0.2rem; height: 0.2rem; background: #55cdf5; border-radius: 100%; position: relative; left: 0.05rem;top: 0.05rem;}
+.jiage{position: relative; color: #fff; width: 0.1rem; top: 0.5rem;}
+.lie1{position: absolute;float: left;left: 0;}
+.lie2{position: absolute;float: left;left: 1.05rem;}
+.lie3{position: absolute;float: left;left: 2.3rem;}
+.lie4{position: absolute;float: left;left: 3.55rem;}
+.lie5{position: absolute;float: left;left: 4.8rem;}
+.anniu{overflow: hidden;  width: 3.8rem;text-align: center;margin: auto;margin-top:0.3rem;}
+.anniu1{width: 1.9rem;height: 0.6rem;background: #e2c49b;text-align: center;font-size: 0.3rem;color: #231815;position: relative;float: left;font-weight: bold;line-height: 0.6rem;border-radius:0.1rem;}
+.anniu2{width: 1.9rem;height: 0.6rem;background: #2fcbf8;text-align: center;font-size: 0.3rem;color: #fff;position: relative;float: right;font-weight: bold;line-height: 0.6rem;border-radius:0.1rem;}
+.biao{width: 100%;overflow: hidden;text-align: center;margin-top:0.6rem;}
+.biao1{width: 6rem; position: relative;margin: auto;background: #130835;border:2px  solid #c59c63;border-top-right-radius : 0.6rem;border-top-left-radius : 0.6rem;}
+.biao .lli1{background: #130835; width: 6rem; border:2px  solid #c59c63;border-radius: 2rem;top: -0.05rem;position: relative;left: -0.05rem;}
+.biao .lli2{background: #130835; height: 1.2rem;border-bottom:2px solid #c59c63;position: relative; padding: 0.18rem 0;}
+.biao .lli2:last-child{ border-bottom: none;}
+.biao .lli1 p{font-weight: bold;color: #fff;font-size: 0.3rem;font-weight: bold;letter-spacing: 0.05rem;line-height:1.0rem;}
+.biao .empty{ color: #fff; line-height:1.0rem;}
+.txbg{width: 0.7rem;height: 0.7rem;border-radius: 50%;background: #fff;opacity: 1; display: flex;
+    align-items: center;  justify-content: center;}
+.tx{width: 0.6rem; height: 0.6rem; border-radius: 50%; }
+.nei_left{position: absolute;    top: 0.2rem;  margin: 0 0.5rem;}
+.nei_right{position: absolute; left: 1.7rem; right: 0;text-align: left; }
+.nei_top{ position: absolute; left: 0; width: 5em; line-height: 0.7rem;}
+.nei_top span{font-size: 14px;color: #f1f1f1;  display: inline-block;}
+.name{position: relative; width: 95%; display: inline-block; text-overflow:ellipsis;white-space: nowrap;overflow: hidden;}
+.name1{position: relative; top: 0.08rem;width: 0.6rem; display: inline-block; text-overflow:ellipsis;white-space: nowrap;overflow: hidden;}
+.nei_down{ position: absolute;    right: 0;  width: 6em; line-height: 0.7rem;}
+.nei_down span{font-size: 14px;color: #fff;margin-right: 0.2rem;font-weight: bold;}
+.huang{color: #f6ea00!important;}
+.shuoming{width: 2.7rem;height: 0.7rem;background: #031b4f;text-align: center;border-radius: 2rem;border:2px solid #c2f6ff;line-height:0.6rem;position: relative;color: #c2f6ff;margin:0.3rem auto;}
+.anniu3{width: 5.2rem;height: 0.6rem;background: #2fcbf8;text-align: center;font-size: 0.3rem;color: #fff;position: relative;float: right;font-weight: bold;line-height: 0.6rem;border-radius:0.1rem;overflow: hidden;}
+.kuang{width: 5.5rem;height: 5.5rem;border:2px  solid #2fcbf8;padding:0.5rem;position: relative;margin: 1rem auto;text-align: center;}
+.k_t{color: #fff;font-weight: bold;}
+.ma{width: 3rem;height:3rem;margin-top:0.3rem;margin-bottom:0.3rem;}
+.bang{color: #2fcbf8;font-weight: bold;}
+.desc-wrap{   position: relative; padding: 0.2rem 0;}
+.desc-wrap .desc-head{
+  position: absolute;
+  text-align: center;
+  width: 100%;
+  z-index: 1;
+}
+.desc-wrap .shuoming1 {
+    width: 2.7rem;
+    background: #130835;
+    border-radius: 10px;
+    line-height: 0.5rem;
+    font-size: 0.38rem;
+    display: inline-block;
+    color: #fff;
+    border: 2px solid #c59c63;
+}
+.desc-wrap .shuoming1 p{
+  margin: 0.05rem;
+  border-radius: 6px;
+  border: 2px solid #2fcbf8;
+}
+
+.desc-wrap .smk1 {
+    width: 6rem;
+    background: #130835;
+    border-radius: 0.2rem;
+    border: 0.05rem solid #c59c63;
+    margin: 0.35rem  auto 0;
+    padding: 0.3rem;
+    padding-top: 0.5rem;
+    position: relative;
+}
+.desc-wrap .smk1 {
+    font-size: 0.33rem;
+    color: #fff;
+    line-height: 0.5rem;
+}
+/* 倒计时*/
+.daojishi{
+	width: 6rem;
+	overflow: hidden;
+	text-align: center;
+	position: relative;
+	margin: auto;
+}
+.daojishi .shijian{
+	position: relative;;
+	overflow: hidden;
+	color: #fff;
+	height: 1rem;
+	margin:0.1rem 0 0.2rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.daojishi .jinse{ color: #c59c63; }
+.daojishi .shijian .unit{
+	font-weight: bold;
+	width: 0.4rem;
+  height: 0.8rem;
+  line-height: 0.8rem;
+}
+.daojishi .shijian1{
+  position: relative;
+  display: inline-block;
+  height: 0.80rem;
+  width: 0.80rem;
+
+}
+.daojishi .shijian2{
+  position: relative;
+  display: inline-block;
+  height: 0.80rem;
+  width: 0.80rem;
+}
+.daojishi .shijian1 .bg{ border: 0.5px solid transparent; width: 100%; height: 100%; float: left;}
+.daojishi .shijian2 .bg{ width: 50%; height: 50%; float: left;  border: 0.5px solid transparent;}
+.daojishi .shijian2 .bg span, .daojishi .shijian1 .bg span{
+  display: inline-block;
+  width: 100%; height: 100%;
+  background-color: #00a7e4;
+  border-radius: 2px; overflow: hidden;
+  font-size: 0.55rem;
+}
+.daojishi .parttime {position: absolute; width: 50%;
+  left: 0;
+  height: 100%;
+  line-height: 0.8rem;
+  text-align: center;
+  font-size: 0.55rem;
+}
+.daojishi .parttime.parttime-right{ right: 0; left: auto;}
+.progresswrap{
+  width: 6rem;
+  margin: auto;
+  margin-top: 0.4rem;
+  height: 1.3rem;
+  padding-top: 0.1rem;
+}
+.c-weui-progress {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    height: 0.1rem;
+    position: relative;
+}
+.c-weui-progress .text{
+  color: #fff;
+  text-align: center;
+}
+.c-weui-progress .text .score{
+  display: inline-block;
+  margin-top: 0.8em;
+}
+.c-weui-progress .text p{
+  margin-top: 0.8em;
+}
+.c-weui-progress__bar {
+    background-color: #fff;
+    height: 0.1rem;
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+    border-radius: 0.1rem;
+}
+.c-weui-progress__inner-bar {
+    width: 0;
+    height: 100%;
+    background-color: #55cdf5;
+}
+.startbtn{
+  background-image: url(/game-bargain-assets/app/images/skin1/wx/startbtn.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  background-color: transparent;
+  border: none;
+  width: 2.6rem;
+  height: 0.75rem;
+}
