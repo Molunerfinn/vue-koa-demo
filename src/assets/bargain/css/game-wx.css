@@ -177,11 +177,6 @@
     background-color: #55cdf5;
 }
 .startbtn{
-  background-image: url(/game-bargain-assets/app/images/skin1/wx/startbtn.png);
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
-  background-color: transparent;
   border: none;
   width: 2.6rem;
   height: 0.75rem;

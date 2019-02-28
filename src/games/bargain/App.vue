@@ -6,7 +6,6 @@
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     color: #2c3e50;
-    margin-top: 60px;
 }
 .bargain{
   font-size: 14px;
@@ -19,11 +18,11 @@
 
   <!-- logo-->
   <div class="logoWrap">
-      <img src="/game-bargain-assets/app/images/skin1/wx/tu_05.png" class="logo">
+      <img src="/static/bargain/images/skin1/wx/tu_05.png" class="logo">
   </div>
   <!-- 音乐播放 -->
   <div class="soundIcon soundIconOff" id="music"><div class="circle_hide">
-    <audio  id="audiobg" loop="true" src="/game-bargain-assets/app/audio/game/bargain/happynewyear.mp3"  type="audio/mpeg" > </audio>
+    <audio  id="audiobg" loop="true" src="/static/bargain/audio/happynewyear.mp3"  type="audio/mpeg" > </audio>
   </div></div>
   <!-- 锦囊 -->
   <div id="jinnangWrap" >
@@ -67,7 +66,7 @@
                   </div>
                 </div>
                 <div class="poupSection isFirstTimeLoading" style="text-align:center;">
-                  <p class="title hide"> <span> 排行榜 <img src='/game-bargain-assets/app/images/spinner.gif' /></span></p>
+                  <p class="title hide"> <span> 排行榜 <img src='/static/bargain/images/spinner.gif' /></span></p>
                 </div>
 
               </div>
@@ -79,10 +78,10 @@
   <div class="page page-0" v-show="pageIndex==0">
     <div class="startwrap"> <button class="startbtn" @click="handleStartGame"> &nbsp;&nbsp;</button> </div>
     <div class="titlebg">
-      <img src="/game-bargain-assets/app/images/game/bargain/kj_05.png" class="gamelogo">
+      <img src="/static/bargain/images/kj_05.png" class="gamelogo">
     </div>
     <div class="banner">
-      <img src="/game-bargain-assets/app/images/skin1/wx/banner.png" class="gamebanner">
+      <img src="/static/bargain/images/skin1/wx/banner.png" class="gamebanner">
     </div>
 
   </div>
@@ -91,7 +90,7 @@
     <div id="scroller">
       <!-- 顶部图片 -->
        <div class="titlebg">
-         <img src="/game-bargain-assets/app/images/game/bargain/kj_05.png" class="gamelogo">
+         <img src="/static/bargain/images/kj_05.png" class="gamelogo">
        </div>
        <div class="daojishi" v-if="t_time >= 0">
           <h3 class="jinse">距离活动结束还有</h3>
@@ -122,7 +121,7 @@
           </div>
         </div>
          <p class="futitle">
-           <img src="/game-bargain-assets/app/images/skin1/wx/game.jpg" alt="砍多少，送多少！">
+           <img src="/static/bargain/images/skin1/wx/game.jpg" alt="砍多少，送多少！">
          </p>
          <div class="progresswrap">
            <div class="c-weui-progress">
@@ -226,7 +225,7 @@
            </div>
       <!-- 当前排名 -->
 
-      <div class="buttom_login"><img src="/game-bargain-assets/app/images/loading.gif" alt=""></div>
+      <div class="buttom_login"><img src="/static/bargain/images/loading.gif" alt=""></div>
       <div class="buttom_text">没有更多数据....</div>
     </div>
 
@@ -243,7 +242,7 @@
 
   <!-- 砍价 -->
   <div class="remove_price" @click="closeshade()">
-    <div class="white_bg scaleDiv"><img src="/game-bargain-assets/app/images/game/bargain/white_bg.png" alt=""></div>
+    <div class="white_bg scaleDiv"><img src="/static/bargain/images/white_bg.png" alt=""></div>
     <div class="red_bg scaleDiv">
       <dd>运气不错哦！<br>此次砍下</dd>
       <dt>${dele_price}元!</dt>
@@ -254,16 +253,16 @@
   <div class="index_enter part_me" style="display:none;" v-show="showContact">
     <div class="index_enter_box">
       <div class="index_enter_main scaleDiv2">
-        <div class="index_enter_head clearfix"><img src="/game-bargain-assets/app/images/wx/close.png" alt="" @click="closeContactDialog"></div>
+        <div class="index_enter_head clearfix"><img src="/static/bargain/images/close.png" alt="" @click="closeContactDialog"></div>
         <div class="index_enter_text">所填信息不会公开，仅用于活动兑奖</div>
         <div class="index_enter_input">
           <div class="enter_input_one">
             <dd>姓名：</dd>
-            <input type="text" placeholder="请输入您的真实姓名" v-model="bargain.realname">
+            <input type="text" placeholder="请输入您的真实姓名" v-model="form.realname">
           </div>
           <div class="enter_input_one">
             <dd>手机：</dd>
-            <input type="text" placeholder="请输入您的手机号码" v-model="bargain.cellphone" maxlength="11">
+            <input type="text" placeholder="请输入您的手机号码" v-model="form.cellphone" maxlength="11">
           </div>
         </div>
         <div class="index_enter_btn">
@@ -278,7 +277,7 @@
   </div>
 
   <!-- 提示语 -->
-  <div class="top_text" :class=" top.onoff ? 'show' : '' ">
+  <div class="top_text" >
     <div class="top_text_box">${top.text}</div>
   </div>
 
@@ -287,13 +286,283 @@
 </template>
 
 <script>
+import { getGameInfo, poll, updateGameDay, updateGamePlayerContact } from '@/api/bargain/getData'
 
 export default {
     name: 'app',
     data() {
       return {
-        msg: 'this is world'
+        loading: false,
+        t_time: 0,
+        pageIndex: 0,
+        game_player_rank: [],
+        game_result_rank: [],
+        to_game_player: { id: 0 },
+        game_player: {},
+        game_round: { start_at: null, end_at: null },
+        game_result: {},
+        form:{
+           realname: null,
+           cellphone: null
+        },
+        msg: 'this is world',
+        showQRCode: false,
+        showContact: false
       }
+    },
+    created(){
+      let data=  {game_round_id:14,game_player_id:110}
+      getGameInfo( data ).then((res)=>{
+        console.log( 100000, res )
+      })
+    },
+    computed:{
+      // 当前玩家助力状态   已经助力 true. 没有助力 false
+      is_raised: function() {
+        return this.game_result != null;
+      },
+      is_to_self: function() { // 被助力人是否为自己
+        return this.game_player.id == this.to_game_player.id;
+      },
+      js_progress_percent: function(){ // 进度条百分比
+        var percent = 0
+        if( this.to_game_player && this.game_round ){
+          percent = parseInt(this.to_game_player.score/(this.game_round.final_score - this.game_round.initial_score)*100)
+        }
+        return percent+'%'
+      },
+      is_game_started: function(){
+        var now = this.getServerTime();
+        var startAt = new Date( this.game_round.start_at);
+        return startAt <= now ;
+      },
+      is_game_end: function(){
+        var now = this.getServerTime();
+        var endAt = new Date( this.game_round.end_at);
+        return endAt <= now ;
+      },
+      is_game_running: function(){
+        return this.is_game_started && !this.is_game_end
+      }
+    },
+    methods:{
+      getServerTime: function() {
+        var time = +new Date();
+        if (typeof this.timeDeviation != "undefined") {
+          time += this.timeDeviation
+        }
+        return time
+      },
+      handleStartGame: function(){
+        // 开始游戏前，检查游戏是否开始或结束
+        var now = this.getServerTime();
+        var startAt = new Date( this.game_round.start_at);
+        var endAt = new Date( this.game_round.end_at);
+        if( startAt>= now ){
+          this.weui.alert('谢谢参与，游戏还未开始');
+          return
+        }
+        if( endAt<= now ){
+          this.weui.alert('谢谢参与，游戏已经结束');
+          return
+        }
+        // 开始游戏前，如果没有联系方式，让用户输入联系方式
+        if( this.has_to_contact ){
+          this.pageIndex = 1
+        }else{
+          this.showContact = true
+        }
+      },
+      closeupdata: function() {
+        //$("#closeupdata").hide();
+      },
+      GetRTime: function() {
+
+        if (this.game_round.end_at) {
+          /*var lastTime = this.game_round.end_at.replace('T', ' ');
+          var arr = lastTime.split('-');
+          lastTime = arr[0] + '/' + arr[1] + '/' + arr[2];
+          lastTime += ':00'
+          var EndTime = new Date(lastTime);*/
+          var EndTime = new Date(this.game_round.end_at);
+          var NowTime = new Date();
+          this.t_time = EndTime.getTime() - NowTime.getTime();
+          var d = Math.floor(this.t_time / 1000 / 60 / 60 / 24);
+          this.time.d = d>9 ? ''+d : '0'+d
+          var h = Math.floor(this.t_time / 1000 / 60 / 60 % 24);
+          this.time.h = h>9 ? ''+h : '0'+h
+          var m = Math.floor(this.t_time / 1000 / 60 % 60);
+          this.time.m = m>9 ? ''+m : '0'+m
+          var s = Math.floor(this.t_time / 1000 % 60);
+          this.time.s = s>9 ? ''+s : '0'+s
+        }
+      },
+      showtime: function() {
+        setInterval(this.GetRTime, 1000)
+      },
+      closeshade: function() {
+        //$(".remove_price").hide();
+      },
+      handleJoinGame: function() {
+        // 加入游戏前请输入联系方式
+        if (!this.has_contact) {
+          this.showContact = true;
+        }
+      },
+      closeContactDialog: function() {
+        this.showContact = false;
+      },
+      updateContact: function() {
+        var demo = /.{2,}/;
+        var demotel = /^1[34578]\d{9}$/;
+        if (!demo.test(this.form.realname)) {
+          return this.shoeTopTex('请输入正确姓名', false);
+        }
+        if (!demotel.test(this.form.cellphone)) {
+          return this.shoeTopTex('手机号码格式不正确', false);
+        }
+        var game_player_id = this.game_player.id;
+        let data = {
+          game_player_id: game_player_id,
+          game_player: {
+            cellphone: this.form.cellphone,
+            realname: this.form.realname
+          }
+        }
+        updateGamePlayerContact(data).then((res)=>{
+          if (res) {
+            console.log(123456, data);
+            this.shoeTopTex('报名成功！快给自己砍一刀吧', true);
+
+            this.initializeGame(game_player_id, null, function(){
+              this.pageIndex = 1; // 进入游戏页面
+              this.showContact = false; // 关闭联系方式对话框
+              this.$nextTick(function(){
+                console.log( "mainScroll.refresh() success ");
+                //mainScroll.refresh();
+              })
+            })
+          }
+        })
+
+      },
+      shoeTopTex: function(text, bool) {
+      },
+      // 处理助力事件
+      handleRaiseUp: function() {
+        /* if( this.mar.new_price < this.mar.floor_price ){
+             this.shoeTopTex("已经是最低价了，不能再砍了！");
+         }
+         if( this.mar.bargain_times == 0 ){
+             this.shoeTopTex("已经是最低价了，不能再砍了！");
+         }*/
+         let data = {
+           to_game_player_id: this.to_game_player.id,
+           game_player_id: this.game_player.id
+         }
+         poll(data).then((res)=>{
+           if (res) {
+             let data = res.data
+             if (data && data.game_result) {
+               this.game_result = data.game_result
+               this.dele_price = data.game_result.score;
+               this.to_game_player = data.to_game_player;
+               this.game_result_rank = data.game_result_rank;
+               //setTimeout(function() {
+               // $(".remove_price").hide();
+               //}, 5000);
+               console.log(0, data);
+             }
+           }
+         })
+
+      },
+      gotoGameOfPlayer: function( player ) {
+        //用户点击 我要参加，输入联系方式后，进入用户自己的游戏
+
+      },
+      returnmodal: function() {
+        var game_player_id = this.game_player.id;
+        var to_game_player_id = game_player_id;
+        this.initializeGame(game_player_id, to_game_player_id, function(){} )
+      },
+      configWeixin: function() {
+        var wxConfig = this.wx_config;
+        wxConfig.debug = false;
+        wxConfig.jsApiList = ['checkJsApi', 'onMenuShareTimeline', 'onMenuShareAppMessage', 'onMenuShareQQ', 'onMenuShareWeibo', 'onMenuShareQZone', 'hideMenuItems', 'showMenuItems', 'hideAllNonBaseMenuItem', 'showAllNonBaseMenuItem', 'translateVoice', 'startRecord', 'stopRecord', 'onVoiceRecordEnd', 'playVoice', 'onVoicePlayEnd', 'pauseVoice', 'stopVoice', 'uploadVoice', 'downloadVoice', 'chooseImage', 'previewImage', 'uploadImage', 'downloadImage', 'getNetworkType', 'openLocation', 'getLocation', 'hideOptionMenu', 'showOptionMenu', 'closeWindow', 'scanQRCode', 'chooseWXPay', 'openProductSpecificView', 'addCard', 'chooseCard', 'openCard', 'updateAppMessageShareData','updateTimelineShareData'];
+        this.wx.config(wxConfig);
+        this.wx.error(function(res){ console.log( "wx error", res) });
+        this.wx.ready(()=> {
+          let sharedata = {
+            title: this.game_round.name,
+            link: this.wx_share.link,
+            desc: this.to_game_player.nickname + "邀请您来帮他（她）砍价！",
+            imgUrl: this.wx_share.img_url,
+            success: function(d) {
+              console.log( "shared success", d, "is there a d?", this.wx_share.link, "is there a link");
+              let data = {
+                game_player_id: this.game_player.id,
+                share: 1
+              }
+              updateGameDay(data).then((res)=>{
+                console.log(111444, res)
+
+              })
+            }
+          };
+
+          this.wx.onMenuShareAppMessage(sharedata);
+          this.wx.onMenuShareTimeline(sharedata);
+          //wx.updateAppMessageShareData(sharedata);
+          //wx.updateTimelineShareData(sharedata);
+          //wx.onMenuShareQQ(sharedata);
+          //wx.onMenuShareWeibo(sharedata);
+          console.log( " sharedata = ", sharedata)
+        });
+      },
+      creatQRCodeImg: function() { //生成砍价二维码
+        var html = document.getElementsByTagName('html')[0];
+        var pageWidth = html.getBoundingClientRect().width;
+        //var pageHeight = html.getBoundingClientRect().height;
+        var c = document.createElement('canvas'), //document.getElementById('j-wedding-canvas');
+          ctx = c.getContext('2d');
+        c.width = pageWidth * 0.72;
+        c.height = pageWidth * 0.72;
+        var my_gradient=ctx.createRadialGradient(c.width/2,c.height/2,0,c.width/2,c.height/2, c.width);
+        my_gradient.addColorStop(0,"#2EA3DC");
+        my_gradient.addColorStop(1,"#036EB4");
+        ctx.fillStyle=my_gradient;
+        ctx.fillRect(0,0,c.width,c.height);
+        ctx.textAlign = "center";
+        ctx.fillStyle= '#ffffff';
+        ctx.font="0.35rem/0.4rem '微软雅黑'";
+        ctx.fillText("长按识别二维码，帮"+this.truncateName(this.to_game_player.nickname, 3)+"补刀", c.width * 0.5, c.height * 0.1);
+        ctx.fillText(" 帮TA补一刀呗", c.width * 0.5, c.width * 0.94);
+        console.log("c.width=", c.width, c.height, this.wx_share.link);
+        this.$QRCode.toCanvas(this.wx_share.link, {
+          width: c.width * 0.74
+        }, function(error, canvas) {
+          if (error) {
+            console.error(error);
+          }
+          console.log('success!');
+          ctx.drawImage(canvas, c.width * 0.13, c.width * 0.13);
+          //var imageData = c.toDataURL('image/png');
+          //$('#share-qrcode-img').attr('src', imageData);
+          this.showQRCode = true;
+        })
+      },
+      closeQRCodeDialog:function(){
+        this.showQRCode = false;
+      },
+      truncateName: function(vals, limit) {
+        var val = vals;
+        if (vals && vals.length>limit) {
+          val = vals.substr(0,limit) +'*' ;
+        }
+        return val;
+      }
+
     }
 }
 

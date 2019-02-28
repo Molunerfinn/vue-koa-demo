@@ -29,11 +29,15 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/auth':{
-        target: 'http://localhost:8889',
+        target: 'http://localhost:8099',
         changeOrigin: true
       },
       '/api':{
-        target: 'http://localhost:8889',
+        target: 'http://localhost:8099',
+        changeOrigin: true
+      },
+      '/gapi':{
+        target: 'http://localhost:8099',
         changeOrigin: true
       }
     },

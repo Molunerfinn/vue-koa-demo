@@ -53,7 +53,7 @@ router.use('/auth', auth.routes()) // 挂载到koa-router上，同时会让所�
 router.use('/api', jwt({secret: 'vue-koa-demo'}), api.routes()) // 所有走/api/打头的请求都需要经过jwt验证。
 
 import gameBargain from './server/routes/game/bargain.js'
-router.use('/game-bargain', gameBargain.routes())
+router.use('/gapi/bargain', gameBargain.routes())
 
 
 app.use(router.routes()) // 将路由规则挂载到Koa上。
