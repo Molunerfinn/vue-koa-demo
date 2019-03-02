@@ -1,12 +1,931 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <title>kouhong</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <!-- built files will be auto injected -->
-  </body>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="referrer" content="always">
+  <meta content="application/xhtml+xml;charset=UTF-8" http-equiv="Content-Type">
+  <meta content="no-cache,must-revalidate" http-equiv="Cache-Control">
+  <meta content="no-cache" http-equiv="pragma">
+  <meta content="0" http-equiv="expires">
+  <meta name="referrer" content="always">
+  <meta content="telephone=no, address=no" name="format-detection">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <!-- apple devices fullscreen -->
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>{{ game_round.name}}</title>
+
+  <meta id="_TOKEN" value="cffd9fe83efe7382ef9190959aa23a06" type="hidden" />
+  <style type="text/css">
+   #newInformBtn{  display: none;   }
+   .attentionBox{   }
+   #drawMenuBtnBox{ background-color: transparent;}
+   #drawMenuBtnBox .resule-button{ background: #E83828;  }
+   .resule-foot-box .resule-button{ border-radius: 1rem;}
+   #explainBox * { color: #fff; }
+   #explainBox .mainTitle { color: #000; }
+  </style>
+  <script type='text/javascript'>
+  DGAME={
+    //game_round_base_url: "{{ game_round_base_url }}",
+    //game_round_id: {{ game_round.id}},
+    //game_player_id: {{ game_player.id }},
+    //game_player_openid: "{{ game_player.openid}}",
+    //game_player: {{{toJSON game_player}}},
+    //game_round: {{{toJSON game_round}}},
+    //wx_config: {{{toJSON wx_config}}},
+    //wx_share: {{{toJSON wx_share}}},
+    routes: {}
+  };
+  DGAME.routes.setAchieveUrl=DGAME.game_round_base_url+'/hdgame_h.jsp?cmd=setAchieve'
+  DGAME.routes.rankUrl = DGAME.game_round_base_url+'/hdgame_h.jsp?cmd=getRankList&aid=10168245&gameId=50&style=22&openId='+DGAME.game_player_openid;
+  DGAME.routes.awardUrl= DGAME.game_round_base_url+'/hdgame_h.jsp?cmd=getGiftList&aid=10168245&style=22';
+  DGAME.routes.getRegAwardUrl = DGAME.game_round_base_url+'/hdgame_h.jsp?cmd=getRegAwardList&aid=10168245&gameId=50&style=22&openId='+DGAME.game_player_openid;
+  DGAME.routes.logAjaxErrUrl = DGAME.game_round_base_url+'/logAjaxErr_h.jsp?cmd=hdajaxErr'
+  </script>
+
+  <script type='text/javascript'>
+    var fromCanal = '-1';
+    if (true) {
+      parent = top = window;
+    }
+
+    var g_serverTime = 1546852399916;
+    var g_timeDeviation = g_serverTime - new Date().getTime(); //服务器时间与系统时间偏差
+    var g_rem = 20;
+    (function(win) {
+      var orientationX = false; //是否横屏进来
+      if (win.orientation == 90 || win.orientation == -90) {
+        orientationX = true;
+      }
+      var docEl = win.document.documentElement,
+        tid;
+
+      function refreshRem1() {
+        g_rem = docEl.getBoundingClientRect().width / 16;
+        !g_rem && (g_rem = 20);
+        docEl.style.fontSize = g_rem + 'px';
+      }
+
+      function refreshRem2() {
+        g_rem = docEl.getBoundingClientRect().width / 16;
+        if (!g_rem) {
+          return refreshRem1();
+        }
+        var width = docEl.getBoundingClientRect().width;
+        var d = win.document.createElement('div');
+        d.style.width = '1rem';
+        d.style.display = "none";
+        docEl.firstElementChild.appendChild(d);
+        var defaultFontSize = parseFloat(window.getComputedStyle(d, null).getPropertyValue('width'));
+        docEl.firstElementChild.removeChild(d);
+        docEl.style.fontSize = (g_rem / defaultFontSize) * 100 + '%';
+      }
+      var refreshRem = /vivo|HUAWEI|OPPO|ONEPLUS A5000/i.test(navigator.userAgent) ? refreshRem2 : refreshRem1;
+      try {
+        win.addEventListener("orientationchange", function() { //触发手机横屏竖屏事件
+          if (orientationX) {
+            location.reload();
+          }
+        }, false);
+      } catch (e) {}
+      win.addEventListener('pageshow', function(e) {
+        if (e.persisted) {
+          clearTimeout(tid);
+          tid = setTimeout(refreshRem, 100);
+        }
+      }, false);
+      refreshRem();
+    })(window);
+  </script>
+
+
+  <link rel="preload" href="/game-kouhong-assets/lib/js/jquery-core.min.js?v=201901021025" as="script" />
+  <link href="/game-kouhong-assets/lib/css/base.min.css?v=201901021025" rel="stylesheet" type="text/css" />
+  <link href="/game-kouhong-assets/lib/css/bbtzw.min.css?v=201901021025" rel="stylesheet" type="text/css" />
+  <link href="/game-kouhong-assets/lib/css/fission.min.css?v=201901021956" rel="stylesheet" type="text/css" />
+  <link href="/game-kouhong-assets/lib/css/weui.min.css?v=201912181935" rel="stylesheet" type="text/css" />
+  <script type="text/javascript">
+    // (function() {
+    //   var fs = document.createElement("script");
+    //   fs.src = "//fe.faisys.com/jssdk_1_0/js/hawkEye.min.js?v=201809261929";
+    //   window.FAI_HAWK_EYE = {};
+    //   window.FAI_HAWK_EYE.jssdk_report_url = "//report.fkw.com/js/report";
+    //   window.FAI_HAWK_EYE.jssdk_appid = 5002;
+    //   window.FAI_HAWK_EYE.fai_aid = 10168245;
+    //   window.FAI_HAWK_EYE.fai_bs_aid = 10168245;
+    //   window.FAI_HAWK_EYE.fai_bs_id = 50;
+    //   window.FAI_HAWK_EYE.fai_bs_wid = 0;
+    //   var s = document.getElementsByTagName("script")[0];
+    //   s.parentNode.insertBefore(fs, s);
+    // })();
+  </script>
+
+  <script type='text/javascript'>
+    ;
+    (function() {
+      var fList = ["WeixinJSBridge", "document.querySelector('#btnOk').click", "document.querySelector('.msg').innerText"];
+      var filter = function() {
+        var oldErr = window.onerror;
+        if (!oldErr) return;
+        window.onerror = function(msg) {
+          for (var i = 0; i < fList.length; i++) {
+            if (~msg.indexOf(fList[i])) {
+              return
+            }
+          }
+          oldErr.apply(this, arguments)
+        }
+      };
+      window.onerror ? filter() : (document.getElementsByTagName("script")[0].onload = filter);
+    })();
+  </script>
+</head>
+
+<body class="gameTpl_-1">
+  <div id="app"></div>
+
+
+  <!-- loading页面 -->
+  <div id="preloadPage" class="bg" style="display:none;">
+
+    <div class="spinner">
+      <div class="spinner-container container1">
+        <div class="circle1"></div>
+        <div class="circle2"></div>
+        <div class="circle3"></div>
+        <div class="circle4"></div>
+      </div>
+      <div class="spinner-container container2">
+        <div class="circle1"></div>
+        <div class="circle2"></div>
+        <div class="circle3"></div>
+        <div class="circle4"></div>
+      </div>
+      <div class="spinner-container container3">
+        <div class="circle1"></div>
+        <div class="circle2"></div>
+        <div class="circle3"></div>
+        <div class="circle4"></div>
+      </div>
+    </div>
+
+    <div class="info"><span id="loadPercent">0</span>%</div>
+    <div id="userPreload" data-src="/game-kouhong-assets/app/images/skin1/wx/0jdk7Deh8T2z5W3k0j44dTZmdTOkZGM.png"></div>
+  </div>
+
+  <!-- 广告页 -->
+  <div class="advertisingBox swiper-container hide">
+    <div class="swiper-wrapper">
+      <!--内容自动添加-->
+    </div>
+    <div class="swiper-pagination hide"></div>
+
+    <div class="skipTips hide">
+      <span class="seconds"></span>
+      <!--
+  --><span class="skipTipsText"></span>
+    </div>
+
+  </div>
+  <div class="ajaxLoadBg">
+    <div class="ajaxLoadBar "></div>
+  </div>
+  <div class="body">
+ 
+    <div id="spxdPage"></div>
+    <div id='_hdOpenIdDiv' class='hide'>{{game_player.openid}}</div>
+    <!-- 存放openId的节点 -->
+    <div id="pageMusic" style="position:absolute;top:0;height:0;"></div>
+    <div class="ruleImg imgContainer absCenter" _mouseIn="0" onclick="showRule(isAnimation=false);">
+      <div id="ruleImg" class="slaveImg abs notNeedFatherChage outSpecialDivAutoFit hd-img-fillDiv" style='width:3.2426666666666666rem;height:2.1333333333333333rem;top:0.2986666666666667rem;left:12.544rem;'></div>
+    </div>
+
+
+
+    <div id="poupInfoBox">
+      <div class="poupHead">
+        <div class="poupTitleBox">
+          <div id="actionExpBtn" class="poupTitleMune checked" _flag="2">
+            <div class="item">活动说明</div>
+          </div>
+
+          <div id="ranBtn" class="poupTitleMune " _flag="1">
+            <div class="item">排行榜</div>
+          </div>
+
+
+          <div id="prizeBtn" class="poupTitleMune hide" _flag="3">
+            <div class="item">我的奖品<span id='Award_Round_Dot' class='redDot hide'></span></div>
+          </div>
+          <div id="winnerBtn" class="poupTitleMune hide" _flag="4">
+            <div class="item">获奖名单</div>
+          </div>
+
+          <div class="poupSlideBar">
+            <div class="slideBarTip transitionPanel"></div>
+          </div>
+        </div>
+        <div class="poupClose"></div>
+        <div style="clear:both; height:0"></div>
+      </div>
+      <div id="popTabBox" class="popTabBox transitionPanel" style="left:0">
+
+        <div id="ruleBox" class="poupMain" _flag="2" style="-webkit-overflow-scrolling:touch;">
+          <div class="poupMainInfo">
+            <div id="explainBox" class="poupLine" data-sortKey="a">
+              <div class="mainTitle">活动说明</div>
+
+              <p id="explaiDrawInfoBox" class="">
+                {{{ game_round.desc}}}
+              </p>
+
+            </div>
+
+            <div id="awardLine" class="poupLine hide" data-sortKey="b">
+              <div class="mainTitle">活动奖品</div>
+              <div id="awardLineBox">
+                <div class='unComfortLine awardItem '><span class='awardStyle'>一等奖</span> : <span class='award'>价值100元礼品</span></div>
+                <div class='unComfortLine awardItem '><span class='awardStyle'>二等奖</span> : <span class='award'>价值50元礼品</span></div>
+                <div class='unComfortLine awardItem '><span class='awardStyle'>三等奖</span> : <span class='award'>价值10元礼品</span></div>
+                <div class='unComfortLine awardItem hide'><span class='awardStyle'>四等奖</span> : <span class='award'>价值5元小礼品</span></div>
+                <div class='unComfortLine awardItem hide'><span class='awardStyle'>五等奖</span> : <span class='award'>价值5元小礼品</span></div>
+                <div class='unComfortLine awardItem hide'><span class='awardStyle'>六等奖</span> : <span class='award'>价值5元小礼品</span></div>
+                <div class='unComfortLine awardItem hide'><span class='awardStyle'>七等奖</span> : <span class='award'>价值5元小礼品</span></div>
+                <div class='unComfortLine awardItem hide'><span class='awardStyle'>八等奖</span> : <span class='award'>价值5元小礼品</span></div>
+                <div class='awardItem anwei hide'><span class='awardStyle'>安慰奖</span> : <span class='award'>价值5元小礼品</span></div>
+
+              </div>
+              <div id="selfAwardLine" class="hide" style="word-wrap: break-word;"></div>
+            </div>
+
+            <div id="gameDateTime" class="poupLine" data-sortKey="c">
+              <div class="mainTitle">活动时间</div>
+              <p><span id="startDate">{{game_round.displayStartAt}}</span>&nbsp;-&nbsp;<span id="endDate">{{game_round.displayEndAt}}</span></p>
+            </div>
+            <div class="hostLine poupLine hide" data-sortKey="d">
+              <div class="mainTitle">主办单位</div>
+              <p><a class="hostName" />fkhdrd</a>
+              </p>
+            </div>
+
+            <div id="skillLine" class="skillLine poupLine hide" data-sortKey="e">
+              <div class="skillCont">
+                <div class="mainTitle">技术支持</div>
+
+                <p>页面技术由 <a class="skillName" href="http://mp.weixin.qq.com/s?__biz=MjM5MTk5MjI3OA==&mid=209854000&idx=1&sn=82241d924839270d3ea820ad2d56c01b#wechat_redirect" />软山互动</a> 提供，技术支持方仅提供页面技术，不承担由活动引起的相关法律责任</p>
+              </div>
+            </div>
+
+            <!--<div id="" style="font-size: 0.6rem; position: relative;" class="noMove">投诉</div>-->
+          </div>
+          <div class='attentionBox'>
+            <div class='hdskillInfo skillInfo theRunningAdClass'><a class="theSpecialTarget" href='http://mp.weixin.qq.com/s?__biz=MjM5MTk5MjI3OA==&#x26;mid=209854000&#x26;idx=1&#x26;sn=82241d924839270d3ea820ad2d56c01b#rd'>我也要创建活动</a><span class='gotoFlag'><i></i></span></div>
+            <div class='holdBox'></div>
+          </div>
+        </div>
+
+        <div id="rankBox" class="poupMain" _flag="1" style="-webkit-overflow-scrolling:touch;">
+          <div class="poupMainInfo">
+            <div id="noRank" class=''>暂无排名</div>
+            <div id="rankMain" class="getRankHeight hide">
+              <div style="margin-top:0.7rem;margin-left: 0.25rem;">当前排名：<span id="rank"></span> （只显示前<span id="showRankNum">100</span>名）</div>
+              <div style="padding:0rem 0.5rem">
+                <table class="rankTable" cellspacing="0" cellpadding="0">
+                  <thead>
+                    <tr style="line-height: 1rem;">
+                      <th>排行</th>
+                      <th>头像</th>
+                      <th>昵称</th>
+                      <th>成绩</th>
+                    </tr>
+                  </thead>
+                </table>
+              </div>
+            </div>
+            <div id="rankHeight">
+              <table id="rankInfoBox" class="rankTable" cellspacing="0" cellpadding="0" style="margin-top: 0;"></table>
+            </div>
+          </div>
+          <div class='attentionBox'>
+            <div class='hdskillInfo skillInfo theRunningAdClass'><a class="theSpecialTarget" href='http://mp.weixin.qq.com/s?__biz=MjM5MTk5MjI3OA==&#x26;mid=209854000&#x26;idx=1&#x26;sn=82241d924839270d3ea820ad2d56c01b#rd'>我也要创建活动</a><span class='gotoFlag'><i></i></span></div>
+            <div class='holdBox'></div>
+          </div>
+        </div>
+
+        <div id="awardBox" class="poupMain" _flag="3">
+          <div id="awardInfoBox">
+            <div id="awardInfo">
+              <div style="line-height: 2.6rem">暂无中奖记录</div>
+            </div>
+
+            <div id="awardContactInfo" class="hide">
+              <div class="titleLine"><span class="title">联系信息</span></div>
+              <div class="contactGroup">
+                <div class="contactItem contactName hide">姓名： <span>monica</span></div>
+                <div class="contactItem contactPhone hide">电话： <span>13200000000</span></div>
+
+                <div class="contactItem contactAddress hide">地址： <span>广东省广州市海...</span></div>
+
+              </div>
+              <div class="updateBtn abs">修改</div>
+            </div>
+          </div>
+          <div class='attentionBox'>
+            <div class='menuBtnBox'>
+              <a class='menuName'>关注我们</a>
+            </div>
+            <div class='hdskillInfo skillInfo theRunningAdClass'><a class="theSpecialTarget" href='http://mp.weixin.qq.com/s?__biz=MjM5MTk5MjI3OA==&#x26;mid=209854000&#x26;idx=1&#x26;sn=82241d924839270d3ea820ad2d56c01b#rd'>我也要创建活动</a><span class='gotoFlag'><i></i></span></div>
+            <div class='holdBox'></div>
+          </div>
+        </div>
+
+        <div id="regAwardBox" class="poupMain" _flag="4" style="-webkit-overflow-scrolling:touch;">
+          <div class="poupMainInfo">
+            <div id="noRegAward" class="hide" style="margin-left:3px;">尚未公布获奖名单，详情请查看活动说明</div>
+            <div id="regAwardMain" style="display:none;">
+
+              <div class="regAwardList">
+                <div class="mainTitle">一等奖</div>
+                <div class="playerName" style="margin-bottom:12px;"></div>
+              </div>
+
+              <div class="regAwardList">
+                <div class="mainTitle">二等奖</div>
+                <div class="playerName" style="margin-bottom:12px;"></div>
+              </div>
+
+              <div class="regAwardList">
+                <div class="mainTitle">三等奖</div>
+                <div class="playerName" style="margin-bottom:12px;"></div>
+              </div>
+
+            </div>
+          </div>
+          <div class='attentionBox'>
+            <div class='hdskillInfo skillInfo theRunningAdClass'><a class="theSpecialTarget" href='http://mp.weixin.qq.com/s?__biz=MjM5MTk5MjI3OA==&#x26;mid=209854000&#x26;idx=1&#x26;sn=82241d924839270d3ea820ad2d56c01b#rd'>我也要创建活动</a><span class='gotoFlag'><i></i></span></div>
+            <div class='holdBox'></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <div id="activityKit" class="poupMain bg hide">
+      <div class="arrow" id="arrow"></div>
+      <div id="tip_txt">
+        <p>提示</p>
+        <p style="margin-top: 0.25rem">点击锦囊即可查看活动规则、排行榜、奖品等信息。</p>
+      </div>
+    </div>
+
+    <div id="awardUserInfoBg" class="hide" style="position:fixed; top:0; left: 0; bottom: 0; right: 0;overflow:hidden;"></div>
+    <div id="hostInfoBg" class="hide" style="position:fixed; top:0; left: 0; bottom: 0; right: 0;overflow:hidden;z-index:9999;"></div>
+    <div id="validteBoxerBg" class="hide" style="position:fixed; top:0; left: 0; bottom: 0; right: 0;overflow: hidden;"></div>
+
+    <div id="awardDetailBox" class="poupMain bg hide isAngular">
+      <div id="forJZCouponBg">
+        <div class="tipsBox">
+          <div class="contain">建站商城优惠券无奖品详情页<br><a href="javascript:;" onclick="window.open('http://hd.fkw.com/news/11181')">了解更多</a></div>
+        </div>
+      </div>
+      <div id="awardDetailScrollBox">
+        <div id="awardDeailBg" class="bgfix hide"></div>
+        <div class="awardCloseIcon" onclick="hg.fire('scrollEvent',true);"></div>
+        <div class="awardDetail">
+          <div class="hostName" style="padding: 0.7rem 2.2rem 1rem 0.7rem;text-align: left;color:#fff;word-break: break-word"></div>
+          <div class="awardName"></div>
+          <div class="awardSubTitle"></div>
+          <div class="awardCodeTime codeTimeFixedRange"><em>使用期限</em>：<span class="codeBgTime"></span> - <span class="codeEndTime"></span></div>
+          <div class="codeTimeFixedTerm hide">中奖后<span class="codeBgTime"></span>天生效，有效天数<span class="codeEndTime"></span>天</div>
+          <div id="awardCollectionBtn" ontouchend="HdGame.logDog(1000045, 2);HdGame.favorite();">收藏优惠券</div>
+          <div class="awardDetailWarp"></div>
+        </div>
+        <div class="codeImgBox">
+          <div id="codeStatusBox" class="hide" style="padding-top:1.25rem;color:#777">
+            <div id="codeStatusBtn"></div>
+            <div id="codeStatusInfo">商家已将该兑奖码设置为作废<br>详情请联系商家</div>
+            <div id="codeStatusTips" class="hide"><em style="font-style: normal;">请先<span class="giftNameA">兑奖券</span>，<span class="targetDateMin">1</span>天后可用</em></div>
+          </div>
+          <div id="codeDetailInfoBox">
+            <img class="codeImg" />
+            <div class='codeLine'><span id="codeName">优惠码</span>：<span style=" max-width: 8.7rem;word-wrap: break-word;display: inline-block; vertical-align: middle;" class="code selectText"></span><span class="copy">复制券码</span></div>
+            <div class="codeOptInfo"></div>
+            <div class="codeOptInfo_Gift"></div>
+            <div class="redPacketTip hide"></div>
+          </div>
+        </div>
+        <div class="awardBtnList">
+
+          <div style="height:0.4rem;"></div>
+          <!--兑奖券详情弹出层 -->
+          <div id="ticketDetailBox">
+            <p class="ticketitle"><span class="text">兑奖券详情</span></p>
+            <div class="ticketInfo">
+              <div class="itemList dateLine codeTimeFixedRange">
+                <div class="title">有效日期</div>
+                <div class="box">
+                  <span class="beginTime">2016.03.03</span>至<span class="endTime">2017.03.03</span>
+                </div>
+              </div>
+              <div class="itemList dateLine codeTimeFixedTerm hide">
+                <div class="title">有效日期</div>
+                <div class="box">
+                  中奖后<span class="codeBgTime"></span>天生效，有效天数<span class="codeEndTime"></span>天
+                </div>
+              </div>
+              <div class="itemList timelimitLine">
+                <div class="title">可用时段</div>
+                <div class="box">
+                  <div class="timelimit">周一至周日</div>
+                </div>
+              </div>
+              <div class="itemList addressLine">
+                <div class="title titleAdress">兑奖地址</div>
+                <div class="box">
+                  <div class="address">地址</div>
+                </div>
+              </div>
+              <div class="itemList noticeLine">
+                <div class="title titleNotice">兑奖须知</div>
+                <div class="box">
+                  <div class="notice"><pre style="word-wrap: break-word;"></pre></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <form action=""></form>
+          <div id="useStoreBox" class="initHide">
+            <div class="storeTitle">
+              <span class="text">适用门店</span><span class="storeNumText">（<span id="storeNum">5</span>个）</span>
+              <span class="moreBtn">更多</span>
+            </div>
+            <div class="storeInfoBox">
+              <div class="locationBtn" onclick="HdGame.openStoreLocation(this)"></div>
+              <div class="info">
+                <div class="storeNameBox"><span id="storeName"></span><span id="distance"></span></div>
+                <div class="storeAdress"></div>
+              </div>
+            </div>
+          </div>
+          <div style="height:0.4rem;"></div>
+          <a style="text-decoration:none;">
+            <div class="servicePhone awardDetailBtn"><span class="text">客服电话</span><span class="phoneIcon"></span><span class="phoneText"></span></div>
+          </a>
+          <!--20180809版本划分新旧活动-->
+
+          <a id="hostInfoDetail" style="text-decoration:none;">
+            <div class="jumptoHostInfo awardDetailBtn"><span class="text">主办方介绍</span>
+              <div class="cell__ft"></div>
+            </div>
+          </a>
+
+          <a id="awardCusBtnInfo" href="javascript:;" style="text-decoration:none;">
+            <div class="awardCusBtn awardDetailBtn weui-cell__bd" style="border-top:none;"><span class="text">自定义按钮（未开启）</span><span class="textDef hide">自定义按钮（未开启）</span>
+              <div class="cell__ft"></div>
+            </div>
+          </a>
+          <div style="height:3.15rem;"></div>
+        </div>
+      </div>
+      <div class="hide homePoupMask codeCopyDetailMask">
+        <div class="codeCopyDetailPoup">
+          长按以下文字复制券码<br>
+          <div class="copyCode selectText"></div>
+        </div>
+      </div>
+      <div class="hide bgfix codeDetailImgBox">
+        <div class="absCenter imgBox">
+          <img class="codeImg" style="width:9rem;height:9rem;" />
+        </div>
+      </div>
+      <div id="bottomCusBtnBox">
+        <a id="seeFsnDetail" href="javascript:;" style="text-decoration:none;display:none;">
+          <div class="bottomCusBtn cusBtn" style="border-top:none;"><span class="text">查看裂变情况</span></div>
+        </a>
+        <a id="bottomCusBtnInfo" href="javascript:;" style="text-decoration:none;">
+          <div class="bottomCusBtn cusBtn" style="border-top:none;"><span class="text">立即兑奖</span></div>
+        </a>
+        <!--<a id="WxCusBtnInfo" href="javascript:;" style="text-decoration:none;" class="hide"><div class="awardCusBtn cusBtn" style="border-top:none;"><span class="text">自定义按钮（未开启）</span><span class="textDef hide">自定义按钮（未开启）</span><div class="cell__ft"></div></div></a>-->
+        <!--<a id="WxCusBtnInfo" href="javascript:;" style="text-decoration:none;"><div class="cusBtn" style="border-top:none;"><span class="text">领取微信卡券</span><div class="cell__ft"></div></div></a>-->
+      </div>
+    </div>
+    <div id="storeListBox" class="bg hide">
+      <div class="list"></div>
+      <div class="refreshBtn hide">更新当前位置</div>
+      <div class="closeBtn"></div>
+    </div>
+
+
+
+
+    <div id="informBox" class="bg hide">
+      <div id="inform-reason-page">
+        <div class="weui-cells__title">请选择投诉原因</div>
+        <div class="weui-cells weui-cells_radio" id="inform-reason-box">
+          <label class="weui-cell weui-check__label reasonItem" for="temptShare" _index="0">
+                <div class="weui-cell__bd">
+                    <p>诱导分享</p>
+                </div>
+                <div class="weui-cell__ft">
+                    <input type="radio" class="weui-check" name="radio1" id="temptShare">
+                    <span class="weui-icon-checked"></span>
+                </div>
+            </label>
+          <label class="weui-cell weui-check__label reasonItem" for="shamActive" _index="1">
+                <div class="weui-cell__bd">
+                    <p>虚假活动</p>
+                </div>
+                <div class="weui-cell__ft">
+                    <input type="radio" name="radio1" class="weui-check" id="shamActive">
+                    <span class="weui-icon-checked"></span>
+                </div>
+            </label>
+          <label class="weui-cell weui-check__label reasonItem" for="political" _index="2">
+                <div class="weui-cell__bd">
+                    <p>政治敏感</p>
+                </div>
+                <div class="weui-cell__ft">
+                    <input type="radio" class="weui-check" name="radio1" id="political">
+                    <span class="weui-icon-checked"></span>
+                </div>
+            </label>
+          <label class="weui-cell weui-check__label reasonItem" for="eroticism" _index="3">
+                <div class="weui-cell__bd">
+                    <p>色情低俗</p>
+                </div>
+                <div class="weui-cell__ft">
+                    <input type="radio" name="radio1" class="weui-check" id="eroticism">
+                    <span class="weui-icon-checked"></span>
+                </div>
+            </label>
+          <label class="weui-cell weui-check__label reasonItem" for="rumor" _index="4">
+                <div class="weui-cell__bd">
+                    <p>谣言</p>
+                </div>
+                <div class="weui-cell__ft">
+                    <input type="radio" class="weui-check" name="radio1" id="rumor">
+                    <span class="weui-icon-checked"></span>
+                </div>
+            </label>
+          <label class="weui-cell weui-check__label reasonItem" for="otherReason" _index="5">
+                <div class="weui-cell__bd">
+                    <p>其他（收集隐私信息等）</p>
+                </div>
+                <div class="weui-cell__ft">
+                    <input type="radio" name="radio1" class="weui-check" id="otherReason">
+                    <span class="weui-icon-checked"></span>
+                </div>
+            </label>
+        </div>
+        <div id="cancel-inform-btn" ontouchend="hg.fire('scrollEvent',true);">取消</div>
+        <div id="next-inform-btn" class="weui-btn weui-btn_primary hide">下一步</div>
+        <div id="inform-poup-tip" class="hide">投诉成功</div>
+      </div>
+      <div id="inform-desc-page" style="display: none;">
+        <div class="weui-cells__title">投诉描述</div>
+        <div class="weui-cells weui-cells_form">
+          <div class="weui-cell" id="inform-desc-box">
+            <div class="weui-cell__bd">
+              <textarea class="weui-textarea" id="informDesc" placeholder="请输入文本" rows="4"></textarea>
+              <div class="weui-textarea-counter" id="informDesc-counter"><span>0</span>/50</div>
+            </div>
+          </div>
+        </div>
+        <div id="submit-inform-btn" class="weui-btn weui-btn_primary">提交</div>
+      </div>
+    </div>
+    <div id="informResultBox" class="bg hide weui">
+      <div class="weui-msg">
+        <div class="weui-msg__icon-area"><i class="weui-icon-success weui-icon_msg"></i></div>
+        <div class="weui-msg__text-area">
+          <h2 class="weui-msg__title">投诉成功</h2>
+          <p class="weui-msg__desc">感谢你的参与，我们坚决反对色情、暴力、欺诈等违规信息，我们会认真处理你的投诉，维护绿色、健康的网络环境</p>
+        </div>
+        <div class="weui-msg__opr-area" ontouchend="hg.fire('scrollEvent',true);">
+          <p class="weui-btn-area">
+            <a class="confirm-btn weui-btn weui-btn_primary">确定</a>
+          </p>
+        </div>
+        <div class="weui-msg__extra-area">
+          <div class="weui-footer">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="homeBtnBox specialBottom">
+
+
+      <div id="myAwardBtn" onclick="HdGame.changePoup(3,'',true)" style="display:none;"><span class='redDot'></span></div>
+      <!--<div id="informBtn" ontouchend="HdGame.changePoup(5,'',true)">-->
+
+      <!--    <span>投诉</span>-->
+    </div>
+  </div>
+
+  <div id="logoImgBox" class="logoImgBox imgContainer absCenter hide" style="">
+    <img id="logoImg" class="slaveImg abs" src="/game-kouhong-assets/lib/image/logo.jpg" style="width:2rem;height:2rem;top:3.5rem;left:0.75rem;" />
+  </div>
+
+
+  <div class="slogan editTarget-slogan hide pointer-events layer">软山互动-营销推广必备神器</div>
+
+  <div id="lots-wait-Box" style="display:none">
+    <div id="lots-wait-img" class="editRelate-lotsPot"></div>
+    <div id="lots-wait-hint">当前抽奖人数过多<br/>请稍等 <span id="lots-wait-hint-num">0</span> 秒</div>
+  </div>
+  <div id="helpGuideBox" style="display:none">
+
+
+    <p>你今天已经没有抽奖机会了</br>分享给好友或群聊</p>
+    <p style="margin-top:1.1rem;">
+      今天将额外获得1次抽奖机会！<br/>（仅限当天首次分享）
+    </p>
+
+
+  </div>
+
+  <div id="themeGameCodeImgBox" class="hide">
+    <img id="themeGameCodeImg" _src="data:image/png;base64,XdmFyIGc9IjQsZiw3LGgsMTIsdywyMix2LDI3LHIsMzEsaiIuc3BsaXQoIiwiKSxmPWdfY29uZmlnLnBUb2tlbixjPWhnLmFzc2V0cy5pbmNyZW1lbnQsaj1mdW5jdGlvbihoKXtoPSQubWQ1KGgrZikuc3BsaXQoIiIpO2Zvcih2YXIgYj0wLGs9Zy5sZW5ndGg7YjxrO2IrPTIpe2guc3BsaWNlKHBhcnNlSW50KGdbYl0pK3BhcnNlSW50KGIvMiksMCxnW2IrMV0pfXJldHVybiAkLm1kNShoLmpvaW4oIiIpKX0sZD1mdW5jdGlvbihsLGgpe2Z1bmN0aW9uIGsoYil7cmV0dXJuIGJ9dmFyIG49bC1oLG09aGcudGltZTtpZihnX2NvbmZpZy5zY29yZVR5cGUmJmwhPW0uaW5pdFRpbWUpe3ZhciBvPW0uaXNEZXNjPy0xOjE7aWYoKG0ucmFuZ2VbMF0+MCYmbypuPG0ucmFuZ2VbMF0vMjAwMCl8fChtLnJhbmdlWzFdPjAmJm8qbj5tLnJhbmdlWzFdLzUwMCkpe3JldHVybiBrKCEwKX19ZWxzZXtpZihsIT0wJiZjJiZuPmMqMil7cmV0dXJuIGsoITApfX1yZXR1cm4gayghMSl9LGUsaSxhPWZ1bmN0aW9uKGIpe2lmKGQoYixhLnQpKXtyZXR1cm59Z19jb25maWcuYXdhcmRJbmZvQj1qKGIpO2EudD1ifTthLnQ9MDtnX2NvbmZpZy5zY29yZVR5cGU/KGU9aGcudGltZSxpPSJzZXRUaW1lIik6KGU9aGcuZ3JhZGUsaT0ic2V0R3JhZGUiKSxlJiZlLm9uPyhlLm9uKGksYSksYSgwKSk6YSgiY2xtMTIzIik=">
+  </div>
+
+
+  <div class="resuleBox hide">
+    <div id="resule-status-box" style="display:none">
+
+      <div id="resule-status-scrollWrap">
+        <div class="resule-bgLight"></div>
+        <div id="resule-status-bird"></div>
+        <div class="optContainer" style="height: 18.6rem; overflow-y:auto;">
+          <div id="resule-status-head">
+            <div class="resule-status-userImg">
+              <img src="{{game_player.avatar}}" />
+            </div>
+            <div id="resule-status-ribbon" class="resule-status-ribbon"></div>
+          </div>
+          <div id="resule-status-body">
+
+            <p class="youraward" style="font-size:0.8rem; line-height:1.2rem">您的成绩为：<span class="resuleArg" style="font-size:0.8rem;"></span><span class="result-scoreUnit" style="font-size:0.8rem;"><span class="gameScoreUnit">分</span></span>
+            </p>
+            <p class="youraward costTime hide" style="font-size:0.8rem; line-height:1.2rem">达到该成绩用时：<span class="resuleArg" style="font-size:0.8rem;"></span><span class="result-scoreUnit" style="font-size:0.8rem;">秒</span></p>
+            <p class="youraward special hide" style="font-size:0.8rem; line-height:1.2rem">通关并且</p>
+            <p class="beat-Percent hide">成功击败全国<span></span>%的玩家</p>
+            <p class="resule-status-minscorex" style="display:none;">成绩必须达到 <span class="resuleArg resulescoreLimit"></span> <span class="gameScoreUnit">分</span>才能<span id="minscoreDrawFont">抽奖</span></p>
+
+            <p id="bestArg" style="margin-top:0.5rem">最佳成绩为：<span class="resuleArg"></span><span class="result-scoreUnit"><span class="gameScoreUnit">分</span></span>
+            </p>
+            <p id="bestCostTime" style="display: none">达到最佳成绩用时：<span class="resuleArg"></span><span class="result-scoreUnit">秒</span></p>
+            <p id="bestRank">最佳排名为：<span class="result-scoreUnit2">NO.</span><span class="resuleArg"></span></p>
+
+            <div id="rank_showRule" style="text-decoration:underline;margin:0.7rem 0rem;" class="hide" onclick="showRule();">活动规则</div>
+
+            <div id="resule-status-count" style="margin-top:0.6rem">
+              <p class="totalDraw">您还有 <span id="totalDrawCount" class="resuleArg"></span> 次抽奖机会</p>
+              <p class="dayDraw">今天还有 <span class="resuleArg dayDrawCount"></span> 次机会抽奖</p>
+              <p class="dayDraw4Total hide">今天可抽 <span class="resuleArg dayDrawCount"></span> 次</p>
+            </div>
+
+            <div id="resule-status-playinfo" style="margin-top:0.6rem">
+              <p class="dayPlayHint">今天还有 <span class="resuleArg todayPlayCount"></span> 次参与机会</p>
+              <p class="totalPlayHint">您还有 <span class="resuleArg totalPlayCount"></span> 次参与机会</p>
+              <p class="dayPlayHint4Total">今天可参与 <span class="resuleArg todayPlayCount"></span> 次</p>
+            </div>
+          </div>
+          <div id="resule-status-other" class="hide">
+            <p style="font-size:0.8rem;font-weight:bold;">通关并且</p>
+            <p class="resule-status-minscorex hide" style="margin: 10px 0px 50px;">成绩必须达到 <span class="resuleArg resuleArg-fail resulescoreLimit"></span> <span class="gameScoreUnit">分</span>才能抽奖</p>
+          </div>
+          <div id="resule-sucReg" class="hide" style="margin-top:0.6rem"> </div>
+          <div class="resule-foot-box">
+            <div class="resule-foot-one">
+              <div class="resule-button resule-one-button resule-status-gift hide">赶紧去抽奖</div>
+              <div class="resule-button resule-one-button resule-status-reg hide">我要报名</div>
+              <div class="resule-button resule-one-button resule-status-again hide">再玩一次</div>
+              <div class="resule-button resule-one-button resule-status-send hide">领取礼品</div>
+              <div class="resule-button resule-one-button resule-status-rightNow hide">马上PK</div>
+            </div>
+            <div class="resule-foot-two">
+              <div class="resule-button resule-status-again restart-again ">再玩一次</div>
+            </div>
+          </div>
+        </div>
+        <div class='attentionBox'>
+          <div class=" resule-foot-box">
+            <div id="drawMenuBtnBox" class='menuBtnBox resule-foot-two'>
+              <div id="resule_seeRank_show" class="resule-button resule-status-seeRank">排行榜</div>
+              <div class="resule-button resule-status-home">返回首页</div>
+            </div>
+          </div>
+          <div class='hdskillInfo skillInfo theRunningAdClass'><a class="theSpecialTarget" href='http://mp.weixin.qq.com/s?__biz=MjM5MTk5MjI3OA==&#x26;mid=209854000&#x26;idx=1&#x26;sn=82241d924839270d3ea820ad2d56c01b#rd'>我也要创建活动</a><span class='gotoFlag'><i></i></span></div>
+          <div class="holdBox"></div>
+        </div>
+      </div>
+
+      <div id="resule-status-lotsBox" style="display:none">
+        <img id="resule-status-lots" class="editTarget-lotsPot">
+        <div id="resule-status-lotsHand" class="editTarget-lotsShakeHand">
+          <div class="shakeHand"></div>
+          <div class="shakeTxt"></div>
+          <div class="waitDrawBtn" style="display:none">点击抽奖</div>
+        </div>
+      </div>
+    </div>
+    <div id="resule-gift-box" style="display:none">
+      <div id="resule-gift-scrollWrap" class="resule-gift-overflowScrolling" style="padding-top:1.2rem;position:relative;z-index:300;">
+
+
+        <div class="resule-bgLight"></div>
+
+
+        <div id="luckContainer" style="position:absolute; width: 100%;z-index:250;">
+          <p id="resule-gift-luck" style="text-align:center;">恭喜你获得了</p>
+
+          <div class="imgContentLimit hide" style="width: 14rem; height: 30rem; position: absolute;"></div>
+          <div class="imgContainer xydzp_GiftPos" style="position:relative;">
+            <img id="resule-gift-sucImg" class="slaveImg">
+
+
+          </div>
+
+          <div id="resule-gift-foot">
+            <p id="resule-gift-rank"> <span class="rank gifArg awardStyle"></span> </p>
+            <p id="resule-gift-goods"> <span class="goods gifArg awardName"></span> </p>
+          </div>
+
+
+
+
+          <div id="resule-gift-buttonMenu">
+
+            <div class="giftBtnBox lookDetail orangeBtn">
+              <a class="seeAwardDetail buttonContent">查看奖品详情</a>
+            </div>
+
+            <div class='resule-gift-draw repeatDraw greenBtn flowBtn ' data-awarded='true'>继续抽奖</div>
+            <div class='resule-gift-home menuBack menuBack2 greenBtn flowBtn'>返回首页</div>
+
+
+
+          </div>
+
+        </div>
+      </div>
+
+      <div id="faiImgBox">
+        <div class="cannotGetThePriceBox"></div>
+
+
+
+        <img class="abs editTarget-theGetPricePic theUnPriceImg imgPreventDefault" id="theGetPricePic" />
+
+
+
+
+
+
+        <div class='resule-gift-draw repeatDraw '>继续抽奖</div>
+        <div class='resule-gift-home menuBack menuBack2'>返回首页</div>
+
+
+      </div>
+
+      <div id="resule-gift-buttonMenu-bottom">
+
+        <div class="giftBtnBox lookDetail orangeBtn">
+          <a class="seeAwardDetail buttonContent">查看奖品详情</a>
+        </div>
+
+        <div class="bottom-line">
+          <div class='resule-gift-draw repeatDraw greenBtn flowBtn ' data-awarded='true'>继续抽奖</div>
+          <div class='resule-gift-home menuBack menuBack2 greenBtn flowBtn'>返回首页</div>
+        </div>
+
+
+
+      </div>
+
+      <div class='attentionBox'>
+
+
+        <div class='menuBtnBox btnB' style='margin-bottom:4rem;'>
+
+          <a class='menuName'>关注我们</a>
+        </div>
+        <div class='hdskillInfo skillInfo theRunningAdClass'><a class="theSpecialTarget" href='http://mp.weixin.qq.com/s?__biz=MjM5MTk5MjI3OA==&#x26;mid=209854000&#x26;idx=1&#x26;sn=82241d924839270d3ea820ad2d56c01b#rd'>我也要创建活动</a><span class='gotoFlag'><i></i></span></div>
+        <div class="holdBox"></div>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="attentionMask" class="homePoupMask">
+    <div id="attentionPoup" class="homePoupInner attentionPoup">
+      <canvas id="QRImg_canvas1" class="QRImg_canvas"></canvas>
+      <img class="QRImg_exportImg" class="hide" src style="position: absolute; top: 0.5rem; z-index: 10; height: 16.5rem" />
+    </div>
+  </div>
+
+  <div id="awardCodeLayer" class="homePoupMask hide">
+    <div id="awardCodeDetail" style="border-radius: 0.2rem;">
+      <div class='codeLine' style="margin-top:0.4rem;">请联系核销员扫码核销</div>
+      <img class="codeImg" />
+      <div class='codeLine' style="padding-top: 0.8rem;"><span class="code selectText"></span></div>
+      <div class="codeOptInfo"></div>
+    </div>
+  </div>
+  <div id="newAttentionMask" class="homePoupMask hide">
+    <div id="newAttentionPoup" class="homePoupInner attentionPoup">
+      <canvas id="QRImg_canvas2" class="QRImg_canvas"></canvas>
+      <img class="QRImg_exportImg" class="hide" src style="position: absolute; top: 0.5rem; z-index: 10; height: 16.5rem" />
+    </div>
+  </div>
+  <div id="plAttentionMask" class="homePoupMask hide">
+    <div id="plAttentionPoup" class="homePoupInner attentionPoup">
+      <canvas id="QRImg_canvas3" class="QRImg_canvas"></canvas>
+      <img class="QRImg_exportImg" class="hide" src style="position: absolute; top: 0.5rem; z-index: 10; height: 16.5rem" />
+    </div>
+  </div>
+
+  <div id="skillSupMask" class="homePoupMask">
+    <img src="/game-kouhong-assets/lib/image/hdQRcode/20170821/caewmB_1.png?v=201711211453" style="position:absolute;top:2rem;z-index:10;margin:auto;left:0;right:0;width:11.65rem" />
+  </div>
+
+
+
+  <div id="loadingToast" class="hide">
+    <div class="weui-mask_transparent"></div>
+    <div class="weui-toast">
+      <i class="weui-loading weui-icon_toast"></i>
+      <p class="weui-toast__content"></p>
+    </div>
+  </div>
+
+
+  <div id="myFissionPage" class="fissionPage">
+    <div class="closeBtn"></div>
+    <div class="fissionBg editTarget-myFissionBg">
+      <div class="fissionProgress">
+        <div class="txt_fsp">
+          <div class="tit_txt">
+            <div class="notFinish">— 当前已增值 —</div>
+            <div class="hasFinish">恭喜完成了所有裂变挑战</div>
+          </div>
+          <div class="pgs_txt">
+            <div class="notFinish"><span class="curVal">0</span><span class="txt">元/<span class="maxVal"></span>元</span>
+            </div>
+            <div class="hasFinish">增值为<span class="txt"><span class="totalVal"></span>元</span>优惠券</div>
+          </div>
+        </div>
+        <div class="cont_fsp">
+          <div class="fill_fsp"></div>
+        </div>
+        <div class="bot_fsp">
+          <div class="notStart">还未开始裂变</div>
+          <div class="start left">已裂变<span class="num"></span>次</div>
+          <div class="start right">面值增加了<span class="curVal"></span>元</div>
+        </div>
+      </div>
+      <div class="func_fsn">
+        <div class="txt_fsn">
+          <div class="inviteTxt_fsn">邀请够 <span class="times"></span> 人，此券可增值 <span class="maxVal"></span> 元</div>
+          <div class="detail_fsn">获得一张可裂变的<span class="fsnName"></span>，立即与好友分享吧！<br/>邀请成功同时自己获得等额增值金额</div>
+        </div>
+        <div class="btnCont_fsn editTarget-myFissionBtn">
+          <div class="invBtnFsn btn editTarget-invBtnFsn"></div>
+          <div class="seeCurAwaFsn btn editTarget-seeCurAwaFsn"></div>
+          <div class="invBtnFsnTxt btn">点击右上角邀请好友</div>
+        </div>
+        <div class="friendList_fsn">
+          <div class="title">
+            <span class="line"></span><span class="cir"></span><span class="txt">邀请好友</span><span class="cir"></span><span class="line"></span>
+          </div>
+          <div class="subTit">共有<span class="num">1</span>名好友帮忙裂变</div>
+          <div class="list"></div>
+          <div class="weui-loadmore loading">
+            <i class="weui-loading"></i>
+            <span class="weui-loadmore__tips">加载更多</span>
+          </div>
+          <div class="loadEnd">————<span class="txt">没有更多了</span>————</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="shareFissionPage" class="fissionPage">
+    <div class="closeBtn"></div>
+    <div class="fissionBg editTarget-shareFissionBg">
+      <div class="shareFissionTxt editTarget-shareFissionTxt"><span class="txt_tit"><span class="name">南笙</span>送给你一张</span>
+      </div>
+      <div class="shareFissionName editTarget-shareFissionName">优惠券</div>
+      <div class="shareFissionBtn editTarget-shareFissionBtn"></div>
+    </div>
+  </div>
+
+  </div>
+
+</body>
+
 </html>

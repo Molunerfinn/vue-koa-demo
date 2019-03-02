@@ -359,11 +359,11 @@ export default {
         var startAt = new Date( this.game_round.start_at);
         var endAt = new Date( this.game_round.end_at);
         if( startAt>= now ){
-          this.weui.alert('谢谢参与，游戏还未开始');
+          this.$weui.alert('谢谢参与，游戏还未开始');
           return
         }
         if( endAt<= now ){
-          this.weui.alert('谢谢参与，游戏已经结束');
+          this.$weui.alert('谢谢参与，游戏已经结束');
           return
         }
         // 开始游戏前，如果没有联系方式，让用户输入联系方式

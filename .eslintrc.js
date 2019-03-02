@@ -23,6 +23,15 @@ module.exports = {
             }
         }
     },
+    // lufylegend 执行代码时脚步需要访问的额外全局变量。
+    "globals": {
+        "BlobBuilder":true,
+        "console":true,
+        "Box2D":true,
+        "webkitAudioContext":true,
+        "ActiveXObject":true,
+        "enableWebGLCanvas":true
+    },
     // add your custom rules here
     'rules': {
         // allow paren-less arrow functions

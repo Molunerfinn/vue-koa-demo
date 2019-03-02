@@ -5,6 +5,9 @@ import App from './App'
 // import ElementUI from 'element-ui'
 // import 'element-ui/lib/theme-default/index.css'
 // import VueRouter from 'vue-router'
+import '@/assets/kouhong/css/base.css'
+import '@/assets/kouhong/css/game.css'
+
 import axios from 'axios'
 
 Vue.prototype.$http = axios // 类似于vue-resource的调用方法

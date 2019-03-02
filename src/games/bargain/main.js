@@ -7,7 +7,8 @@ import App from './App'
 // import VueRouter from 'vue-router'
 import axios from 'axios'
 import wx from 'weixin-js-sdk'
-import weui from 'weui'
+import 'weui'
+import weui from 'weui.js'
 import QRCode from 'qrcode'
 
 import '@/assets/bargain/css/common-wx.css'
@@ -16,7 +17,7 @@ import '@/assets/bargain/css/game-wx.css'
 Vue.prototype.$http = axios // 类似于vue-resource的调用方法
 Vue.prototype.$wx = wx
 Vue.prototype.$weui = weui
-Vue.prototype.$QRCode  = QRCode 
+Vue.prototype.$QRCode  = QRCode
 /* eslint-disable no-new */
 new Vue({
   render: h => h(App)

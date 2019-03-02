@@ -1,0 +1,31 @@
+*{margin:0;outline:0;padding:0;font-size:100%;-webkit-tap-highlight-color:transparent}
+a{color:#000;-webkit-tap-highlight-color:rgba(0,0,0,.35)}
+html{height:100%;font-size:100%;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%}
+body{margin:0;padding:0;width:100%;height:100%;min-height:100%;font-family:"微软雅黑";font-size:.6rem;line-height:1.231;-webkit-touch-callout:none;display:-webkit-box;-webkit-box-orient:vertical;-moz-box-orient:vertical;-webkit-box-align:stretch;-moz-box-align:stretch;position:relative}
+img{-ms-interpolation-mode:bicubic;vertical-align:middle}
+.hide{display:none}
+.body{width:100%;height:100%;margin:auto;-webkit-background-size:100% auto;background-size:100% auto;min-height:100%;position:relative}
+.home{width:100%;height:100%;text-align:center}
+.gameInfoBox{position:absolute;top:.5rem;width:100%}
+.home .joinNumLine{color:#124bb3;font-size:.7rem;margin-top:.3rem;text-shadow:-1px -1px 0 #fff,0 -1px 0 #fff,1px -1px 0 #fff,1px 0 0 #fff,1px 1px 0 #fff,0 1px 0 #fff,-1px 1px 0 #fff,-1px 0 0 #fff}
+.gameBox{width:100%;height:100%}
+#gameBgBox{width:100%;height:100%;min-height:25.2rem;overflow:hidden}
+#gameBgBox img{width:100%;height:auto}
+.gameBox .userInfoBox{margin-left:.75rem}
+.gameBox .userInfoBox .userImgBox{width:2.5rem;height:2.5rem;display:inline-block;border-radius:999px;border:.1rem solid rgba(255,255,255,.3)}
+.gameBox .userImgBox .userImg{width:100%;height:100%;display:inline-block;border-radius:999px}
+.gameBox .userInfoBox .grade{display:inline-block;font-size:.9rem;line-height:2.6rem;vertical-align:top;margin-left:.3rem}
+.gameBox .timeBox{position:absolute;left:0;right:0;top:0;margin:auto;text-align:center;font-size:.8rem;margin-top:.5rem;width:4rem}
+.gameBox .timeBox .time{font-size:1.3rem;font-weight:700}
+#gameLayerBox{position:absolute;top:0;bottom:0;left:0;right:0;min-height:25rem}
+#gameLayerBox .editTarget-ySugar{position:absolute;width:6rem;height:6rem;left:3.625rem;top:3.625rem;z-index:100}
+#gameLayerBox .lollipop{position:absolute;width:1rem;height:3.625rem;left:6.125rem;top:0;transform-origin:50% 6.625rem}
+#gameLayerBox .lollipop.editTarget-club{background-size:auto 100%!important}
+#gameLayerBox .lollipop:nth-child(2){transform:rotate(90deg)}
+#gameLayerBox .lollipop:nth-child(3){transform:rotate(180deg)}
+#gameLayerBox .lollipop:nth-child(4){transform:rotate(270deg)}
+#gameLayerBox .lollipop .editTarget-bSugar{position:absolute;width:1rem;height:1rem;left:0;top:0}
+#gameLayerBox #lollipopLimit{position:absolute;width:1.5rem;height:6.625rem;left:5.875rem;top:6.625rem}
+#gameLayerBox #bSugarBox{position:absolute;width:1rem;height:5.6rem;left:6.125rem;bottom:0}
+#gameLayerBox #bSugarBox .editTarget-bSugar{width:1rem;height:1rem;margin-top:.4rem}
+#gameLayerBox .editTarget-club{position:absolute;width:.1rem;height:2.625rem;left:.45rem;top:1rem}

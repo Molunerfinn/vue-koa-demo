@@ -59,7 +59,7 @@ select{-webkit-border-radius:0;border-radius:0;-webkit-border-image:none;-webkit
 .hide, .tanch{display: none}
 
 /* 顶部图片 */
-.index_top{width:100%;height:7.5rem;position: relative; background: url(/game-bargain-assets/app/images/game/bargain/banner_new_03.png) no-repeat center center / cover;}
+.index_top{width:100%;height:7.5rem;position: relative; background: url(/static/bargain/images/banner_new_03.png) no-repeat center center / cover;}
 .index_top img{float:left;width:100%;}
 .top_content{width:100%;height:0.5rem;padding: 0.1rem 0 0 0;text-align: center;display: flex;background-color:red;line-height: 0.3rem}
 .top_content strong{color:#ffee2d}
@@ -94,8 +94,8 @@ select{-webkit-border-radius:0;border-radius:0;-webkit-border-image:none;-webkit
 .index_describe_box{width:100%;padding:0.2rem;border-radius: 0.06rem;background-color: #00a7e4;}
 .index_describe_title{width:100%;height:0.54rem;text-align: center;color:#fff;font-size: 0.32rem;line-height: 0.54rem;}
 .main .title{display: inline-block;font-size: 0.32rem;padding:0 0.78rem;height:100%;position: relative;}
-.main .title:before{content:"";width:0.78rem;height:100%;position: absolute;left:0;top:0;background:url(/game-bargain-assets/app/images/game/bargain/title_1.png) no-repeat center center;-webkit-background-size: 0.58rem;background-size: 0.58rem;}
-.main .title:after{content:"";width:0.78rem;height:100%;position: absolute;right:0;top:0;background:url(/game-bargain-assets/app/images/game/bargain/title_2.png) no-repeat center center;-webkit-background-size: 0.58rem;background-size: 0.58rem;}
+.main .title:before{content:"";width:0.78rem;height:100%;position: absolute;left:0;top:0;background:url(/static/bargain/images/title_1.png) no-repeat center center;-webkit-background-size: 0.58rem;background-size: 0.58rem;}
+.main .title:after{content:"";width:0.78rem;height:100%;position: absolute;right:0;top:0;background:url(/static/bargain/images/title_2.png) no-repeat center center;-webkit-background-size: 0.58rem;background-size: 0.58rem;}
 .index_describe_num{width:100%;font-size: 0.28rem;line-height: 0.36rem;}
 .index_describe_num span{color:#ffee2d;font-weight: bold;font-size: 0.28rem;}
 .index_describe_img{width:100%;}
@@ -115,20 +115,26 @@ select{-webkit-border-radius:0;border-radius:0;-webkit-border-image:none;-webkit
  /*弹窗   */
 .shade{width: 100%;height: 100%;opacity: 0.8;background-color:#1d1c1c;position: absolute;
     top:0;left: 0; }
-.rauids{background-image: url(/game-bargain-assets/app/images/game/bargain/failure_03.png);background-size: 100% 100%;position: absolute;top: 20%;left: 10%;width: 80%;  height: 35%;}
+.rauids{background-image: url(/static/bargain/images/failure_03.png);background-size: 100% 100%;position: absolute;top: 20%;left: 10%;width: 80%;  height: 35%;}
 .shade_content{margin: auto;height:auto;width: 72%;overflow: hidden;position: absolute; top: 2.5rem;  left: 15%;text-align: center; color: #fff;}
 .shade_content p{color: #fff;margin: 0 auto;font-size: 0.4rem; padding: 0.8em 0;}
 
 /*login    */
-.loading{position: absolute;left:calc(50% - 1rem);top:calc(50% - 1rem);width:2rem;height:2rem;z-index: 101;border-radius: 0.06rem;background-image: url(/game-bargain-assets/app/images/game/bargain/waiting3.gif);-webkit-background-size: 1.24rem 1.24rem;background-size: 1.24rem 1.24rem;background-position: center center;background-repeat: no-repeat;background-color: rgba(0,0,0,0.5);}
+.loading{position: absolute;left:calc(50% - 1rem);top:calc(50% - 1rem);width:2rem;height:2rem;z-index: 101;border-radius: 0.06rem;
+  background-image: url(/static/bargain/images/waiting3.gif);
+  background-size: 1.24rem 1.24rem;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-color: rgba(0,0,0,0.5);
+}
 
 
 
 /* 投诉 */
 .circle_one{position: absolute;right:0.2rem;top:0.2rem;background-color: rgba(0,0,0,0.5);width:0.92rem;height:0.92rem;border-radius: 0.46rem;font-size: 0.24rem;color:#fff;text-align: center;line-height: 0.3rem;padding-top:0.15rem;z-index: 10;}
 .circle_two{position: absolute;right:0.2rem;top:1.32rem;background-color: #008000;width:0.92rem;height:0.92rem;border-radius: 0.46rem;font-size: 0.24rem;color:#fff;text-align: center;line-height: 0.3rem;z-index: 10;}
-.circle_tre{-webkit-animation-duration: 2s;animation-duration: 2s;-webkit-animation-fill-mode: both;animation-fill-mode: both;-webkit-animation-name: musicRotate;animation-name: musicRotate;animation-iteration-count:infinite;-webkit-animation-iteration-count:infinite;animation-timing-function:linear;-webkit-animation-timing-function:linear;position: absolute;right:0.2rem;top:2.5rem;background-color: #008000;width:0.92rem;height:0.92rem;border-radius: 0.46rem;font-size: 0.24rem;color:#fff;text-align: center;line-height: 0.3rem;z-index: 10;background: url(/game-bargain-assets/app/images/game/bargain/p3_blessing.png) no-repeat center/cover;}
-.circle_play{position: absolute;right:0.2rem;top:2.5rem;background-color: #008000;width:0.92rem;height:0.92rem;border-radius: 0.46rem;font-size: 0.24rem;color:#fff;text-align: center;line-height: 0.3rem;z-index: 10;background: url(/game-bargain-assets/app/images/game/bargain/p3_blessing.png) no-repeat center/cover;}
+.circle_tre{-webkit-animation-duration: 2s;animation-duration: 2s;-webkit-animation-fill-mode: both;animation-fill-mode: both;-webkit-animation-name: musicRotate;animation-name: musicRotate;animation-iteration-count:infinite;-webkit-animation-iteration-count:infinite;animation-timing-function:linear;-webkit-animation-timing-function:linear;position: absolute;right:0.2rem;top:2.5rem;background-color: #008000;width:0.92rem;height:0.92rem;border-radius: 0.46rem;font-size: 0.24rem;color:#fff;text-align: center;line-height: 0.3rem;z-index: 10;background: url(/static/bargain/images/p3_blessing.png) no-repeat center/cover;}
+.circle_play{position: absolute;right:0.2rem;top:2.5rem;background-color: #008000;width:0.92rem;height:0.92rem;border-radius: 0.46rem;font-size: 0.24rem;color:#fff;text-align: center;line-height: 0.3rem;z-index: 10;background: url(/static/bargain/images/p3_blessing.png) no-repeat center/cover;}
 .circle_hide{opacity: 0}
 .circle_two a{font-size: 0.24rem;color:#fff;display: inline-block;padding-top:0.15rem;width:100%;height:100%;}
 .foot_div{position: fixed;left:0px;bottom:0px;width:100%;height:0.82rem;padding:0 0.3rem;color:#fff;background-color: rgba(0,0,0,0.5);line-height: 0.82rem;z-index: 10;font-size: 0.3rem;}

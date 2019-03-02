@@ -1104,6 +1104,10 @@ babylon@^6.17.0, babylon@^6.18.0:
   version "6.18.0"
   resolved "https://registry.npmjs.org/babylon/-/babylon-6.18.0.tgz#af2f3b88fa6f5c1e4c634d1a0f8eac4f55b395e3"
 
+balajs@^0.1.9:
+  version "0.1.9"
+  resolved "http://registry.npm.taobao.org/balajs/download/balajs-0.1.9.tgz#e03d1e6fb88d53cc1a2591a7bfec70d1e52d8f00"
+
 balanced-match@^0.4.1, balanced-match@^0.4.2:
   version "0.4.2"
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-0.4.2.tgz#cb3f3e3c732dc0f01ee70b403f302e61d7709838"
@@ -2416,6 +2420,10 @@ electron-to-chromium@^1.2.7:
 electron-to-chromium@^1.3.27:
   version "1.3.27"
   resolved "https://registry.npmjs.org/electron-to-chromium/-/electron-to-chromium-1.3.27.tgz#78ecb8a399066187bb374eede35d9c70565a803d"
+
+element-closest@^2.0.1:
+  version "2.0.2"
+  resolved "http://registry.npm.taobao.org/element-closest/download/element-closest-2.0.2.tgz#72a740a107453382e28df9ce5dbb5a8df0f966ec"
 
 element-ui@^1.2.9:
   version "1.2.9"
@@ -8194,6 +8202,14 @@ webpack@^3.6.0:
 weixin-js-sdk@^1.4.0-test:
   version "1.4.0-test"
   resolved "http://registry.npm.taobao.org/weixin-js-sdk/download/weixin-js-sdk-1.4.0-test.tgz#612bbafcc97ad84f5afe6dc84701534cc59fc3ca"
+
+weui.js@^1.1.4:
+  version "1.1.4"
+  resolved "http://registry.npm.taobao.org/weui.js/download/weui.js-1.1.4.tgz#56f8a7ae66d20fb7b5a514e87a9e5aae30134af3"
+  dependencies:
+    balajs "^0.1.9"
+    element-closest "^2.0.1"
+    object-assign "^4.1.0"
 
 weui@^1.1.3:
   version "1.1.3"
