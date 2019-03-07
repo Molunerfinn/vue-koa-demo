@@ -27,21 +27,27 @@
        </div>
      </div>
 
-     <Game> </Game>
+     <Game :hd="hd"> </Game>
   </div>
 </template>
 
 <script>
 
-import Game from './Game.vue'
+import Game from './game/Game.vue'
+import GameRes from './game/GameRes'
+import HgGame from '@/lib/hdgame'
 
 export default {
   name: 'app',
   components: {
     Game
   },
+  created(){
+    HgGame.initJsHead(this.hd, GameRes)
+  },
   data(){
     return {
+      hd:{},
       homeBgImg: require('@/assets/kouhong/image/skin1/wx/ACgIABACGAAg5_-r4AUojOO-xgcwgAU4wAw.jpg'),
       titleImg: require('@/assets/kouhong/image/skin1/wx/ACgIABAEGAAg_e-r4AUoi5fylAQwugQ4tAE.png'),
       startBtnImg: require('@/assets/kouhong/image/skin1/wx/ACgIABAEGAAgjPDr4AUo8MCYpgMw9AM4yAE.png')
