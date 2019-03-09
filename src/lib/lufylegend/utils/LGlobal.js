@@ -56,6 +56,19 @@ let LGlobal = (function() {
         return typeof enableWebGLCanvas !== UNDEFINED;
     })();
     LGlobal.window = window;
+    // start copy from lufylegend.js on 20190309
+    LGlobal.pauseLoop = false;
+    LGlobal._setPauseLoopTrue = false;
+    LGlobal.setPauseLoop = function(aw, av) {
+        if (aw && av) {
+            LGlobal._setPauseLoopTrue = true
+        } else {
+            LGlobal.pauseLoop = aw;
+            LGlobal._setPauseLoopTrue = false
+        }
+    };
+    // end copy from lufylegend.js on 20190309
+
     (function(n) {
         LGlobal.isOldFirefox = (function(un) {
             let i = un.toLowerCase().indexOf('firefox');
@@ -99,7 +112,7 @@ let LGlobal = (function() {
         LGlobal.mobile = LGlobal.canTouch;
     })(navigator.userAgent);
     LGlobal.setDebug = function(v) {
-        LGlobal.traceDebug = v; 
+        LGlobal.traceDebug = v;
     };
     LGlobal.setCanvas = function(id, w, h) {
         LGlobal.ll_createCanvas(id, w, h);
@@ -129,8 +142,8 @@ let LGlobal = (function() {
         LGlobal.object.innerHTML = '<div style="position:absolute;margin:0;padding:0;overflow:visible;-webkit-transform: translateZ(0);z-index:0;">' +
   '<canvas id="' + LGlobal.id + '_canvas" style="margin:0;padding:0;width:' + w + 'px;height:' + h + 'px;">' +
   '<div id="noCanvas">' +
-  '<p>Hey there, it looks like you\'re using Microsoft\'s Internet Explorer. Microsoft hates the Web and doesn\'t support HTML5 :(</p>' + 
-  '</div>' +  
+  '<p>Hey there, it looks like you\'re using Microsoft\'s Internet Explorer. Microsoft hates the Web and doesn\'t support HTML5 :(</p>' +
+  '</div>' +
   '</canvas></div>' +
   '<div id="' + LGlobal.id + '_InputText" style="position:absolute;margin:0;padding:0;z-index:10;display:none;">' +
   '<textarea rows="1" id="' + LGlobal.id + '_InputTextareaBox" style="resize:none;background:transparent;border:0px;"></textarea>' +
@@ -311,10 +324,10 @@ let LGlobal = (function() {
             eve.offsetY = LGlobal.ll_scaleY(eve.offsetY);
             window.mouseX = LGlobal.offsetX = eve.offsetX;
             window.mouseY = LGlobal.offsetY = eve.offsetY;
-            if (LMultitouch.touchs['touch' + eve.touchPointID] && 
-    LMultitouch.touchs['touch' + eve.touchPointID].offsetX === eve.offsetX && 
+            if (LMultitouch.touchs['touch' + eve.touchPointID] &&
+    LMultitouch.touchs['touch' + eve.touchPointID].offsetX === eve.offsetX &&
     LMultitouch.touchs['touch' + eve.touchPointID].offsetY === eve.offsetY) {
-                continue;	
+                continue;
             }
             LGlobal.buttonStatusEvent = eve;
             LMultitouch.touchs['touch' + eve.touchPointID] = eve;
@@ -463,7 +476,7 @@ let LGlobal = (function() {
         }
     };
     LGlobal._ll_mobile = function() {
-        let w1 = LGlobal.width * 0.3, h1 = w1 * 1.5, s = LGlobal.width * 0.05, ss = w1 * 0.05, sm = w1 * 0.15, 
+        let w1 = LGlobal.width * 0.3, h1 = w1 * 1.5, s = LGlobal.width * 0.05, ss = w1 * 0.05, sm = w1 * 0.15,
             sx = w1 * 0.3, sh = h1 * 0.20, c = '#cccccc', d = '#000000', f = '#ffffff', h = '#ff0000', b, m, m1, n, v;
         b = new LSprite();
         addChild(b);
@@ -473,7 +486,7 @@ let LGlobal = (function() {
         b.graphics.drawRect(1, f, [s + sm, s + sh, w1 - sm * 2, h1 - sh * 2], true, f);
         b.graphics.drawArc(1, f, [s + w1 * 0.5, s + h1 - ss * 3.5, ss * 1.5, 0, 2 * Math.PI]);
         b.graphics.drawRoundRect(1, f, [s + sx, s + sm, w1 - sx * 2, ss, ss * 0.5]);
-		
+
         m = new LSprite();
         m.x = -(w1 - sm * 2) * 0.5;
         m.y = -ss * 0.5;
@@ -489,7 +502,7 @@ let LGlobal = (function() {
         n.addChild(m);
         n.addChild(m1);
         b.addChild(n);
-		
+
         v = new LSprite();
         v.graphics.drawVertices(2, d, [[0, 0], [sm, sm ], [0, sm * 2]], true, c);
         v.x = s * 1.5 + h1;
@@ -527,6 +540,17 @@ let LGlobal = (function() {
         b.arrow.x = s * 1.5 + w1;
     };
     LGlobal.onShow = function() {
+      /// start copy from lufylegend.js on 20190309
+      if (LGlobal.pauseLoop) {
+          return
+      }
+      if (LGlobal._setPauseLoopTrue) {
+          LGlobal.pauseLoop = true;
+          LGlobal._setPauseLoopTrue = false
+      }
+      // hg.time && hg.time.updateInFrame(au.delta);
+      /// end copy from lufylegend.js on 20190309
+
         if (!LGlobal.canvas) {
             return;
         }
@@ -602,13 +626,13 @@ let LGlobal = (function() {
         return r;
     };
     LGlobal._create_loading_color = function() {
-        let co = LGlobal.canvas.createRadialGradient(LGlobal.width / 2, LGlobal.height, 0, LGlobal.width / 2, 0, LGlobal.height);  
-        co.addColorStop(0, 'red');  
-        co.addColorStop(0.3, 'orange');  
-        co.addColorStop(0.4, 'yellow');  
-        co.addColorStop(0.5, 'green');  
-        co.addColorStop(0.8, 'blue');  
-        co.addColorStop(1, 'violet');  
+        let co = LGlobal.canvas.createRadialGradient(LGlobal.width / 2, LGlobal.height, 0, LGlobal.width / 2, 0, LGlobal.height);
+        co.addColorStop(0, 'red');
+        co.addColorStop(0.3, 'orange');
+        co.addColorStop(0.4, 'yellow');
+        co.addColorStop(0.5, 'green');
+        co.addColorStop(0.8, 'blue');
+        co.addColorStop(1, 'violet');
         return co;
     };
     LGlobal.hitPolygon = function(list, x, y) {
@@ -835,7 +859,7 @@ let LGlobal = (function() {
         LGlobal.ll_setStageSize(w, h);
     };
     LGlobal.sleep = function(s) {
-        let d = new Date();   
+        let d = new Date();
         while ((new Date().getTime() - d.getTime()) < s) {
             //
         }
@@ -878,7 +902,7 @@ let LGlobal = (function() {
             LGlobal.box2d.world.DestroyJoint(LGlobal.box2d.mouseJoint);
             LGlobal.box2d.mouseJoint = null;
         }
-    }; 
+    };
     return LGlobal;
 })();
 ll.LGlobal = LGlobal;

@@ -1,20 +1,23 @@
-import { ll } from '@/lib/lufylegend/ll'
+import LSprite from '@/lib/lufylegend/display/LSprite'
+import LBitmap from '@/lib/lufylegend/display/LBitmap'
+import LTweenLite from '@/lib/lufylegend/transitions/LTweenLite'
+
 import { GameArg, g_rem } from './GameArg'
 
 
 
 
-class SugarY extends ll.LSprite {
+class SugarY extends LSprite {
   constructor(imgData, sugarYsize ) {
     super()
     var s = this;
     s.x = 1.375 * g_rem;
     s.y = 4 * g_rem;
 
-    s.lollyWarp = new ll.LSprite();
+    s.lollyWarp = new LSprite();
     s.addChild(s.lollyWarp);
 
-    s.sugar = new ll.LBitmap(imgData, 3.625 * g_rem + (6 * g_rem - sugarYsize.width) / 2, 3.625 * g_rem + (6 * g_rem - sugarYsize.height) / 2, sugarYsize.width, sugarYsize.height);
+    s.sugar = new LBitmap(imgData, 3.625 * g_rem + (6 * g_rem - sugarYsize.width) / 2, 3.625 * g_rem + (6 * g_rem - sugarYsize.height) / 2, sugarYsize.width, sugarYsize.height);
     s.addChild(s.sugar);
     s.rotatex = 6.625 * g_rem;
     s.rotatey = 6.625 * g_rem;
@@ -53,7 +56,7 @@ class SugarY extends ll.LSprite {
 
   rotating() {
     var s = this;
-    ll.LTweenLite.to(s, 7, {
+    LTweenLite.to(s, 7, {
       loop: true,
       rotate: 360,
       onComplete: function() {

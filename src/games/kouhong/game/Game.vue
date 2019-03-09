@@ -24,9 +24,13 @@
 </template>
 
 <script>
-import { ll } from '@/lib/lufylegend/ll'
+import LSprite from '@/lib/lufylegend/display/LSprite'
+import LBitmap from '@/lib/lufylegend/display/LBitmap'
+import LBitmapData from '@/lib/lufylegend/display/LBitmapData'
+import LEvent from '@/lib/lufylegend/events/LEvent'
 import LGlobal from '@/lib/lufylegend/utils/LGlobal'
-import { LInit } from '@/lib/lufylegend/utils/Function';
+import { LInit } from '@/lib/lufylegend/utils/Function'
+import LTweenLite from '@/lib/lufylegend/transitions/LTweenLite'
 //import LStageScaleMode from '@/lib/lufylegend/display/LStageScaleMode';
 //import LStageAlign from '@/lib/lufylegend/display/LStageAlign';
 
@@ -43,8 +47,13 @@ LGlobal.height = LGlobal.width * window.innerHeight / window.innerWidth;
 
 export default {
   name: 'game',
-  prop:{
-    hg: Object
+  props:{
+    hg: Object,
+    // 游戏初始化的状态
+    gamestate: {
+      type: [String, Number],
+      default: 0
+    }
   },
   data () {
     return {
@@ -52,14 +61,15 @@ export default {
       imgData: null,
       sugarYsize: 0,
       game_player:{},
-
       msg: 'Welcome to Your Vue.js App'
     }
   },
-  created(){
+  mounted(){
+    console.log( "mounted props=", this.hg, this.gamestate)
+    //this.initGame()
     // this.hg.assets.onReady(() => {
     //   var clubInfo = this.hg.edit.getImgInfo('club', true);
-    //   this.clubImg = new ll.LBitmapData( this.hg.assets[clubInfo.path]);
+    //   this.clubImg = new LBitmapData( this.hg.assets[clubInfo.path]);
     //
     //   GameArg.clubH = GameArg.lollyH = clubInfo.height;
     //   GameArg.lollyW = clubInfo.width;
@@ -71,7 +81,7 @@ export default {
     // });
     //
     // this.hg.assets.onReady( () =>{
-    //   this.imgData = new ll.LBitmapData(this.hg.assets[this.hg.edit.getImgInfo('ySugar').path]);
+    //   this.imgData = new LBitmapData(this.hg.assets[this.hg.edit.getImgInfo('ySugar').path]);
     //   this.sugarYsize = HdGame.getPosAndSize( this.imgData, {
     //     width: 6 * g_rem,
     //     height: 6 * g_rem
@@ -79,22 +89,47 @@ export default {
     // });
   },
   methods:{
+    handleStartGame(){
+      if (GameArg.first) {
+        this.initCanvas();
+        GameArg.first = false;
+      } else {
+        this.startGame();
+      }
+
+      // hg.sound.play("startButton")
+      // hg.sound.get("0",
+      // function(sound) {
+      //   if (g_config.style != 51 && g_config.style != 49 && g_config.style != 9 && g_config.style != 48 && g_config.style != 57 && g_config.style != 62 && g_config.style != 58 && g_config.style != 65 && g_config.style != 69) {
+      //     if (g_config.style == 27 && !HdGame.getLocalStorage(soundPauseCord)) {
+      //       hg.sound.allowPlay = true
+      //     }
+      //     hg.sound.readyPlay(0, 0, "loop")
+      //   }
+      // })
+    },
+    initGameData() {
+      //hg.time.init();
+      //hg.grade.set(0);
+      //$('.timeUpImg').hide();
+    },
+
     initGame() {
       GameArg.left = parseInt(0.5 * g_rem);
       GameArg.top = parseInt(4 * g_rem);
       LGlobal.canvasObj.addEventListener('touchstart', this.canvasDown, false);
       LGlobal.canvasObj.addEventListener('touchmove', this.canvasMove, false);
       //LGlobal.canvasObj.addEventListener('touchend', function(){ console.log("LGlobal.canvasObj->touchend")}, false);
-      GameArg.stageLayer = new ll.LSprite(true);
+      GameArg.stageLayer = new LSprite(true);
 
       this.startGame();
     },
 
     endGame(lolly) {
       _gameOver = true;
-      ll.LTweenLite.removeAll();
+      LTweenLite.removeAll();
       if (lolly) {
-        ll.LTweenLite.to(lolly, 0.1, {
+        LTweenLite.to(lolly, 0.1, {
             alpha: 0
           })
           .to(lolly, 0.1, {
@@ -139,7 +174,7 @@ export default {
       LGlobal.setPauseLoop(false)
       window.scrollTo(0, 0);
       GameArg.stageLayer.removeAllChild();
-      GameArg.readyLayer = new ll.LSprite();
+      GameArg.readyLayer = new LSprite();
       GameArg.stageLayer.addChild(GameArg.readyLayer);
       GameArg.readyList = [];
       GameArg.rotateList = [];
@@ -163,15 +198,15 @@ export default {
 
     showTishi() {
       var tishiImg = this.hg.assets["/game-kouhong-assets/lib/image/bbtzw/tishi.png"],
-        jtBitmap = new ll.LBitmap(new ll.LBitmapData(tishiImg, 20, 12, 90, 300), 6.875 * g_rem, LGlobal.height - 7.5 * g_rem, 2.25 * g_rem, 7.5 * g_rem),
-        handBitmap = new ll.LBitmap(new ll.LBitmapData(tishiImg, 220, 30, 84, 95), 7.7 * g_rem, LGlobal.height, 2.1 * g_rem, 2.375 * g_rem);
-      GameArg.mask = new ll.LSprite(true);
-      var maskObj = new ll.LBitmap(new ll.LBitmapData("#000000", 0, 0, LGlobal.width, LGlobal.height));
+        jtBitmap = new LBitmap(new LBitmapData(tishiImg, 20, 12, 90, 300), 6.875 * g_rem, LGlobal.height - 7.5 * g_rem, 2.25 * g_rem, 7.5 * g_rem),
+        handBitmap = new LBitmap(new LBitmapData(tishiImg, 220, 30, 84, 95), 7.7 * g_rem, LGlobal.height, 2.1 * g_rem, 2.375 * g_rem);
+      GameArg.mask = new LSprite(true);
+      var maskObj = new LBitmap(new LBitmapData("#000000", 0, 0, LGlobal.width, LGlobal.height));
       maskObj.alpha = 0.6;
       GameArg.mask.addChild(maskObj);
       GameArg.mask.addChild(jtBitmap);
       GameArg.mask.addChild(handBitmap);
-      ll.LTweenLite.to(handBitmap, 1, {
+      LTweenLite.to(handBitmap, 1, {
         loop: true,
         y: LGlobal.height - 7.5 * g_rem,
       }).to(handBitmap, 0.2, {
@@ -186,7 +221,7 @@ export default {
 
     initCanvas() {
       LGlobal.notMouseEvent = true;
-      LInit(0, "gameLayerBox", 0, 0, this.initGame, ll.LEvent.INIT);
+      LInit(0, "gameLayerBox", 0, 0, this.initGame, LEvent.INIT);
     },
 
     canvasDown(e) {
@@ -230,7 +265,7 @@ export default {
         readyList.pop().launch();
         readyList.unshift(new Lolly(this.clubImg, firstY + interval));
         readyList.each( function(index, lolly) {
-          ll.LTweenLite.to(lolly, 0.2, {
+          LTweenLite.to(lolly, 0.2, {
             y: lolly.y - interval
           })
         })
@@ -242,6 +277,15 @@ export default {
 
     GetRandom(a, b) {
       return a + Math.random() * (b - a);
+    }
+  },
+  watch: {
+    gamestate: function (val, oldVal) {
+      //外部触发游戏开始
+      console.log('watch-gamestate new: %s, old: %s', val, oldVal)
+      if( val == 'start'){
+        this.handleStartGame()
+      }
     }
   }
 }

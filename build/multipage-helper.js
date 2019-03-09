@@ -117,7 +117,7 @@ exports.getProdHtmlWebpackPluginList = function getProdHtmlWebpackPluginList(){
  */
 function readDirSync(path){
 
-  glob.sync('./src/games/**/*.js').forEach(function(name){
+  glob.sync('./src/games/**/main.js').forEach(function(name){
       // src/games/yiy/main.js
       // src/games/yiy/index.html
       let ns = name.split('/')
