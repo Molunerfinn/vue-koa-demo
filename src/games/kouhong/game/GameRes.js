@@ -4,7 +4,7 @@ const GameRes = {
   "isOpenAdvertise": false,
   "editPropList": [{
     "name": "ySugar",
-    "path": ["/game-kouhong-assets/app/images/skin1/wx/ACgIABAEGAAg8u_M4QUovOCGlQIw8AE48AE.png"]
+    "path": ["/static/kouhong/image/skin1/wx/ACgIABAEGAAg8u_M4QUovOCGlQIw8AE48AE.png"]
   }, {
     "name": "club",
     "pos": {
@@ -15,7 +15,7 @@ const GameRes = {
       "width": "0.9813333333333333rem",
       "height": "3.498666666666667rem"
     },
-    "path": ["/game-kouhong-assets/app/images/skin1/wx/ACgIABAEGAAgk8uM4QUo0e6k8QEwKDiMAQ.png"]
+    "path": ["/static/kouhong/image/skin1/wx/ACgIABAEGAAgk8uM4QUo0e6k8QEwKDiMAQ.png"]
   }, {
     "name": "playInfo",
     "pos": {
@@ -33,7 +33,7 @@ const GameRes = {
       "height": "11.178666666666667rem"
     },
     "path": [
-      ["/game-kouhong-assets/lib/image/faiImg1-2.png"]
+      ["/static/kouhong/image/faiImg1-2.png"]
     ]
   }, {
     "name": "theGetPricePicTwo",
@@ -46,7 +46,7 @@ const GameRes = {
       "height": "11.178666666666667rem"
     },
     "path": [
-      ["/game-kouhong-assets/lib/image/faiImg2-2.png"]
+      ["/static/kouhong/image/faiImg2-2.png"]
     ]
   }, {
     "name": "theGetPricePicThree",
@@ -59,7 +59,7 @@ const GameRes = {
       "height": "4rem"
     },
     "path": [
-      ["/game-kouhong-assets/lib/image/faiImg3-2.png"]
+      ["/static/kouhong/image/faiImg3-2.png"]
     ]
   }, {
     "name": "lotsPot",
@@ -72,7 +72,7 @@ const GameRes = {
       "height": "12.373333333333333rem"
     },
     "path": [
-      ["/game-kouhong-assets/lib/image/lots1.png"]
+      ["/static/kouhong/image/lots1.png"]
     ]
   }, {
     "name": "lotsShakeHand",
@@ -83,23 +83,23 @@ const GameRes = {
   }, {
     "name": "advertising",
     "path": [
-      ["/game-kouhong-assets/lib/image/gg.jpg"],
-      ["/game-kouhong-assets/lib/image/gg.jpg"],
-      ["/game-kouhong-assets/lib/image/gg.jpg"],
-      ["/game-kouhong-assets/lib/image/gg.jpg"]
+      ["/static/kouhong/image/gg.jpg"],
+      ["/static/kouhong/image/gg.jpg"],
+      ["/static/kouhong/image/gg.jpg"],
+      ["/static/kouhong/image/gg.jpg"]
     ]
   }, {
     "name": "myFissionBg",
-    "path": ["/game-kouhong-assets/lib/image/fission/myFissionBg.jpg"]
+    "path": ["/static/kouhong/image/fission/myFissionBg.jpg"]
   }, {
     "name": "shareFissionBg",
-    "path": ["/game-kouhong-assets/lib/image/fission/shareFissionBg.jpg"]
+    "path": ["/static/kouhong/image/fission/shareFissionBg.jpg"]
   }, {
     "name": "invBtnFsn",
-    "path": ["/game-kouhong-assets/lib/image/fission/inviteBtn.png?v=1"]
+    "path": ["/static/kouhong/image/fission/inviteBtn.png?v=1"]
   }, {
     "name": "seeCurAwaFsn",
-    "path": ["/game-kouhong-assets/lib/image/fission/seeAward_share.png?v=1"]
+    "path": ["/static/kouhong/image/fission/seeAward_share.png?v=1"]
   }, {
     "name": "shareFissionTxt",
     "pos": {
@@ -119,8 +119,8 @@ const GameRes = {
       "top": "10.24rem"
     },
     "path": [
-      ["/game-kouhong-assets/lib/image/fission/get.png"],
-      ["/game-kouhong-assets/lib/image/fission/backIndex.png"]
+      ["/static/kouhong/image/fission/get.png"],
+      ["/static/kouhong/image/fission/backIndex.png"]
     ]
   }, {
     "name": "slogan",
@@ -129,27 +129,28 @@ const GameRes = {
       "top": "0.128rem"
     }
   }],
+  editPropListDef:[],
   "editPropListIsMod": false,
   "advertisingNum": 1,
   "gameImg": "/image/game/s_bbtzw.jpg",
   "openStrongAttention": false,
   "strongAttIMG": "",
-  "logoImg_path": "/game-kouhong-assets/lib/image/logo.jpg",
-  "startImg_path": "/game-kouhong-assets/app/images/skin1/wx/ACgIABAEGAAgjPDr4AUo8MCYpgMw9AM4yAE.png",
-  "gameBgPath": "/game-kouhong-assets/app/images/skin1/wx/ACgIABACGAAg3fDr4AUojqC25gYwgAU4wAw.jpg",
-  "homeBgPath": "/game-kouhong-assets/app/images/skin1/wx/ACgIABACGAAg5_-r4AUojOO-xgcwgAU4wAw.jpg",
-  "titleImg_path": "/game-kouhong-assets/app/images/skin1/wx/ACgIABAEGAAg_e-r4AUoi5fylAQwugQ4tAE.png",
+  "logoImg_path": "/static/kouhong/image/logo.jpg",
+  "startImg_path": "/static/kouhong/image/skin1/wx/ACgIABAEGAAgjPDr4AUo8MCYpgMw9AM4yAE.png",
+  "gameBgPath": "/static/kouhong/image/skin1/wx/ACgIABACGAAg3fDr4AUojqC25gYwgAU4wAw.jpg",
+  "homeBgPath": "/static/kouhong/image/skin1/wx/ACgIABACGAAg5_-r4AUojOO-xgcwgAU4wAw.jpg",
+  "titleImg_path": "/static/kouhong/image/skin1/wx/ACgIABAEGAAg_e-r4AUoi5fylAQwugQ4tAE.png",
   "gameTimeNumDef": 10,
   "soundList": [{
-    "path": "/game-kouhong-assets/lib/image/bbtzw/music/bgmusic01M.mp3",
+    "path": "/static/kouhong/image/bbtzw/music/bgmusic01M.mp3",
     "fileName": "背景音乐.mp3",
     "optFlag": 0
   }, {
-    "path": "/game-kouhong-assets/lib/image/bbtzw/music/tap.mp3",
+    "path": "/static/kouhong/image/bbtzw/music/tap.mp3",
     "fileName": "得分音效.mp3",
     "optFlag": 2
   }, {
-    "path": "/game-kouhong-assets/lib/image/bbtzw/music/err.mp3",
+    "path": "/static/kouhong/image/bbtzw/music/err.mp3",
     "fileName": "错误音效.mp3",
     "optFlag": 2
   }],

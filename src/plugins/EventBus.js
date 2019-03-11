@@ -1,8 +1,7 @@
-import Vue from 'vue'
 
 export default {
   install(vm) {
-    const EventBus = new Vue()
+    const { EventBus } = require('../lib/EventBus')
     vm.prototype.$bus = EventBus
   }
 }

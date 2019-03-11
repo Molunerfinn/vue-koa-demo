@@ -1,7 +1,5 @@
 <template>
   <div id="app">
-     this is kouhong game.
-
      <div class="home" v-show="ui.homeVisible">
        <div id="homeBgBox">
          <img id="homeBg" :src="homeBgImg" />
@@ -37,7 +35,7 @@ import Game from './game/Game.vue'
 import GameRes from './game/GameRes'
 import HdGame from '@/lib/hdgame'
 
-const hg = {}
+//const hg = {}
 // const g_config = {
 //   HWRatio: 1.608,
 //   ipInfo: {
@@ -51,7 +49,8 @@ export default {
     Game
   },
   created(){
-    HdGame.initJsHead(hg, GameRes)
+    HdGame.initJsHead(this.hg, GameRes)
+    HdGame.initEdit(this.hg.edit);
     console.log( "created gameState=", this.gameState)
   },
   data(){
@@ -135,7 +134,7 @@ export default {
 
         showGame();
 
-        console.log('showGameBox: ' + hg.showGameBox);
+        console.log('showGameBox: ' + that.hg.showGameBox);
 
         logs();
 
@@ -163,7 +162,7 @@ export default {
 
     activateSound() { //兼容ios下 WebAudio类型的对象无法自动播放，必须在点击事件中播放过一次，才允许播放
       try {
-        if (HdGame.isIPhone() && hg.sound.list && hg.sound.list.length > 0 && !hg.sound._activate) {
+        if (HdGame.isIPhone() && this.hg.sound.list && this.hg.sound.list.length > 0 && !this.hg.sound._activate) {
           // $.each(hg.sound.list, function(i, val) {
           //   var data = hg.sound.cache[i];
           //   if (i > 0 && data && data.soundType == "LWebAudio") {
@@ -171,7 +170,7 @@ export default {
           //     data.stop();
           //   }
           // });
-          hg.sound._activate = true;
+          this.hg.sound._activate = true;
         }
       } catch (e) {
         //HdGame.logStd("activateSoundErr", e);

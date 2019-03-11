@@ -1,7 +1,7 @@
 <template>
-  <div class="gameBox hide gameBgBox">
+  <div class="gameBox gameBgBox" v-show="ui.gameBoxVisible">
     <div id="gameBgBox">
-      <img id="gameBg" src="/game-kouhong-assets/app/images/skin1/wx/ACgIABACGAAg3fDr4AUojqC25gYwgAU4wAw.jpg" style="width:100%;height:auto;" />
+      <img id="gameBg" :src="gameBg" style="width:100%;height:auto;" />
     </div>
 
     <div id="gameTopBar" class="gameTopBar" style="color:;background-color:">
@@ -35,6 +35,8 @@ import LTweenLite from '@/lib/lufylegend/transitions/LTweenLite'
 //import LStageAlign from '@/lib/lufylegend/display/LStageAlign';
 
 var _gameOver = false;
+const _resRoot = '/static/kouhong'
+
 import HdGame from '@/lib/hdgame'
 import { GameArg, g_rem } from './GameArg'
 import Lolly from './Lolly'
@@ -44,7 +46,6 @@ LGlobal.width = 640;
 LGlobal.height = LGlobal.width * window.innerHeight / window.innerWidth;
 
 //LInit(50, 'legend', LGlobal.width, LGlobal.height, main);
-
 export default {
   name: 'game',
   props:{
@@ -57,36 +58,45 @@ export default {
   },
   data () {
     return {
+      gameBg: require('@/assets/kouhong/image/skin1/wx/ACgIABACGAAg3fDr4AUojqC25gYwgAU4wAw.jpg'),
       clubImg: null,
       imgData: null,
       sugarYsize: 0,
       game_player:{},
+      ui:{
+        gameBoxVisible: false
+      },
       msg: 'Welcome to Your Vue.js App'
     }
   },
   mounted(){
     console.log( "mounted props=", this.hg, this.gamestate)
     //this.initGame()
-    // this.hg.assets.onReady(() => {
-    //   var clubInfo = this.hg.edit.getImgInfo('club', true);
-    //   this.clubImg = new LBitmapData( this.hg.assets[clubInfo.path]);
-    //
-    //   GameArg.clubH = GameArg.lollyH = clubInfo.height;
-    //   GameArg.lollyW = clubInfo.width;
-    //   GameArg.lollyY = clubInfo.top;
-    //   GameArg.launchY = 10.625 + GameArg.lollyY;
-    //   GameArg.clubH = GameArg.lollyH = clubInfo.height;
-    //   GameArg.minRotate = Math.atan((GameArg.lollyW / 2) / (GameArg.lollyH + GameArg.lollyY)) * 180 * 2 / Math.PI + 0.5;
-    //
-    // });
-    //
-    // this.hg.assets.onReady( () =>{
-    //   this.imgData = new LBitmapData(this.hg.assets[this.hg.edit.getImgInfo('ySugar').path]);
-    //   this.sugarYsize = HdGame.getPosAndSize( this.imgData, {
-    //     width: 6 * g_rem,
-    //     height: 6 * g_rem
-    //   });
-    // });
+    this.hg.assets.onReady(() => {
+      let clubInfo = this.hg.edit.getImgInfo('club', true);
+      console.log( " hg.assets.onReady clubInfo", clubInfo)
+      this.clubImg = new LBitmapData( this.hg.assets[clubInfo.path]);
+
+      GameArg.clubH = GameArg.lollyH = clubInfo.height;
+      GameArg.lollyW = clubInfo.width;
+      GameArg.lollyY = clubInfo.top;
+      GameArg.launchY = 10.625 + GameArg.lollyY;
+      GameArg.clubH = GameArg.lollyH = clubInfo.height;
+      GameArg.minRotate = Math.atan((GameArg.lollyW / 2) / (GameArg.lollyH + GameArg.lollyY)) * 180 * 2 / Math.PI + 0.5;
+      console.log( " hg.assets.onReady 1")
+
+    });
+
+    this.hg.assets.onReady( () =>{
+      let ySugar = this.hg.edit.getImgInfo('ySugar')
+      console.log( " hg.assets.onReady ySugar", ySugar)
+
+      this.imgData = new LBitmapData(this.hg.assets[ySugar.path]);
+      this.sugarYsize = HdGame.getPosAndSize( this.imgData, {
+        width: 6 * g_rem,
+        height: 6 * g_rem
+      });
+    });
   },
   methods:{
     handleStartGame(){
@@ -190,6 +200,7 @@ export default {
 
     creatSugarY() {
       var sugarY = new SugarY( this.imgData, this.sugarYsize );
+      console.log( "creatSugarY ", this.sugarYsize, sugarY )
       for (var i = 0; i < 4; i++) {
         sugarY.add(new Lolly(this.clubImg, GameArg.launchY * g_rem, true), this.GetRandomNum(i * 90 + GameArg.minRotate + 7, (i + 1) * 90 - GameArg.minRotate + 3));
       }
@@ -197,7 +208,7 @@ export default {
     },
 
     showTishi() {
-      var tishiImg = this.hg.assets["/game-kouhong-assets/lib/image/bbtzw/tishi.png"],
+      var tishiImg = this.hg.assets[_resRoot+"/image/bbtzw/tishi.png"],
         jtBitmap = new LBitmap(new LBitmapData(tishiImg, 20, 12, 90, 300), 6.875 * g_rem, LGlobal.height - 7.5 * g_rem, 2.25 * g_rem, 7.5 * g_rem),
         handBitmap = new LBitmap(new LBitmapData(tishiImg, 220, 30, 84, 95), 7.7 * g_rem, LGlobal.height, 2.1 * g_rem, 2.375 * g_rem);
       GameArg.mask = new LSprite(true);
@@ -284,6 +295,7 @@ export default {
       //外部触发游戏开始
       console.log('watch-gamestate new: %s, old: %s', val, oldVal)
       if( val == 'start'){
+        this.ui.gameBoxVisible = true
         this.handleStartGame()
       }
     }
