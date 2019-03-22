@@ -1,4 +1,4 @@
-var g_rem = 20;
+var g_rem = window.g_rem;
 
 var GameArg = {
   createTime: 0.8,

@@ -38,12 +38,13 @@ var _gameOver = false;
 const _resRoot = '/static/kouhong'
 
 import HdGame from '@/lib/hdgame'
-import { GameArg, g_rem } from './GameArg'
+import { GameArg } from './GameArg'
 import Lolly from './Lolly'
 import SugarY from './SugarY'
 
-LGlobal.width = 640;
-LGlobal.height = LGlobal.width * window.innerHeight / window.innerWidth;
+//LGlobal.displayState = LGlobal.FULL_SCREEN
+//LGlobal.width = 640;
+//LGlobal.height = LGlobal.width * window.innerHeight / window.innerWidth;
 
 //LInit(50, 'legend', LGlobal.width, LGlobal.height, main);
 export default {
@@ -66,15 +67,19 @@ export default {
       ui:{
         gameBoxVisible: false
       },
-      msg: 'Welcome to Your Vue.js App'
+      msg: 'Welcome to Your Vue.js App',
+      rem: 20
     }
+  },
+  created(){
+    this.rem = window.g_rem
   },
   mounted(){
     console.log( "mounted props=", this.hg, this.gamestate)
     //this.initGame()
     this.hg.assets.onReady(() => {
       let clubInfo = this.hg.edit.getImgInfo('club', true);
-      console.log( " hg.assets.onReady clubInfo", clubInfo)
+      console.log( " hg.assets.onReady clubInfo", clubInfo, "this.hg.assets[clubInfo.path]", this.hg.assets[clubInfo.path])
       this.clubImg = new LBitmapData( this.hg.assets[clubInfo.path]);
 
       GameArg.clubH = GameArg.lollyH = clubInfo.height;
@@ -89,12 +94,13 @@ export default {
 
     this.hg.assets.onReady( () =>{
       let ySugar = this.hg.edit.getImgInfo('ySugar')
-      console.log( " hg.assets.onReady ySugar", ySugar)
+      console.log( "this.hg.assets=", this.hg.assets)
+      console.log( " hg.assets.onReady ySugar", ySugar, "this.hg.assets[ySugar.path]",this.hg.assets[ySugar.path])
 
       this.imgData = new LBitmapData(this.hg.assets[ySugar.path]);
       this.sugarYsize = HdGame.getPosAndSize( this.imgData, {
-        width: 6 * g_rem,
-        height: 6 * g_rem
+        width: 6 * this.rem,
+        height: 6 * this.rem
       });
     });
   },
@@ -125,8 +131,9 @@ export default {
     },
 
     initGame() {
-      GameArg.left = parseInt(0.5 * g_rem);
-      GameArg.top = parseInt(4 * g_rem);
+      GameArg.left = parseInt(0.5 * this.rem);
+      GameArg.top = parseInt(4 * this.rem);
+
       LGlobal.canvasObj.addEventListener('touchstart', this.canvasDown, false);
       LGlobal.canvasObj.addEventListener('touchmove', this.canvasMove, false);
       //LGlobal.canvasObj.addEventListener('touchend', function(){ console.log("LGlobal.canvasObj->touchend")}, false);
@@ -202,15 +209,15 @@ export default {
       var sugarY = new SugarY( this.imgData, this.sugarYsize );
       console.log( "creatSugarY ", this.sugarYsize, sugarY )
       for (var i = 0; i < 4; i++) {
-        sugarY.add(new Lolly(this.clubImg, GameArg.launchY * g_rem, true), this.GetRandomNum(i * 90 + GameArg.minRotate + 7, (i + 1) * 90 - GameArg.minRotate + 3));
+        sugarY.add(new Lolly(this.clubImg, GameArg.launchY * this.rem, true), this.GetRandomNum(i * 90 + GameArg.minRotate + 7, (i + 1) * 90 - GameArg.minRotate + 3));
       }
       GameArg.sugarY = sugarY;
     },
 
     showTishi() {
       var tishiImg = this.hg.assets[_resRoot+"/image/bbtzw/tishi.png"],
-        jtBitmap = new LBitmap(new LBitmapData(tishiImg, 20, 12, 90, 300), 6.875 * g_rem, LGlobal.height - 7.5 * g_rem, 2.25 * g_rem, 7.5 * g_rem),
-        handBitmap = new LBitmap(new LBitmapData(tishiImg, 220, 30, 84, 95), 7.7 * g_rem, LGlobal.height, 2.1 * g_rem, 2.375 * g_rem);
+        jtBitmap = new LBitmap(new LBitmapData(tishiImg, 20, 12, 90, 300), 6.875 * this.rem, LGlobal.height - 7.5 * this.rem, 2.25 * this.rem, 7.5 * this.rem),
+        handBitmap = new LBitmap(new LBitmapData(tishiImg, 220, 30, 84, 95), 7.7 * this.rem, LGlobal.height, 2.1 * this.rem, 2.375 * this.rem);
       GameArg.mask = new LSprite(true);
       var maskObj = new LBitmap(new LBitmapData("#000000", 0, 0, LGlobal.width, LGlobal.height));
       maskObj.alpha = 0.6;
@@ -219,7 +226,7 @@ export default {
       GameArg.mask.addChild(handBitmap);
       LTweenLite.to(handBitmap, 1, {
         loop: true,
-        y: LGlobal.height - 7.5 * g_rem,
+        y: LGlobal.height - 7.5 * this.rem,
       }).to(handBitmap, 0.2, {
         loop: true,
         alpha: 0,
@@ -232,7 +239,11 @@ export default {
 
     initCanvas() {
       LGlobal.notMouseEvent = true;
-      LInit(0, "gameLayerBox", 0, 0, this.initGame, LEvent.INIT);
+      console.log( " LGlobal.width, LGlobal.height",  LGlobal.width, LGlobal.height, " window.innerWidth, window.innerHeight", window.innerWidth, window.innerHeight)
+      //LInit(50, 'gameLayerBox', LGlobal.width, LGlobal.height, this.initGame);
+      LInit(0, "gameLayerBox",  window.innerWidth, window.innerHeight, this.initGame, LEvent.INIT);
+      console.log( " LGlobal.width, LGlobal.height",  LGlobal.width, LGlobal.height, " window.innerWidth, window.innerHeight", window.innerWidth, window.innerHeight)
+      LGlobal.resize(window.innerWidth, window.innerHeight);
     },
 
     canvasDown(e) {
@@ -248,7 +259,7 @@ export default {
       if (_gameOver) {
         return;
       }
-      if (GameArg.lastPageY && GameArg.lastPageY - e.changedTouches[0].pageY > g_rem) {
+      if (GameArg.lastPageY && GameArg.lastPageY - e.changedTouches[0].pageY > this.rem) {
         if (!HdGame.isplaySucess) {
           HdGame.isplaySucess = true;
           GameArg.mask.removeAllChild();
@@ -268,8 +279,8 @@ export default {
 
     addReadyList(isInit) {
       var readyList = GameArg.readyList;
-      var interval = (GameArg.lollyH + 0.5) * g_rem;
-      var firstY = LGlobal.height - (GameArg.lollyH + 0.5) * g_rem;
+      var interval = (GameArg.lollyH + 0.5) * this.rem;
+      var firstY = LGlobal.height - (GameArg.lollyH + 0.5) * this.rem;
       if (isInit) {
         readyList.push(new Lolly(this.clubImg, firstY - readyList.length * interval));
       } else {

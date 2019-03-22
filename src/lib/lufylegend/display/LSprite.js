@@ -1,12 +1,14 @@
 import LDisplayObjectContainer from './LDisplayObjectContainer';
 import { UNDEFINED, OS_PC } from '../utils/LConstant';
+import { addChild } from '../utils/Function';
 import LGraphics from './LGraphics';
 import LPoint from '../geom/LPoint';
 import LEvent from '../events/LEvent';
 import LMouseEvent from '../events/LMouseEvent';
 import lufylegend from '../ll';
 class LSprite extends LDisplayObjectContainer {
-    constructor() {
+  // stageRequired 是凡客添加的参数。
+    constructor(stageRequired) {
         super();
         let s = this;
         s.type = 'LSprite';
@@ -17,8 +19,12 @@ class LSprite extends LDisplayObjectContainer {
         s.box2dBody = null;
         s.shapes = new Array();
         s.useCursor = null;
+        if( stageRequired ){
+          //添加对象到舞台
+          addChild( s )
+        }
     }
-	
+
     setRotate(angle) {
         let s = this;
         if (s.box2dBody) {

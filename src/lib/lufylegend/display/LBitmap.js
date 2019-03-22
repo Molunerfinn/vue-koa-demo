@@ -1,17 +1,22 @@
 import LDisplayObject from './LDisplayObject';
 import ll from '../ll';
 class LBitmap extends LDisplayObject {
-    constructor(bitmapdata) {
+    // 扩展，添加, x, y, width, height
+    constructor(bitmapdata, x, y, width, height) {
         super();
         this.type = 'LBitmap';
         this.rotateCenter = true;
-        this.bitmapData = bitmapdata; 
+        this.bitmapData = bitmapdata;
         if (this.bitmapData) {
-            this.width = this.bitmapData.width;
-            this.height = this.bitmapData.height;
+          this.width = width || this.bitmapData.width;
+          this.height = height || this.bitmapData.height;
+          this.x = x || 0;
+          this.y = y || 0;
+          //  this.width = this.bitmapData.width;
+          //  this.height = this.bitmapData.height;
         }
     }
-	
+
     _canShow() {
         return (this.visible && this.bitmapData);
     }
@@ -40,8 +45,8 @@ class LBitmap extends LDisplayObject {
             s.bitmapData.height,
             s.x,
             s.y,
-            s.bitmapData.width,
-            s.bitmapData.height
+            s.width, // 使用bitmap.width 实现缩放
+            s.height // 使用bitmap.height 实现缩放
         );
     }
     clone() {

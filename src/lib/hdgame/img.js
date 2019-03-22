@@ -1,4 +1,4 @@
-const g_rem = 20;
+let g_rem = window.g_rem
 
 const Img = {
   MODE_SCALE_FILL: 1,

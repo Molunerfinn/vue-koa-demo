@@ -232,6 +232,60 @@ HdGame.initJsHead = function(hg, _data) {
      let originDef = _data.editPropListDef;
      let originMod = _data.editModPropList;
      hg.edit.isMod = _data.editPropListIsMod;
+
+     var correctPaths = function(pathDef, path) {
+       if (!path || !pathDef || !_.isArray(pathDef[0])) {
+         return
+       }
+       if (!_.isArray(path[0])) {
+         path[0] = [path[0]];
+         path.length = 1
+       }
+       if (pathDef.length > path.length) {
+         pathDef.forEach(function(defv, i) {
+           if (i >= path.length) {
+             path.push(defv)
+           }
+         })
+       }
+     };
+
+     for (var i = 0; i < originDef.length; i++) {
+       var path = origin[i].path;
+       var pathDef = originDef[i].path;
+       var pathMod = originMod ? originMod[i].path: null;
+       var notDeferPath = !originDef[i].deferPath;
+       var isAdvertising = origin[i].name == "advertising";
+       correctPaths(pathDef, pathMod);
+       correctPaths(pathDef, path);
+       pathDef = pathMod || pathDef;
+       if (pathDef) {
+         if (!path) {
+           origin[i].path = path = pathDef
+         }
+         if (_.isArray(path[0])) {
+           for (var j = 0; j < pathDef.length; j++) {
+             if (!path[j]) {
+               path[j] = pathDef[j]
+             }
+             if (!path[j][0]) {
+               path[j][0] = pathDef[j][0]
+             }
+             notDeferPath && hg.assets.add(originDef[i].group, path[j][0].replace("*_resRoot*", _resRoot))
+           }
+         } else {
+           if (!path[0]) {
+             path[0] = pathDef[0]
+           }
+           if (!isAdvertising && notDeferPath || (isAdvertising && _data.isOpenAdvertise)) {
+             hg.assets.add(originDef[i].group, path[0].replace(/\*_resRoot\*/g, _resRoot))
+           }
+         }
+       }
+
+     }
+
+
      hg.edit = {
        origin: origin,
        originDef: originDef,
@@ -858,6 +912,7 @@ HdGame.initEdit = function(Edit) {
   // }
   function initEdit() {
     origin.forEach( function(tem, index) {
+      console.log( "initItem: ", tem)
       //initItem(tem, originDef[index], $(".editTarget-" + tem.name))
     })
   }
@@ -1127,6 +1182,8 @@ HdGame.getSrc = function(src) {
 
 HdGame.getPosAndSize = function(theObj, def, type) {
   ! type && (type = HdGame.Img.MODE_SCALE_DEFLATE_FILL);
+console.log( "theObj=", theObj, "def=", def)  
+console.log( ` type=${type}, theObj=${theObj.width}:${theObj.width}, def=${def.width}:${def.height},`)
   var sizeInfo = HdGame.Img.calcSize(theObj.width, theObj.height, def.width, def.height, type, true);
   var defLeft = def.left || 0;
   var defTop = def.top || 0;
