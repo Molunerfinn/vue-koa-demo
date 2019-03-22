@@ -1,4 +1,5 @@
 import LDisplayObject from './LDisplayObject';
+import LShape from './LShape'
 import ll from '../ll';
 class LBitmap extends LDisplayObject {
     // 扩展，添加, x, y, width, height
@@ -71,7 +72,7 @@ class LBitmap extends LDisplayObject {
                 return false;
             }
         }
-        return s.ismouseonShapes([{ type: ll.LShape.RECT, arg: [0, 0, s.bitmapData.width, s.bitmapData.height] }], e.offsetX, e.offsetY);
+        return s.ismouseonShapes([{ type: LShape.RECT, arg: [0, 0, s.bitmapData.width, s.bitmapData.height] }], e.offsetX, e.offsetY);
     }
     getWidth(maskSize) {
         let s = this, w, mx, mw;

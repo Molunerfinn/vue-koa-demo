@@ -24,12 +24,12 @@
 </template>
 
 <script>
+import { LInit } from '@/lib/lufylegend/utils/Function'
+import LGlobal from '@/lib/lufylegend/utils/LGlobal'
 import LSprite from '@/lib/lufylegend/display/LSprite'
 import LBitmap from '@/lib/lufylegend/display/LBitmap'
 import LBitmapData from '@/lib/lufylegend/display/LBitmapData'
 import LEvent from '@/lib/lufylegend/events/LEvent'
-import LGlobal from '@/lib/lufylegend/utils/LGlobal'
-import { LInit } from '@/lib/lufylegend/utils/Function'
 import LTweenLite from '@/lib/lufylegend/transitions/LTweenLite'
 //import LStageScaleMode from '@/lib/lufylegend/display/LStageScaleMode';
 //import LStageAlign from '@/lib/lufylegend/display/LStageAlign';
@@ -42,6 +42,7 @@ import { GameArg } from './GameArg'
 import Lolly from './Lolly'
 import SugarY from './SugarY'
 
+LGlobal.setDebug(true);
 //LGlobal.displayState = LGlobal.FULL_SCREEN
 //LGlobal.width = 640;
 //LGlobal.height = LGlobal.width * window.innerHeight / window.innerWidth;
@@ -215,15 +216,16 @@ export default {
     },
 
     showTishi() {
-      var tishiImg = this.hg.assets[_resRoot+"/image/bbtzw/tishi.png"],
-        jtBitmap = new LBitmap(new LBitmapData(tishiImg, 20, 12, 90, 300), 6.875 * this.rem, LGlobal.height - 7.5 * this.rem, 2.25 * this.rem, 7.5 * this.rem),
-        handBitmap = new LBitmap(new LBitmapData(tishiImg, 220, 30, 84, 95), 7.7 * this.rem, LGlobal.height, 2.1 * this.rem, 2.375 * this.rem);
+      let tishiImg = this.hg.assets[_resRoot+"/image/bbtzw/tishi.png"]
+      let jtBitmap = new LBitmap(new LBitmapData(tishiImg, 20, 12, 90, 300), 6.875 * this.rem, LGlobal.height - 7.5 * this.rem, 2.25 * this.rem, 7.5 * this.rem)
+      let handBitmap = new LBitmap(new LBitmapData(tishiImg, 220, 30, 84, 95), 7.7 * this.rem, LGlobal.height, 2.1 * this.rem, 2.375 * this.rem)
       GameArg.mask = new LSprite(true);
       var maskObj = new LBitmap(new LBitmapData("#000000", 0, 0, LGlobal.width, LGlobal.height));
       maskObj.alpha = 0.6;
       GameArg.mask.addChild(maskObj);
       GameArg.mask.addChild(jtBitmap);
       GameArg.mask.addChild(handBitmap);
+console.log( "showTishi",LGlobal.width, LGlobal.height,  "LTweenLite->", handBitmap)
       LTweenLite.to(handBitmap, 1, {
         loop: true,
         y: LGlobal.height - 7.5 * this.rem,
@@ -239,9 +241,9 @@ export default {
 
     initCanvas() {
       LGlobal.notMouseEvent = true;
-      console.log( " LGlobal.width, LGlobal.height",  LGlobal.width, LGlobal.height, " window.innerWidth, window.innerHeight", window.innerWidth, window.innerHeight)
+      //console.log( " LGlobal.width, LGlobal.height",  LGlobal.width, LGlobal.height, " window.innerWidth, window.innerHeight", window.innerWidth, window.innerHeight)
       //LInit(50, 'gameLayerBox', LGlobal.width, LGlobal.height, this.initGame);
-      LInit(0, "gameLayerBox",  window.innerWidth, window.innerHeight, this.initGame, LEvent.INIT);
+      LInit(50, "gameLayerBox",  window.innerWidth, window.innerHeight, this.initGame, LEvent.INIT);
       console.log( " LGlobal.width, LGlobal.height",  LGlobal.width, LGlobal.height, " window.innerWidth, window.innerHeight", window.innerWidth, window.innerHeight)
       LGlobal.resize(window.innerWidth, window.innerHeight);
     },
@@ -278,6 +280,7 @@ export default {
     },
 
     addReadyList(isInit) {
+      console.log( " addReadyList ", isInit)
       var readyList = GameArg.readyList;
       var interval = (GameArg.lollyH + 0.5) * this.rem;
       var firstY = LGlobal.height - (GameArg.lollyH + 0.5) * this.rem;
@@ -286,7 +289,7 @@ export default {
       } else {
         readyList.pop().launch();
         readyList.unshift(new Lolly(this.clubImg, firstY + interval));
-        readyList.each( function(index, lolly) {
+        readyList.forEach( function(lolly, index) {
           LTweenLite.to(lolly, 0.2, {
             y: lolly.y - interval
           })

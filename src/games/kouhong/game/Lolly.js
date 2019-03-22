@@ -16,6 +16,7 @@ class Lolly extends LSprite {
     GameArg.readyLayer.addChild(this);
 	}
 	launch() {
+		console.log( "Lolly launch", this)
     var s = this;
     s.club.visible = true;
     LTweenLite.to(s, 0.1, {
