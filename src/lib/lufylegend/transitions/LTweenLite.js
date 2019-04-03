@@ -30,6 +30,7 @@ class LTweenLiteChild extends LObject {
             s.currentTime = 0;
             s.duration *= 1000;
             s.currentTime -= s.delay * 1000;
+            s.initTime = (new Date()).getTime() - s.currentTime
         }
         s.combinedTimeScale = s.vars.timeScale || 1;
         s.active = s.duration === 0 && s.delay === 0;
@@ -105,7 +106,16 @@ class LTweenLiteChild extends LObject {
             if (s.stop) {
                 return;
             }
-            s.currentTime += ll.LGlobal.speed;
+            // lufylegend 凡客定制
+            if (ll.LGlobal.speed) {
+                s.currentTime += ll.LGlobal.speed
+            } else {
+                s.currentTime = ((new Date()).getTime() - s.initTime)
+            }
+            if (this._end) {
+                s.currentTime = s.duration
+            }
+            //s.currentTime += ll.LGlobal.speed;
             if (s.currentTime < 0) {
                 return;
             }
@@ -159,7 +169,8 @@ class LTweenLiteChild extends LObject {
                 s.target[tweentype] = s.varsto[tweentype];
             }
             if (s.onComplete) {
-                s._dispatchEvent(s.onComplete, true);
+              s._dispatchEvent(s.onComplete);
+              //s._dispatchEvent(s.onComplete, true);
             }
             return true;
         } else if (s.onUpdate) {

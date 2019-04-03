@@ -50,7 +50,8 @@ export default {
   },
   created(){
     HdGame.initJsHead(this.hg, GameRes)
-    HdGame.initEdit(this.hg.edit);
+  
+
     console.log( "created gameState=", this.gameState)
   },
   data(){

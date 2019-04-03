@@ -3,7 +3,6 @@ import LBitmap from '@/lib/lufylegend/display/LBitmap'
 import LTweenLite from '@/lib/lufylegend/transitions/LTweenLite'
 import { GameArg, g_rem } from './GameArg'
 
-
 class Lolly extends LSprite {
 	constructor(clubImg, y, flag ) {
 		super() //  调用父类的 constructor(x, y)

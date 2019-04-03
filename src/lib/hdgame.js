@@ -1,10 +1,20 @@
+import LSound from '@/lib/lufylegend/media/LSound'
+import LMedia from '@/lib/lufylegend/media/LMedia'
+import LWebAudio from '@/lib/lufylegend/media/LWebAudio'
+
 import {
   EventBus
 } from '@/lib/EventBus'
 import _ from 'lodash'
+import { GameBackgroundMusicLoadEvent } from '@/lib/GameEvent'
+
+import wx from 'weixin-js-sdk'
+
 //const g_rem = 20
 import UA from './hdgame/ua'
 import Img from './hdgame/img'
+import Log from './hdgame/log'
+
 const HdGame = {}
 const arrPro = Array.prototype
 const isReady = true
@@ -308,9 +318,16 @@ HdGame.initJsHead = function(hg, _data) {
     assetsImage = null
   })();
 
+  //hg.grade = HdGame.initGrade()
+
+  HdGame.initEdit(hg.edit)
+
+  hg.sound = HdGame.initSound(_data.soundList, _data.soundListDef, _data.soundListMod);
+
 }
 
 HdGame.initEdit = function(Edit) {
+console.log( " doing init edit =", Edit );
   let origin = Edit.origin
   let originDef = Edit.originDef
   // originMod = Edit.originMod,
@@ -1182,7 +1199,7 @@ HdGame.getSrc = function(src) {
 
 HdGame.getPosAndSize = function(theObj, def, type) {
   ! type && (type = HdGame.Img.MODE_SCALE_DEFLATE_FILL);
-console.log( "theObj=", theObj, "def=", def)  
+console.log( "theObj=", theObj, "def=", def)
 console.log( ` type=${type}, theObj=${theObj.width}:${theObj.width}, def=${def.width}:${def.height},`)
   var sizeInfo = HdGame.Img.calcSize(theObj.width, theObj.height, def.width, def.height, type, true);
   var defLeft = def.left || 0;
@@ -1204,11 +1221,262 @@ console.log( ` type=${type}, theObj=${theObj.width}:${theObj.width}, def=${def.w
 //   }
 //   $("#loadingToast").addClass("hide")
 // }
+HdGame.initSound = function(soundList, soundListDef, soundListMod) {
+
+  if (soundList && soundListDef) {
+    soundList.forEach(
+      function(s, index) {
+        var soundDef = soundListDef[index];
+        if (index !== 0 && s.optFlag === 1) {
+          s.optFlag = 2
+        }
+        s.path = HdGame.getSrc(s.path);
+        soundDef.path = HdGame.getSrc(soundDef.path)
+      })
+  }
+  var cache = {};
+  var supportWebAudio = LSound.webAudioEnabled;
+  var sound = {
+    list: soundList,
+    listDef: soundListDef,
+    allowPlay: true,
+    setPlayPower: function(key, power) {
+      if (typeof key == "boolean") {
+        this.allowPlay = key
+      }
+      this.get(key,
+      function(lsound) {
+        lsound._allowPlay = power
+      });
+      return this
+    },
+    play: function(key, c, l) {
+
+      if (!this.allowPlay ) {
+        return this
+      }
+      if (soundList && HdGame.getType(key) === "number") {
+        var flag = key === 0 ? 1 : 3;
+        if (soundList[key].optFlag === flag) {
+          return this
+        }
+      }
+      if (key !== 0 && soundList && soundList[0].optFlag !== 1 && !supportWebAudio) {
+        return this
+      }
+      this.get(key,
+      function(lsound) {
+        if (!lsound._allowPlay) {
+          return
+        }
+        if (lsound.isWebAudio && lsound.isOnec && lsound.playing) {
+          return
+        }
+        var isChange = !lsound.playing;
+        lsound.play(c, l);
+        if (lsound.isWebAudio) {
+          isChange && lsound.fire("play", lsound)
+        } else {
+          if (!lsound.playing && wx.checkJsApi) {
+            wx.checkJsApi({
+              jsApiList: ["checkJsApi"],
+              success: function() {
+                lsound.play(c, l)
+              }
+            })
+          }
+        }
+      });
+      return this
+    },
+    readyPlay: function(key, c, l) {
+
+      this.get(key,
+      function(lsound) {
+        var self = this;
+        if (!lsound.isWebAudio) {
+          self.play(key, c, l)
+        }
+        self.onReady(key,
+        function() {
+          if (lsound.isWebAudio || !lsound.playing) {
+            self.play(key, c, l);
+            HdGame.tlog("sound_play2:" + key + "|" + lsound.playing)
+          }
+        })
+      });
+      return this
+    },
+    pause: function(key) {
+
+      this.get(key,
+      function(lsound) {
+        var isChange = lsound.playing;
+        lsound.stop();
+        if (isChange && lsound.isWebAudio) {
+          lsound.fire("pause", lsound)
+        }
+      });
+      return this
+    },
+    pauseAll: function() {
+
+      var key;
+      for (key in cache) {
+        this.pause(key)
+      }
+      return this
+    },
+    load: function(path, key, webAudioEnabled, isOnec) {
+
+      if (cache[key]) {
+        HdGame.tlog("Sound_load_err", "这个key:" + key + " 已经存在!");
+        return this
+      }
+      var lsound = null,
+      useWebAudio = supportWebAudio;
+      typeof webAudioEnabled === "boolean" && (useWebAudio = webAudioEnabled);
+      if (/.wav$/.test(path) && HdGame.isIPhone()) {
+        useWebAudio = false
+      }
+      HdGame.tlog("useWebAudio=" + useWebAudio + ",key=" + key);
+      if (useWebAudio) {
+        lsound = new LWebAudio();
+        lsound.isWebAudio = true
+      } else {
+        lsound = new LMedia();
+        try {
+          lsound.data = new Audio()
+        } catch(e) {
+          console.warn("ReferenceError: Can't find variable: Audio");
+          lsound.data = {}
+        }
+        lsound.data.loop = false;
+        lsound.data.autoplay = false
+      }
+      HdGame.tlog("lsound", lsound);
+      lsound.register([["ready", true], "play", "pause"]);
+      if (!useWebAudio) {
+        lsound.data.addEventListener("play",
+        function() {
+          lsound.playing = true;
+          lsound.fire("play", lsound)
+        },
+        false);
+        lsound.data.addEventListener("pause",
+        function() {
+          lsound.playing = false;
+          lsound.fire("pause", lsound)
+        },
+        false)
+      }
+      lsound.isOnec = !!isOnec;
+      lsound._type = "audio";
+      if (path) {
+        HdGame.tlog("load", key + "_wuhao");
+        lsound.load(path)
+      }
+      lsound.on("complete",
+      function(event) {
+        lsound.complete = true;
+        lsound.fire("ready", lsound);
+        HdGame.tlog("sound", key + " ready")
+      });
+      lsound._allowPlay = true;
+      lsound.name = key;
+      cache[key] = lsound;
+      return this
+    },
+    onReady: function(key, callBack) {
+
+      this.get(key,
+      function(lsound) {
+        if (lsound.complete) {
+          callBack(lsound)
+        } else {
+          lsound.on("ready", callBack)
+        }
+      });
+      return this
+    },
+    setVolume: function(key, volume) {
+
+      this.get(key,
+      function(lsound) {
+        if (lsound.isWebAudio) {
+          lsound.volume = volume
+        } else {
+          lsound.data.volume = volume
+        }
+      });
+      return this
+    },
+    get: function(key, callBack) {
+      var lsound = cache[key];
+      if (!lsound) {
+        HdGame.tlog("sound_get_err", "这个key:" + key + " 不存在!")
+      } else {
+        callBack && callBack.call(this, lsound)
+      }
+      return lsound
+    },
+    cache: cache,
+  };
+  sound.load(_resRoot + "/image/button.mp3", "startButton");
+  if (soundList) {
+    soundList.forEach(
+    function(s, index) {
+      var path = s.path;
+      if (index === 0) {
+        var useWebAudio = false;
+        var UA = HdGame.UA;
+        if (UA.isWX() && !UA.isIOS() && UA.getWxVerNum() >= UA.getWxVerNum("6.6.6")) {
+          useWebAudio = true
+        }
+        sound.load(path, index, useWebAudio, true);
+        // 游戏背景音乐加载,
+        eventBus.$emit( GameBackgroundMusicLoadEvent.type, new GameBackgroundMusicLoadEvent())
+        //initBackgroundMusic()
+      } else {
+        sound.load(path, index)
+      }
+    })
+  }
+  sound.readyPlay(0, 0, "loop");
+  wx.ready(function() {
+    sound.readyPlay(0, 0, "loop")
+  })
+
+  return sound;
+
+};
+
+
 
 HdGame.isIPhone = UA.isIPhone;
 HdGame.IsPC = UA.isPC;
 HdGame.UA = UA
 HdGame.Img = Img
 
+
+Object.keys(Log).forEach(function(key){
+  let fn = Log[key]
+
+  HdGame[key] = function(logFlag, logStr, isErr) {
+    if (HdGame.IsPC()) {
+      return
+    }
+    if (arguments.length <= 1) {
+      logStr = logFlag;
+      logFlag = "###"
+    }
+    if (HdGame.getType(logStr) === "object" || HdGame.getType(logStr) === "array") {
+      logStr = JSON.stringify(logStr)
+    } else {
+      logStr = String(logStr)
+    }
+    fn.call(HdGame, logFlag, logStr, isErr)
+  }
+});
 
 export default HdGame

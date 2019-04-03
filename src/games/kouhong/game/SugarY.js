@@ -4,7 +4,7 @@ import LTweenLite from '@/lib/lufylegend/transitions/LTweenLite'
 
 import { GameArg, g_rem } from './GameArg'
 
-
+import { GameEndEvent } from '@/lib/GameEvent'
 
 
 class SugarY extends LSprite {
@@ -24,6 +24,7 @@ class SugarY extends LSprite {
     GameArg.stageLayer.addChild(s);
   }
 
+  /// 添加飞镖到标靶，并根据飞镖位置设置游戏是否成功
   add(lolly, rotate) {
     var s = this,
       rotateList = GameArg.rotateList,
@@ -39,10 +40,10 @@ class SugarY extends LSprite {
     lolly.rotate = -rotate;
     s.lollyWarp.addChild(lolly);
     for (var i = 0; i < rotateList.length; i++) {
+      // 游戏结束条件
       if (Math.abs(rotate - rotateList[i]) <= GameArg.minRotate) {
-        //hg.sound.play(2);
-        //hg.time.end();
-        this.endGame(lolly);
+        GameArg.eventBus.$emit( GameEndEvent.type, new GameEndEvent(lolly))
+
         return s;
       }
     }

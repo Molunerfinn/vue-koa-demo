@@ -42,12 +42,16 @@ import { GameArg } from './GameArg'
 import Lolly from './Lolly'
 import SugarY from './SugarY'
 
-LGlobal.setDebug(true);
+//LGlobal.setDebug(true);
 //LGlobal.displayState = LGlobal.FULL_SCREEN
 //LGlobal.width = 640;
 //LGlobal.height = LGlobal.width * window.innerHeight / window.innerWidth;
 
 //LInit(50, 'legend', LGlobal.width, LGlobal.height, main);
+
+// eventBus
+import { GameEndEvent, GameBackgroundMusicLoadEvent } from '@/lib/GameEvent'
+
 export default {
   name: 'game',
   props:{
@@ -79,6 +83,7 @@ export default {
     console.log( "mounted props=", this.hg, this.gamestate)
     //this.initGame()
     this.hg.assets.onReady(() => {
+console.log( " this.hg.edit = ", this.hg.edit )      
       let clubInfo = this.hg.edit.getImgInfo('club', true);
       console.log( " hg.assets.onReady clubInfo", clubInfo, "this.hg.assets[clubInfo.path]", this.hg.assets[clubInfo.path])
       this.clubImg = new LBitmapData( this.hg.assets[clubInfo.path]);
@@ -104,6 +109,17 @@ export default {
         height: 6 * this.rem
       });
     });
+    GameArg.eventBus.$on(GameEndEvent.type, (event)=>{
+      this.hg.sound.play(2);
+      this.hg.time.end();
+      this.endGame(event.target);//lolly
+      GameArg.state = 4;
+    })
+    GameArg.eventBus.$on(GameBackgroundMusicLoadEvent.type, (event)=>{
+
+      this.initBackgroundMusic()
+    })
+
   },
   methods:{
     handleStartGame(){
@@ -125,6 +141,7 @@ export default {
       //   }
       // })
     },
+
     initGameData() {
       //hg.time.init();
       //hg.grade.set(0);
@@ -229,10 +246,19 @@ console.log( "showTishi",LGlobal.width, LGlobal.height,  "LTweenLite->", handBit
       LTweenLite.to(handBitmap, 1, {
         loop: true,
         y: LGlobal.height - 7.5 * this.rem,
+        onStart: function( event){
+          //console.log("onStart ->00 handBitmap.y=", handBitmap.y)
+        },
+        onUpdate: function( event ){
+          //console.log("onUpdate ->01 handBitmap.y=", handBitmap.y)
+        },
+        onComplete: function(event) {
+          //console.log("onComplete ->02 handBitmap.y=", handBitmap.y)
+        }
       }).to(handBitmap, 0.2, {
         loop: true,
         alpha: 0,
-        onComplete: function() {
+        onComplete: function(event) {
           handBitmap.alpha = 1;
           handBitmap.y = LGlobal.height;
         }
@@ -243,7 +269,7 @@ console.log( "showTishi",LGlobal.width, LGlobal.height,  "LTweenLite->", handBit
       LGlobal.notMouseEvent = true;
       //console.log( " LGlobal.width, LGlobal.height",  LGlobal.width, LGlobal.height, " window.innerWidth, window.innerHeight", window.innerWidth, window.innerHeight)
       //LInit(50, 'gameLayerBox', LGlobal.width, LGlobal.height, this.initGame);
-      LInit(50, "gameLayerBox",  window.innerWidth, window.innerHeight, this.initGame, LEvent.INIT);
+      LInit(0, "gameLayerBox",  window.innerWidth, window.innerHeight, this.initGame, LEvent.INIT);
       console.log( " LGlobal.width, LGlobal.height",  LGlobal.width, LGlobal.height, " window.innerWidth, window.innerHeight", window.innerWidth, window.innerHeight)
       LGlobal.resize(window.innerWidth, window.innerHeight);
     },
@@ -278,7 +304,7 @@ console.log( "showTishi",LGlobal.width, LGlobal.height,  "LTweenLite->", handBit
         GameArg.lastPageY = null;
       }
     },
-
+    //
     addReadyList(isInit) {
       console.log( " addReadyList ", isInit)
       var readyList = GameArg.readyList;
@@ -296,12 +322,36 @@ console.log( "showTishi",LGlobal.width, LGlobal.height,  "LTweenLite->", handBit
         })
       }
     },
+
     GetRandomNum(a, b) {
       return a + Math.floor(Math.random() * (b - a + 1));
     },
 
     GetRandom(a, b) {
       return a + Math.random() * (b - a);
+    },
+    initBackgroundMusic() {
+
+      this.hg.sound.get("0",
+      function(lsound) {
+        // lsound.on("play",
+        // function() {
+        //   $(function() {
+        //     if ($(".soundIcon").length <= 0) {
+        //       HdGame.appendMusicIcon()
+        //     }
+        //     $(".soundIcon").removeClass("soundIconOff")
+        //   })
+        // }).on("pause",
+        // function() {
+        //   $(function() {
+        //     $(".soundIcon").addClass("soundIconOff")
+        //   })
+        // });
+        if (Audio && lsound.data instanceof Audio) {
+          document.getElementById("pageMusic").appendChild(lsound.data)
+        }
+      })
     }
   },
   watch: {

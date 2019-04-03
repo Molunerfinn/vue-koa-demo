@@ -1,4 +1,8 @@
+import {  EventBus } from '@/lib/EventBus'
+
 var g_rem = window.g_rem;
+
+
 
 var GameArg = {
   createTime: 0.8,
@@ -10,7 +14,9 @@ var GameArg = {
   minRotate: 9, //最小间距角度
   touchLimit: 1 * g_rem,
   first: true,
-  firstTouch: true
+  firstTouch: true,
+  state: 0, //游戏状态
+  eventBus: EventBus
 };
 
 //HdGame.initCallBack(hg, ["startGame", "beforeStartGame", "startGamehead", "home", "again", "jsFootEnd", "showResult", "changeBottomBar", "showPoup", "hidePoup", "timeChange", "beforeDraw", "updateRankList", "afterDraw", "editBackground", "luckDrawErr", "scrollEvent", "beforeStartGiftEvent"]);
