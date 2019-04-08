@@ -42,7 +42,8 @@ class SugarY extends LSprite {
     for (var i = 0; i < rotateList.length; i++) {
       // 游戏结束条件
       if (Math.abs(rotate - rotateList[i]) <= GameArg.minRotate) {
-        GameArg.eventBus.$emit( GameEndEvent.type, new GameEndEvent(lolly))
+        console.log( "eventBus.$emit GameEndEvent.name", GameEndEvent.name)
+        GameArg.eventBus.$emit( GameEndEvent.name, new GameEndEvent(lolly))
 
         return s;
       }

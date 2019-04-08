@@ -83,7 +83,7 @@ export default {
     console.log( "mounted props=", this.hg, this.gamestate)
     //this.initGame()
     this.hg.assets.onReady(() => {
-console.log( " this.hg.edit = ", this.hg.edit )      
+console.log( " this.hg.edit = ", this.hg.edit )
       let clubInfo = this.hg.edit.getImgInfo('club', true);
       console.log( " hg.assets.onReady clubInfo", clubInfo, "this.hg.assets[clubInfo.path]", this.hg.assets[clubInfo.path])
       this.clubImg = new LBitmapData( this.hg.assets[clubInfo.path]);
@@ -109,17 +109,20 @@ console.log( " this.hg.edit = ", this.hg.edit )
         height: 6 * this.rem
       });
     });
-    GameArg.eventBus.$on(GameEndEvent.type, (event)=>{
+    GameArg.eventBus.$on(GameEndEvent.name, (event)=>{
       this.hg.sound.play(2);
       this.hg.time.end();
       this.endGame(event.target);//lolly
       GameArg.state = 4;
     })
-    GameArg.eventBus.$on(GameBackgroundMusicLoadEvent.type, (event)=>{
+    GameArg.eventBus.$on(GameBackgroundMusicLoadEvent.name, (event)=>{
 
       this.initBackgroundMusic()
     })
 
+    this.hg.time.on( 'setTime', (e)=>{
+      console.log( "setTime", e)
+    })
   },
   methods:{
     handleStartGame(){
@@ -187,10 +190,11 @@ console.log( " this.hg.edit = ", this.hg.edit )
           })
           .to(lolly, 0.1, {
             alpha: 1,
-            onComplete: function() {
+            onComplete: ()=> {
               LGlobal.setPauseLoop(true);
               this.endClear();
-              this.gameOver(this.hg.grade.val);
+              this.$emit( "game-over" )
+              //this.gameOver(this.hg.grade.val);
             }
           });
       } else {
@@ -222,7 +226,6 @@ console.log( " this.hg.edit = ", this.hg.edit )
         this.showTishi();
       }
     },
-
     creatSugarY() {
       var sugarY = new SugarY( this.imgData, this.sugarYsize );
       console.log( "creatSugarY ", this.sugarYsize, sugarY )
@@ -242,7 +245,7 @@ console.log( " this.hg.edit = ", this.hg.edit )
       GameArg.mask.addChild(maskObj);
       GameArg.mask.addChild(jtBitmap);
       GameArg.mask.addChild(handBitmap);
-console.log( "showTishi",LGlobal.width, LGlobal.height,  "LTweenLite->", handBitmap)
+      console.log( "showTishi",LGlobal.width, LGlobal.height,  "LTweenLite->", handBitmap)
       LTweenLite.to(handBitmap, 1, {
         loop: true,
         y: LGlobal.height - 7.5 * this.rem,
@@ -330,6 +333,7 @@ console.log( "showTishi",LGlobal.width, LGlobal.height,  "LTweenLite->", handBit
     GetRandom(a, b) {
       return a + Math.random() * (b - a);
     },
+
     initBackgroundMusic() {
 
       this.hg.sound.get("0",
@@ -353,6 +357,8 @@ console.log( "showTishi",LGlobal.width, LGlobal.height,  "LTweenLite->", handBit
         }
       })
     }
+
+
   },
   watch: {
     gamestate: function (val, oldVal) {

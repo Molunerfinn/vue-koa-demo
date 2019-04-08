@@ -13,7 +13,7 @@ const Log = {
     //   return
     // }
 
-    console.log(logStr)
+    console.log(logFlag+':'+logStr)
 
 
   }

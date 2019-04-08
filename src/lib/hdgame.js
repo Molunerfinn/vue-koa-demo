@@ -7,13 +7,16 @@ import {
 } from '@/lib/EventBus'
 import _ from 'lodash'
 import { GameBackgroundMusicLoadEvent } from '@/lib/GameEvent'
+import HdUtil from './hdutil'
 
 import wx from 'weixin-js-sdk'
-
+import { btoa  } from 'base64'
 //const g_rem = 20
 import UA from './hdgame/ua'
 import Img from './hdgame/img'
 import Log from './hdgame/log'
+import Grade from './hdgame/grade'
+import Time from './hdgame/time'
 
 const HdGame = {}
 const arrPro = Array.prototype
@@ -318,9 +321,18 @@ HdGame.initJsHead = function(hg, _data) {
     assetsImage = null
   })();
 
-  //hg.grade = HdGame.initGrade()
+  HdGame.initCallBack(hg, ["startGame", "beforeStartGame", "startGamehead", "home", "again", "jsFootEnd", "showResult", "changeBottomBar", "showPoup", "hidePoup", "timeChange", "beforeDraw", "updateRankList", "afterDraw", "editBackground", "luckDrawErr", "scrollEvent", "beforeStartGiftEvent"]);
+  hg.register(["setGameType", "hpInit", "hgLoadEnd", "save", "changeShow", "showTabByStyle", "changeAwardNum", "changeAwardImg", "changeContactImg", "isLimit", "changeTopBar", "advertisingSetting", "bannerNumberChange", "questionNumSet"]);
 
   HdGame.initEdit(hg.edit)
+
+  if (!g_config.scoreType) {
+    hg.grade = new HdGame.Grade(0)
+  }
+
+  var initTime = g_config.initTime;
+  hg.time = new HdGame.Time(initTime)
+
 
   hg.sound = HdGame.initSound(_data.soundList, _data.soundListDef, _data.soundListMod);
 
@@ -1185,6 +1197,24 @@ console.log( " doing init edit =", Edit );
   return Edit
 };
 
+HdGame.initCallBack = function(target, arg) {
+  var callBackObj = new HdUtil.CallBack();
+  target = target || {};
+  console.log( "callBackObj=", callBackObj)
+  callBackObj.getApiKeys().forEach(
+  function(key, i) {
+    target[key] = function() {
+      var rt = callBackObj[key].apply(callBackObj, arguments);
+      return rt === callBackObj ? this: rt
+    }
+  });
+  if (HdGame.getType(arg) == "array") {
+    callBackObj.register(arg)
+  }
+  return target
+};
+
+
 HdGame.getBgHeight = function() {
   return Math.max((window).innerWidth * g_config.HWRatio, (window).innerHeight)
 };
@@ -1342,9 +1372,11 @@ HdGame.initSound = function(soundList, soundListDef, soundListMod) {
       HdGame.tlog("useWebAudio=" + useWebAudio + ",key=" + key);
       if (useWebAudio) {
         lsound = new LWebAudio();
+        HdGame.initCallBack(lsound, ["complete", "sound_complete"])
         lsound.isWebAudio = true
       } else {
         lsound = new LMedia();
+        HdGame.initCallBack(lsound, ["complete"])
         try {
           lsound.data = new Audio()
         } catch(e) {
@@ -1356,6 +1388,7 @@ HdGame.initSound = function(soundList, soundListDef, soundListMod) {
       }
       HdGame.tlog("lsound", lsound);
       lsound.register([["ready", true], "play", "pause"]);
+
       if (!useWebAudio) {
         lsound.data.addEventListener("play",
         function() {
@@ -1435,7 +1468,7 @@ HdGame.initSound = function(soundList, soundListDef, soundListMod) {
         }
         sound.load(path, index, useWebAudio, true);
         // 游戏背景音乐加载,
-        eventBus.$emit( GameBackgroundMusicLoadEvent.type, new GameBackgroundMusicLoadEvent())
+        eventBus.$emit( GameBackgroundMusicLoadEvent.name, new GameBackgroundMusicLoadEvent())
         //initBackgroundMusic()
       } else {
         sound.load(path, index)
@@ -1451,13 +1484,16 @@ HdGame.initSound = function(soundList, soundListDef, soundListMod) {
 
 };
 
+HdGame.Time = Time
 
+HdGame.Grade = Grade
 
 HdGame.isIPhone = UA.isIPhone;
 HdGame.IsPC = UA.isPC;
 HdGame.UA = UA
 HdGame.Img = Img
 
+HdGame.encodeBase64 = btoa
 
 Object.keys(Log).forEach(function(key){
   let fn = Log[key]

@@ -1,7 +1,5 @@
 import { baseUrl } from './env'
-import store from '@/store'
-
-var Promise = require('es6-promise').Promise;
+import fetch from 'cross-fetch';
 
 export default async (url = '', data = {}, type = 'GET', method = 'fetch') => {
   type = type.toUpperCase()
@@ -18,16 +16,13 @@ export default async (url = '', data = {}, type = 'GET', method = 'fetch') => {
       url = url + '?' + dataStr
     }
   }
-  //console.log("fetch->", url, data, type)
-  if (window.fetch && method == 'fetch') {
+
     let requestConfig = {
       credentials: 'include',
       method: type,
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'X-Jpos-Site-Id': store.state.storeId,
-        'X-Jpos-User-Token': store.state.userInfo.apiKey
+        'Content-Type': 'application/json'
       },
       mode: 'cors',
       cache: 'force-cache'
@@ -41,53 +36,20 @@ export default async (url = '', data = {}, type = 'GET', method = 'fetch') => {
 
     try {
       const response = await fetch(url, requestConfig)
-      let responseJson = null
-      // session expired
-      if( response.status ==401 )
-      {
-        console.log( "response.error=", response.error)
+
+      if (response.status >= 400) {
+        throw new Error("Bad response from server");
       }
-      if( type=='DELETE' &&  response.status == 204 ){
-        //删除成功时，没有返回内容
-        responseJson = { ret: 'success' }
-      }else{
-        responseJson = await response.json()
-      }
-      if( response.status ==401 &&  (responseJson.error== 'unauthorized' || responseJson.error== 'session_expired')){
-        console.log("api expired, trigger store.resetUser")
-        store.commit('resetUser')
-      }
+
+      let responseJson = await response.json()
+
       return responseJson
     } catch (error) {
+
       console.log(error)
       throw new Error(error)
+
     }
-  } else {
-    return new Promise((resolve, reject) => {
-      let requestObj = new XMLHttpRequest()
 
-      let sendData = ''
-      if (type == 'POST') {
-        sendData = JSON.stringify(data)
-      }
 
-      requestObj.open(type, url, true)
-      requestObj.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
-      requestObj.send(sendData)
-
-      requestObj.onreadystatechange = () => {
-        if (requestObj.readyState == 4) {
-          if (requestObj.status == 200) {
-            let obj = requestObj.response
-            if (typeof obj !== 'object') {
-              obj = JSON.parse(obj)
-            }
-            resolve(obj)
-          } else {
-            reject(requestObj)
-          }
-        }
-      }
-    })
-  }
 }

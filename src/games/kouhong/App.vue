@@ -25,7 +25,8 @@
        </div>
      </div>
 
-     <Game ref="game" :hg="hg" :gamestate="gameState" > </Game>
+     <Game ref="game" :hg="hg" :gamestate="gameState" @game-over="handleGameOver" > </Game>
+     <LoadToast ref="load-toast" is-loading="loadToast.isLoading" > </LoadToast>
   </div>
 </template>
 
@@ -34,28 +35,34 @@
 import Game from './game/Game.vue'
 import GameRes from './game/GameRes'
 import HdGame from '@/lib/hdgame'
+import { setAchieve } from '@/api/common'
+import LoadToast from '@/components/LoadToast.vue'
 
-//const hg = {}
-// const g_config = {
-//   HWRatio: 1.608,
-//   ipInfo: {
-//     provice: null,
-//     city: null
-//   }
-// }
+//关于玩家的配置信息
+const g_config = {
+  ipInfo: {
+    provice: null,
+    city: null
+  }
+}
+
+const gameType = 1; // 0抽奖， 1刷记录
+
 export default {
   name: 'app',
   components: {
-    Game
+    Game,
+    LoadToast
   },
   created(){
     HdGame.initJsHead(this.hg, GameRes)
-  
+
 
     console.log( "created gameState=", this.gameState)
   },
   data(){
     return {
+      game_player:{ },
       hg:{
         showGameBox: true
       },
@@ -67,6 +74,10 @@ export default {
         homeVisible: true, // 初始页面是否可见，游戏时需要隐藏
         ruleImgVisible: true, // 锦囊按钮
         loadToastVisible: false
+      },
+      loadToast:{
+        isLoading: false,
+        text: null
       }
     }
   },
@@ -104,7 +115,7 @@ export default {
 
       // 无论是否显示游戏界面都需要调用的功能
       function complete(result) {
-        //HdGame.hideLoadToast();
+        //this.hideLoadToast();
         //HdGame.otherAjaxComplete();
 
         // if (callback) {
@@ -160,7 +171,9 @@ export default {
 
 
     },
-
+    handleGameOver(event){
+      this.gameOver( this.hg.grade.val )
+    },
     activateSound() { //兼容ios下 WebAudio类型的对象无法自动播放，必须在点击事件中播放过一次，才允许播放
       try {
         if (HdGame.isIPhone() && this.hg.sound.list && this.hg.sound.list.length > 0 && !this.hg.sound._activate) {
@@ -176,7 +189,167 @@ export default {
       } catch (e) {
         //HdGame.logStd("activateSoundErr", e);
       }
-    }
+    },
+    // 游戏结束，设置游戏成绩
+    gameOver(_gameScore, callBack, option, showAjaxBar) {
+
+          if (_gameScore === 'fail') {
+            setTimeout(function() {
+              // HdGame.resulePoup.show({
+              //   isSuc: false,
+              //   gameScore: "fail", //闯关失败
+              //   minScore: 50,
+              //   bestScore: '20',
+              //   gameType: gameType,
+              //   rank: 0,
+              //   count: drawTimesLimit - count < 0 ? 0 : (drawTimesLimit - count),
+              //   isLimitDrawTotal: isLimitDraw,
+              //   totalCount: drawTotalLimit - totalCount < 0 ? 0 : (drawTotalLimit - totalCount)
+              // });
+            }, 900);
+            return;
+          }
+          if (isNaN(_gameScore) || _gameScore < 0) {
+            _gameScore = 0;
+          }
+
+          //  if (gameType != 1 && HdGame.shouldRegInfo(infoType, arguments, this)) {
+
+          //$('.ajaxLoadBg').show();
+          //$('.ajaxLoadBar').addClass('ajaxLoad');
+          this.showLoadToast('数据加载中');
+          var _gameScoreStr = _gameScore + '';
+
+          var info = {
+            headImg: this.game_player.avatar
+          };
+          //g_config.awardUsername && (info.ausername = g_config.awardUsername);
+          //g_config.awardPhone && (info.aphone = g_config.awardPhone);
+          //g_config.awardAddress && (info.aadress = g_config.awardAddress);
+          //info.ip = '60.20.175.68';
+          var params = {
+            gameId: 50,
+            style: 22,
+            achieve: HdGame.encodeBase64('"' + _gameScoreStr + '"') + "0jdk7Deh8T2z5W3k0j44dTZmdTOkZGM",
+            openId: this.game_player.openid,
+            //name: g_config.userName,
+            //city_gps: typeof g_config.ipInfo.city != 'undefined' ? g_config.ipInfo.city : '',
+            //province_gps: typeof g_config.ipInfo.provice != 'undefined' ? g_config.ipInfo.provice : ''
+          };
+
+          params.info = JSON.stringify(info);
+
+          Object.assign(params, option);
+
+          setAchieve( params ).then( data=>{
+            this.hideLoadToast();
+            HdGame.tlog('gameOver', data);
+            var r = data;
+            var isShowPoup = true;
+            if (!showAjaxBar) {
+              HdGame.otherAjaxComplete();
+            }
+            if (r.rt == 0) {
+              var arg = {
+                isSuc: r.isSuc,
+                gameScore: _gameScoreStr,
+                minScore: 0, //到多少分可以抽奖
+                bestScore: r.score,
+                gameType: gameType,
+                rank: r.rank,
+                beat: r.beat,
+                //count: drawTimesLimit - count < 0 ? 0 : (drawTimesLimit - count),
+                //isLimitDrawTotal: isLimitDraw,
+                //totalCount: drawTotalLimit - totalCount < 0 ? 0 : (drawTotalLimit - totalCount),
+                isEqualDraw: false,
+                //gameCostTime: consumption,
+                bestCostTime: r.bestCostTime
+              };
+              setTimeout(function() {
+                var callBackArg = {
+                  rt: r.rt,
+                  msg: r.msg,
+                  arg: arg,
+                  pId: r.playerId,
+                  firstScore: r.firstScore
+                };
+                g_config.playerId = r.playerId;
+
+                callBack && (isShowPoup = callBack(callBackArg, r));
+                //$('#timeUpImg,.timeUpImg').removeClass('tada');
+                //isShowPoup !== false && HdGame.resulePoup.show(arg);
+              }, 300);
+              //PlayInfo.addPlayTimes(1);
+              g_config.achieveToken = r.achieveToken;
+            } else if (r.rt == 11) {
+              alert("已被检测到有作弊行为，再次被检测将永久禁止参与本游戏！");
+            } else if (r.rt == 12) {
+              alert("由于作弊行为，该微信号已永久禁止参与本游戏！");
+            } else if (r.rt == 23) {//活动已经结束
+              HdGame.statusMsg(3);
+            } else if (r.rt == 44) {
+              HdGame.statusMsg(8);
+            } else {
+              callBack && (isShowPoup = callBack({
+                rt: r.rt,
+                msg: r.msg
+              }, r));
+              if (isShowPoup !== false) {
+                HdGame.logStd("gameOverErr", 'style=' + g_config.style + ' gameScore=' + _gameScore + ' faiOpenId=tryPlay_12435152 data=' + (data));
+                HdGame.resulePoup.show({
+                  isSuc: false,
+                  gameScore: '--',
+                  minScore: 50,
+                  bestScore: '--',
+                  gameType: gameType,
+                  rank: '--',
+                  beat: '--',
+                  //count: drawTimesLimit - count < 0 ? 0 : (drawTimesLimit - count),
+                  //isLimitDrawTotal: isLimitDraw,
+                  //totalCount: drawTotalLimit - totalCount < 0 ? 0 : (drawTotalLimit - totalCount),
+                  isEqualDraw: false
+                });
+              }
+              return;
+            }
+            if (r.rt !== 0) {
+              callBack && callBack({
+                rt: r.rt,
+                msg: r.msg
+              }, r);
+            }
+          }).catch( err =>{
+            this.hideLoadToast();
+            HdGame.otherAjaxComplete();
+            var rt = {
+              rt: -999,
+              msg: "ajax返回错误"
+            };
+            if (!window.navigator.onLine) {
+              rt.msg = "网络连接失败，请检查你的网络设置!";
+            }
+            if (callBack) {
+              if (callBack(rt, rt)) {
+                alert(rt.msg);
+              }
+            } else {
+              alert(rt.msg);
+            }
+            HdGame.tlog('gameOverErr', JSON.stringify(arguments));
+          })
+
+          params = info = option = null;
+
+        },
+
+        showLoadToast(text){
+          this.loadToast.isLoading = true
+          this.loadToast.text = text
+        },
+        hideLoadToast(){
+          this.loadToast.isLoading = false
+        }
+
   }
 }
 </script>

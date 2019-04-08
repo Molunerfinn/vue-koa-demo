@@ -15,8 +15,10 @@
     "start:pm2": "cross-env NODE_ENV=production pm2 start pm2.json"
   },
   "dependencies": {
+    "Base64": "^1.0.2",
     "axios": "^0.15.3",
     "bcryptjs": "^2.4.0",
+    "cross-fetch": "^3.0.2",
     "element-ui": "^1.2.9",
     "koa": "^2.2.0",
     "koa-bodyparser": "^4.2.0",
