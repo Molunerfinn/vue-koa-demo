@@ -7,9 +7,9 @@
 
 'use strict';
 import fetch from 'node-fetch'
-import { Sequelize, GameRoundBargain,  GamePlayer, GameResult, GameDay } from '../../models'
-import { GameRoundStates } from '../../schema/constant'
-import { FailMessage } from '../constant'
+import { Sequelize, GameRoundBargain,  GamePlayer, GameResult, GameDay } from '../../../models'
+import { GameRoundStates } from '../../../schema/constant'
+import { FailMessage } from '../../constant'
 import log4 from 'koa-log4'
 const logger = log4.getLogger('index')
 

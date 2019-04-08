@@ -286,7 +286,7 @@
 </template>
 
 <script>
-import { getGameInfo, poll, updateGameDay, updateGamePlayerContact } from '@/api/bargain/getData'
+import { getGameInfo, poll, updateGameDay, updateGamePlayerContact } from '@/api/games/bargain'
 
 export default {
     name: 'app',

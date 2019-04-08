@@ -35,7 +35,7 @@
 import Game from './game/Game.vue'
 import GameRes from './game/GameRes'
 import HdGame from '@/lib/hdgame'
-import { setAchieve } from '@/api/common'
+import { setAchieve } from '@/api/base'
 import LoadToast from '@/components/LoadToast.vue'
 
 //关于玩家的配置信息
@@ -246,9 +246,6 @@ export default {
             HdGame.tlog('gameOver', data);
             var r = data;
             var isShowPoup = true;
-            if (!showAjaxBar) {
-              HdGame.otherAjaxComplete();
-            }
             if (r.rt == 0) {
               var arg = {
                 isSuc: r.isSuc,
