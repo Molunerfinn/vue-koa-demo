@@ -1,5 +1,5 @@
 <template>
-  <div class="gameBox gameBgBox" v-show="ui.gameBoxVisible">
+  <div class="gameBox gameBgBox" >
     <div id="gameBgBox">
       <img id="gameBg" :src="gameBg" style="width:100%;height:auto;" />
     </div>
@@ -57,7 +57,7 @@ export default {
   props:{
     hg: Object,
     // 游戏初始化的状态
-    gamestate: {
+    command: {
       type: [String, Number],
       default: 0
     }
@@ -80,10 +80,10 @@ export default {
     this.rem = window.g_rem
   },
   mounted(){
-    console.log( "mounted props=", this.hg, this.gamestate)
+    console.log( "mounted props=", this.hg, this.command)
     //this.initGame()
     this.hg.assets.onReady(() => {
-console.log( " this.hg.edit = ", this.hg.edit )
+      console.log( " this.hg.edit = ", this.hg.edit )
       let clubInfo = this.hg.edit.getImgInfo('club', true);
       console.log( " hg.assets.onReady clubInfo", clubInfo, "this.hg.assets[clubInfo.path]", this.hg.assets[clubInfo.path])
       this.clubImg = new LBitmapData( this.hg.assets[clubInfo.path]);
@@ -145,9 +145,17 @@ console.log( " this.hg.edit = ", this.hg.edit )
       // })
     },
 
-    initGameData() {
-      //hg.time.init();
-      //hg.grade.set(0);
+    handleRestartGame(){
+
+      this.handleInitGameData();
+      this.startGame();
+      this.hg.fire('again');
+
+    },
+
+    handleInitGameData() {
+      this.hg.time.init();
+      this.hg.grade.set(0);
       //$('.timeUpImg').hide();
     },
 
@@ -361,12 +369,17 @@ console.log( " this.hg.edit = ", this.hg.edit )
 
   },
   watch: {
-    gamestate: function (val, oldVal) {
+    command: function (val, oldVal) {
       //外部触发游戏开始
-      console.log('watch-gamestate new: %s, old: %s', val, oldVal)
+      console.log('watch-command new: %s, old: %s', val, oldVal)
       if( val == 'start'){
-        this.ui.gameBoxVisible = true
         this.handleStartGame()
+      }
+      if( val == 'restart'){
+        this.handleRestartGame()
+      }
+      if( val == 'initial'){
+        this.handleInitGameData()
       }
     }
   }

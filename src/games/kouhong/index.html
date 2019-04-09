@@ -189,15 +189,12 @@
   <div class="body">
     <div id="app"></div>
 
-    <div id="spxdPage"></div>
     <div id='_hdOpenIdDiv' class='hide'>{{game_player.openid}}</div>
     <!-- 存放openId的节点 -->
     <div id="pageMusic" style="position:absolute;top:0;height:0;"></div>
     <div class="ruleImg imgContainer absCenter" _mouseIn="0" onclick="showRule(isAnimation=false);">
       <div id="ruleImg" class="slaveImg abs notNeedFatherChage outSpecialDivAutoFit hd-img-fillDiv" style='width:3.2426666666666666rem;height:2.1333333333333333rem;top:0.2986666666666667rem;left:12.544rem;'></div>
     </div>
-
-
 
     <div id="poupInfoBox">
       <div class="poupHead">
@@ -366,8 +363,6 @@
       </div>
     </div>
 
-
-
     <div id="activityKit" class="poupMain bg hide">
       <div class="arrow" id="arrow"></div>
       <div id="tip_txt">
@@ -508,14 +503,12 @@
         <!--<a id="WxCusBtnInfo" href="javascript:;" style="text-decoration:none;"><div class="cusBtn" style="border-top:none;"><span class="text">领取微信卡券</span><div class="cell__ft"></div></div></a>-->
       </div>
     </div>
+
     <div id="storeListBox" class="bg hide">
       <div class="list"></div>
       <div class="refreshBtn hide">更新当前位置</div>
       <div class="closeBtn"></div>
     </div>
-
-
-
 
     <div id="informBox" class="bg hide">
       <div id="inform-reason-page">
@@ -649,173 +642,6 @@
   </div>
 
 
-  <div class="resuleBox hide">
-    <div id="resule-status-box" style="display:none">
-
-      <div id="resule-status-scrollWrap">
-        <div class="resule-bgLight"></div>
-        <div id="resule-status-bird"></div>
-        <div class="optContainer" style="height: 18.6rem; overflow-y:auto;">
-          <div id="resule-status-head">
-            <div class="resule-status-userImg">
-              <img src="{{game_player.avatar}}" />
-            </div>
-            <div id="resule-status-ribbon" class="resule-status-ribbon"></div>
-          </div>
-          <div id="resule-status-body">
-
-            <p class="youraward" style="font-size:0.8rem; line-height:1.2rem">您的成绩为：<span class="resuleArg" style="font-size:0.8rem;"></span><span class="result-scoreUnit" style="font-size:0.8rem;"><span class="gameScoreUnit">分</span></span>
-            </p>
-            <p class="youraward costTime hide" style="font-size:0.8rem; line-height:1.2rem">达到该成绩用时：<span class="resuleArg" style="font-size:0.8rem;"></span><span class="result-scoreUnit" style="font-size:0.8rem;">秒</span></p>
-            <p class="youraward special hide" style="font-size:0.8rem; line-height:1.2rem">通关并且</p>
-            <p class="beat-Percent hide">成功击败全国<span></span>%的玩家</p>
-            <p class="resule-status-minscorex" style="display:none;">成绩必须达到 <span class="resuleArg resulescoreLimit"></span> <span class="gameScoreUnit">分</span>才能<span id="minscoreDrawFont">抽奖</span></p>
-
-            <p id="bestArg" style="margin-top:0.5rem">最佳成绩为：<span class="resuleArg"></span><span class="result-scoreUnit"><span class="gameScoreUnit">分</span></span>
-            </p>
-            <p id="bestCostTime" style="display: none">达到最佳成绩用时：<span class="resuleArg"></span><span class="result-scoreUnit">秒</span></p>
-            <p id="bestRank">最佳排名为：<span class="result-scoreUnit2">NO.</span><span class="resuleArg"></span></p>
-
-            <div id="rank_showRule" style="text-decoration:underline;margin:0.7rem 0rem;" class="hide" onclick="showRule();">活动规则</div>
-
-            <div id="resule-status-count" style="margin-top:0.6rem">
-              <p class="totalDraw">您还有 <span id="totalDrawCount" class="resuleArg"></span> 次抽奖机会</p>
-              <p class="dayDraw">今天还有 <span class="resuleArg dayDrawCount"></span> 次机会抽奖</p>
-              <p class="dayDraw4Total hide">今天可抽 <span class="resuleArg dayDrawCount"></span> 次</p>
-            </div>
-
-            <div id="resule-status-playinfo" style="margin-top:0.6rem">
-              <p class="dayPlayHint">今天还有 <span class="resuleArg todayPlayCount"></span> 次参与机会</p>
-              <p class="totalPlayHint">您还有 <span class="resuleArg totalPlayCount"></span> 次参与机会</p>
-              <p class="dayPlayHint4Total">今天可参与 <span class="resuleArg todayPlayCount"></span> 次</p>
-            </div>
-          </div>
-          <div id="resule-status-other" class="hide">
-            <p style="font-size:0.8rem;font-weight:bold;">通关并且</p>
-            <p class="resule-status-minscorex hide" style="margin: 10px 0px 50px;">成绩必须达到 <span class="resuleArg resuleArg-fail resulescoreLimit"></span> <span class="gameScoreUnit">分</span>才能抽奖</p>
-          </div>
-          <div id="resule-sucReg" class="hide" style="margin-top:0.6rem"> </div>
-          <div class="resule-foot-box">
-            <div class="resule-foot-one">
-              <div class="resule-button resule-one-button resule-status-gift hide">赶紧去抽奖</div>
-              <div class="resule-button resule-one-button resule-status-reg hide">我要报名</div>
-              <div class="resule-button resule-one-button resule-status-again hide">再玩一次</div>
-              <div class="resule-button resule-one-button resule-status-send hide">领取礼品</div>
-              <div class="resule-button resule-one-button resule-status-rightNow hide">马上PK</div>
-            </div>
-            <div class="resule-foot-two">
-              <div class="resule-button resule-status-again restart-again ">再玩一次</div>
-            </div>
-          </div>
-        </div>
-        <div class='attentionBox'>
-          <div class=" resule-foot-box">
-            <div id="drawMenuBtnBox" class='menuBtnBox resule-foot-two'>
-              <div id="resule_seeRank_show" class="resule-button resule-status-seeRank">排行榜</div>
-              <div class="resule-button resule-status-home">返回首页</div>
-            </div>
-          </div>
-          <div class='hdskillInfo skillInfo theRunningAdClass'><a class="theSpecialTarget" href='http://mp.weixin.qq.com/s?__biz=MjM5MTk5MjI3OA==&#x26;mid=209854000&#x26;idx=1&#x26;sn=82241d924839270d3ea820ad2d56c01b#rd'>我也要创建活动</a><span class='gotoFlag'><i></i></span></div>
-          <div class="holdBox"></div>
-        </div>
-      </div>
-
-      <div id="resule-status-lotsBox" style="display:none">
-        <img id="resule-status-lots" class="editTarget-lotsPot">
-        <div id="resule-status-lotsHand" class="editTarget-lotsShakeHand">
-          <div class="shakeHand"></div>
-          <div class="shakeTxt"></div>
-          <div class="waitDrawBtn" style="display:none">点击抽奖</div>
-        </div>
-      </div>
-    </div>
-    <div id="resule-gift-box" style="display:none">
-      <div id="resule-gift-scrollWrap" class="resule-gift-overflowScrolling" style="padding-top:1.2rem;position:relative;z-index:300;">
-
-
-        <div class="resule-bgLight"></div>
-
-
-        <div id="luckContainer" style="position:absolute; width: 100%;z-index:250;">
-          <p id="resule-gift-luck" style="text-align:center;">恭喜你获得了</p>
-
-          <div class="imgContentLimit hide" style="width: 14rem; height: 30rem; position: absolute;"></div>
-          <div class="imgContainer xydzp_GiftPos" style="position:relative;">
-            <img id="resule-gift-sucImg" class="slaveImg">
-
-
-          </div>
-
-          <div id="resule-gift-foot">
-            <p id="resule-gift-rank"> <span class="rank gifArg awardStyle"></span> </p>
-            <p id="resule-gift-goods"> <span class="goods gifArg awardName"></span> </p>
-          </div>
-
-
-
-
-          <div id="resule-gift-buttonMenu">
-
-            <div class="giftBtnBox lookDetail orangeBtn">
-              <a class="seeAwardDetail buttonContent">查看奖品详情</a>
-            </div>
-
-            <div class='resule-gift-draw repeatDraw greenBtn flowBtn ' data-awarded='true'>继续抽奖</div>
-            <div class='resule-gift-home menuBack menuBack2 greenBtn flowBtn'>返回首页</div>
-
-
-
-          </div>
-
-        </div>
-      </div>
-
-      <div id="faiImgBox">
-        <div class="cannotGetThePriceBox"></div>
-
-
-
-        <img class="abs editTarget-theGetPricePic theUnPriceImg imgPreventDefault" id="theGetPricePic" />
-
-
-
-
-
-
-        <div class='resule-gift-draw repeatDraw '>继续抽奖</div>
-        <div class='resule-gift-home menuBack menuBack2'>返回首页</div>
-
-
-      </div>
-
-      <div id="resule-gift-buttonMenu-bottom">
-
-        <div class="giftBtnBox lookDetail orangeBtn">
-          <a class="seeAwardDetail buttonContent">查看奖品详情</a>
-        </div>
-
-        <div class="bottom-line">
-          <div class='resule-gift-draw repeatDraw greenBtn flowBtn ' data-awarded='true'>继续抽奖</div>
-          <div class='resule-gift-home menuBack menuBack2 greenBtn flowBtn'>返回首页</div>
-        </div>
-
-
-
-      </div>
-
-      <div class='attentionBox'>
-
-
-        <div class='menuBtnBox btnB' style='margin-bottom:4rem;'>
-
-          <a class='menuName'>关注我们</a>
-        </div>
-        <div class='hdskillInfo skillInfo theRunningAdClass'><a class="theSpecialTarget" href='http://mp.weixin.qq.com/s?__biz=MjM5MTk5MjI3OA==&#x26;mid=209854000&#x26;idx=1&#x26;sn=82241d924839270d3ea820ad2d56c01b#rd'>我也要创建活动</a><span class='gotoFlag'><i></i></span></div>
-        <div class="holdBox"></div>
-      </div>
-    </div>
-  </div>
-
 
   <div id="attentionMask" class="homePoupMask">
     <div id="attentionPoup" class="homePoupInner attentionPoup">
@@ -848,17 +674,6 @@
   <div id="skillSupMask" class="homePoupMask">
     <img src="/game-kouhong-assets/lib/image/hdQRcode/20170821/caewmB_1.png?v=201711211453" style="position:absolute;top:2rem;z-index:10;margin:auto;left:0;right:0;width:11.65rem" />
   </div>
-
-
-
-  <div id="loadingToast" class="hide">
-    <div class="weui-mask_transparent"></div>
-    <div class="weui-toast">
-      <i class="weui-loading weui-icon_toast"></i>
-      <p class="weui-toast__content"></p>
-    </div>
-  </div>
-
 
   </div>
 

@@ -34,7 +34,11 @@ function Time( initTime ){
 }
 
 const Methods = {
-  setAcceList: function(list) {
+  init(){
+    this.val = this.initTime;
+    this.pastTime = 0;
+  },
+  setAcceList(list) {
     if (typeof list === "number") {
       var n = list;
       list = [];
@@ -45,13 +49,13 @@ const Methods = {
     this.acceList = list;
     return this
   },
-  setTarget: function() {
+  setTarget() {
     var val = this.changeTwoDecimal_f(this.val);
     //this.targetFlag && this.target.text(val);
     this.fire("setTime", this, [val])
   },
 
-  start: function() {
+  start() {
     if (this.initTime === 99999) {
       return
     }
@@ -64,13 +68,13 @@ const Methods = {
     }
     return this
   },
-  isRunning: function() {
+  isRunning() {
     return this.status === "runing"
   },
-  pause: function() {
+  pause() {
     this.status = "pause"
   },
-  end: function() {
+  end() {
     if (this.status === "ended") {
       return
     }
@@ -80,7 +84,7 @@ const Methods = {
     this.status = "ended";
     return this
   },
-  setTime: function() {
+  setTime() {
     var now = (new Date).getTime() / 1000;
     var delta = now - _timeFlag;
     var r = this.isDesc ? -1 : 1;
@@ -117,7 +121,7 @@ const Methods = {
     }
     this.setTarget()
   },
-  update: function() {
+  update() {
     if (this.initTime === 99999) {
       return
     }
@@ -126,7 +130,7 @@ const Methods = {
     }
     this.fireWith("timer", this, [this.status !== "pause"])
   },
-  play: function() {
+  play() {
     this.update();
     if (this.status !== "ended") {
       //_timer = setTimeout(arguments.callee.bind(this), this.interval)
@@ -135,7 +139,7 @@ const Methods = {
       }, this.interval)
     }
   },
-  updateInFrame: function(delta) {
+  updateInFrame(delta) {
     if (this.initTime === 99999) {
       return
     }
@@ -151,7 +155,7 @@ const Methods = {
       this.frameInc = 0
     }
   },
-  changeTwoDecimal_f: function(x) {
+  changeTwoDecimal_f(x) {
     var f_x = Math.round(x * 100) / 100;
     var s_x = f_x.toString();
     var pos_decimal = s_x.indexOf(".");

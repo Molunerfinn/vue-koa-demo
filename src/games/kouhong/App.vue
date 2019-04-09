@@ -25,8 +25,9 @@
        </div>
      </div>
 
-     <Game ref="game" :hg="hg" :gamestate="gameState" @game-over="handleGameOver" > </Game>
+     <Game ref="game" :hg="hg" :command="gameCommand" @game-over="handleGameOver" v-show="ui.gameBoxVisible"> </Game>
      <LoadToast ref="load-toast" is-loading="loadToast.isLoading" > </LoadToast>
+     <ResultBox ref="result-box" :home-callback="home" :again-callback="handleGameRestart" v-show="resultBoxVisible" :params="resultBoxParams" :command="resultBoxCommand"> </ResultBox>
   </div>
 </template>
 
@@ -37,6 +38,7 @@ import GameRes from './game/GameRes'
 import HdGame from '@/lib/hdgame'
 import { setAchieve } from '@/api/base'
 import LoadToast from '@/components/LoadToast.vue'
+import ResultBox from '@/components/ResultBox.vue'
 
 //关于玩家的配置信息
 const g_config = {
@@ -52,13 +54,13 @@ export default {
   name: 'app',
   components: {
     Game,
-    LoadToast
+    LoadToast,
+    ResultBox
   },
   created(){
     HdGame.initJsHead(this.hg, GameRes)
 
-
-    console.log( "created gameState=", this.gameState)
+    console.log( "created gameCommand=", this.gameCommand)
   },
   data(){
     return {
@@ -66,26 +68,30 @@ export default {
       hg:{
         showGameBox: true
       },
-      gameState: 'initial',
+      gameCommand: 'initial',
       homeBgImg: require('@/assets/kouhong/image/skin1/wx/ACgIABACGAAg5_-r4AUojOO-xgcwgAU4wAw.jpg'),
       titleImg: require('@/assets/kouhong/image/skin1/wx/ACgIABAEGAAg_e-r4AUoi5fylAQwugQ4tAE.png'),
       startBtnImg: require('@/assets/kouhong/image/skin1/wx/ACgIABAEGAAgjPDr4AUo8MCYpgMw9AM4yAE.png'),
       ui:{
         homeVisible: true, // 初始页面是否可见，游戏时需要隐藏
+        gameBoxVisible: false,  // 游戏页面
         ruleImgVisible: true, // 锦囊按钮
         loadToastVisible: false
       },
       loadToast:{
         isLoading: false,
         text: null
-      }
+      },
+      resultBoxVisible: false, //游戏结果页面
+      resultBoxParams: {},
+      resultBoxCommand: null
     }
   },
   methods:{
     handleStartGame(event){
       let that = this
       //点击开始按钮，开始游戏
-      console.log( `handleStartGame=${this.gameState}`)
+      console.log( `handleStartGame=${this.gameCommand}`)
       //this.$refs.game.initGame()
       // HdGame.tlog("startBtnAjax：", "调用了");
       this.activateSound();
@@ -106,6 +112,7 @@ export default {
         //$('.homeBtnBox,.bottomSkill').hide();
         //$('.footerBox').hide();
         that.ui.homeVisible = false
+        that.ui.gameBoxVisible = true
         //$('.home, #ruleImg').hide();
         //$('.gameBox').show();
         // if (typeof hg.sound.cache[0] !== 'undefined' && typeof hg.sound.cache[0].playing !== 'undefined' && !hg.sound.cache[0].playing && g_config.style != 48 && g_config.style != 49 && g_config.style != 69) {
@@ -162,17 +169,45 @@ export default {
       Promise.resolve().then(()=>{
         console.log( " then->handleResult")
         handleResult()
-        this.gameState = 'start'
+        this.gameCommand = 'start'
       }).catch((error)=>{
         console.log( " catch->handleFail", error)
         handleFail()
       })
 
-
-
     },
     handleGameOver(event){
       this.gameOver( this.hg.grade.val )
+    },
+    handleGameRestart() {
+      this.gameCommand = 'restart'
+      this.resultBoxVisible = false
+    },
+    home() {
+      //$('#ruleImg').show();
+      //$('.homeBtnBox').show();
+      //$('.footerBox').show();
+      //$('.gameBox').hide();
+      this.ui.gameBoxVisible = false
+      this.startBtnDelay();
+      this.ui.homeVisible = true
+
+      this.resultBoxVisible = false
+      //$('.home').show();
+      //$('#poupInfoBox').hide();
+      //$('.resuleBox').hide();
+      this.gameCommand = 'initial'
+      this.hg.fire('home');
+    },
+    startBtnDelay() {
+      //$('.titleImg').removeClass('titleDown').addClass('titleDown');
+      //$('#startBtnImg').removeClass('startTada');
+
+      this.hg.sound.pauseAll();
+
+      //setTimeout(function() {
+      //  $('#startBtnImg').addClass('startTada');
+      //}, 1000);
     },
     activateSound() { //兼容ios下 WebAudio类型的对象无法自动播放，必须在点击事件中播放过一次，才允许播放
       try {
@@ -262,20 +297,14 @@ export default {
                 //gameCostTime: consumption,
                 bestCostTime: r.bestCostTime
               };
-              setTimeout(function() {
-                var callBackArg = {
-                  rt: r.rt,
-                  msg: r.msg,
-                  arg: arg,
-                  pId: r.playerId,
-                  firstScore: r.firstScore
-                };
-                g_config.playerId = r.playerId;
 
-                callBack && (isShowPoup = callBack(callBackArg, r));
-                //$('#timeUpImg,.timeUpImg').removeClass('tada');
-                //isShowPoup !== false && HdGame.resulePoup.show(arg);
-              }, 300);
+              g_config.playerId = r.playerId;
+
+              //callBack && (isShowPoup = callBack(callBackArg, r));
+              //$('#timeUpImg,.timeUpImg').removeClass('tada');
+              this.resultBoxParams = arg
+              this.resultBoxCommand = "showResult"
+              this.resultBoxVisible = true //显示游戏结果
               //PlayInfo.addPlayTimes(1);
               g_config.achieveToken = r.achieveToken;
             } else if (r.rt == 11) {
@@ -345,7 +374,8 @@ export default {
         },
         hideLoadToast(){
           this.loadToast.isLoading = false
-        }
+        },
+
 
   }
 }
