@@ -21,7 +21,7 @@
          <div class="dayPlayHint4Total">今天有 <span class="count specil todayPlayCount"></span> 次</div>
        </div>
        <div id="startBtn" class="startBtn imgContainer absCenter" style="top:0rem;">
-         <img @click="handleStartGame" id="startBtnImg" class="slaveImg abs" :src="startBtnImg" style="width: 6.66rem; height: 2.449333333333334rem;    top: 19.706666666666667rem;  left: 4.67rem;" />
+         <img @touchend="handleStartGame" id="startBtnImg" class="slaveImg abs" :src="startBtnImg" style="width: 6.66rem; height: 2.449333333333334rem;    top: 19.706666666666667rem;  left: 4.67rem;" />
        </div>
      </div>
 
@@ -39,7 +39,7 @@ import HdGame from '@/lib/hdgame'
 import { setAchieve } from '@/api/base'
 import LoadToast from '@/components/LoadToast.vue'
 import ResultBox from '@/components/ResultBox.vue'
-
+//import {simplifyLufylegend } from '@/lib/simplify'
 //关于玩家的配置信息
 const g_config = {
   ipInfo: {
@@ -58,8 +58,8 @@ export default {
     ResultBox
   },
   created(){
+    //simplifyLufylegend( this.hg, window.g_rem )
     HdGame.initJsHead(this.hg, GameRes)
-
     console.log( "created gameCommand=", this.gameCommand)
   },
   data(){
@@ -89,6 +89,8 @@ export default {
   },
   methods:{
     handleStartGame(event){
+      event.preventDefault()
+
       let that = this
       //点击开始按钮，开始游戏
       console.log( `handleStartGame=${this.gameCommand}`)

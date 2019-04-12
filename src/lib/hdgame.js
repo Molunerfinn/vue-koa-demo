@@ -23,11 +23,12 @@ const arrPro = Array.prototype
 const isReady = true
 const _resRoot = '/static/kouhong'
 const g_config = {
+  initTime: 10,
   HWRatio: 1.608,
   drawType: 0,
   headImg: '/static/kouhong/image/manImg.jpg'
 }
-const g_rem = 20;
+const g_rem = window.g_rem;
 const eventBus = EventBus;
 
 function parseRemToPx(rem) {

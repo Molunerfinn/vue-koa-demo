@@ -33,6 +33,7 @@ import LEvent from '@/lib/lufylegend/events/LEvent'
 import LTweenLite from '@/lib/lufylegend/transitions/LTweenLite'
 //import LStageScaleMode from '@/lib/lufylegend/display/LStageScaleMode';
 //import LStageAlign from '@/lib/lufylegend/display/LStageAlign';
+import {setGameTopBar, showTopBar } from '@/lib/simplify'
 
 var _gameOver = false;
 const _resRoot = '/static/kouhong'
@@ -72,12 +73,13 @@ export default {
       ui:{
         gameBoxVisible: false
       },
-      msg: 'Welcome to Your Vue.js App',
       rem: 20
     }
   },
   created(){
     this.rem = window.g_rem
+    this.handleInitGameData()
+
   },
   mounted(){
     console.log( "mounted props=", this.hg, this.command)
@@ -155,11 +157,15 @@ export default {
 
     handleInitGameData() {
       this.hg.time.init();
+      console.log( "handleInitGameData hg.time", this.hg.time )
       this.hg.grade.set(0);
       //$('.timeUpImg').hide();
     },
 
     initGame() {
+      //初始化游戏头部 头像，计时，分数
+      setGameTopBar('#gameTopBar', this.hg )
+
       GameArg.left = parseInt(0.5 * this.rem);
       GameArg.top = parseInt(4 * this.rem);
 
@@ -227,6 +233,13 @@ export default {
       GameArg.rotateList = [];
       GameArg.firstTouch = true;
       this.creatSugarY();
+
+      GameArg.readyLayer.addEventListener(LEvent.ENTER_FRAME,(event)=>{
+        this.hg.time.updateInFrame( 60);
+
+        showTopBar()
+        console.log( " readyLayer onframe event", this.hg.time);
+      });
       for (var i = 0; i < 1; i++) {
         this.addReadyList(true);
       }
@@ -378,9 +391,7 @@ export default {
       if( val == 'restart'){
         this.handleRestartGame()
       }
-      if( val == 'initial'){
-        this.handleInitGameData()
-      }
+
     }
   }
 }

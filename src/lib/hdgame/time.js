@@ -17,8 +17,8 @@ function Time( initTime ){
   this.isDesc= true, //!g_config.countsTimeType,
   this.acceList= null,
   this.status= "ended",
-  this.updateFlag= true,
-  this.targetFlag= true, // 是否更新target
+  this.updateFlag= false, // 缺省情况下使用，lufy.show事件更新时间。
+  this.targetFlag= true,  // 是否更新target
   this.gameCostTime= 0,
   this.frameInc= 0;
 
@@ -50,9 +50,10 @@ const Methods = {
     return this
   },
   setTarget() {
+    console.log( " setTarget.val=", this.val)
     var val = this.changeTwoDecimal_f(this.val);
     //this.targetFlag && this.target.text(val);
-    this.fire("setTime", this, [val])
+    this.fireWith("setTime", this, val)
   },
 
   start() {
