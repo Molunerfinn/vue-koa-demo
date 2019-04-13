@@ -51,7 +51,7 @@ import SugarY from './SugarY'
 //LInit(50, 'legend', LGlobal.width, LGlobal.height, main);
 
 // eventBus
-import { GameEndEvent, GameBackgroundMusicLoadEvent, GameScoreChangedEvent } from '@/lib/GameEvent'
+import { GameEndEvent,  GameScoreChangedEvent } from '@/lib/GameEvent'
 
 export default {
   name: 'game',
@@ -118,10 +118,7 @@ export default {
       this.hg.time.end();
       this.endGame(event.target);//lolly
     })
-    GameArg.eventBus.$on(GameBackgroundMusicLoadEvent.name, (event)=>{
 
-      this.initBackgroundMusic()
-    })
 
     GameArg.eventBus.$on(GameScoreChangedEvent.name, (event)=>{
       this.hg.grade.inc(10);
@@ -364,29 +361,7 @@ export default {
       return a + Math.random() * (b - a);
     },
 
-    initBackgroundMusic() {
 
-      this.hg.sound.get("0",
-      function(lsound) {
-        // lsound.on("play",
-        // function() {
-        //   $(function() {
-        //     if ($(".soundIcon").length <= 0) {
-        //       HdGame.appendMusicIcon()
-        //     }
-        //     $(".soundIcon").removeClass("soundIconOff")
-        //   })
-        // }).on("pause",
-        // function() {
-        //   $(function() {
-        //     $(".soundIcon").addClass("soundIconOff")
-        //   })
-        // });
-        if (Audio && lsound.data instanceof Audio) {
-          document.getElementById("pageMusic").appendChild(lsound.data)
-        }
-      })
-    }
 
 
   },

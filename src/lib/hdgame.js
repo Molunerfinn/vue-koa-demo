@@ -1,16 +1,22 @@
 import LSound from '@/lib/lufylegend/media/LSound'
-import LMedia from '@/lib/lufylegend/media/LMedia'
-import LWebAudio from '@/lib/lufylegend/media/LWebAudio'
+import {
+  LWebAudio2,
+  LMedia2
+} from '@/lib/simplify'
 
 import {
   EventBus
 } from '@/lib/EventBus'
 import _ from 'lodash'
-import { GameBackgroundMusicLoadEvent } from '@/lib/GameEvent'
+import {
+  GameBackgroundMusicLoadEvent
+} from '@/lib/GameEvent'
 import HdUtil from './hdutil'
 
 import wx from 'weixin-js-sdk'
-import { btoa  } from 'base64'
+import {
+  btoa
+} from 'base64'
 //const g_rem = 20
 import UA from './hdgame/ua'
 import Img from './hdgame/img'
@@ -44,6 +50,28 @@ function parseRemToPx(rem) {
 //   }
 //   return parseFloat(px) / g_rem + 'rem';
 // }
+
+// 添加log功能，tlog, tlogErr 下面会调用
+Object.keys(Log).forEach(function(key) {
+  let fn = Log[key]
+
+  HdGame[key] = function(logFlag, logStr, isErr) {
+    if (HdGame.IsPC()) {
+      return
+    }
+    if (arguments.length <= 1) {
+      logStr = logFlag;
+      logFlag = "###"
+    }
+    if (HdGame.getType(logStr) === "object" || HdGame.getType(logStr) === "array") {
+      logStr = JSON.stringify(logStr)
+    } else {
+      logStr = String(logStr)
+    }
+    fn.call(HdGame, logFlag, logStr, isErr)
+  }
+});
+
 
 // 游戏开始前需要加载的js，主要是加载图片，音乐等资源
 HdGame.initJsHead = function(hg, _data) {
@@ -153,7 +181,7 @@ HdGame.initJsHead = function(hg, _data) {
                 loadStart(groupLoaded)
               } else {
                 _this.complete = true;
-                console.log( "eventBus.$emit(ready)" )
+                console.log("eventBus.$emit(ready)")
                 eventBus.$emit("ready")
               }
               if (group.name === FIRST_NAME) {
@@ -176,7 +204,7 @@ HdGame.initJsHead = function(hg, _data) {
             img.onerror = loadCheckComplete;
             setTimeout(_.bind(loadCheckComplete, img), 4000);
             img.src = img.assets_key = arr[i];
-            console.log( "img.src= ", img.src)
+            console.log("img.src= ", img.src)
             _this[arr[i]] = img
           }
 
@@ -241,74 +269,74 @@ HdGame.initJsHead = function(hg, _data) {
 
   // 定义资源
   (function() {
-     hg.edit = {};
-     let origin = _data.editPropList;
-     let originDef = _data.editPropListDef;
-     let originMod = _data.editModPropList;
-     hg.edit.isMod = _data.editPropListIsMod;
+    hg.edit = {};
+    let origin = _data.editPropList;
+    let originDef = _data.editPropListDef;
+    let originMod = _data.editModPropList;
+    hg.edit.isMod = _data.editPropListIsMod;
 
-     var correctPaths = function(pathDef, path) {
-       if (!path || !pathDef || !_.isArray(pathDef[0])) {
-         return
-       }
-       if (!_.isArray(path[0])) {
-         path[0] = [path[0]];
-         path.length = 1
-       }
-       if (pathDef.length > path.length) {
-         pathDef.forEach(function(defv, i) {
-           if (i >= path.length) {
-             path.push(defv)
-           }
-         })
-       }
-     };
+    var correctPaths = function(pathDef, path) {
+      if (!path || !pathDef || !_.isArray(pathDef[0])) {
+        return
+      }
+      if (!_.isArray(path[0])) {
+        path[0] = [path[0]];
+        path.length = 1
+      }
+      if (pathDef.length > path.length) {
+        pathDef.forEach(function(defv, i) {
+          if (i >= path.length) {
+            path.push(defv)
+          }
+        })
+      }
+    };
 
-     for (var i = 0; i < originDef.length; i++) {
-       var path = origin[i].path;
-       var pathDef = originDef[i].path;
-       var pathMod = originMod ? originMod[i].path: null;
-       var notDeferPath = !originDef[i].deferPath;
-       var isAdvertising = origin[i].name == "advertising";
-       correctPaths(pathDef, pathMod);
-       correctPaths(pathDef, path);
-       pathDef = pathMod || pathDef;
-       if (pathDef) {
-         if (!path) {
-           origin[i].path = path = pathDef
-         }
-         if (_.isArray(path[0])) {
-           for (var j = 0; j < pathDef.length; j++) {
-             if (!path[j]) {
-               path[j] = pathDef[j]
-             }
-             if (!path[j][0]) {
-               path[j][0] = pathDef[j][0]
-             }
-             notDeferPath && hg.assets.add(originDef[i].group, path[j][0].replace("*_resRoot*", _resRoot))
-           }
-         } else {
-           if (!path[0]) {
-             path[0] = pathDef[0]
-           }
-           if (!isAdvertising && notDeferPath || (isAdvertising && _data.isOpenAdvertise)) {
-             hg.assets.add(originDef[i].group, path[0].replace(/\*_resRoot\*/g, _resRoot))
-           }
-         }
-       }
+    for (var i = 0; i < originDef.length; i++) {
+      var path = origin[i].path;
+      var pathDef = originDef[i].path;
+      var pathMod = originMod ? originMod[i].path : null;
+      var notDeferPath = !originDef[i].deferPath;
+      var isAdvertising = origin[i].name == "advertising";
+      correctPaths(pathDef, pathMod);
+      correctPaths(pathDef, path);
+      pathDef = pathMod || pathDef;
+      if (pathDef) {
+        if (!path) {
+          origin[i].path = path = pathDef
+        }
+        if (_.isArray(path[0])) {
+          for (var j = 0; j < pathDef.length; j++) {
+            if (!path[j]) {
+              path[j] = pathDef[j]
+            }
+            if (!path[j][0]) {
+              path[j][0] = pathDef[j][0]
+            }
+            notDeferPath && hg.assets.add(originDef[i].group, path[j][0].replace("*_resRoot*", _resRoot))
+          }
+        } else {
+          if (!path[0]) {
+            path[0] = pathDef[0]
+          }
+          if (!isAdvertising && notDeferPath || (isAdvertising && _data.isOpenAdvertise)) {
+            hg.assets.add(originDef[i].group, path[0].replace(/\*_resRoot\*/g, _resRoot))
+          }
+        }
+      }
 
-     }
+    }
 
 
-     hg.edit = {
-       origin: origin,
-       originDef: originDef,
-       originMod: originMod,
-       isMod: _data.editPropListIsMod
-     }
-   })();
+    hg.edit = {
+      origin: origin,
+      originDef: originDef,
+      originMod: originMod,
+      isMod: _data.editPropListIsMod
+    }
+  })();
 
-   // 加载资源
+  // 加载资源
   (function() {
     let assetsImage = [_data.logoImg_path, _resRoot + "/image/ruleImg.png", _resRoot + "/image/success.png", _resRoot + "/image/light.png", _resRoot + "/image/musicOff.png", _resRoot + "/image/musicOn.png", g_config.headImg];
     //if (g_config.drawType != 0) {
@@ -332,15 +360,16 @@ HdGame.initJsHead = function(hg, _data) {
 }
 
 HdGame.initEdit = function(Edit) {
-console.log( " doing init edit =", Edit );
+  console.log(" doing init edit =", Edit);
   let origin = Edit.origin
   let originDef = Edit.originDef
   // originMod = Edit.originMod,
   // elemRegx = /\b(editTarget|editRelate)(-\w+?)(-\d+?)?\b/,
   // templateRegx = /{{(.*?)}}/g,
   let cache = {};
+
   function getImgInfo(name, isRem) {
-    console.log( "getImgInfo=", name )
+    console.log("getImgInfo=", name)
     let key = "getImgInfo-" + name;
     if (isRem) {
       key = "getImgInfo-rem-" + name
@@ -367,7 +396,7 @@ console.log( " doing init edit =", Edit );
         obj.path = HdGame.getSrc(tem.path[0])
       }
     }
-    let parseUnit = isRem ? parseFloat: parseRemToPx;
+    let parseUnit = isRem ? parseFloat : parseRemToPx;
     let handles = {
       size: ["width", "height"],
       pos: ["left", "top"]
@@ -380,8 +409,8 @@ console.log( " doing init edit =", Edit );
       }
       if (HdGame.getType(val) === "array") {
         obj[key2[0]] = [],
-        obj[key2[1]] = [];
-        val.forEach( function(item, index) {
+          obj[key2[1]] = [];
+        val.forEach(function(item, index) {
           obj[key2[0]].push(parseUnit(item[key2[0]]));
           obj[key2[1]].push(parseUnit(item[key2[1]]))
         })
@@ -393,6 +422,7 @@ console.log( " doing init edit =", Edit );
     cache[key] = obj;
     return obj
   }
+
   function getInfoByName(name) {
     for (let i = 0; i < origin.length; i++) {
       let tem = origin[i];
@@ -933,8 +963,8 @@ console.log( " doing init edit =", Edit );
   //   }
   // }
   function initEdit() {
-    origin.forEach( function(tem, index) {
-      console.log( "initItem: ", tem)
+    origin.forEach(function(tem, index) {
+      console.log("initItem: ", tem)
       //initItem(tem, originDef[index], $(".editTarget-" + tem.name))
     })
   }
@@ -1178,12 +1208,12 @@ console.log( " doing init edit =", Edit );
   Edit.hasInitEle = true;
   initEdit()
 
-//  Edit.setEdit = setEdit;
+  //  Edit.setEdit = setEdit;
   Edit.getImgInfo = getImgInfo;
-//  Edit.getInfoByName = getInfoByName;
-//  Edit.getRgba = getRgba;
+  //  Edit.getInfoByName = getInfoByName;
+  //  Edit.getRgba = getRgba;
   Edit.initEdit = initEdit;
-//  Edit.initByElem = initByElem;
+  //  Edit.initByElem = initByElem;
   Edit.cache = cache;
   // Edit.setJqSrc = setJqSrc;
   delete Edit.originMod;
@@ -1193,14 +1223,14 @@ console.log( " doing init edit =", Edit );
 HdGame.initCallBack = function(target, arg) {
   var callBackObj = new HdUtil.CallBack();
   target = target || {};
-  console.log( "callBackObj=", callBackObj)
+  console.log("callBackObj=", callBackObj)
   callBackObj.getApiKeys().forEach(
-  function(key, i) {
-    target[key] = function() {
-      var rt = callBackObj[key].apply(callBackObj, arguments);
-      return rt === callBackObj ? this: rt
-    }
-  });
+    function(key, i) {
+      target[key] = function() {
+        var rt = callBackObj[key].apply(callBackObj, arguments);
+        return rt === callBackObj ? this : rt
+      }
+    });
   if (HdGame.getType(arg) == "array") {
     callBackObj.register(arg)
   }
@@ -1221,8 +1251,8 @@ HdGame.getSrc = function(src) {
 };
 
 HdGame.getPosAndSize = function(theObj, def, type) {
-  ! type && (type = HdGame.Img.MODE_SCALE_DEFLATE_FILL);
-  console.log( ` type=${type}, theObj=${theObj.width}:${theObj.width}, def=${def.width}:${def.height},`)
+  !type && (type = HdGame.Img.MODE_SCALE_DEFLATE_FILL);
+  console.log(` type=${type}, theObj=${theObj.width}:${theObj.width}, def=${def.width}:${def.height},`)
   var sizeInfo = HdGame.Img.calcSize(theObj.width, theObj.height, def.width, def.height, type, true);
   var defLeft = def.left || 0;
   var defTop = def.top || 0;
@@ -1258,6 +1288,7 @@ HdGame.initSound = function(soundList, soundListDef, soundListMod) {
   }
   var cache = {};
   var supportWebAudio = LSound.webAudioEnabled;
+  HdGame.tlog( "sound", "supportWebAudio="+supportWebAudio)
   var sound = {
     list: soundList,
     listDef: soundListDef,
@@ -1267,14 +1298,13 @@ HdGame.initSound = function(soundList, soundListDef, soundListMod) {
         this.allowPlay = key
       }
       this.get(key,
-      function(lsound) {
-        lsound._allowPlay = power
-      });
+        function(lsound) {
+          lsound._allowPlay = power
+        });
       return this
     },
     play: function(key, c, l) {
-
-      if (!this.allowPlay ) {
+      if (!this.allowPlay) {
         return this
       }
       if (soundList && HdGame.getType(key) === "number") {
@@ -1286,59 +1316,62 @@ HdGame.initSound = function(soundList, soundListDef, soundListMod) {
       if (key !== 0 && soundList && soundList[0].optFlag !== 1 && !supportWebAudio) {
         return this
       }
+
       this.get(key,
-      function(lsound) {
-        if (!lsound._allowPlay) {
-          return
-        }
-        if (lsound.isWebAudio && lsound.isOnec && lsound.playing) {
-          return
-        }
-        var isChange = !lsound.playing;
-        lsound.play(c, l);
-        if (lsound.isWebAudio) {
-          isChange && lsound.fire("play", lsound)
-        } else {
-          if (!lsound.playing && wx.checkJsApi) {
-            wx.checkJsApi({
-              jsApiList: ["checkJsApi"],
-              success: function() {
-                lsound.play(c, l)
-              }
-            })
+        function(lsound) {
+          if (!lsound._allowPlay) {
+            return
           }
-        }
-      });
+          if (lsound.isWebAudio && lsound.isOnec && lsound.playing) {
+            return
+          }
+          var isChange = !lsound.playing;
+          console.log( "play41", lsound,lsound.length, key, c,l )
+          lsound.play(c, l);
+          console.log( "play43", key, c,l )
+          if (lsound.isWebAudio) {
+            isChange && lsound.fire("play", lsound)
+          } else {
+            if (!lsound.playing && wx.checkJsApi) {
+              wx.checkJsApi({
+                jsApiList: ["checkJsApi"],
+                success: function() {
+                  lsound.play(c, l)
+                }
+              })
+            }
+          }
+        });
       return this
     },
     readyPlay: function(key, c, l) {
 
       this.get(key,
-      function(lsound) {
-        var self = this;
-        if (!lsound.isWebAudio) {
-          self.play(key, c, l)
-        }
-        self.onReady(key,
-        function() {
-          if (lsound.isWebAudio || !lsound.playing) {
-            self.play(key, c, l);
-            HdGame.tlog("sound_play2:" + key + "|" + lsound.playing)
+        function(lsound) {
+          var self = this;
+          if (!lsound.isWebAudio) {
+            self.play(key, c, l)
           }
-        })
-      });
+          self.onReady(key,
+            function() {
+              if (lsound.isWebAudio || !lsound.playing) {
+                self.play(key, c, l);
+                HdGame.tlog("sound_play2:" + key + "|" + lsound.playing)
+              }
+            })
+        });
       return this
     },
     pause: function(key) {
 
       this.get(key,
-      function(lsound) {
-        var isChange = lsound.playing;
-        lsound.stop();
-        if (isChange && lsound.isWebAudio) {
-          lsound.fire("pause", lsound)
-        }
-      });
+        function(lsound) {
+          var isChange = lsound.playing;
+          lsound.stop();
+          if (isChange && lsound.isWebAudio) {
+            lsound.fire("pause", lsound)
+          }
+        });
       return this
     },
     pauseAll: function() {
@@ -1356,57 +1389,62 @@ HdGame.initSound = function(soundList, soundListDef, soundListMod) {
         return this
       }
       var lsound = null,
-      useWebAudio = supportWebAudio;
+        useWebAudio = supportWebAudio;
       typeof webAudioEnabled === "boolean" && (useWebAudio = webAudioEnabled);
       if (/.wav$/.test(path) && HdGame.isIPhone()) {
         useWebAudio = false
       }
       HdGame.tlog("useWebAudio=" + useWebAudio + ",key=" + key);
       if (useWebAudio) {
-        lsound = new LWebAudio();
-        HdGame.initCallBack(lsound, ["complete", "sound_complete"])
+        lsound = new LWebAudio2();
         lsound.isWebAudio = true
       } else {
-        lsound = new LMedia();
-        HdGame.initCallBack(lsound, ["complete"])
+        lsound = new LMedia2();
         try {
           lsound.data = new Audio()
-        } catch(e) {
+        } catch (e) {
           console.warn("ReferenceError: Can't find variable: Audio");
           lsound.data = {}
         }
         lsound.data.loop = false;
         lsound.data.autoplay = false
       }
-      HdGame.tlog("lsound", lsound);
+      HdGame.tlog("lsound", path);
       lsound.register([["ready", true], "play", "pause"]);
 
       if (!useWebAudio) {
         lsound.data.addEventListener("play",
-        function() {
-          lsound.playing = true;
-          lsound.fire("play", lsound)
-        },
-        false);
+          function() {
+            lsound.playing = true;
+            lsound.fire("play", lsound)
+          },
+          false);
         lsound.data.addEventListener("pause",
-        function() {
-          lsound.playing = false;
-          lsound.fire("pause", lsound)
-        },
-        false)
+          function() {
+            lsound.playing = false;
+            lsound.fire("pause", lsound)
+          },
+          false)
       }
       lsound.isOnec = !!isOnec;
       lsound._type = "audio";
       if (path) {
-        HdGame.tlog("load", key + "_wuhao");
+        HdGame.tlog("load", key + path);
         lsound.load(path)
       }
       lsound.on("complete",
-      function(event) {
-        lsound.complete = true;
-        lsound.fire("ready", lsound);
-        HdGame.tlog("sound", key + " ready")
-      });
+        function(event) {
+          lsound.complete = true;
+          lsound.fire("ready", lsound);
+          HdGame.tlog("sound", key + " ready" + path)
+        });
+      // 游戏背景音乐加载,
+      if( key == 0 ){
+        lsound.on("complete",
+          function(event) {
+            eventBus.$emit(GameBackgroundMusicLoadEvent.name, new GameBackgroundMusicLoadEvent())
+        })
+      }
       lsound._allowPlay = true;
       lsound.name = key;
       cache[key] = lsound;
@@ -1415,25 +1453,25 @@ HdGame.initSound = function(soundList, soundListDef, soundListMod) {
     onReady: function(key, callBack) {
 
       this.get(key,
-      function(lsound) {
-        if (lsound.complete) {
-          callBack(lsound)
-        } else {
-          lsound.on("ready", callBack)
-        }
-      });
+        function(lsound) {
+          if (lsound.complete) {
+            callBack(lsound)
+          } else {
+            lsound.on("ready", callBack)
+          }
+        });
       return this
     },
     setVolume: function(key, volume) {
 
       this.get(key,
-      function(lsound) {
-        if (lsound.isWebAudio) {
-          lsound.volume = volume
-        } else {
-          lsound.data.volume = volume
-        }
-      });
+        function(lsound) {
+          if (lsound.isWebAudio) {
+            lsound.volume = volume
+          } else {
+            lsound.data.volume = volume
+          }
+        });
       return this
     },
     get: function(key, callBack) {
@@ -1450,22 +1488,20 @@ HdGame.initSound = function(soundList, soundListDef, soundListMod) {
   sound.load(_resRoot + "/image/button.mp3", "startButton");
   if (soundList) {
     soundList.forEach(
-    function(s, index) {
-      var path = s.path;
-      if (index === 0) {
-        var useWebAudio = false;
-        var UA = HdGame.UA;
-        if (UA.isWX() && !UA.isIOS() && UA.getWxVerNum() >= UA.getWxVerNum("6.6.6")) {
-          useWebAudio = true
+      function(s, index) {
+        var path = s.path;
+        if (index === 0) {
+          var useWebAudio = false;
+          var UA = HdGame.UA;
+          if (UA.isWX() && !UA.isIOS() && UA.getWxVerNum() >= UA.getWxVerNum("6.6.6")) {
+            useWebAudio = true
+          }
+          sound.load(path, index, useWebAudio, true);
+          //initBackgroundMusic()
+        } else {
+          sound.load(path, index)
         }
-        sound.load(path, index, useWebAudio, true);
-        // 游戏背景音乐加载,
-        eventBus.$emit( GameBackgroundMusicLoadEvent.name, new GameBackgroundMusicLoadEvent())
-        //initBackgroundMusic()
-      } else {
-        sound.load(path, index)
-      }
-    })
+      })
   }
   sound.readyPlay(0, 0, "loop");
   wx.ready(function() {
@@ -1487,24 +1523,5 @@ HdGame.Img = Img
 
 HdGame.encodeBase64 = btoa
 
-Object.keys(Log).forEach(function(key){
-  let fn = Log[key]
-
-  HdGame[key] = function(logFlag, logStr, isErr) {
-    if (HdGame.IsPC()) {
-      return
-    }
-    if (arguments.length <= 1) {
-      logStr = logFlag;
-      logFlag = "###"
-    }
-    if (HdGame.getType(logStr) === "object" || HdGame.getType(logStr) === "array") {
-      logStr = JSON.stringify(logStr)
-    } else {
-      logStr = String(logStr)
-    }
-    fn.call(HdGame, logFlag, logStr, isErr)
-  }
-});
 
 export default HdGame

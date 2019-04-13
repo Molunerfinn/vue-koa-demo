@@ -39,6 +39,9 @@ import HdGame from '@/lib/hdgame'
 import { setAchieve } from '@/api/base'
 import LoadToast from '@/components/LoadToast.vue'
 import ResultBox from '@/components/ResultBox.vue'
+import { GameBackgroundMusicLoadEvent } from '@/lib/GameEvent'
+import {  EventBus } from '@/lib/EventBus'
+
 //import {simplifyLufylegend } from '@/lib/simplify'
 //关于玩家的配置信息
 const g_config = {
@@ -64,6 +67,9 @@ export default {
 
     this.hg.time = new HdGame.Time( g_config.initTime)
 
+    EventBus.$on(GameBackgroundMusicLoadEvent.name, (event)=>{
+      this.initBackgroundMusic()
+    })
     //simplifyLufylegend( this.hg, window.g_rem )
     HdGame.initJsHead(this.hg, GameRes)
 
@@ -223,13 +229,13 @@ export default {
     activateSound() { //兼容ios下 WebAudio类型的对象无法自动播放，必须在点击事件中播放过一次，才允许播放
       try {
         if (HdGame.isIPhone() && this.hg.sound.list && this.hg.sound.list.length > 0 && !this.hg.sound._activate) {
-          // $.each(hg.sound.list, function(i, val) {
-          //   var data = hg.sound.cache[i];
-          //   if (i > 0 && data && data.soundType == "LWebAudio") {
-          //     data.play();
-          //     data.stop();
-          //   }
-          // });
+          this.hg.sound.list.forEach( function(val, i) {
+             var data = this.hg.sound.cache[i];
+             if (i > 0 && data && data.soundType == "LWebAudio") {
+               data.play();
+               data.stop();
+             }
+           });
           this.hg.sound._activate = true;
         }
       } catch (e) {
@@ -378,6 +384,29 @@ export default {
           params = info = option = null;
 
         },
+        initBackgroundMusic() {
+          console.log("initBackgroundMusic->sound")
+          this.hg.sound.get("0",
+          function(lsound) {
+            // lsound.on("play",
+            // function() {
+            //   $(function() {
+            //     if ($(".soundIcon").length <= 0) {
+            //       HdGame.appendMusicIcon()
+            //     }
+            //     $(".soundIcon").removeClass("soundIconOff")
+            //   })
+            // }).on("pause",
+            // function() {
+            //   $(function() {
+            //     $(".soundIcon").addClass("soundIconOff")
+            //   })
+            // });
+            if (Audio && lsound.data instanceof Audio) {
+              document.getElementById("pageMusic").appendChild(lsound.data)
+            }
+          })
+        },
 
         showLoadToast(text){
           this.loadToast.isLoading = true
@@ -386,7 +415,6 @@ export default {
         hideLoadToast(){
           this.loadToast.isLoading = false
         },
-
 
   }
 }

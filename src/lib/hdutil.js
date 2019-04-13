@@ -9,7 +9,7 @@ HdUtil.CallBack = function() {
   //
   function CallBackable(target) {
       //如果当前对象没有
-      console.log( "new CallBackable = ", this)
+      //console.log( "new CallBackable = ", this)
       if (! (this instanceof CallBackable)) return new CallBackable(target);
       this.callbacks = {}
       // 保存所有事件名称，ex. { 注册事件名称：1 }
@@ -66,7 +66,7 @@ HdUtil.CallBack = function() {
           var e = Array.from( arguments),
           t = e.shift(),
           r = this.callbacks[t];
-          //console.log( "CallBackableMethods r, n = ",r, n, "this =", this )          
+          //console.log( "CallBackableMethods r, n = ",r, n, "this =", this )
           return this._ones[t] && (this._ones[t] = 2),
           !r || r[n].apply(r, e)
       }
