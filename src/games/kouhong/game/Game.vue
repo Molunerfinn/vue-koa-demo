@@ -51,11 +51,12 @@ import SugarY from './SugarY'
 //LInit(50, 'legend', LGlobal.width, LGlobal.height, main);
 
 // eventBus
-import { GameEndEvent, GameBackgroundMusicLoadEvent } from '@/lib/GameEvent'
+import { GameEndEvent, GameBackgroundMusicLoadEvent, GameScoreChangedEvent } from '@/lib/GameEvent'
 
 export default {
   name: 'game',
   props:{
+    // hg, 保存游戏的所有资源，图片，音乐，时间，分数
     hg: Object,
     // 游戏初始化的状态
     command: {
@@ -78,12 +79,12 @@ export default {
   },
   created(){
     this.rem = window.g_rem
-    this.handleInitGameData()
 
   },
   mounted(){
     console.log( "mounted props=", this.hg, this.command)
-    //this.initGame()
+    this.handleInitGameData()
+
     this.hg.assets.onReady(() => {
       console.log( " this.hg.edit = ", this.hg.edit )
       let clubInfo = this.hg.edit.getImgInfo('club', true);
@@ -111,20 +112,27 @@ export default {
         height: 6 * this.rem
       });
     });
+
     GameArg.eventBus.$on(GameEndEvent.name, (event)=>{
       this.hg.sound.play(2);
       this.hg.time.end();
       this.endGame(event.target);//lolly
-      GameArg.state = 4;
     })
     GameArg.eventBus.$on(GameBackgroundMusicLoadEvent.name, (event)=>{
 
       this.initBackgroundMusic()
     })
 
+    GameArg.eventBus.$on(GameScoreChangedEvent.name, (event)=>{
+      this.hg.grade.inc(10);
+      this.hg.sound.play(1);
+    })
+
     this.hg.time.on( 'setTime', (e)=>{
       console.log( "setTime", e)
     })
+    this.hg.time.on('end', this.endGame)
+
   },
   methods:{
     handleStartGame(){
@@ -214,9 +222,10 @@ export default {
       } else {
         LGlobal.setPauseLoop(true);
         this.endClear();
-        this.gameOver(this.hg.grade.val);
+        this.$emit( "game-over" )
       }
     },
+
     endClear() {
       setTimeout(function() {
         LGlobal.canvas.clearRect(0, 0, LGlobal.width + 1, LGlobal.height + 1);
@@ -238,7 +247,7 @@ export default {
         this.hg.time.updateInFrame( 60);
 
         showTopBar()
-        console.log( " readyLayer onframe event", this.hg.time);
+        //console.log( " readyLayer onframe event", this.hg.time);
       });
       for (var i = 0; i < 1; i++) {
         this.addReadyList(true);
@@ -255,7 +264,7 @@ export default {
       }
       GameArg.sugarY = sugarY;
     },
-
+    // 显示游戏开始前提示动画
     showTishi() {
       let tishiImg = this.hg.assets[_resRoot+"/image/bbtzw/tishi.png"]
       let jtBitmap = new LBitmap(new LBitmapData(tishiImg, 20, 12, 90, 300), 6.875 * this.rem, LGlobal.height - 7.5 * this.rem, 2.25 * this.rem, 7.5 * this.rem)
@@ -391,7 +400,9 @@ export default {
       if( val == 'restart'){
         this.handleRestartGame()
       }
-
+      if( val== 'initial'){
+        this.handleInitGameData()
+      }
     }
   }
 }

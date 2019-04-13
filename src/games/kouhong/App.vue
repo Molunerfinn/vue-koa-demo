@@ -25,7 +25,7 @@
        </div>
      </div>
 
-     <Game ref="game" :hg="hg" :command="gameCommand" @game-over="handleGameOver" v-show="ui.gameBoxVisible"> </Game>
+     <Game ref="game" :hg="hg" :command="gameState" @game-over="handleGameOver" v-show="ui.gameBoxVisible"> </Game>
      <LoadToast ref="load-toast" is-loading="loadToast.isLoading" > </LoadToast>
      <ResultBox ref="result-box" :home-callback="home" :again-callback="handleGameRestart" v-show="resultBoxVisible" :params="resultBoxParams" :command="resultBoxCommand"> </ResultBox>
   </div>
@@ -42,6 +42,8 @@ import ResultBox from '@/components/ResultBox.vue'
 //import {simplifyLufylegend } from '@/lib/simplify'
 //关于玩家的配置信息
 const g_config = {
+  scoreType: false,
+  initTime: 10,
   ipInfo: {
     provice: null,
     city: null
@@ -58,9 +60,15 @@ export default {
     ResultBox
   },
   created(){
+    this.hg.grade = new HdGame.Grade(0)
+
+    this.hg.time = new HdGame.Time( g_config.initTime)
+
     //simplifyLufylegend( this.hg, window.g_rem )
     HdGame.initJsHead(this.hg, GameRes)
-    console.log( "created gameCommand=", this.gameCommand)
+
+
+    console.log( "created gameState=", this.gameState, this.hg.grade)
   },
   data(){
     return {
@@ -68,7 +76,7 @@ export default {
       hg:{
         showGameBox: true
       },
-      gameCommand: 'initial',
+      gameState: 'initial', // start, restart, over
       homeBgImg: require('@/assets/kouhong/image/skin1/wx/ACgIABACGAAg5_-r4AUojOO-xgcwgAU4wAw.jpg'),
       titleImg: require('@/assets/kouhong/image/skin1/wx/ACgIABAEGAAg_e-r4AUoi5fylAQwugQ4tAE.png'),
       startBtnImg: require('@/assets/kouhong/image/skin1/wx/ACgIABAEGAAgjPDr4AUo8MCYpgMw9AM4yAE.png'),
@@ -93,8 +101,8 @@ export default {
 
       let that = this
       //点击开始按钮，开始游戏
-      console.log( `handleStartGame=${this.gameCommand}`)
-      //this.$refs.game.initGame()
+      console.log( `handleStartGame=${this.gameState}`)
+
       // HdGame.tlog("startBtnAjax：", "调用了");
       this.activateSound();
       //HdGame.ajaxLoad.show();
@@ -171,7 +179,7 @@ export default {
       Promise.resolve().then(()=>{
         console.log( " then->handleResult")
         handleResult()
-        this.gameCommand = 'start'
+        this.gameState = 'start'
       }).catch((error)=>{
         console.log( " catch->handleFail", error)
         handleFail()
@@ -179,10 +187,11 @@ export default {
 
     },
     handleGameOver(event){
+      this.gameState = "over"
       this.gameOver( this.hg.grade.val )
     },
     handleGameRestart() {
-      this.gameCommand = 'restart'
+      this.gameState = 'restart'
       this.resultBoxVisible = false
     },
     home() {
@@ -198,7 +207,7 @@ export default {
       //$('.home').show();
       //$('#poupInfoBox').hide();
       //$('.resuleBox').hide();
-      this.gameCommand = 'initial'
+      this.gameState = 'initial'
       this.hg.fire('home');
     },
     startBtnDelay() {

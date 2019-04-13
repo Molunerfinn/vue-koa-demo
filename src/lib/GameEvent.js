@@ -21,6 +21,13 @@ export class GameEndEvent extends GameEvent{
   }
 }
 
+// 得分事件
+export class GameScoreChangedEvent extends GameEvent{
+  constructor( target, changedScore){
+    super( target)
+    this.changedScore = changedScore
+  }
+}
 // 游戏背景音乐加载
 export class GameBackgroundMusicLoadEvent extends GameEvent{
   constructor( target){

@@ -28,7 +28,6 @@ function Time( initTime ){
     //} ! this.target && (this.target = $(".time"));
     this.val = this.initTime;
     this.pastTime = 0;
-    //this.setTarget();
     initializeCallback(this, ["end", "timer", "acce", "setTime"]);
 
 }
@@ -37,6 +36,7 @@ const Methods = {
   init(){
     this.val = this.initTime;
     this.pastTime = 0;
+    this.setTarget();
   },
   setAcceList(list) {
     if (typeof list === "number") {

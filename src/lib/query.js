@@ -1,5 +1,6 @@
 // https://www.cnblogs.com/mycognos/p/9131180.html
 // about width, offsetWidth, clientWidth
+// 查询dom对象，样式表属性
 export default function query(element) {
     function getElements() {
         if (element instanceof HTMLElement) {

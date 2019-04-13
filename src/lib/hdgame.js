@@ -323,17 +323,9 @@ HdGame.initJsHead = function(hg, _data) {
   })();
 
   HdGame.initCallBack(hg, ["startGame", "beforeStartGame", "startGamehead", "home", "again", "jsFootEnd", "showResult", "changeBottomBar", "showPoup", "hidePoup", "timeChange", "beforeDraw", "updateRankList", "afterDraw", "editBackground", "luckDrawErr", "scrollEvent", "beforeStartGiftEvent"]);
-  hg.register(["setGameType", "hpInit", "hgLoadEnd", "save", "changeShow", "showTabByStyle", "changeAwardNum", "changeAwardImg", "changeContactImg", "isLimit", "changeTopBar", "advertisingSetting", "bannerNumberChange", "questionNumSet"]);
+  //hg.register(["setGameType", "hpInit", "hgLoadEnd", "save", "changeShow", "showTabByStyle", "changeAwardNum", "changeAwardImg", "changeContactImg", "isLimit", "changeTopBar", "advertisingSetting", "bannerNumberChange", "questionNumSet"]);
 
   HdGame.initEdit(hg.edit)
-
-  if (!g_config.scoreType) {
-    hg.grade = new HdGame.Grade(0)
-  }
-
-  var initTime = g_config.initTime;
-  hg.time = new HdGame.Time(initTime)
-
 
   hg.sound = HdGame.initSound(_data.soundList, _data.soundListDef, _data.soundListMod);
 
@@ -1230,8 +1222,7 @@ HdGame.getSrc = function(src) {
 
 HdGame.getPosAndSize = function(theObj, def, type) {
   ! type && (type = HdGame.Img.MODE_SCALE_DEFLATE_FILL);
-console.log( "theObj=", theObj, "def=", def)
-console.log( ` type=${type}, theObj=${theObj.width}:${theObj.width}, def=${def.width}:${def.height},`)
+  console.log( ` type=${type}, theObj=${theObj.width}:${theObj.width}, def=${def.width}:${def.height},`)
   var sizeInfo = HdGame.Img.calcSize(theObj.width, theObj.height, def.width, def.height, type, true);
   var defLeft = def.left || 0;
   var defTop = def.top || 0;

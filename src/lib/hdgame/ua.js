@@ -54,7 +54,7 @@ UA.getWxVerNum = function(ver) {
     return 0
   }
   var num = 0;
-  ver.split(".").each((val, index)=> {
+  ver.split(".").forEach((val, index)=> {
     num += Math.pow(1000, 2 - index) * parseInt(val)
   })
   return num

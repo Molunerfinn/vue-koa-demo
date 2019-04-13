@@ -4,7 +4,7 @@ import LTweenLite from '@/lib/lufylegend/transitions/LTweenLite'
 
 import { GameArg, g_rem } from './GameArg'
 
-import { GameEndEvent } from '@/lib/GameEvent'
+import { GameEndEvent, GameScoreChangedEvent } from '@/lib/GameEvent'
 
 
 class SugarY extends LSprite {
@@ -49,8 +49,8 @@ class SugarY extends LSprite {
       }
     }
     if (gradeFlag) {
-      //hg.grade(10);
-      //hg.sound.play(1);
+      GameArg.eventBus.$emit( GameScoreChangedEvent.name, new GameScoreChangedEvent(this, 10))
+
     }
     rotateList.push(rotate);
     return s;

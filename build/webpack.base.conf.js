@@ -1,6 +1,8 @@
 var path = require('path')
 var utils = require('./utils')
 var config = require('../config')
+const Dotenv = require('dotenv-webpack');
+
 var vueLoaderConfig = require('./vue-loader.conf')
 var multipageHelper = require('./multipage-helper')
 
@@ -24,6 +26,7 @@ module.exports = {
       ? config.build.assetsPublicPath
       : config.dev.assetsPublicPath
   },
+  plugins:[ new Dotenv()], 
   resolve: {
     extensions: ['.js', '.vue', '.json'],
     alias: {

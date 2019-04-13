@@ -3,7 +3,7 @@ import {  EventBus } from '@/lib/EventBus'
 var g_rem = window.g_rem;
 
 
-
+// 对游戏的配置
 var GameArg = {
   createTime: 0.8,
   clubH: 2.625, //支架高
@@ -15,7 +15,6 @@ var GameArg = {
   touchLimit: 1 * g_rem,
   first: true,
   firstTouch: true,
-  state: 0, //游戏状态
   eventBus: EventBus
 };
 
