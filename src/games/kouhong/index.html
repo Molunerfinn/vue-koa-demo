@@ -142,7 +142,7 @@
 
 
   <!-- loading页面 -->
-  <div id="preloadPage" class="bg" style="display:none;">
+  <div id="preloadPage" class="bg"  >
 
     <div class="spinner">
       <div class="spinner-container container1">
@@ -168,7 +168,153 @@
     <div class="info"><span id="loadPercent">0</span>%</div>
     <div id="userPreload" data-src="/game-kouhong-assets/app/images/skin1/wx/0jdk7Deh8T2z5W3k0j44dTZmdTOkZGM.png"></div>
   </div>
+  <script type="text/javascript">
+    (function() {
+      var _hasInit = false;
+      var _hasFinish = false;
+      var _hasStrting = false;
+      var percentText = document.getElementById('loadPercent');
+      var endCallback;
 
+      function _setPercentage(percent) {
+        percentText.innerText = percent
+      }
+
+      function _initCustomPreLoad(callback) {
+        var logoImg = document.getElementById('preloadImg');
+
+        function initLogoImg() {
+          var img = logoImg;
+          var h = img.height;
+          var w = img.width;
+          var bottomPageInfoDeg = -Math.atan(w / h) - Math.PI / 2;
+          var canvas = document.getElementById('preloadCanvas');
+          var ctx = canvas.getContext('2d');
+          var ratio = (window.devicePixelRatio || 1) / (ctx.backingStorePixelRatio || ctx.webkitBackingStorePixelRatio || ctx.mozBackingStorePixelRatio || ctx.msBackingStorePixelRatio || ctx.oBackingStorePixelRatio || ctx.backingStorePixelRatio ||
+            1);
+          var drawImg = function() {
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(0.2 * g_rem * ratio, 0.2 * g_rem * ratio, w * ratio, h * ratio);
+            ctx.drawImage(img, 0.2 * g_rem * ratio, 0.2 * g_rem * ratio, w * ratio, h * ratio)
+          };
+          if (h === w) {
+            if (h > 3.5 * g_rem) {
+              h = w = 3.5 * g_rem
+            }
+            drawImg = function() {
+              ctx.save();
+              ctx.beginPath();
+              ctx.arc(canvas.width / 2, canvas.height / 2, w / 2 * ratio, 0, 2 * Math.PI);
+              ctx.clip();
+              ctx.fillStyle = '#FFFFFF';
+              ctx.fill();
+              ctx.drawImage(img, 0.2 * g_rem * ratio, 0.2 * g_rem * ratio, w * ratio, h * ratio);
+              ctx.restore()
+            }
+          } else {
+            if (w > h && w > 8 * g_rem) {
+              h = 8 * g_rem * h / w;
+              w = 8 * g_rem
+            } else {
+              if (h > w && h > 8 * g_rem) {
+                w = 8 * g_rem * w / h;
+                h = 8 * g_rem
+              }
+            }
+          }
+          canvas.width = (w + 0.4 * g_rem) * ratio;
+          canvas.height = (h + 0.4 * g_rem) * ratio;
+          canvas.style.width = w + 0.4 * g_rem + 'px';
+          canvas.style.height = h + 0.4 * g_rem + 'px';
+          if (h === w) {
+            ctx.beginPath();
+            ctx.arc(canvas.width / 2, canvas.height / 2, canvas.width / 2, 0, 2 * Math.PI);
+            ctx.clip()
+          }
+          ctx.strokeStyle = '#69C5FF';
+          ctx.lineWidth = 8 * g_rem * ratio;
+          _setPercentage = function(percent) {
+            percentText.innerText = percent;
+            ctx.beginPath();
+            ctx.arc(canvas.width / 2, canvas.height / 2, 4 * g_rem * ratio, bottomPageInfoDeg, bottomPageInfoDeg + percent * (2 * Math.PI / 100));
+            ctx.stroke();
+            drawImg()
+          };
+          callback && callback()
+        }
+        if (logoImg.complete) {
+          initLogoImg()
+        } else {
+          logoImg.onload = initLogoImg
+        }
+      }
+
+      function init(callback) {
+        var preloadStyle = 1;
+        if (_hasInit) return finish();
+
+        function finish() {
+          callback && callback();
+          if (!_hasInit) {
+            _setPercentage(0);
+            _hasInit = true
+          }
+        }
+        window.scrollTo(0, 0);
+        if (preloadStyle === 3) _initCustomPreLoad(finish);
+        if (preloadStyle === 1) finish()
+      }
+
+      function start() {
+        if (_hasStrting) return;
+        init(function() {
+          _hasStrting = true;
+          _hasFinish = false;
+          var percent = 0;
+
+          function go() {
+            var time = 1000 / 60;
+            time *= _hasFinish ? 3 : Math.max(3, percent / 10);
+            if (percent === 99 && _hasFinish) {
+              _setPercentage(100);
+              _hasStrting = false;
+              if (endCallback) {
+                endCallback();
+                endCallback = null
+              }
+              var preloadPage = document.getElementById('preloadPage');
+              setTimeout(function() {
+                preloadPage.style.display = 'none'
+              }, 500);
+              preloadPage.className += ' leftClose';
+              return
+            }
+            setTimeout(function() {
+              var prevPercent = percent;
+              percent = Math.min(percent + (_hasFinish ? 8 : 1), 99);
+              if (prevPercent !== percent) {
+                _setPercentage(percent)
+              }
+              go()
+            }, time)
+          }
+          go()
+        })
+      }
+
+      function end(callback) {
+        console.log( "preloadEnd end")
+        if (_hasFinish) return;
+        if (!_hasStrting) return;
+        init(function() {
+          _hasFinish = true;
+          endCallback = callback
+        })
+      }
+      start();
+      window.preloadEnd = end
+    })();
+  </script>
   <!-- 广告页 -->
   <div class="advertisingBox swiper-container hide">
     <div class="swiper-wrapper">

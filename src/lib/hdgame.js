@@ -4,9 +4,7 @@ import {
   LSound2
 } from '@/lib/simplify'
 
-import {
-  EventBus
-} from '@/lib/EventBus'
+//import {  EventBus } from '@/lib/EventBus'
 import _ from 'lodash'
 import HdUtil from './hdutil'
 
@@ -32,7 +30,6 @@ const g_config = {
   headImg: '/static/kouhong/image/manImg.jpg'
 }
 const g_rem = window.g_rem;
-const eventBus = EventBus;
 
 function parseRemToPx(rem) {
   if (rem.indexOf('rem') === -1) {
@@ -73,6 +70,9 @@ Object.keys(Log).forEach(function(key) {
 // 游戏开始前需要加载的js，主要是加载图片，音乐等资源
 HdGame.initJsHead = function(hg, _data) {
   hg.assets = (function() {
+    var eventBus = new HdUtil.CallBack(function() {
+      return true
+    });
     let groups = [],
       FIRST_NAME = "home",
       DEF_NAME = "other";
@@ -142,18 +142,18 @@ HdGame.initJsHead = function(hg, _data) {
       onReady: function(name, fn) {
         let _this = this;
         if (arguments.length === 1) {
-          eventBus.$on("ready", arguments[0])
+          eventBus.on("ready", arguments[0])
         } else {
           if (arguments.length === 2) {
             if (Array.isArray(name)) {
               let callBack = _.throttle(fn, name.length);
               name.forEach(
                 function(src, i) {
-                  eventBus.$on("ready_" + src, callBack)
+                  eventBus.on("ready_" + src, callBack)
                 })
             } else {
               if (typeof(name) === "string") {
-                eventBus.$on("ready_" + name, fn)
+                eventBus.on("ready_" + name, fn)
               }
             }
           }
@@ -161,7 +161,7 @@ HdGame.initJsHead = function(hg, _data) {
         return _this
       },
       onload: function(fn) {
-        eventBus.$on("load", fn);
+        eventBus.on("load", fn);
         return this
       },
       loadPage: function() {
@@ -173,13 +173,13 @@ HdGame.initJsHead = function(hg, _data) {
           let group = groups[groupLoaded];
           loadimg(group.path,
             function() {
-              // eventBus.fire("ready_" + group.name, group);
+              eventBus.fire("ready_" + group.name, group);
               if (++groupLoaded < groups.length) {
                 loadStart(groupLoaded)
               } else {
                 _this.complete = true;
-                console.log("eventBus.$emit(ready)")
-                eventBus.$emit("ready")
+                console.log("eventBus.fire(ready)")
+                eventBus.fire("ready")
               }
               if (group.name === FIRST_NAME) {
                 console.log("home is loaded!");
@@ -212,7 +212,7 @@ HdGame.initJsHead = function(hg, _data) {
             }
             this.assets_complete = true;
             if (this.assets_key) {
-              //eventBus.fire("ready_" + this.assets_key, this)
+              eventBus.fire("ready_" + this.assets_key, this)
             } else {
               console.log(this, "assets_key is undefined!")
             }
@@ -228,13 +228,14 @@ HdGame.initJsHead = function(hg, _data) {
           // if (!HdGame.nootNeedFixHeight) {
           //   $("#homeBgBox,.gameBgBox").css("height", bgHeight / g_rem + "rem")
           // }
-          // let onEnd = function() {
-          //   eventBus.fire("load");
+           let onEnd = function() {
+             eventBus.fire("load");
           //   if (bgHeight > $(window).height()) {
           //     $("#bottomSkill").css("top", (bgHeight - $(".bottomSkill").outerHeight()) / g_rem + "rem")
           //   }
-          // };
-          // onEnd();
+           };
+           typeof window.preloadEnd != undefined ? window.preloadEnd(onEnd) : onEnd()
+
         }
 
         function checkOtherLoaded() {
@@ -1492,7 +1493,7 @@ HdGame.initSound = function(soundList, soundListDef, soundListMod) {
             if (Audio && sound.data instanceof Audio) {
               document.getElementById("pageMusic").appendChild(sound.data)
             }
-            //eventBus.$emit(GameBackgroundMusicLoadEvent.name, new GameBackgroundMusicLoadEvent())
+            //eventBus.fire(GameBackgroundMusicLoadEvent.name, new GameBackgroundMusicLoadEvent())
           }
 
         } else {

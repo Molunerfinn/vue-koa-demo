@@ -29,7 +29,7 @@ HdUtil.CallBack = function() {
           if (this.checkFire(e)) return t();
           if (!this.callbacks.hasOwnProperty(e)) {
               if (!this.free) return this;
-              "function" == _.type(this.free) && this.free(e) && (this._ones[e] = 1)
+              _.isFunction(this.free) && this.free(e) && (this._ones[e] = 1)
           }
           console.log( "new CallBackable = ", this)
 
