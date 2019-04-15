@@ -1,7 +1,7 @@
-import LSound from '@/lib/lufylegend/media/LSound'
 import {
   LWebAudio2,
-  LMedia2
+  LMedia2,
+  LSound2
 } from '@/lib/simplify'
 
 import {
@@ -1284,7 +1284,7 @@ HdGame.initSound = function(soundList, soundListDef, soundListMod) {
       })
   }
   var cache = {};
-  var supportWebAudio = LSound.webAudioEnabled;
+  var supportWebAudio = LSound2.webAudioEnabled;
   var sound = {
     list: soundList,
     listDef: soundListDef,
@@ -1303,16 +1303,19 @@ HdGame.initSound = function(soundList, soundListDef, soundListMod) {
       if (!this.allowPlay) {
         return this
       }
+      HdGame.tlog('play', "play0 key "+key)
+
       if (soundList && HdGame.getType(key) === "number") {
         var flag = key === 0 ? 1 : 3;
         if (soundList[key].optFlag === flag) {
           return this
         }
       }
+      HdGame.tlog('play', "play1 key "+key)
+
       if (key !== 0 && soundList && soundList[0].optFlag !== 1 && !supportWebAudio) {
         return this
       }
-
       this.get(key,
         function(lsound) {
           if (!lsound._allowPlay) {
@@ -1322,9 +1325,7 @@ HdGame.initSound = function(soundList, soundListDef, soundListMod) {
             return
           }
           var isChange = !lsound.playing;
-          console.log( "play41", key, c,l, lsound.length )
           lsound.play(c, l);
-          console.log( "play43", key, c,l, lsound.length )
           if (lsound.isWebAudio) {
             isChange && lsound.fire("play", lsound)
           } else {
@@ -1404,7 +1405,7 @@ HdGame.initSound = function(soundList, soundListDef, soundListMod) {
         lsound.data.loop = false;
         lsound.data.autoplay = false
       }
-      HdGame.tlog("lsound1", path);
+      HdGame.tlog("lsound1", "useWebAudio"+useWebAudio+path);
       lsound.register([["ready", true], "play", "pause"]);
 
       if (!useWebAudio) {
