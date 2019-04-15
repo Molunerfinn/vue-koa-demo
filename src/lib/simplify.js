@@ -2,6 +2,7 @@ import HdGame from '@/lib/hdgame'
 import LGlobal from '@/lib/lufylegend/utils/LGlobal'
 import LWebAudio from '@/lib/lufylegend/media/LWebAudio'
 import LMedia from '@/lib/lufylegend/media/LMedia'
+import { UNDEFINED } from '@/lib/lufylegend/utils/LConstant';
 
 import query from '@/lib/query'
 const g_rem = window.g_rem;
@@ -37,20 +38,51 @@ export class LWebAudio2 extends LWebAudio {
 export class LMedia2 extends LMedia {
   constructor() {
     super()
-    HdGame.initCallBack(this, ["complete", "sound_complete"])
+    HdGame.initCallBack(this, ["complete" ])
   }
   onload() {
-    console.log( " LMedia2 -> onload play", this.data.readyState )
 
-    super.onload()
-    if (this.data.readyState) {
-      this.fire("complete")
+    let s = this;
+    if (s.data.readyState) {
+        s.length = s.data.duration - (LGlobal.android ? 0.1 : 0);
+
+        s.fire("complete");
+        s.data.removeEventListener("canplaythrough", s._canplaythrough, false);
+        s.data.removeEventListener("canplay", s._canplaythrough, false);
+        s.data.removeEventListener("loadedmetadata", s._canplaythrough, false);
+        return
     }
+    s._canplaythrough = function() {
+        s.onload()
+    };
+    s.data.addEventListener("canplaythrough", s._canplaythrough, false);
+    s.data.addEventListener("canplay", s._canplaythrough, false);
+    s.data.addEventListener("loadedmetadata", s._canplaythrough, false)
+
+    // s.data.addEventListener('error', function(e) {
+    //     let event = new LEvent(LEvent.ERROR);
+    //     event.currentTarget = s;
+    //     event.target = e.target;
+    //     event.responseURL = e.target.src;
+    //     s.dispatchEvent(event);
+    // }, false);
+
   }
   _onended(){
     this.fire("sound_complete");
     super._onended()
   }
+  play(c, l, to) {
+      let s = this;
+      if (typeof c != UNDEFINED) {
+          s.data.currentTime = c
+      }
+      if (typeof l != UNDEFINED) {
+          s.data.loop = l
+      }
+      s.data.play()
+  }
+
 }
 
 //

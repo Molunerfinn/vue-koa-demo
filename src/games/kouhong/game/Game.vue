@@ -19,6 +19,8 @@
 
     </div>
     <div class="timeUpImg hide"></div>
+    <div class="soundIconOff soundIcon" style="z-index:700" ></div>
+
   </div>
 
 </template>
@@ -114,15 +116,19 @@ export default {
     });
 
     GameArg.eventBus.$on(GameEndEvent.name, (event)=>{
+      console.log( "GameEndEvent0")
       this.hg.sound.play(2);
       this.hg.time.end();
       this.endGame(event.target);//lolly
+      console.log( "GameEndEvent1")
     })
 
 
     GameArg.eventBus.$on(GameScoreChangedEvent.name, (event)=>{
       this.hg.grade.inc(10);
+      console.log( "GameScoreChangedEvent0")
       this.hg.sound.play(1);
+      console.log( "GameScoreChangedEvent1")
     })
 
     this.hg.time.on( 'setTime', (e)=>{
@@ -130,6 +136,16 @@ export default {
     })
     this.hg.time.on('end', this.endGame)
 
+
+    this.hg.sound.get("0",
+      function (lsound) {
+        lsound.on("play", () => {
+          this.soundIconClass = "soundIcon"
+
+        }).on("pause", () => {
+          this.soundIconClass = "soundIconOff soundIcon"
+        })
+    })
   },
   methods:{
     handleStartGame(){

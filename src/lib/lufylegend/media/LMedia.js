@@ -18,7 +18,6 @@ class LMedia extends LDisplayObject {
 
     onload() {
         let s = this;
-console.log( " LMedia -> onload play", s.data.readyState, s.data)
         if (s.data.readyState) {
             s.length = s.data.duration - (LGlobal.android ? 0.1 : 0);
             let e = new LEvent(LEvent.COMPLETE);
@@ -96,7 +95,6 @@ console.log( " LMedia -> onload play", s.data.readyState, s.data)
         return this.data.volume;
     }
     play(c, l, to) {
-      console.log('LMedia ->play s.length', this.length, c,l, to)
         let s = this;
         if (s.length === 0) {
             return;

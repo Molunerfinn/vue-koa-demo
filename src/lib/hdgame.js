@@ -8,9 +8,6 @@ import {
   EventBus
 } from '@/lib/EventBus'
 import _ from 'lodash'
-import {
-  GameBackgroundMusicLoadEvent
-} from '@/lib/GameEvent'
 import HdUtil from './hdutil'
 
 import wx from 'weixin-js-sdk'
@@ -1288,7 +1285,6 @@ HdGame.initSound = function(soundList, soundListDef, soundListMod) {
   }
   var cache = {};
   var supportWebAudio = LSound.webAudioEnabled;
-  HdGame.tlog( "sound", "supportWebAudio="+supportWebAudio)
   var sound = {
     list: soundList,
     listDef: soundListDef,
@@ -1326,9 +1322,9 @@ HdGame.initSound = function(soundList, soundListDef, soundListMod) {
             return
           }
           var isChange = !lsound.playing;
-          console.log( "play41", lsound,lsound.length, key, c,l )
+          console.log( "play41", key, c,l, lsound.length )
           lsound.play(c, l);
-          console.log( "play43", key, c,l )
+          console.log( "play43", key, c,l, lsound.length )
           if (lsound.isWebAudio) {
             isChange && lsound.fire("play", lsound)
           } else {
@@ -1383,7 +1379,6 @@ HdGame.initSound = function(soundList, soundListDef, soundListMod) {
       return this
     },
     load: function(path, key, webAudioEnabled, isOnec) {
-
       if (cache[key]) {
         HdGame.tlog("Sound_load_err", "这个key:" + key + " 已经存在!");
         return this
@@ -1394,7 +1389,7 @@ HdGame.initSound = function(soundList, soundListDef, soundListMod) {
       if (/.wav$/.test(path) && HdGame.isIPhone()) {
         useWebAudio = false
       }
-      HdGame.tlog("useWebAudio=" + useWebAudio + ",key=" + key);
+      //HdGame.tlog("useWebAudio=" + useWebAudio + ",key=" + key);
       if (useWebAudio) {
         lsound = new LWebAudio2();
         lsound.isWebAudio = true
@@ -1409,7 +1404,7 @@ HdGame.initSound = function(soundList, soundListDef, soundListMod) {
         lsound.data.loop = false;
         lsound.data.autoplay = false
       }
-      HdGame.tlog("lsound", path);
+      HdGame.tlog("lsound1", path);
       lsound.register([["ready", true], "play", "pause"]);
 
       if (!useWebAudio) {
@@ -1438,13 +1433,6 @@ HdGame.initSound = function(soundList, soundListDef, soundListMod) {
           lsound.fire("ready", lsound);
           HdGame.tlog("sound", key + " ready" + path)
         });
-      // 游戏背景音乐加载,
-      if( key == 0 ){
-        lsound.on("complete",
-          function(event) {
-            eventBus.$emit(GameBackgroundMusicLoadEvent.name, new GameBackgroundMusicLoadEvent())
-        })
-      }
       lsound._allowPlay = true;
       lsound.name = key;
       cache[key] = lsound;
@@ -1498,15 +1486,23 @@ HdGame.initSound = function(soundList, soundListDef, soundListMod) {
           }
           sound.load(path, index, useWebAudio, true);
           //initBackgroundMusic()
+          // 游戏背景音乐加载,
+          if( index == 0 ){
+            if (Audio && sound.data instanceof Audio) {
+              document.getElementById("pageMusic").appendChild(sound.data)
+            }
+            //eventBus.$emit(GameBackgroundMusicLoadEvent.name, new GameBackgroundMusicLoadEvent())
+          }
+
         } else {
           sound.load(path, index)
         }
       })
   }
-  sound.readyPlay(0, 0, "loop");
-  wx.ready(function() {
-    sound.readyPlay(0, 0, "loop")
-  })
+  //sound.readyPlay(0, 0, "loop");
+  //wx.ready(function() {
+  //  sound.readyPlay(0, 0, "loop")
+  //})
 
   return sound;
 
