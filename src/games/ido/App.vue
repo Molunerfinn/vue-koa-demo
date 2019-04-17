@@ -6,7 +6,7 @@
       <!-- ////////////////////////////////////////////////////////// -->
     <div class="swiper-slide" style="background:#0000FF">
       <div class="div_1_img">
-        <img src="../assets/logo.png"  alt="logo" width="100vw" height="100vh"/>
+        <img src="../../assets/logo.png"  alt="logo" width="100vw" height="100vh"/>
       </div>
       <div class="div_1_p">
         <!-- <el-button type="primary" plain>主要按钮</el-button>
@@ -24,7 +24,7 @@
       </div>
       <hr style="height:1px;border:none;border-top:1px solid #555555;" />
       <div class="div_2_img">
-        <img src="../assets/logo.png"  alt="logo" width="100vw" height="100vh"/>
+        <img src="../../assets/logo.png"  alt="logo" width="100vw" height="100vh"/>
       </div>
       <button class="div_2_button" type="button" @click="next(2)">点我!</button>
     </div>
@@ -48,7 +48,7 @@
     <!-- ////////////////////////////////////////////////////////// -->
     <div class="swiper-slide swiper-no-swiping" style="background:#0000FF">
       <div class="div_4_img">
-        <img src="../assets/logo.png"  alt="logo" width="100vw" height="100vh"/>
+        <img src="../../assets/logo.png"  alt="logo" width="100vw" height="100vh"/>
       </div>
       <table border="1" class="div_4_table" align="right">
         <tr>
@@ -99,7 +99,7 @@
             <th>remaining_qty</th>
           </tr>
           <tr v-for="gift in gifts">
-            <td><img src="../assets/logo.png" alt="logo" width="100vw" height="100vh"/></td>
+            <td><img src="../../assets/logo.png" alt="logo" width="100vw" height="100vh"/></td>
             <td>{{gift.gift_name}}</td>
             <td>{{gift.remaining}}</td>
           </tr>
@@ -127,7 +127,7 @@
             <th>gift_name</th>
           </tr>
           <tr v-for="gift in gifts">
-            <td><img src="../assets/logo.png" alt="logo" width="100vw" height="100vh"/></td>
+            <td><img src="../../assets/logo.png" alt="logo" width="100vw" height="100vh"/></td>
             <td>{{gift.gift_name}}</td>
           </tr>
         </table>
