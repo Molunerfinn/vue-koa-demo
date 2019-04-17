@@ -38,6 +38,7 @@
     "stylus": "^0.54.5",
     "stylus-loader": "^2.4.0",
     "supertest": "^3.0.0",
+    "swiper": "^4.5.0",
     "vue": "2.6.4",
     "vue-bscroll": "^1.0.4",
     "vue-lazyload": "^1.2.6",
