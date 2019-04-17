@@ -384,18 +384,19 @@ function YYYYMMDDstart () {
   { document.reg_testdate.YYYY.options.add(new Option(' ' + i + ' 年', i)) }
 
   // 赋月份的下拉框
-  for (var i = 1; i < 13; i++) { document.reg_testdate.MM.options.add(new Option(' ' + i + ' 月', i)) }
+  for (var m = 1; m < 13; m++) { document.reg_testdate.MM.options.add(new Option(' ' + m + ' 月', m)) }
 
   document.reg_testdate.YYYY.value = y
   document.reg_testdate.MM.value = new Date().getMonth() + 1
   var n = MonHead[new Date().getMonth()]
-  if (new Date().getMonth() == 1 && IsPinYear(YYYYvalue)) n++
+  if (new Date().getMonth() == 1 && IsPinYear(y)) n++
   writeDay(n) // 赋日期下拉框Author:meizz
   document.reg_testdate.DD.value = new Date().getDate()
 }
 if (document.attachEvent) { window.attachEvent('onload', YYYYMMDDstart) } else { window.addEventListener('load', YYYYMMDDstart, false) }
 function YYYYDD (str) // 年发生变化时日期发生变化(主要是判断闰平年)
 {
+  var MonHead = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
   var MMvalue = document.reg_testdate.MM.options[document.reg_testdate.MM.selectedIndex].value
   if (MMvalue == '') { var e = document.reg_testdate.DD; optionsClear(e); return }
   var n = MonHead[MMvalue - 1]
@@ -404,6 +405,7 @@ function YYYYDD (str) // 年发生变化时日期发生变化(主要是判断闰
 }
 function MMDD (str) // 月发生变化时日期联动
 {
+  var MonHead = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
   var YYYYvalue = document.reg_testdate.YYYY.options[document.reg_testdate.YYYY.selectedIndex].value
   if (YYYYvalue == '') { var e = document.reg_testdate.DD; optionsClear(e); return }
   var n = MonHead[str - 1]

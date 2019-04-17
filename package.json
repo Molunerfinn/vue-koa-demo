@@ -20,7 +20,7 @@
     "bcryptjs": "^2.4.0",
     "cross-fetch": "^3.0.2",
     "dotenv-webpack": "^1.7.0",
-    "element-ui": "^1.2.9",
+    "element-ui": "^1.4.13",
     "koa": "^2.2.0",
     "koa-bodyparser": "^4.2.0",
     "koa-json": "^2.0.2",

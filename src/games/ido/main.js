@@ -1,14 +1,12 @@
 import Vue from 'vue'
 import App from './App'
 
-Vue.config.productionTip = false
+import 'weui'
+import weui from 'weui.js'
 
-Vue.use(ElementUI);
+Vue.prototype.$weui = weui
 
 /* eslint-disable no-new */
 new Vue({
-  el: '#app',
-  router,
-  components: { App },
-  template: '<App/>'
-})
+  render: h => h(App)
+}).$mount('#app')
