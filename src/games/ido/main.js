@@ -8,5 +8,7 @@ Vue.prototype.$weui = weui
 
 /* eslint-disable no-new */
 new Vue({
-  render: h => h(App)
-}).$mount('#app')
+  el: '#app',
+  components: { App },
+  template: '<App/>'
+})
