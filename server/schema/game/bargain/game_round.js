@@ -1,11 +1,11 @@
-const {GameRoundStates} = require('../constant')
+const {GameRoundStates} = require('../../constant')
 var moment = require('moment')
 
 module.exports = (sequelize, DataTypes) => {
-    return sequelize.define('game_round_bargains', {
+    return sequelize.define('bargain_game_rounds', {
         game_id: DataTypes.BIGINT(11),
         name: DataTypes.STRING,
-        creator_id: DataTypes.BIGINT(11),         
+        creator_id: DataTypes.BIGINT(11),
         start_at: DataTypes.DATE,
         end_at: DataTypes.DATE,
         desc: DataTypes.TEXT,
