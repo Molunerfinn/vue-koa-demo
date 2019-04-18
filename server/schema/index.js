@@ -35,4 +35,4 @@ modelfiles.forEach((modelfile) => {
 db.sequelize = sequelize
 db.Sequelize = Sequelize
 
-export db
+export default db
