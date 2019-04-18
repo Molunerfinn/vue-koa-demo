@@ -2,7 +2,8 @@ const GameRes = {
   "loadingStyle": 1,
   "maxIncrement": 10,
   "isOpenAdvertise": false,
-  "editPropList": [{
+  "editPropList": [
+    {
     "name": "ySugar",
     "path": ["/static/kouhong/image/skin1/wx/ACgIABAEGAAg8u_M4QUovOCGlQIw8AE48AE.png"]
   }, {
@@ -129,7 +130,8 @@ const GameRes = {
       "top": "0.128rem"
     }
   }],
-  editPropListDef: [{
+  "editPropListDef": [
+    {
     "name": "ySugar",
     "rsize": {
       "width": "6rem",

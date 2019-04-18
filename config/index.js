@@ -1,4 +1,5 @@
 // see http://vuejs-templates.github.io/webpack for documentation.
+require('dotenv').config()
 
 var path = require('path')
 

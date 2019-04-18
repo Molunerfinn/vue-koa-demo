@@ -117,7 +117,8 @@ exports.getProdHtmlWebpackPluginList = function getProdHtmlWebpackPluginList(){
  */
 function readDirSync(path){
 
-  glob.sync('./src/games/**/main.js').forEach(function(name){
+  let targetWildcard = process.env.TARGET_WILDCARD || '**'
+  glob.sync(`./src/games/${targetWildcard}/main.js`).forEach(function(name){
       // src/games/yiy/main.js
       // src/games/yiy/index.html
       let ns = name.split('/')
@@ -126,4 +127,10 @@ function readDirSync(path){
       moduleList.push( { moduleID: id, moduleJS: name, moduleHTML:  ns.join('/') } )
   })
 
+  glob.sync(`./src/dpgames/${targetWildcard}/main.js`).forEach(function(name){
+      let ns = name.split('/')
+      var id = ns[ns.length-2]
+      ns[ns.length -1] = 'index.html'
+      moduleList.push( { moduleID: id, moduleJS: name, moduleHTML:  ns.join('/') } )
+  })
 }
