@@ -24,7 +24,7 @@ export function setGameTopBar(selector, hg, canvas, o ) {
     //let selector = "#gameTopBar"
     let topBar = query(selector).ele();
 
-    if (topBar == null) {
+    if (topBar == null || gamebar.content != null) {
         return
     }
     query(selector).set({'display': 'none'});

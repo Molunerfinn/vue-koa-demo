@@ -273,6 +273,15 @@ HdGame.initJsHead = function(hg, _data) {
     let originMod = _data.editModPropList;
     hg.edit.isMod = _data.editPropListIsMod;
 
+    var correct = function(list1, list2, beforeMerge) {
+        return list2.map(function(val2) {
+            var result = list1.filter(function(val1) {
+                return val1.name === val2.name
+            })[0] || val2;
+
+            return result
+        })
+    };
     var correctPaths = function(pathDef, path) {
       if (!path || !pathDef || !_.isArray(pathDef[0])) {
         return
@@ -289,8 +298,11 @@ HdGame.initJsHead = function(hg, _data) {
         })
       }
     };
-
+    originMod = originMod ? correct(originMod, originDef) : originMod;
+    origin = originMod ? correct(origin, originMod) : correct(origin, originDef);
     for (var i = 0; i < originDef.length; i++) {
+      console.log("edit","i="+i, origin[i], originDef[i])
+
       var path = origin[i].path;
       var pathDef = originDef[i].path;
       var pathMod = originMod ? originMod[i].path : null;
@@ -1521,5 +1533,12 @@ HdGame.Img = Img
 
 HdGame.encodeBase64 = btoa
 
+import { shuffle } from './hdgame/array'
+
+HdGame.shuffle = shuffle
+
+
+//
+HdGame.isSupportWebp = false
 
 export default HdGame
