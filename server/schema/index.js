@@ -12,16 +12,27 @@ const sequelize = new Sequelize(
     config.db.options
 )
 
-fs
-    .readdirSync(__dirname+'/game')
-    .filter((file) =>
-        file !== 'index.js'
-    )
-    .forEach((modelfile) => {
-        var model = sequelize.import(path.join(__dirname, 'game', modelfile))
-        db[model.name] = model
+//
+var walk = function(dir) {
+    var results = []
+    var list = fs.readdirSync(dir)
+    list.forEach(function(file) {
+        file = dir + '/' + file
+        var stat = fs.statSync(file)
+        if (stat && stat.isDirectory()) results = results.concat(walk(file))
+        else results.push(file)
     })
+    return results
+}
 
-let { game_rounds, game_players, game_results, game_days, game_round_bargains }  = db
+let modelfiles = walk( __dirname+'/game')
+modelfiles.forEach((modelfile) => {
+      console.log("modelfile=", modelfile)
+      let model = sequelize.import(  modelfile)
+      db[model.name] = model
+})
 
-export { sequelize, Sequelize, game_rounds, game_round_bargains, game_players, game_results, game_days }
+db.sequelize = sequelize
+db.Sequelize = Sequelize
+
+export db
