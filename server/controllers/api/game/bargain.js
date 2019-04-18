@@ -7,7 +7,7 @@
 
 'use strict';
 import fetch from 'node-fetch'
-import { Sequelize, GameRoundBargain,  GamePlayer, GameResult, GameDay } from '../../../models'
+import { Sequelize, BargainGameRound,  GamePlayer, GameResult, GameDay } from '../../../models'
 import { GameRoundStates } from '../../../schema/constant'
 import { FailMessage } from '../../constant'
 import log4 from 'koa-log4'
@@ -41,7 +41,7 @@ class Bargain {
       }
       if( game_player ){
 
-        let game_round = await GameRoundBargain.findById(game_round_id);
+        let game_round = await BargainGameRound.findById(game_round_id);
         // 检查当前用户的game_day
         let game_day = GameDay.findOrCreate({where:{ game_round_id,game_player_id, day: new Date() }})
 
@@ -70,7 +70,7 @@ class Bargain {
       let game_round_id = ctx.params.id
       let openid = ctx.query.openid
       let to_game_player_id = ctx.query.to_game_player_id //被助力人id
-      const current_game = await GameRoundBargain.findById(game_round_id);
+      const current_game = await BargainGameRound.findById(game_round_id);
       const current_player = await GamePlayer.findOne({ where:{game_round_id, openid}});
       const context = { game_player:current_player };
 
@@ -113,7 +113,7 @@ class Bargain {
       let to_game_player_id = ctx.query.to_game_player_id //被助力人id，可能为空
       let url = ctx.query.url // 可能有 to_game_player_id 或者没有
 
-      const game_round = await GameRoundBargain.findById(game_round_id);
+      const game_round = await BargainGameRound.findById(game_round_id);
 
       const game_player = await GamePlayer.findById(game_player_id);
 
@@ -173,7 +173,7 @@ console.log( "before to_game_player_id")
       let game_round_id = ctx.params.id
       let game_player_id = ctx.request.body.game_player_id //助力人id
       let to_game_player_id = ctx.request.body.to_game_player_id //被助力人id，可能为空
-      const game_round = await GameRoundBargain.findById(game_round_id);
+      const game_round = await BargainGameRound.findById(game_round_id);
       let game_player = await GamePlayer.findById(game_player_id);
       let to_game_player = await GamePlayer.findById(to_game_player_id);
       let data = { }

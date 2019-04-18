@@ -1,4 +1,4 @@
-import game from '../../../controllers/api/games/bargain.js'
+import game from '../../../controllers/api/game/bargain.js'
 import koaRouter from 'koa-router'
 const router = koaRouter()
 
