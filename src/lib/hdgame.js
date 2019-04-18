@@ -11,8 +11,8 @@ import HdUtil from './hdutil'
 import wx from 'weixin-js-sdk'
 import {
   btoa
-} from 'base64'
-//const g_rem = 20
+} from 'Base64'
+// const g_rem = 20
 import UA from './hdgame/ua'
 import Img from './hdgame/img'
 import Log from './hdgame/log'
