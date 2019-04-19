@@ -12,6 +12,10 @@
         <!-- <el-button type="primary" plain>主要按钮</el-button>
         <el-progress :text-inside="true" :stroke-width="18" :percentage="70"></el-progress> -->
         <button  type="button" @click="post_gameround()">POST</button>
+          <select name="YYYY" id="YYYY">
+            <option value="">请选择 年</option>
+            <Option v-for="y in yearList" :value="y.value" :key="y.value" name="yearValue">{{y.label }}</Option>
+        </select>
         {{game_rounds}}
         {{stores}}
         {{player}}
@@ -53,11 +57,11 @@
       <table border="1" class="div_4_table" align="right">
         <tr>
           <td>NAME:</td>
-          <td><el-input id="name" v-model="player_info.name" placeholder="请输入姓名" clearable></el-input></td><a id="name1"></a>
+          <td><input id="name" v-model="player_info.name"></input></td><a id="name1"></a>
         </tr>
         <tr>
           <td>TEL:</td>
-          <td><el-input id="tel" v-model="player_info.tel" placeholder="请输入电话" clearable></el-input></td><a id="tel1"></a>
+          <td><input id="tel" v-model="player_info.tel"></input></td><a id="tel1"></a>
         </tr>
         <tr>
           <td>DATE:</td>
@@ -143,6 +147,7 @@
 <script>
 import Swiper from 'swiper'
 import fetch from 'node-fetch'
+import { getGameInfo } from '@/api/games/ido'
 
 export default {
   name: 'App',
@@ -162,7 +167,12 @@ export default {
       h: null,
       m: null,
       s: null,
-      mySwiper: null
+      mySwiper: null,
+      n: null,
+      year: null,
+      yearList: [],
+      monthList: [],
+      dayList:[]
     }
   },
   methods: {
@@ -340,22 +350,79 @@ export default {
       } else {
         mySwiper.lockSwipes()
       }
+    },
+    YYYYMMDDstart: function(){
+        var MonHead = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+        // 先给年下拉框赋内容
+        var y = new Date().getFullYear()
+        for (var i = (y - 100); i < (y + 10); i++) // 以今年为准，前100年，后10年
+        { document.reg_testdate.YYYY.options.add(new Option(' ' + i + ' 年', i)) }
+
+        // 赋月份的下拉框
+        for (var m = 1; m < 13; m++) { document.reg_testdate.MM.options.add(new Option(' ' + m + ' 月', m)) }
+
+        document.reg_testdate.YYYY.value = y
+        document.reg_testdate.MM.value = new Date().getMonth() + 1
+        var n = MonHead[new Date().getMonth()]
+        if (new Date().getMonth() == 1 && this.IsPinYear(y)) n++
+        this.writeDay(n) // 赋日期下拉框Author:meizz
+        document.reg_testdate.DD.value = new Date().getDate()
+    },
+    YYYYDD: function(str){
+      var MonHead = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+      var MMvalue = document.reg_testdate.MM.options[document.reg_testdate.MM.selectedIndex].value
+      if (MMvalue == '') { var e = document.reg_testdate.DD; this.optionsClear(e); return }
+      var n = MonHead[MMvalue - 1]
+      if (MMvalue == 2 && this.IsPinYear(str)) n++
+      this.writeDay(n)
+    },
+    MMDD: function(str){
+      var MonHead = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+      var YYYYvalue = document.reg_testdate.YYYY.options[document.reg_testdate.YYYY.selectedIndex].value
+      if (YYYYvalue == '') { var e = document.reg_testdate.DD; this.optionsClear(e); return }
+      var n = MonHead[str - 1]
+      if (str == 2 && this.IsPinYear(YYYYvalue)) n++
+      this.writeDay(n)
+    },
+    writeDay: function(n){
+      var e = document.reg_testdate.DD; this.optionsClear(e)
+      for (var i = 1; i <= (n + 1); i++) { e.options.add(new Option(' ' + i + ' 日', i)) }
+    },
+    IsPinYear: function(year){
+      return (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0))
+    },
+    optionsClear: function(e){
+      e.options.length = 1
     }
   },
   created () {
-    fetch('http://127.0.0.1:3000/start?1')
-      .then(res => {
-        return res.json()
-      })
-      .then(json => {
-        var start_info = json
-        this.game_rounds = start_info['round']
-        this.player_info = start_info['player_info']
-        this.player = start_info['player']
-        this.stores = start_info['store']
-        this.gifts = start_info['gift']
-        this.results = start_info['result']
-      })
+    let time = new Date();
+    let year = time.getFullYear();
+    for(let i = year-80;i<year;i++){
+      let option = {
+        value: i,
+        lable: i
+      }
+      this.yearList.push(option);
+    }
+
+    let data=  {game_round_id:1,game_player_id:1}
+    getGameInfo( data ).then((res)=>{
+      console.log( 100000, res )
+    })
+    // fetch('http://127.0.0.1:3000/start?1')
+    //   .then(res => {
+    //     return res.json()
+    //   })
+    //   .then(json => {
+    //     var start_info = json
+    //     this.game_rounds = start_info['round']
+    //     this.player_info = start_info['player_info']
+    //     this.player = start_info['player']
+    //     this.stores = start_info['store']
+    //     this.gifts = start_info['gift']
+    //     this.results = start_info['result']
+    //   })
   },
   mounted () {
     this.mySwiper = new Swiper('.swiper-container',
@@ -374,55 +441,6 @@ export default {
     this.checkTime()
     this.countTime()
   }
-}
-function YYYYMMDDstart () {
-  var MonHead = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
-
-  // 先给年下拉框赋内容
-  var y = new Date().getFullYear()
-  for (var i = (y - 100); i < (y + 10); i++) // 以今年为准，前100年，后10年
-  { document.reg_testdate.YYYY.options.add(new Option(' ' + i + ' 年', i)) }
-
-  // 赋月份的下拉框
-  for (var m = 1; m < 13; m++) { document.reg_testdate.MM.options.add(new Option(' ' + m + ' 月', m)) }
-
-  document.reg_testdate.YYYY.value = y
-  document.reg_testdate.MM.value = new Date().getMonth() + 1
-  var n = MonHead[new Date().getMonth()]
-  if (new Date().getMonth() == 1 && IsPinYear(y)) n++
-  writeDay(n) // 赋日期下拉框Author:meizz
-  document.reg_testdate.DD.value = new Date().getDate()
-}
-if (document.attachEvent) { window.attachEvent('onload', YYYYMMDDstart) } else { window.addEventListener('load', YYYYMMDDstart, false) }
-function YYYYDD (str) // 年发生变化时日期发生变化(主要是判断闰平年)
-{
-  var MonHead = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
-  var MMvalue = document.reg_testdate.MM.options[document.reg_testdate.MM.selectedIndex].value
-  if (MMvalue == '') { var e = document.reg_testdate.DD; optionsClear(e); return }
-  var n = MonHead[MMvalue - 1]
-  if (MMvalue == 2 && IsPinYear(str)) n++
-  writeDay(n)
-}
-function MMDD (str) // 月发生变化时日期联动
-{
-  var MonHead = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
-  var YYYYvalue = document.reg_testdate.YYYY.options[document.reg_testdate.YYYY.selectedIndex].value
-  if (YYYYvalue == '') { var e = document.reg_testdate.DD; optionsClear(e); return }
-  var n = MonHead[str - 1]
-  if (str == 2 && IsPinYear(YYYYvalue)) n++
-  writeDay(n)
-}
-function writeDay (n) // 据条件写日期的下拉框
-{
-  var e = document.reg_testdate.DD; optionsClear(e)
-  for (var i = 1; i <= (n + 1); i++) { e.options.add(new Option(' ' + i + ' 日', i)) }
-}
-function IsPinYear (year)// 判断是否闰平年
-{
-  return (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0))
-}
-function optionsClear (e) {
-  e.options.length = 1
 }
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->

@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define('gameround_store_gifts', {
+  return sequelize.define('ido_gameround_store_gifts', {
     game_round_id: {
       type: DataTypes.BIGINT(11),
       allowNull: false,

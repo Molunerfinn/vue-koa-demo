@@ -1,32 +1,14 @@
 var moment = require('moment')
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define('player_info', {
-    openid: {
-      type: DataTypes.BIGINT(11),
-      allowNull: false,
-      defaultValue: '0'
-    },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      defaultValue: 'null'
-    },
-    tel: {
-      type: DataTypes.BIGINT(11),
-      allowNull: false,
-      defaultValue: '0'
-    },
-    birth: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      defaultValue: 'null'
-    },
+  return sequelize.define('ido_game_rounds', {
+    game_id: DataTypes.BIGINT(11),
+    name: DataTypes.STRING,
+    creator_id: DataTypes.BIGINT(11),
     default_store_id: {
-      type: DataTypes.BIGINT(11),
+      type: DataTypes.STRING(24),
       allowNull: false,
       defaultValue: '0'
     },
-
   }, {
     createdAt: 'created_at',
     updatedAt: 'updated_at',

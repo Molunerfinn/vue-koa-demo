@@ -12,7 +12,7 @@ const sequelize = new Sequelize(
     config.db.options
 )
 
-//
+//遍历 schema/game 目录
 var walk = function(dir) {
     var results = []
     var list = fs.readdirSync(dir)
@@ -32,7 +32,13 @@ modelfiles.forEach((modelfile) => {
       db[model.name] = model
 })
 
-db.sequelize = sequelize
-db.Sequelize = Sequelize
 
-export db
+let {  game_rounds, bargain_game_rounds, game_players, game_results, game_days } = db
+
+export { sequelize, Sequelize }
+
+//
+export { game_rounds, game_players, game_results, game_days }
+
+//砍价游戏
+export { bargain_game_rounds }

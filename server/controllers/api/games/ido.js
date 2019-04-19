@@ -1,22 +1,45 @@
-const router = require('koa-router')()
-const fetch = require('node-fetch');
-const {
-  Sequelize
-} = require('../sequelize/src/db')
-const Op = Sequelize.Op;
+// const router = require('koa-router')()
+// const fetch = require('node-fetch');
+// const {
+//   Sequelize
+// } = require('../../../models')
+// const Op = Sequelize.Op;
 
-const {
-  players,
-  game_rounds,
-  player_info,
-  gameround_store_gifts,
-  gifts,
-  results,
-  stores
-} = require('../../../models')
-const {
-  LogMessage
-} = require('../sequelize/src/common')
+// const {
+//   players,
+//   game_rounds,
+//   player_info,
+//   gameround_store_gifts,
+//   gifts,
+//   results,
+//   stores
+// } = require('../../../models')
+// const {
+//   LogMessage
+// } = require('../../../models')
+
+import fetch from 'node-fetch'
+import {
+  Sequelize,
+  GameRound,
+  GameRoundBargain,
+  GamePlayer,
+  GameResult,
+  GameDay,
+  IDoGameRound,
+  IDoGameRoundStoreGift,
+  IDoGift,
+  IDoPlayer,
+  IDoPlayerInfo,
+  IDoResult,
+  IDoStroe
+} from '../../../models'
+import {
+  GameRoundStates
+} from '../../../schema/constant'
+import {
+  FailMessage
+} from '../../constant'
 
 static async get_start_info(ctx, next){
 
@@ -26,14 +49,14 @@ static async get_start_info(ctx, next){
     console.log("openid:" + openid);
 
     //启动时获取game_round
-    var round = await game_rounds.findOne({
+    var round = await IDoGameRound.findOne({
       attributes: ['game_id', 'name', 'created_at', 'updated_at'],
       where: {
         game_id: 1
       }
     })
     //启动时获取gameround_store_gift
-    var gameround_store_gift = await gameround_store_gifts.findAll({
+    var gameround_store_gift = await IDoGameRoundStoreGift.findAll({
       attributes: ['game_round_id', 'store_id', 'gift_id', 'qty', 'info', 'remaining'],
       where: {
         game_round_id: 1,
@@ -52,7 +75,7 @@ static async get_start_info(ctx, next){
     }
 
     //启动时获取store
-    var store = await stores.findAll({
+    var store = await IDoStroe.findAll({
       attributes: ['store_id', 'store_name', 'tel', 'remaining', 'created_at', 'updated_at'],
       where: {
         store_id: {
@@ -62,7 +85,7 @@ static async get_start_info(ctx, next){
     })
 
     //启动时获取gift
-    var gift = await gifts.findAll({
+    var gift = await IDoGift.findAll({
       attributes: ['gift_id', 'gift_name', 'image_name'],
       where: {
         gift_id: {
@@ -72,7 +95,7 @@ static async get_start_info(ctx, next){
     })
 
     //启动时获取player
-    var player = await players.findOne({
+    var player = await IDoPlayer.findOne({
       attributes: ['openid', 'nickname', 'headurl', 'to_player_id', 'default_store_id'],
       where: {
         openid: openid
@@ -80,7 +103,7 @@ static async get_start_info(ctx, next){
     })
 
     //启动时获取player_info
-    var player_infos = await player_info.findOne({
+    var player_infos = await IDoPlayerInfo.findOne({
       attributes: ['openid', 'name', 'tel', 'birth', 'default_store_id'],
       where: {
         openid: openid
@@ -88,7 +111,7 @@ static async get_start_info(ctx, next){
     })
 
     //启动时获取点赞result
-    var result = await results.findAll({
+    var result = await IDoResult.findAll({
       attributes: ['openid', 'to_player_id', 'createtime'],
       where: {
         openid: openid,

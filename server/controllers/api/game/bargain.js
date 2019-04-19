@@ -7,6 +7,7 @@
 
 'use strict';
 import fetch from 'node-fetch'
+<<<<<<< HEAD:server/controllers/api/games/bargain.js
 import {
   Sequelize,
   GameRoundBargain,
@@ -20,6 +21,11 @@ import {
 import {
   FailMessage
 } from '../../constant'
+=======
+import { Sequelize, BargainGameRound,  GamePlayer, GameResult, GameDay } from '../../../models'
+import { GameRoundStates } from '../../../schema/constant'
+import { FailMessage } from '../../constant'
+>>>>>>> c31f2055345e8e77236cafbb1e884c2f395c108d:server/controllers/api/game/bargain.js
 import log4 from 'koa-log4'
 const logger = log4.getLogger('index')
 
@@ -49,6 +55,7 @@ class Bargain {
         id: game_player_id,
         game_round_id
       }
+<<<<<<< HEAD:server/controllers/api/games/bargain.js
     })
     let to_game_player = game_player
     if (to_game_player_id) {
@@ -68,6 +75,50 @@ class Bargain {
           game_round_id,
           game_player_id,
           day: new Date()
+=======
+      if( game_player ){
+
+        let game_round = await BargainGameRound.findById(game_round_id);
+        // 检查当前用户的game_day
+        let game_day = GameDay.findOrCreate({where:{ game_round_id,game_player_id, day: new Date() }})
+
+        //'109', 'oF9hV0SyZ6tI_k2WHtpRXqfedRH4', '14', NULL, 'try?', 'http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKQ6uAkRKEXBicIqEdKe4tkicM3Nr47VJq1HO5n2TkgGDg0AXXnfWtd3XQFQd3HyAOeYl15chtK6dRA/132', '5', '1', '2018-02-13 02:04:54', '2018-02-17 14:38:42', '50', '330', '0', '', '', '0', NULL, NULL, NULL, '0', NULL, '0yqL0nCmShgPF1dYpIjcNRw+tglqwoF6tLP55i2Q0Go=', '110101199003200517'
+        //const link = `http://client.vw-dealer-wechat.faw-vw.com/wechatclient/game/${game_round_id}/cupcheck_in/gotoGame.html?appid=${game_round.appid}&code=null&state=null`
+
+        let game_round_base_url = `/game-bargain/${game_round.id}`;
+        const context = { game_round, game_round_base_url, game_player, to_game_player  };
+        console.log( `game_round=${game_round.id} game_player=${game_player.id} to_game_player=${to_game_player.id}`)
+        await ctx.render('games/bargain/play-wx', context);
+      }else{
+        const context = { msg: FailMessage.noPlayer  };
+        await ctx.render('games/bargain/error-wx', context);
+      }
+      console.log(1, "playWx")
+
+    }
+
+    /**
+     * 微信用户注册
+     * GET /game-yiy/14/checkin-wx?openid=oF9hV0SyZ6tI_k2WHtpRXqfedRH4
+     * parmas game_round_id, headimgurl, nickname, openid
+     */
+    static async checkinWx(ctx) {
+
+      let game_round_id = ctx.params.id
+      let openid = ctx.query.openid
+      let to_game_player_id = ctx.query.to_game_player_id //被助力人id
+      const current_game = await BargainGameRound.findById(game_round_id);
+      const current_player = await GamePlayer.findOne({ where:{game_round_id, openid}});
+      const context = { game_player:current_player };
+
+      if( current_player ){
+        // 用户再次扫码，重复进入
+        ctx.session.game_player_id = current_player.id
+        //找到，redirect playWx
+        let url = 'play-wx'
+        if( to_game_player_id ){
+          url= `${url}?to_game_player_id=${to_game_player_id}`
+>>>>>>> c31f2055345e8e77236cafbb1e884c2f395c108d:server/controllers/api/game/bargain.js
         }
       })
 
@@ -89,6 +140,7 @@ class Bargain {
       };
       await ctx.render('games/bargain/error-wx', context);
     }
+<<<<<<< HEAD:server/controllers/api/games/bargain.js
     console.log(1, "playWx")
 
   }
@@ -108,6 +160,37 @@ class Bargain {
       where: {
         game_round_id,
         openid
+=======
+
+    // 取得助力游戏基本信息
+    static async gameInfoWx( ctx ){
+      console.log(0, "gameInfoWx")
+
+      let game_round_id = ctx.query.game_round_id
+      let game_player_id = ctx.query.game_player_id //助力人id
+      let to_game_player_id = ctx.query.to_game_player_id //被助力人id，可能为空
+      let url = ctx.query.url // 可能有 to_game_player_id 或者没有
+
+      const game_round = await BargainGameRound.findById(game_round_id);
+
+      const game_player = await GamePlayer.findById(game_player_id);
+
+      // 参加此活动总人数和排名
+      let game_player_rank = await GamePlayer.findAll({ where:{ game_round_id }, order:[['score', 'DESC'], ['id', 'ASC']], limit: 20, offset: 0, })
+      //$bargain_user_all = $user_mod->where(array("bargain_id" => $bargain_id))->order('new_price asc,id DESC')->limit("0,20")->select();
+      let game_result = null;
+      let to_game_player = game_player; // 被助力人缺省情况是自己
+console.log( "before to_game_player_id")
+      if( to_game_player_id ){// 如果有被助力人
+         to_game_player = await GamePlayer.findById(to_game_player_id);
+          // 判断是否为本机的活动 我要参与
+          // 砍价日志的获取判断是否砍过
+          game_result = await GameResult.findOne({ where:{ game_player_id, game_round_id, to_game_player_id: to_game_player_id }})
+          //$list_log = M("bargain_log")->where(array("user_id" => $user_id, "openid" => $openid, "bargain_id" => $bargain_id))->select();
+      }else{
+        // 砍价日志的获取判断是否砍过
+        game_result = await GameResult.findOne({ where:{ game_player_id, game_round_id, to_game_player_id: game_player_id }})
+>>>>>>> c31f2055345e8e77236cafbb1e884c2f395c108d:server/controllers/api/game/bargain.js
       }
     });
     const context = {
@@ -145,6 +228,7 @@ class Bargain {
       ctx.redirect(url);
     }
 
+<<<<<<< HEAD:server/controllers/api/games/bargain.js
   }
 
   // 取得助力游戏基本信息
@@ -239,6 +323,50 @@ class Bargain {
         wx_share = {
           link: data['link'],
           img_url: `${GAME_HOST}/game-bargain-assets/app/images/share.jpg`
+=======
+    // 点击投票，助力，砍价
+    static async pollWx( ctx ){
+
+      let game_round_id = ctx.params.id
+      let game_player_id = ctx.request.body.game_player_id //助力人id
+      let to_game_player_id = ctx.request.body.to_game_player_id //被助力人id，可能为空
+      const game_round = await BargainGameRound.findById(game_round_id);
+      let game_player = await GamePlayer.findById(game_player_id);
+      let to_game_player = await GamePlayer.findById(to_game_player_id);
+      let data = { }
+      if( game_player ){
+        let remaining_score = game_round.final_score - to_game_player.score
+        // 最低砍价和最高砍价间取随机数
+        let max_score =  game_round.unit_score;
+        // 需要砍掉的价格
+        let score =  Math.round( Math.random()*max_score );
+        // 砍完价以后现在的价格
+        let new_score = to_game_player.score + score;
+        // 砍到低价的时候不能超过底价  并且减去礼品
+        if ( to_game_player.score < game_round.final_score ) {
+           // 砍完价以后价格低于底价则修改为底价
+            if ( new_score > game_round.final_score ) {
+              score = game_round.final_score - to_game_player.score
+              new_score = game_round.final_score
+            }
+            // 查询当前砍价人是否砍过价 没有则可以砍价并添加日志
+            let game_result = await GameResult.findOne({ where:{ game_player_id, game_round_id, to_game_player_id: to_game_player_id }})
+            if (!game_result ) {
+              var options={ fields: ['game_round_id', 'game_player_id', 'to_game_player_id', 'score'] }
+              var result_values = { game_round_id, game_player_id, to_game_player_id, score  }
+              const game_result = await GameResult.create(result_values, options)
+              var player_values = { score: new_score }
+              await to_game_player.update( player_values )
+              let game_result_rank = await GameResult.findAll({ where:{ game_round_id, to_game_player_id: to_game_player.id }, include: [{ model: GamePlayer }], order:[['score', 'DESC'], ['id', 'ASC']], limit: 20, offset: 0, })
+              data.game_result_rank = game_result_rank //查询最新的好友助力榜
+              data.game_result = game_result
+              data.to_game_player = to_game_player
+            }else{
+              data.error = { msg:  '您已帮忙砍过价' }
+            }
+        } else {
+          data.error = { msg:  '底价和现价相等' }
+>>>>>>> c31f2055345e8e77236cafbb1e884c2f395c108d:server/controllers/api/game/bargain.js
         }
       }
     } catch (err) {

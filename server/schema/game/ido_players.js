@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define('players', {
+  return sequelize.define('ido_players', {
     openid: {
       type: DataTypes.BIGINT(11),
       allowNull: false,

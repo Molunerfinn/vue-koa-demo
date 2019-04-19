@@ -27,7 +27,6 @@
 Base64@^1.0.2:
   version "1.0.2"
   resolved "http://registry.npm.taobao.org/Base64/download/Base64-1.0.2.tgz#82a36d43f4b98659d72488afe008a905d2cbccdb"
-  integrity sha1-gqNtQ/S5hlnXJIiv4AipBdLLzNs=
 
 abab@^1.0.3:
   version "1.0.4"
@@ -313,9 +312,11 @@ async-listener@^0.6.0:
     semver "^5.3.0"
     shimmer "^1.1.0"
 
-async-validator@^1.6.6:
-  version "1.6.7"
-  resolved "https://registry.yarnpkg.com/async-validator/-/async-validator-1.6.7.tgz#345162bdb54f3d653f07cd1ac076bbb517e53a2e"
+async-validator@~1.8.1:
+  version "1.8.5"
+  resolved "https://registry.yarnpkg.com/async-validator/-/async-validator-1.8.5.tgz#dc3e08ec1fd0dddb67e60842f02c0cd1cec6d7f0"
+  dependencies:
+    babel-runtime "6.x"
 
 async@1.5, async@^1.4.0, async@^1.5, async@^1.5.2:
   version "1.5.2"
@@ -1041,9 +1042,9 @@ babel-register@^6.26.0:
     mkdirp "^0.5.1"
     source-map-support "^0.4.15"
 
-babel-runtime@^6.0.0, babel-runtime@^6.26.0:
+babel-runtime@6.x, babel-runtime@^6.0.0, babel-runtime@^6.26.0:
   version "6.26.0"
-  resolved "https://registry.npmjs.org/babel-runtime/-/babel-runtime-6.26.0.tgz#965c7058668e82b55d7bfe04ff2337bc8b5647fe"
+  resolved "https://registry.yarnpkg.com/babel-runtime/-/babel-runtime-6.26.0.tgz#965c7058668e82b55d7bfe04ff2337bc8b5647fe"
   dependencies:
     core-js "^2.4.0"
     regenerator-runtime "^0.11.0"
@@ -1975,7 +1976,6 @@ cross-env@^5.1.1:
 cross-fetch@^3.0.2:
   version "3.0.2"
   resolved "http://registry.npm.taobao.org/cross-fetch/download/cross-fetch-3.0.2.tgz#b7136491967031949c7f86b15903aef4fa3f1768"
-  integrity sha1-txNkkZZwMZScf4axWQOu9Po/F2g=
   dependencies:
     node-fetch "2.3.0"
     whatwg-fetch "3.0.0"
@@ -2167,7 +2167,6 @@ date-now@^0.1.4:
 de-indent@^1.0.2:
   version "1.0.2"
   resolved "http://registry.npm.taobao.org/de-indent/download/de-indent-1.0.2.tgz#b2038e846dc33baa5796128d0804b455b8c1e21d"
-  integrity sha1-sgOOhG3DO6pXlhKNCAS0VbjB4h0=
 
 debug@*, debug@^2.1.1, debug@^2.2.0, debug@^2.6.0:
   version "2.6.0"
@@ -2360,6 +2359,12 @@ dom-walk@^0.1.0:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/dom-walk/-/dom-walk-0.1.1.tgz#672226dc74c8f799ad35307df936aba11acd6018"
 
+dom7@^2.1.3:
+  version "2.1.3"
+  resolved "https://registry.yarnpkg.com/dom7/-/dom7-2.1.3.tgz#a736f9c3bfbc4ca039a81cd095f97d1d7f3de19c"
+  dependencies:
+    ssr-window "^1.0.1"
+
 domain-browser@^1.1.1:
   version "1.1.7"
   resolved "https://registry.yarnpkg.com/domain-browser/-/domain-browser-1.1.7.tgz#867aa4b093faa05f1de08c06f4d7b21fdf8698bc"
@@ -2413,14 +2418,12 @@ dot-prop@^4.1.0:
 dotenv-defaults@^1.0.2:
   version "1.0.2"
   resolved "http://registry.npm.taobao.org/dotenv-defaults/download/dotenv-defaults-1.0.2.tgz#441cf5f067653fca4bbdce9dd3b803f6f84c585d"
-  integrity sha1-RBz18GdlP8pLvc6d07gD9vhMWF0=
   dependencies:
     dotenv "^6.2.0"
 
 dotenv-webpack@^1.7.0:
   version "1.7.0"
   resolved "http://registry.npm.taobao.org/dotenv-webpack/download/dotenv-webpack-1.7.0.tgz#4384d8c57ee6f405c296278c14a9f9167856d3a1"
-  integrity sha1-Q4TYxX7m9AXClieMFKn5FnhW06E=
   dependencies:
     dotenv-defaults "^1.0.2"
 
@@ -2431,7 +2434,6 @@ dotenv@^4.0.0:
 dotenv@^6.2.0:
   version "6.2.0"
   resolved "http://registry.npm.taobao.org/dotenv/download/dotenv-6.2.0.tgz#941c0410535d942c8becf28d3f357dbd9d476064"
-  integrity sha1-lBwEEFNdlCyL7PKNPzV9vZ1HYGQ=
 
 dottie@^2.0.0:
   version "2.0.1"
@@ -2488,11 +2490,11 @@ element-closest@^2.0.1:
   version "2.0.2"
   resolved "http://registry.npm.taobao.org/element-closest/download/element-closest-2.0.2.tgz#72a740a107453382e28df9ce5dbb5a8df0f966ec"
 
-element-ui@^1.2.9:
-  version "1.2.9"
-  resolved "https://registry.npmjs.org/element-ui/-/element-ui-1.2.9.tgz#ce7332dbbde73f239a72b7ca517cf83b1bf7f1fb"
+element-ui@^1.4.13:
+  version "1.4.13"
+  resolved "https://registry.yarnpkg.com/element-ui/-/element-ui-1.4.13.tgz#d0b055987af0cb937a1135babf4360ae80d4a121"
   dependencies:
-    async-validator "^1.6.6"
+    async-validator "~1.8.1"
     babel-helper-vue-jsx-merge-props "^2.0.0"
     deepmerge "^1.2.0"
     throttle-debounce "^1.0.1"
@@ -3602,7 +3604,6 @@ he@1.1.x:
 he@^1.1.0:
   version "1.2.0"
   resolved "http://registry.npm.taobao.org/he/download/he-1.2.0.tgz#84ae65fa7eafb165fddb61566ae14baf05664f0f"
-  integrity sha1-hK5l+n6vsWX922FWauFLrwVmTw8=
 
 hmac-drbg@^1.0.0:
   version "1.0.1"
@@ -5368,7 +5369,6 @@ mute-stream@~0.0.4:
 mysql2@^1.6.0:
   version "1.6.5"
   resolved "http://registry.npm.taobao.org/mysql2/download/mysql2-1.6.5.tgz#6695304fa2ce793dda5c98e8bbec65cbd2e6cb9d"
-  integrity sha1-ZpUwT6LOeT3aXJjou+xly9Lmy50=
   dependencies:
     denque "^1.4.0"
     generate-function "^2.3.1"
@@ -5462,7 +5462,6 @@ node-dir@^0.1.10:
 node-fetch@2.3.0, node-fetch@^2.1.1:
   version "2.3.0"
   resolved "http://registry.npm.taobao.org/node-fetch/download/node-fetch-2.3.0.tgz#1a1d940bbfb916a1d3e0219f037e89e71f8c5fa5"
-  integrity sha1-Gh2UC7+5FqHT4CGfA36J5x+MX6U=
 
 node-int64@^0.4.0:
   version "0.4.0"
@@ -7376,6 +7375,10 @@ sshpk@^1.7.0:
     jsbn "~0.1.0"
     tweetnacl "~0.14.0"
 
+ssr-window@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/ssr-window/-/ssr-window-1.0.1.tgz#30752a6a4666e7767f0b7e6aa6fc2fdbd0d9b369"
+
 stackframe@^1.0.2:
   version "1.0.2"
   resolved "https://registry.npmjs.org/stackframe/-/stackframe-1.0.2.tgz#162245509c687d328b14f671dab8fdb755b1e1e8"
@@ -7587,6 +7590,13 @@ svgo@^0.7.0:
     mkdirp "~0.5.1"
     sax "~1.2.1"
     whet.extend "~0.9.9"
+
+swiper@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/swiper/-/swiper-4.5.0.tgz#4d870bec4f5abe2fb259325849dd2641c9243c0d"
+  dependencies:
+    dom7 "^2.1.3"
+    ssr-window "^1.0.1"
 
 symbol-tree@^3.2.1:
   version "3.2.2"
@@ -8133,7 +8143,6 @@ vue-style-loader@^3.0.0, vue-style-loader@^3.0.1:
 vue-template-compiler@2.6.4:
   version "2.6.4"
   resolved "http://registry.npm.taobao.org/vue-template-compiler/download/vue-template-compiler-2.6.4.tgz#0feacfe35e3386033bf4fe31ab4ff1dc1a0c5dec"
-  integrity sha1-D+rP414zhgM79P4xq0/x3BoMXew=
   dependencies:
     de-indent "^1.0.2"
     he "^1.1.0"
@@ -8145,7 +8154,6 @@ vue-template-es2015-compiler@^1.5.3, vue-template-es2015-compiler@^1.6.0:
 vue@2.6.4:
   version "2.6.4"
   resolved "http://registry.npm.taobao.org/vue/download/vue-2.6.4.tgz#8a5a44e5740d8b8423a420c8655c97663421fb4d"
-  integrity sha1-ilpE5XQNi4QjpCDIZVyXZjQh+00=
 
 vuex@^3.1.0:
   version "3.1.0"
@@ -8296,7 +8304,6 @@ whatwg-encoding@^1.0.1:
 whatwg-fetch@3.0.0:
   version "3.0.0"
   resolved "http://registry.npm.taobao.org/whatwg-fetch/download/whatwg-fetch-3.0.0.tgz#fc804e458cc460009b1a2b966bc8817d2578aefb"
-  integrity sha1-/IBORYzEYACbGiuWa8iBfSV4rvs=
 
 whatwg-url@^4.3.0:
   version "4.8.0"
