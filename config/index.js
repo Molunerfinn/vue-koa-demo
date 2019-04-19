@@ -2,6 +2,7 @@
 require('dotenv').config()
 
 var path = require('path')
+let apiServerPort = process.env.API_SERVER_PORT
 
 module.exports = {
   build: {
@@ -32,15 +33,15 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/auth':{
-        target: 'http://localhost:8099',
+        target: `http://localhost:${apiServerPort}`,
         changeOrigin: true
       },
       '/api':{
-        target: 'http://localhost:8099',
+        target: `http://localhost:${apiServerPort}`,
         changeOrigin: true
       },
       '/gapi':{
-        target: 'http://localhost:8099',
+        target: `http://localhost:${apiServerPort}`,
         changeOrigin: true
       }
     },
