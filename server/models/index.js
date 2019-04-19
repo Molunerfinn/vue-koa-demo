@@ -3,13 +3,13 @@ import BargainGameRound from './bargain/GameRound'
 import GamePlayer from './GamePlayer'
 import GameResult from './GameResult'
 import GameDay from './GameDay'
-import IDoGameRound from './IDoGameRound'
-import IDoGameRoundStoreGift from './IDoGameRoundStoreGift'
-import IDoGift from './IDoGift'
-import IDoPlayer from './IDoPlayer'
-import IDoPlayerInfo from './IDoPlayerInfo'
-import IDoResult from './IDoResult'
-import IDoStroe from './IDoStroe'
+import IdoGameRound from './ido/GameRound'
+import IdoGameRoundStoreGift from './ido/GameRoundStoreGift'
+import IdoGift from './ido/Gift'
+import IdoPlayer from './ido/Player'
+import IdoPlayerInfo from './ido/PlayerInfo'
+import IdoResult from './ido/Result'
+import IdoStroe from './ido/Stroe'
 
 import {
   Sequelize
@@ -20,12 +20,22 @@ GameResult.belongsTo(GamePlayer, {
   foreignKey: 'game_player_id'
 })
 
-export { Sequelize, GameRound, GamePlayer,GameResult, GameDay }
-export { BargainGameRound }
-export { IDoGameRound,
-IDoGameRoundStoreGift,
-IDoGift,
-IDoPlayer,
-IDoPlayerInfo,
-IDoResult,
-IDoStroe }
+export {
+  Sequelize,
+  GameRound,
+  GamePlayer,
+  GameResult,
+  GameDay
+}
+export {
+  BargainGameRound
+}
+export {
+  IdoGameRound,
+  IdoGameRoundStoreGift,
+  IdoGift,
+  IdoPlayer,
+  IdoPlayerInfo,
+  IdoResult,
+  IdoStroe
+}
