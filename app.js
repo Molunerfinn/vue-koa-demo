@@ -59,6 +59,8 @@ router.use('/gapi/base', gameBase.routes())
 import gameBargain from './server/routes/api/game/bargain.js'
 router.use('/gapi/bargain', gameBargain.routes())
 
+import gameIdo from './server/routes/api/game/ido.js'
+router.use('/gapi/ido', gameIdo.routes())
 
 app.use(router.routes()) // 将路由规则挂载到Koa上。
 app.use(historyApiFallback())
