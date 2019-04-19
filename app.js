@@ -72,8 +72,8 @@ app.use(serve(path.resolve('dist'))) // 将webpack打包好的项目目录作为
 
 const server = http.createServer(app.callback())
 
-const config = require('./server/config')
-config().then(()=> {
+const db = require('./server/config/db')
+db().then(()=> {
     server.listen(port);
     // process received SIGINT on linux..
     process.on('SIGINT', () => {

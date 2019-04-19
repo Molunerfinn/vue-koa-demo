@@ -1,7 +1,7 @@
-import Sequelize from 'sequelize'
-import fs from 'fs'
-import path from 'path'
-import config from '../config/dbConfig'
+const Sequelize =require('sequelize')
+const fs = require('fs')
+const path = require('path')
+const config = require('../config/dbConfig')
 
 var db = {}
 
@@ -32,46 +32,7 @@ modelfiles.forEach((modelfile) => {
   db[model.name] = model
 })
 
+db.sequelize = sequelize
+db.Sequelize = Sequelize
 
-let {
-  game_rounds,
-  bargain_game_rounds,
-  game_players,
-  game_results,
-  game_days,
-  ido_game_rounds,
-  ido_gifts,
-  ido_gameround_store_gifts,
-  ido_players,
-  ido_player_info,
-  ido_results,
-  ido_stores
-} = db
-
-export {
-  sequelize,
-  Sequelize
-}
-
-//
-export {
-  game_rounds,
-  game_players,
-  game_results,
-  game_days
-}
-
-//砍价游戏
-export {
-  bargain_game_rounds
-}
-
-export {
-  ido_game_rounds,
-  ido_gifts,
-  ido_gameround_store_gifts,
-  ido_players,
-  ido_player_info,
-  ido_results,
-  ido_stores
-}
+module.exports = db
