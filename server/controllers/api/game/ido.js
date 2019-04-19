@@ -1,23 +1,3 @@
-// const router = require('koa-router')()
-// const fetch = require('node-fetch');
-// const {
-//   Sequelize
-// } = require('../../../models')
-// const Op = Sequelize.Op;
-
-// const {
-//   players,
-//   game_rounds,
-//   player_info,
-//   gameround_store_gifts,
-//   gifts,
-//   results,
-//   stores
-// } = require('../../../models')
-// const {
-//   LogMessage
-// } = require('../../../models')
-
 import fetch from 'node-fetch'
 import {
   Sequelize,
@@ -33,7 +13,7 @@ import {
   IdoPlayerInfo,
   IdoResult,
   IdoStroe
-} from '../../../models'
+} from '../../../models/ido'
 import {
   GameRoundStates
 } from '../../../schema/constant'
