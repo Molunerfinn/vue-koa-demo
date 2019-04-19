@@ -15,7 +15,7 @@ import http from 'http'
 const app = new Koa()
 const router = koaRouter()
 
-let port = process.env.PORT
+let port = process.env.API_SERVER_PORT || 3000
 
 app.use(koaBodyparser())
 app.use(json())
@@ -74,8 +74,7 @@ const server = http.createServer(app.callback())
 
 const config = require('./server/config')
 config().then(()=> {
-    //app.listen(process.env.PORT||3000);
-    server.listen(process.env.PORT||3000);
+    server.listen(port);
     // process received SIGINT on linux..
     process.on('SIGINT', () => {
       console.info('SIGINT signal received.')
@@ -97,7 +96,7 @@ config().then(()=> {
       }, 1500)
     })
 
-    console.info(`${process.version} listening on port ${process.env.PORT||3000}`);
+    console.info(`${process.version} listening on port ${port}`);
 
 })
 
