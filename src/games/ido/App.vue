@@ -2,7 +2,7 @@
   <div class="swiper-container swiper-container-initialized swiper-container-horizontal">
     <div class="swiper-wrapper">
       <!-- //////////////////////////////////////////////////////////////// -->
-    <div class="swiper-slide" style="background:#00FF00">活动已经结束</div>
+    <div class="swiper-slide swiper-no-swiping" style="background:#00FF00">活动已经结束</div>
       <!-- ////////////////////////////////////////////////////////// -->
     <div class="swiper-slide" style="background:#0000FF">
       <div class="div_1_img">
@@ -12,10 +12,6 @@
         <!-- <el-button type="primary" plain>主要按钮</el-button>
         <el-progress :text-inside="true" :stroke-width="18" :percentage="70"></el-progress> -->
         <button  type="button" @click="post_gameround()">POST</button>
-          <select name="YYYY" id="YYYY">
-            <option value="">请选择 年</option>
-            <Option v-for="y in yearList" :value="y.value" :key="y.value" name="yearValue">{{y.label }}</Option>
-        </select>
         {{game_rounds}}
         {{stores}}
         {{player}}
@@ -67,15 +63,18 @@
           <td>DATE:</td>
           <td>
             <form name="reg_testdate">
-              <select name="YYYY" id="YYYY" @onchange="YYYYDD(this.value)">
+              <select name="YYYY" id="YYYY">
                 <option value="">请选择 年</option>
-              </select>
-              <select name="MM"  id="MM"@onchange="MMDD(this.value)">
-                <option value="">选择 月</option>
-              </select>
-              <select name="DD" id="DD">
-                <option value="">选择 日</option>
-              </select>
+                <Option v-for="y in yearList" :value="y.value" :key="y.value" name="yearValue" id="YYYY">{{y.lable }}</Option>
+            </select>
+              <select name="MM" id="MM">
+              <option value="">请选择 月</option>
+              <Option v-for="m in monthList" :value="m.value" :key="m.value" name="yearValue" id="MM">{{m.lable }}</Option>
+          </select>
+          <select name="DD" id="DD">
+            <option value="">请选择 日</option>
+            <Option v-for="d in dayList" :value="d.value" :key="d.value" name="yearValue" id="DD">{{d.lable }}</Option>
+        </select>
             </form>
           </td>
         </tr>
@@ -89,7 +88,7 @@
 
     </div>
     <!-- ////////////////////////////////////////////////////////// -->
-    <div class="swiper-slide" style="background:#FF0000">
+    <div class="swiper-slide swiper-no-swiping" style="background:#FF0000">
       <div class="div_6_p">
         <!-- <button  @click="countTime()" type="button"></button> -->
         剩余天数:{{d}}天{{h}}时{{m}}分{{s}}秒
@@ -146,8 +145,7 @@
 
 <script>
 import Swiper from 'swiper'
-import fetch from 'node-fetch'
-import { getGameInfo } from '@/api/games/ido'
+import { getGameInfo,postSignUp,postThumbUp,postMsg } from '@/api/games/ido'
 
 export default {
   name: 'App',
@@ -176,27 +174,11 @@ export default {
     }
   },
   methods: {
-    post_gameround: function () {
-      const body = {
-        id: 1,
-        game_round: {
-          game_id: 1,
-          name: 'a new data',
-          creator_id: 1
-        }
-      }
-
-      fetch('http://127.0.0.1:3000/post/game_rounds', {
-        method: 'post',
-        body: JSON.stringify(body),
-        headers: { 'Content-Type': 'application/json' }
-      })
-    },
     next: function (page) {
-      this.mySwiper.slideTo(page, 100, false)
+      this.mySwiper.slideTo(page,100)
     },
     check_remaining: function (remaining) {
-      // console.log(remaining);
+      // //console.log(remaining);
       if (remaining > 0) {
         return 'weui-btn weui-btn_primary'
       } else {
@@ -234,73 +216,65 @@ export default {
       }
 
       if (msg_is_ok) {
-        this.player_info.name = document.getElementById('name').value
-        this.player_info.tel = parseInt(document.getElementById('tel').value)
-        this.player_info.birth = document.getElementById('YYYY').value +
-          '-' + document.getElementById('MM').value +
-          '-' + document.getElementById('DD').value
-
-        const body = {
-          openid: this.player.openid,
-          player_info: this.player_info
-        }
-        console.log(JSON.stringify(body))
-        fetch('http://127.0.0.1:3000/put/put_msg', {
-          method: 'put',
-          body: JSON.stringify(body),
-          headers: { 'Content-Type': 'application/json' }
+          var openid =  this.player.openid
+          var realname = document.getElementById('name').value
+          var tel = parseInt(document.getElementById('tel').value)
+          var birth = document.getElementById('YYYY').value +
+            '-' + document.getElementById('MM').value +
+            '-' + document.getElementById('DD').value
+            //console.log('birth:',birth);
+          var data = {openid,realname,tel,birth}
+        postMsg(data).then((res)=>{
+          //console.log( 100000, res )
+          return res
         })
         this.next(4)
       }
     },
     sign_up: function (store_id,status) {
-      console.log('status:'+status);
+      //console.log('status:'+status);
       if(status=='weui-btn weui-btn_primary'){
         var player = this.player
-        const body = {
-          player_info: {
-            openid: player.openid,
-            default_store_id: store_id,
-            start_at: new Date(),
-            end_at: new Date()
-          }
-        }
+        const openid = player.openid
+        const default_store_id = store_id
+        const start_at = this.getServerTime();
+        const end_at = this.getServerTime();
+        const data = {openid,default_store_id,start_at,end_at}
 
-        fetch('http://127.0.0.1:3000/post/sign_up', {
-          method: 'post',
-          body: JSON.stringify(body),
-          headers: { 'Content-Type': 'application/json' }
+        postSignUp(data).then((res)=>{
+          //console.log( 100000, res )
+          return res
         })
+
         this.next(3)
       }
     },
     thumb_up: function () {
       var player = this.player
+
       var now_year = new Date().getFullYear()
       var now_month = new Date().getMonth() + 1
       var now_day = new Date().getDate()
       var date_str = now_year + '-' + now_month + '-' + now_day
       var is_ok = true
       for (var i = 0; i < this.results.length; i++) {
+        //console.log(date_str);
+        //console.log(this.results[i].createtime);
         if (date_str === this.results[i].createtime) {
           is_ok = false
         }
       }
       var thumb_result = document.getElementById('thumb_result')
       if (is_ok) {
-        const body = {
-          result: {
-            openid: player.openid,
-            to_player_id: player.to_player_id,
-            createtime: date_str,
-            sourceid: ""+player.openid+player.to_player_id+now_year+now_month+now_day
-          }
-        }
-        fetch('http://127.0.0.1:3000/post/thumb_up', {
-          method: 'post',
-          body: JSON.stringify(body),
-          headers: { 'Content-Type': 'application/json' }
-        })
+            var openid=player.openid
+            var to_player_id=player.to_player_id
+
+            const data = {openid,to_player_id,now_year,now_month,now_day}
+
+            postThumbUp(data).then((res)=>{
+              //console.log( 100000, res )
+              return res
+            })
         thumb_result.innerHTML = '点赞成功!!!目前' + player.nickname + '已经收集了' + (this.results.length + 1) + '个赞'
       } else {
         thumb_result.innerHTML = '你今天已经点过赞了!!目前' + player.nickname + '已经收集了' + (this.results.length) + '个赞'
@@ -309,13 +283,12 @@ export default {
     },
     countTime: function () {
       // 获取当前时间
-      var date = new Date()
-      var now = date.getTime()
+      var date = this.getServerTime();
       // 设置截止时间
-      var endDate = new Date('2019-04-16 16:59:59')
+      var endDate = new Date(2019,3,22,17,0,0)
       var end = endDate.getTime()
       // 时间差
-      var leftTime = end - now
+      var leftTime = end - date
       // 定义变量 d,h,m,s保存倒计时的时间
       if (leftTime >= 0) {
         this.d = Math.floor(leftTime / 1000 / 60 / 60 / 24)
@@ -328,101 +301,48 @@ export default {
     },
     checkTime: function () {
       // 获取当前时间
-      var date = new Date()
-      var now = date.getTime()
+      var date = this.getServerTime();
       // 设置截止时间
-      var endDate = new Date('2019-11-10 23:59:59')
+      var endDate = new Date(2019,11,11)
+      //console.log(endDate);
       var end = endDate.getTime()
+      //console.log(end);
       // 时间差
-      var leftTime = end - now
-      var mySwiper = new Swiper('.swiper-container',
-        {
-          preventInteractionOnTransition: true,
-          direction: 'vertical',
-          noSwiping: true,
-          pagination: {
-            el: '.swiper-pagination',
-            clickable: true
-          }
-        })
+      var leftTime = end - date
+      //console.log(leftTime);
+
       if (leftTime >= 0) {
-        mySwiper.removeSlide(0)
-      } else {
-        mySwiper.lockSwipes()
+        this.mySwiper.removeSlide(0)
       }
     },
-    YYYYMMDDstart: function(){
-        var MonHead = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
-        // 先给年下拉框赋内容
-        var y = new Date().getFullYear()
-        for (var i = (y - 100); i < (y + 10); i++) // 以今年为准，前100年，后10年
-        { document.reg_testdate.YYYY.options.add(new Option(' ' + i + ' 年', i)) }
-
-        // 赋月份的下拉框
-        for (var m = 1; m < 13; m++) { document.reg_testdate.MM.options.add(new Option(' ' + m + ' 月', m)) }
-
-        document.reg_testdate.YYYY.value = y
-        document.reg_testdate.MM.value = new Date().getMonth() + 1
-        var n = MonHead[new Date().getMonth()]
-        if (new Date().getMonth() == 1 && this.IsPinYear(y)) n++
-        this.writeDay(n) // 赋日期下拉框Author:meizz
-        document.reg_testdate.DD.value = new Date().getDate()
-    },
-    YYYYDD: function(str){
-      var MonHead = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
-      var MMvalue = document.reg_testdate.MM.options[document.reg_testdate.MM.selectedIndex].value
-      if (MMvalue == '') { var e = document.reg_testdate.DD; this.optionsClear(e); return }
-      var n = MonHead[MMvalue - 1]
-      if (MMvalue == 2 && this.IsPinYear(str)) n++
-      this.writeDay(n)
-    },
-    MMDD: function(str){
-      var MonHead = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
-      var YYYYvalue = document.reg_testdate.YYYY.options[document.reg_testdate.YYYY.selectedIndex].value
-      if (YYYYvalue == '') { var e = document.reg_testdate.DD; this.optionsClear(e); return }
-      var n = MonHead[str - 1]
-      if (str == 2 && this.IsPinYear(YYYYvalue)) n++
-      this.writeDay(n)
-    },
-    writeDay: function(n){
-      var e = document.reg_testdate.DD; this.optionsClear(e)
-      for (var i = 1; i <= (n + 1); i++) { e.options.add(new Option(' ' + i + ' 日', i)) }
-    },
-    IsPinYear: function(year){
-      return (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0))
-    },
-    optionsClear: function(e){
-      e.options.length = 1
+    getServerTime: function() {
+      var time = new Date();
+      //console.log('time:',time,'this.timeDeviation',this.timeDeviation);
+      if (typeof this.timeDeviation != "undefined") {
+        time += this.timeDeviation
+      }
+      return time
     }
   },
   created () {
-    let time = new Date();
-    let year = time.getFullYear();
-    for(let i = year-80;i<year;i++){
-      let option = {
-        value: i,
-        lable: i
-      }
-      this.yearList.push(option);
-    }
 
-    let data=  {game_round_id:1,game_player_id:1}
+    let data=  1
     getGameInfo( data ).then((res)=>{
-      console.log( 100000, res )
+      //console.log( 100000, res )
+      return res
+    }).then(json => {
+      var start_info = json
+      this.game_rounds = start_info['round']
+      //console.log('start_info:',start_info['player_info']);
+      if(start_info['player_info']!==null){
+        //console.log('inininininininin');
+        this.player_info = start_info['player_info']
+      }
+      this.player = start_info['player']
+      this.stores = start_info['store']
+      this.gifts = start_info['gift']
+      this.results = start_info['result']
     })
-    // fetch('http://127.0.0.1:3000/start?1')
-    //   .then(res => {
-    //     return res.json()
-    //   })
-    //   .then(json => {
-    //     var start_info = json
-    //     this.game_rounds = start_info['round']
-    //     this.player_info = start_info['player_info']
-    //     this.player = start_info['player']
-    //     this.stores = start_info['store']
-    //     this.gifts = start_info['gift']
-    //     this.results = start_info['result']
-    //   })
   },
   mounted () {
     this.mySwiper = new Swiper('.swiper-container',
@@ -430,16 +350,39 @@ export default {
         direction: 'vertical',
         noSwiping: true,
         pagination: {
-          el: '.swiper-pagination',
           clickable: true
         }
       })
     this.mySwiper.on('click', (e) => {
-      console.log(e)
+      //console.log(e)
     })
 
     this.checkTime()
     this.countTime()
+
+    for(let i = 1960;i<2019;i++){
+      let option = {
+        value: i,
+        lable: i+'年'
+      }
+      this.yearList.push(option);
+    }
+    for(let i=1;i<13;i++){
+      let option = {
+        value: i,
+        lable: i+'月'
+      }
+      this.monthList.push(option);
+    }
+
+    for(let i=1;i<32;i++){
+      let option = {
+        value: i,
+        lable: i+'日'
+      }
+      this.dayList.push(option);
+    }
+
   }
 }
 </script>

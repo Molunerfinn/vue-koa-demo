@@ -6,7 +6,7 @@ const Dotenv = require('dotenv-webpack');
 var vueLoaderConfig = require('./vue-loader.conf')
 var multipageHelper = require('./multipage-helper')
 
-function resolve (dir) {
+function resolve(dir) {
   return path.join(__dirname, '..', dir)
 }
 
@@ -22,21 +22,21 @@ module.exports = {
   output: {
     path: config.build.assetsRoot,
     filename: '[name].js',
-    publicPath: process.env.NODE_ENV === 'production'
-      ? config.build.assetsPublicPath
-      : config.dev.assetsPublicPath
+    publicPath: process.env.NODE_ENV === 'production' ?
+      config.build.assetsPublicPath :
+      config.dev.assetsPublicPath
   },
-  plugins:[ new Dotenv()], 
+  plugins: [new Dotenv()],
   resolve: {
     extensions: ['.js', '.vue', '.json'],
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
-      '@': resolve('src')
+      '@': resolve('src'),
+      'swiper': 'swiper/dist/js/swiper.js'
     }
   },
   module: {
-    rules: [
-      {
+    rules: [{
         test: /\.(js|vue)$/,
         loader: 'eslint-loader',
         enforce: 'pre',

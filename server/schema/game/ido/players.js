@@ -1,3 +1,4 @@
+var moment = require('moment')
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define('ido_players', {
     openid: {
