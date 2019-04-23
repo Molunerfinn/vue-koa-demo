@@ -8,6 +8,6 @@ router.get('/result', ido.get_result_info)
 router.post('/sign_up', ido.post_sign_up)
 router.post('/thumb_up', ido.post_thumb_up)
 router.post('/post_msg', ido.post_msg)
-router.post('/post_gameround', ido.post_gameround)
+router.post('/gameround', ido.gameround)
 
 export default router

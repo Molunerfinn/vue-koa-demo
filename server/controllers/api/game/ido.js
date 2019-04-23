@@ -15,9 +15,9 @@ import {
   GameRoundStates
 } from '../../../schema/constant'
 const Op = Sequelize.Op;
-// import {
-//   FailMessage
-// } from '../../constant'
+import log4 from 'koa-log4'
+const logger = log4.getLogger('index')
+
 class Ido {
   static async get_start_info(ctx, next) {
 
@@ -203,28 +203,43 @@ class Ido {
     ctx.status = 200
   }
 
-  static async post_gameround(ctx, next) {
+  static async gameround(ctx, next) {
 
-    var game_id = ctx.request.body.game_id
-    var name = ctx.request.body.name
-    var creator_id = ctx.request.body.creator_id
-    var default_store_id = ctx.request.body.default_store_id
+    try {
+      var game_id = ctx.request.body.game_round.game_id
+      var name = ctx.request.body.game_round.name
+      var creator_id = ctx.request.body.game_round.creator_id
+      var default_store_id = ctx.request.body.game_round.default_store_id
+      var wx_keyword = ctx.request.body.game_round.wx_keyword
+      var close_at = ctx.request.body.game_round.close_at
+      var open_at = ctx.request.body.game_round.open_at
+      var end_at = ctx.request.body.game_round.end_at
+      var start_at = ctx.request.body.game_round.start_at
+      var round = {
+        game_id: game_id,
+        name: name,
+        creator_id: creator_id,
+        default_store_id: default_store_id,
+        wx_keyword: wx_keyword,
+        open_at: open_at,
+        close_at: close_at,
+        start_at: start_at,
+        end_at: end_at
+      }
 
-    var round = {
-      game_id: game_id,
-      name: name,
-      creator_id: creator_id,
-      default_store_id: default_store_id
+      var options = {
+        fields: ['game_id', 'name', 'creator_id', 'default_store_id', 'wx_keyword', 'close_at', 'open_at', 'start_at', 'end_at']
+      }
+      let res = await IdoGameRound.create(round, options)
+      ctx.body = res
+      ctx.status = 201
+    } catch (err) {
+      ctx.status = 422
+      ctx.body = ("create gameround error-", 'key-:', ctx.request.body.game_round.game_id, err)
+      logger.error("create gameround error-", 'key-:', ctx.request.body.game_round.game_id, err)
+      console.error("create gameround error-", 'key-:', ctx.request.body.game_round.game_id, err)
     }
-
-    var options = {
-      fields: ['game_id', 'name', 'creator_id', 'default_store_id']
-    }
-    let res = await IdoGameRound.create(round, options)
-    ctx.body = res
-    ctx.status = 200
   }
-
 }
 
 module.exports = Ido;

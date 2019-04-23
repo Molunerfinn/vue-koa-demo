@@ -9,9 +9,6 @@
         <img src="../../assets/logo.png"  alt="logo" width="100vw" height="100vh"/>
       </div>
       <div class="div_1_p">
-        <!-- <el-button type="primary" plain>主要按钮</el-button>
-        <el-progress :text-inside="true" :stroke-width="18" :percentage="70"></el-progress> -->
-        <button  type="button" @click="post_gameround()">POST</button>
         {{game_rounds}}
         {{stores}}
         {{player}}
