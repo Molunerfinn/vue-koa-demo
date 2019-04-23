@@ -1,4 +1,3 @@
-const {GameRoundStates} = require('../constant')
 var moment = require('moment')
 
 module.exports = (sequelize, DataTypes) => {
@@ -14,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
             completed	 5 completed	游戏已结束
             disabled	 6 disabled	游戏已关闭
         */
-        state: { type: DataTypes.BIGINT(11), defaultValue: GameRoundStates.created },
+        state: { type: DataTypes.BIGINT(11), defaultValue: 0},
         start_at: DataTypes.DATE,
         end_at: DataTypes.DATE,
         desc: DataTypes.TEXT,
@@ -24,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
         code: { type: DataTypes.STRING(24), allowNull: false, defaultValue: '' },
         appid: { type: DataTypes.STRING(64), allowNull: false, defaultValue: '' },
         contact_required:{ type:  DataTypes.BOOLEAN, allowNull: false, defaultValue: true },
-        number: { type: DataTypes.STRING(24), allowNull: false, defaultValue: '' }      
+        number: { type: DataTypes.STRING(24), allowNull: false, defaultValue: '' }
 
     }, {
       createdAt: 'created_at', updatedAt:'updated_at',
