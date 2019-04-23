@@ -1,4 +1,4 @@
-import game from '../../../controllers/api/games/kouhong.js'
+import game from '../../../controllers/gapi/games/kouhong.js'
 import koaRouter from 'koa-router'
 const router = koaRouter()
 

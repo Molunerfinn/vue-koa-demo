@@ -62,6 +62,9 @@ router.use('/gapi/bargain', gameBargain.routes())
 import gameIdo from './server/routes/api/game/ido.js'
 router.use('/gapi/ido', gameIdo.routes())
 
+import gamePintu from './server/routes/api/dpgame/pintu.js'
+router.use('/gapi/dppintu', gamePintu.routes())
+
 app.use(router.routes()) // 将路由规则挂载到Koa上。
 app.use(historyApiFallback())
 app.use(serve(path.resolve('dist'))) // 将webpack打包好的项目目录作为Koa静态文件服务的目录

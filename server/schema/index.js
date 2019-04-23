@@ -30,6 +30,15 @@ modelfiles.forEach((modelfile) => {
   let model = sequelize.import(modelfile)
   console.log("modelfile=", modelfile, model.name)
   db[model.name] = model
+
+
+  if(/GameRound$/.test(model.name)){
+    model.addHook( 'beforeCreate', 'generate_number', (game, options) => {
+     var buf = crypto.randomBytes(16)
+     game.number =  buf.toString('hex')
+    })
+  }
+
 })
 
 db.sequelize = sequelize

@@ -109,34 +109,22 @@
 
 <script>
 
-import io from 'socket.io-client';
-//const socket = io('http://localhost');
+import io from 'socket.io-client'
+import queryString from 'query-string'
 
+//const socket = io('http://localhost');
 
 export default {
   name: 'app',
   components: {
 
   },
-  created() {
-    var that = this
-		that.gameRoundId = DGAME.game_round.id
-		that.gameRoundState = DGAME.game_round.state;
-		that.socket = io( );
-		that.socket.on('connect', () => {
-			that.loading = false;
-			console.log(that.socket.connected); // true
-			that.bindSocketEvents()
-		});
-		// 游戏已经结束，获取游戏排名
-		if( that.gameRoundState == 5){
-			that.getFinalScores();
-		}
-  },
+
   data() {
     return {
       //socket
       loading: true,
+      gameRoundNumber: null,
       gameRoundId: 0,
       gameRoundState: null,
       canstart: true, // 游戏是否允许开始，防抖
@@ -149,6 +137,23 @@ export default {
       playerCheckTimerId: null,
       gamePlayers:[],
       gamePlayerScores:[] // {id, score} top 20
+    }
+  },
+  created() {
+    var that = this
+    const parsed = queryString.parse(location.search);
+    //if( parsed.number ){}
+    that.gameRoundId = DGAME.game_round.id
+    that.gameRoundState = DGAME.game_round.state;
+    that.socket = io( );
+    that.socket.on('connect', () => {
+      that.loading = false;
+      console.log(that.socket.connected); // true
+      that.bindSocketEvents()
+    });
+    // 游戏已经结束，获取游戏排名
+    if( that.gameRoundState == 5){
+      that.getFinalScores();
     }
   },
   computed: {
@@ -240,7 +245,6 @@ export default {
 				that.gameRoundState = data.gameRoundState
 			});
 			clearInterval(this.playerCheckTimerId)
-			//this.timeRunning();
 		},
 
 		// 获取游戏排名
@@ -267,26 +271,6 @@ export default {
 				}, 1500);
 			}
 		},
-
-		// 游戏页面倒计时
-		timeRunning: function(){
-			var that = setInterval(function(){
-				if(that.timeToEnd <= 0){
-					clearInterval(timeId);
-					// 触发游戏结束事件
-					socket.emit('gameOver');
-					var finalTimeId = setTimeout(function(){
-						socket.removeListener('shakeUserInfo', that.changeCount);
-						// 断开与服务器的连接
-						//socket.disconnect();
-						alert('游戏时间到！');
-					}, 2000);
-					return;
-				}
-				that.timeToEnd--;
-			}, 1000);
-		},
-
 		// 重置游戏
 		resetGameHandler: function(){
 			var that = this
