@@ -27,8 +27,8 @@ var walk = function(dir) {
 
 let modelfiles = walk(__dirname + '/game')
 modelfiles.forEach((modelfile) => {
-  console.log("modelfile=", modelfile)
   let model = sequelize.import(modelfile)
+  console.log("modelfile=", modelfile, model.name)
   db[model.name] = model
 })
 
