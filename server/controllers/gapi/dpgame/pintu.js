@@ -7,8 +7,8 @@
 
 'use strict';
 import fetch from 'node-fetch'
-import { Sequelize, PintuGameRound  } from '../../../models/dpgame/pintu'
-import { GameRoundStates } from '../../../models/constant'
+import { PintuGameRound  } from '../../../models/dpgame/pintu'
+import { Sequelize, GameRoundStates } from '../../../models'
 import { FailMessage } from '../../constant'
 import log4 from 'koa-log4'
 const logger = log4.getLogger('index')
@@ -17,9 +17,9 @@ const GAME_HOST = process.env.GAME_HOST
 const GET_WX_PARAM_URL = process.env.GET_WX_PARAM_URL
 const Op = Sequelize.Op;
 
-class DpPintu {
+export default class DpPintu {
 
-  static permittedAttributes = [:number, :name, :start_at, :end_at]
+  static permittedAttributes = ['number', 'name', 'start_at', 'end_at']
 
   /**
    * 取得游戏基本信息
@@ -29,7 +29,7 @@ class DpPintu {
   static async gameInfo( ctx ){
     let number = ctx.query.number
 
-    const gameround = await PintuGameRound.findOne( where:{ number }, attributes: permittedAttributes )
+    const gameround = await PintuGameRound.findOne( { where:{ number }, attributes: DpPintu.permittedAttributes } )
     ctx.body = { gameround }
   }
   /**

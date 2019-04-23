@@ -14,7 +14,12 @@
 // GameResult.belongsTo(GamePlayer, {
 //   foreignKey: 'game_player_id'
 // })
-export { Sequelize, sequelize } from '../schema'
+// export { Sequelize, sequelize } from '../schema'
 
 //const models = Object.assign( {Sequelize, sequelize}, bargain )
 //module.exports = models
+const { GameRoundStates } = require('./constant')
+
+const db = require('../schema')
+db.GameRoundStates = GameRoundStates
+module.exports = db

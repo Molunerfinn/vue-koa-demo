@@ -52,17 +52,17 @@ app.use(async function (ctx, next) {  //  如果JWT验证失败，返回验证�
 router.use('/auth', auth.routes()) // 挂载到koa-router上，同时会让所有的auth的请求路径前面加上'/auth'的请求路径。
 router.use('/api', jwt({secret: 'vue-koa-demo'}), api.routes()) // 所有走/api/打头的请求都需要经过jwt验证。
 
-import gameBase from './server/routes/api/game/base.js'
+import gameBase from './server/routes/gapi/game/base.js'
 router.use('/gapi/base', gameBase.routes())
 
 
-import gameBargain from './server/routes/api/game/bargain.js'
+import gameBargain from './server/routes/gapi/game/bargain.js'
 router.use('/gapi/bargain', gameBargain.routes())
 
-import gameIdo from './server/routes/api/game/ido.js'
+import gameIdo from './server/routes/gapi/game/ido.js'
 router.use('/gapi/ido', gameIdo.routes())
 
-import gamePintu from './server/routes/api/dpgame/pintu.js'
+import gamePintu from './server/routes/gapi/dpgame/pintu.js'
 router.use('/gapi/dppintu', gamePintu.routes())
 
 app.use(router.routes()) // 将路由规则挂载到Koa上。
