@@ -25,7 +25,7 @@ exports.getEntries = function getEntries(){
   this.getModuleList()
   //变量模块列表
   moduleList.forEach(function (module) {
-    entries[module.moduleID] = module.moduleJS
+    entries[module.moduleID] = module.moduleEntry
   })
   console.log("*********************************** entries ***********************************")
   console.log(entries)
@@ -115,22 +115,25 @@ exports.getProdHtmlWebpackPluginList = function getProdHtmlWebpackPluginList(){
  * @param path 需要变量的路径
  * @param moduleName 模块名称
  */
-function readDirSync(path){
+function readDirSync( ){
 
   let targetWildcard = process.env.TARGET_WILDCARD || '**'
   glob.sync(`./src/games/${targetWildcard}/main.js`).forEach(function(name){
       // src/games/yiy/main.js
       // src/games/yiy/index.html
       let ns = name.split('/')
-      var id = ns[ns.length-2]
+      let id = ns[ns.length-2]
       ns[ns.length -1] = 'index.html'
-      moduleList.push( { moduleID: id, moduleJS: name, moduleHTML:  ns.join('/') } )
+      moduleList.push( { moduleID: id, moduleEntry: name, moduleHTML:  ns.join('/') } )
   })
 
-  glob.sync(`./src/dpgames/${targetWildcard}/main.js`).forEach(function(name){
-      let ns = name.split('/')
-      var id = ns[ns.length-2]
-      ns[ns.length -1] = 'index.html'
-      moduleList.push( { moduleID: id, moduleJS: name, moduleHTML:  ns.join('/') } )
+  glob.sync(`./src/dpgames/${targetWildcard}/*.js`).forEach(function(filePath){
+
+      let name = path.basename(filePath, '.js');
+      let ns = filePath.split('/')
+      let id = ns[ns.length-2]
+      ns[ns.length -1] = `${name}.html`
+      let moduleId = [id, name].join('-')
+      moduleList.push( { moduleID: moduleId, moduleEntry: filePath, moduleHTML:  ns.join('/') } )
   })
 }
