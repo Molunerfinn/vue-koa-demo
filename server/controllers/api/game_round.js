@@ -18,15 +18,15 @@ export default class GameRoundController {
       throw "code requires a string"
     }
     let re = new RegExp(code, 'i')
-    let model = db.GameRound
-    console.log( "keys= ",Object.keys(db))
-    for( let [key, val] of Object.entries(db) ){      
-      if (re.test(val.name)) {
-        model = val
+    let sequelize = db.sequelize
+    let round = null
+    for( let [key, model] of Object.entries(sequelize.models)){
+      if (re.test(model.name)) {
+        round = model
         break
       }
     }
-    return model
+    return round
   }
   /**
    * get the rounds with options
@@ -66,6 +66,8 @@ export default class GameRoundController {
   static async createRound(ctx) {
     let gameRoundParams = ctx.request.body.game_round
     try {
+      // code 在 url 中 或者 在参数中 game_round
+      let code = ctx.query.code || gameRoundParams.code
       let Model = GameRoundController.getGameRoundModelByCode(gameRoundParams.code)
 
       let model = await Model.create(gameRoundParams)
@@ -76,6 +78,7 @@ export default class GameRoundController {
         ctx.status = 201
       }
     } catch (error) {
+      console.log( " error ", error )
       ctx.throw(messageContent.ResponeStatus.CommonError, `create round fail: ` + error, {
         expose: true
       })

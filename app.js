@@ -8,12 +8,12 @@ import jwt from 'koa-jwt'
 import path from 'path'
 import serve from 'koa-static'
 import historyApiFallback from 'koa2-history-api-fallback'
-import koaRouter from 'koa-router'
+import KoaRouter from 'koa-router'
 import koaBodyparser from 'koa-bodyparser'
 import http from 'http'
 
 const app = new Koa()
-const router = koaRouter()
+const router = new KoaRouter()
 
 let port = process.env.API_SERVER_PORT || 3000
 
@@ -52,12 +52,20 @@ app.use(async function (ctx, next) {  //  如果JWT验证失败，返回验证�
 router.use('/auth', auth.routes()) // 挂载到koa-router上，同时会让所有的auth的请求路径前面加上'/auth'的请求路径。
 //router.use('/api', jwt({secret: 'vue-koa-demo'}), api.routes()) // 所有走/api/打头的请求都需要经过jwt验证。
 
+// 游戏管理api
 import gameRound from './server/routes/api/game_round.js'
 router.use('/api/game_rounds', gameRound.routes())
 
+import gameRoundByCode from './server/routes/api/game_round_by_code.js'
+// 支持路径 /api/game/:code/
+router.use('/api/game', gameRoundByCode.routes())
 
+// 游戏过程api
 import gameBase from './server/routes/gapi/game/base.js'
 router.use('/gapi/base', gameBase.routes())
+import roundByCode from './server/routes/gapi/game_round_by_code.js'
+router.use('/gapi/game', roundByCode.routes())
+
 
 import gameBargain from './server/routes/gapi/game/bargain.js'
 router.use('/gapi/bargain', gameBargain.routes())
