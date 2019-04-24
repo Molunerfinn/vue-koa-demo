@@ -1,0 +1,5 @@
+# 关于 model 名称 和 code 的命名
+保持model.name  和 code 是同样的前缀，api/game_rounds/  可以根据code 找到 model
+
+示例：
+名称 DpPintuGameRound  和 code：dppintu  是同样的前缀，

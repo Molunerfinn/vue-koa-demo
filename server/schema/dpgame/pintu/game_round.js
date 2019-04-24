@@ -1,8 +1,10 @@
 const {GameRoundStates} = require('../../constant')
 var moment = require('moment')
 
+// 保持 名称 DpPintuGameRound  和 code：dppintu  是同样的前缀，
+// api/game_rounds/  可以根据code 找到 model
 module.exports = (sequelize, DataTypes) => {
-    return sequelize.define('PintuGameRound', {
+    return sequelize.define('DpPintuGameRound', {
         game_id: DataTypes.BIGINT(11),
         name: DataTypes.STRING,
         creator_id: DataTypes.BIGINT(11),
@@ -11,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
         desc: DataTypes.TEXT,
         award_desc: DataTypes.TEXT,
         duration: { type: DataTypes.BIGINT(11), defaultValue: '0' },
-        //不使用game表，code代表游戏类型  dpyiy: 大屏摇一摇, bargain: 砍价
+        //不使用game表，code代表游戏类型  dppingtu: 大屏拼图
         code: { type: DataTypes.STRING(24), allowNull: false, defaultValue: 'dppintu' },
         appid: { type: DataTypes.STRING(64), allowNull: false, defaultValue: '' },
         contact_required:{ type:  DataTypes.BOOLEAN, allowNull: false, defaultValue: true },

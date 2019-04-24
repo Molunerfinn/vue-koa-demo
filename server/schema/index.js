@@ -2,6 +2,7 @@ const Sequelize =require('sequelize')
 const fs = require('fs')
 const path = require('path')
 const config = require('../config/dbConfig')
+const crypto = require('crypto')
 
 var db = {}
 
@@ -25,7 +26,7 @@ var walk = function(dir) {
   return results
 }
 
-let modelfiles = walk(__dirname + '/game')
+let modelfiles = [...walk(__dirname + '/game'), ...walk(__dirname + '/dpgame')]
 modelfiles.forEach((modelfile) => {
   let model = sequelize.import(modelfile)
   console.log("modelfile=", modelfile, model.name)
