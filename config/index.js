@@ -43,6 +43,10 @@ module.exports = {
       '/gapi':{
         target: `http://localhost:${apiServerPort}`,
         changeOrigin: true
+      },
+      '/socket.io':{
+        target: `http://localhost:${apiServerPort}`,
+        ws: true
       }
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"

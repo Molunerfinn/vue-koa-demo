@@ -1,6 +1,6 @@
 <template>
-  <div id="mainContainer">
-    <div class="Panel">
+  <div id="app" :class="skin">
+    <div class="Panel Top">
       <div  >
         <div class="bg-nei-top">
         				<img src="/game-yiy-assets/app/images/skin1/tu_03.png" class="bg-nei-top-erwei" style="display:none;">
@@ -19,7 +19,7 @@
         <div class="box-title">  <img src="/game-yiy-assets/app/images/skin1/bgtop.gif"> </div>
         <div class="box-body">
           <div>    <img src="/game-yiy-assets/app/images/skin1/yao_02.png">      </div>
-          <button class="start btn yao-btn" @click="openGameHandler" >准备开始</button>
+          <button class="start btn yao-btn btn-primary" @click="openGameHandler" >准备开始</button>
         </div>
       </div>
 
@@ -42,7 +42,7 @@
             <button  class="btn yao-btn" @click="startGameHandler">开始摇一摇</button>
           </div>
        </div>
-      <div class="fullfill  game-state  state-starting " v-show="computedGameState=='starting'">
+      <div class="fullfill game-state state-starting " v-show="computedGameState=='starting'">
         <div class="box-title">  <img src="/game-yiy-assets/app/images/skin1/bgtop.gif" class="logo"> </div>
         <div class="box-body">
           <p class="szbg">${timeToStart}</p>
@@ -66,7 +66,7 @@
 
       </div>
 
-      <div class="fullfill game-state  state-completed" v-show="computedGameState=='completed'">
+      <div class="fullfill game-state state-completed" v-show="computedGameState=='completed'">
         <div class="box-title">  <img src="/game-yiy-assets/app/images/skin1/pm_03.png" class="logo"> </div>
         <div class="player-rank clearfix">
           <div class="pm-top5">
@@ -104,6 +104,10 @@
     <div class="loader"  v-show="loading">
       <div class="icon"></div>
     </div>
+
+    <div class="error"  v-show="error">
+      <div class=""> {{errorMsg}}</div>
+    </div>
   </div>
 </template>
 
@@ -111,21 +115,27 @@
 
 import io from 'socket.io-client'
 import queryString from 'query-string'
-
+import { getGameInfoByNumber } from '@/api/dpgame/pintu'
 //const socket = io('http://localhost');
 
+import 'bootstrap/dist/css/bootstrap.css'
+import '@/assets/dpgame/pintu/css/skin/runlin.css'
+
+const skin = 'runlin'
+
 export default {
-  name: 'app',
+  name: 'control',
   components: {
-
   },
-
   data() {
     return {
       //socket
+      error: false,
+      errorMsg: null,
       loading: true,
+      skin: ['base', skin],
+      socketNamespace: null, // socketio namespace
       gameRoundNumber: null,
-      gameRoundId: 0,
       gameRoundState: null,
       canstart: true, // 游戏是否允许开始，防抖
       QRCodeState: false, // 二维码页面是否显示
@@ -142,19 +152,30 @@ export default {
   created() {
     var that = this
     const parsed = queryString.parse(location.search);
-    //if( parsed.number ){}
-    that.gameRoundId = DGAME.game_round.id
-    that.gameRoundState = DGAME.game_round.state;
-    that.socket = io( );
-    that.socket.on('connect', () => {
-      that.loading = false;
-      console.log(that.socket.connected); // true
-      that.bindSocketEvents()
-    });
-    // 游戏已经结束，获取游戏排名
-    if( that.gameRoundState == 5){
-      that.getFinalScores();
+    if( parsed.number != null ){
+      getGameInfoByNumber( parsed.number ).then((res)=>{
+        that.socketNameSpace = "/channel-dppintu-"+ res.number
+        that.gameRoundState = res.state
+        that.socket = io( that.socketNameSpace )
+        console.log( "that.socketNameSpace = ", that.socketNameSpace, that.socket)
+        that.socket.on('connect', () => {
+          that.loading = false;
+          console.log("socket.connect=",that.socket.connected); // true
+          //that.bindSocketEvents()
+        });
+        // 游戏已经结束，获取游戏排名
+        if( that.gameRoundState == 5){
+          that.getFinalScores();
+        }
+        this.loading = false
+      })
+    }else{
+      this.loading = false
+      this.error = true
+      this.errorMsg = "游戏不存在！"
     }
+
+
   },
   computed: {
 		leftFormatTime: function(){
@@ -298,6 +319,9 @@ export default {
   color: #2c3e50;
   height: 100%;
   width: 100%;
+}
+.base{
+
 }
 
 .dp-pintu {
