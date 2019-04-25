@@ -1,4 +1,3 @@
-const {GameRoundStates} = require('../../constant')
 var moment = require('moment')
 
 // 保持 名称 DpPintuGameRound  和 code：dppintu  是同样的前缀，
@@ -7,6 +6,7 @@ module.exports = (sequelize, DataTypes) => {
     return sequelize.define('DpPintuGameRound', {
         game_id: DataTypes.BIGINT(11),
         name: DataTypes.STRING,
+        state: { type: DataTypes.BIGINT(11), defaultValue: 0 },
         creator_id: DataTypes.BIGINT(11),
         start_at: DataTypes.DATE,
         end_at: DataTypes.DATE,
