@@ -30,7 +30,7 @@ class PintuRunner {
      */
     async startRound() {
       let round = await this.getGameRound()
-      await round.update( { state:  DpGameRoundStates.start})
+      await round.update( { state:  DpGameRoundStates.started})
       return round
     }
     /**
@@ -66,6 +66,15 @@ class PintuRunner {
       return round
     }
 
+    /**
+     * 重置游戏，便于调试使用，即设置游戏状态为created
+     * @param {*}
+     */
+    async resetRound() {
+      let round = await this.getGameRound()
+      await round.update( { state:  DpGameRoundStates.created})
+      return round
+    }
     /**
      * 控制台点击开始游戏时，添加玩家到缓存
      * return player information include the id of the player

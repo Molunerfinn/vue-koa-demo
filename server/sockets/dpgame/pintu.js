@@ -137,8 +137,8 @@ export default class DpPintuSocket{
       socket.on('ResetGameEvent', async (data, callback) =>{
          console.log('ResetGameEvent.')
          let number = getGameRoundNumber(socket)
-         await game_rounds.update({state: DpGameRoundStates.created},{ where:{ number}})
-
+         let runner =  new PintuRunner(number)
+         let gameRound = await runner.resetRound()
          callback({ gameRoundState: DpGameRoundStates.created })
       });
 
