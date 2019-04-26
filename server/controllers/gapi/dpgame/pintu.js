@@ -7,7 +7,7 @@
 
 'use strict';
 import fetch from 'node-fetch'
-import { PintuGameRound  } from '../../../models/dpgame/pintu'
+import { DpPintuGameRound  } from '../../../models/dpgame/pintu'
 import { Sequelize, GameRoundStates } from '../../../models'
 import { FailMessage } from '../../constant'
 import log4 from 'koa-log4'
@@ -28,8 +28,7 @@ export default class DpPintu {
    */
   static async gameInfo( ctx ){
     let number = ctx.query.number
-
-    const gameround = await PintuGameRound.findOne( { where:{ number }, attributes: DpPintu.permittedAttributes } )
+    const gameround = await DpPintuGameRound.findOne( { where:{ number }, attributes: DpPintu.permittedAttributes } )
     ctx.body = { gameround }
   }
   /**
@@ -44,7 +43,7 @@ export default class DpPintu {
 
     let url = ctx.query.url // 可能有 to_game_player_id 或者没有
 
-    const game_round = await PintuGameRound.findById(game_round_id);
+    const game_round = await DpPintuGameRound.findById(game_round_id);
 
     const game_player = await GamePlayer.findById(game_player_id);
 

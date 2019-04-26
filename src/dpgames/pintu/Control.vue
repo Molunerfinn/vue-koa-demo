@@ -93,7 +93,7 @@
 
     </div>
 
-    <div class="Panel Bottom"  style=" height:0px;">
+    <div class="Panel Bottom"  style="">
       <div class="actions">
         <button class="start btn btn-danger btn-lg" @click="resetGameHandler">重置游戏</button>
       </div>

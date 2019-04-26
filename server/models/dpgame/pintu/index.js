@@ -1,6 +1,7 @@
-import  PintuGameRound  from './GameRound'
+import  DpPintuGameRound  from './game_round'
+import  DpPintuGamePlayer  from './game_player'
 
 
 export {
-  PintuGameRound
+  DpPintuGameRound, DpPintuGamePlayer
 }

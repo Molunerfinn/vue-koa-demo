@@ -26,6 +26,11 @@ var walk = function(dir) {
   return results
 }
 
+var generateCode = function(){
+ var buf = crypto.randomBytes(16)
+ return buf.toString('hex')
+}
+
 let modelfiles = [...walk(__dirname + '/game'), ...walk(__dirname + '/dpgame')]
 modelfiles.forEach((modelfile) => {
   let model = sequelize.import(modelfile)
@@ -34,12 +39,19 @@ modelfiles.forEach((modelfile) => {
 
 
   if(/GameRound$/.test(model.name)){
+    console.log( "GameRound$ ", model.name )
     model.addHook( 'beforeCreate', 'generate_number', (game, options) => {
-     var buf = crypto.randomBytes(16)
-     game.number =  buf.toString('hex')
+
+     game.number =  generateCode()
     })
   }
-
+  if(/GamePlayer$/.test(model.name)){
+    console.log( "GamePlayer$ ", model.name )
+    // 不要使用openid作为token，*希望游戏可以在微信、支付宝，网页等打开*
+    model.addHook( 'beforeCreate', 'generate_token', (player, options) => {
+      player.token = generateCode()//密钥用于更新用户信息；
+    })
+  }
 })
 
 db.sequelize = sequelize

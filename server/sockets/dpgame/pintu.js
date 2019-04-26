@@ -8,6 +8,7 @@ const PintuSocketEvent={
 	GameRunningEvent:"GameRunningEvent",
 	GameEndEvent:"GameEndEvent",
 }
+// 游戏socketio通讯
 // 游戏流程
 // PC端（控制端）
 // 准备开始-> 玩家签到 -> 点击开始游戏 ->(开始前倒计时)->游戏进行中-> 游戏结束 ->显示排名
@@ -48,7 +49,7 @@ export default class DpPintuSocket{
         //console.log("GetGamePlayersEvent rooms=",socket.rooms);
         let number = getGameRoundNumber(socket)
         let runner =  new PintuRunner(number)
-        let gamePlayers = await runner.GetRoundAllPlayers()
+        let gamePlayers = await runner.getAllPlayers()
         callback({ gamePlayers })
       });
 
@@ -85,7 +86,7 @@ export default class DpPintuSocket{
                         runner.endRound().then(()=>{
                           // 广播游戏结束。并广播成绩
                           let payload =  { gameRoundState: DpGameRoundStates.completed }
-                          runner.GetRoundAllPlayers().then((players)=>{
+                          runner.getAllPlayers().then((players)=>{
                             players.sort((a,b)=>{
                               return b.score - a.score
                             })
@@ -104,7 +105,7 @@ export default class DpPintuSocket{
 
                     namespace.emit('GameRunningEvent', payload);
                     // PC端 返回玩家成绩
-                    runner.GetPlayerScores().then((players)=>{
+                    runner.getPlayerScores().then((players)=>{
                       let cachedPlayers = players
                       cachedPlayers.forEach((player)=>{
                         player.id = player.player_id,
