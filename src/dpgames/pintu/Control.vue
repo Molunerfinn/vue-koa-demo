@@ -6,7 +6,7 @@
         				<img src="/game-yiy-assets/app/images/skin1/tu_03.png" class="bg-nei-top-erwei" style="display:none;">
                 <div class="bg-nei-top-right"><span></span><img src="/game-yiy-assets/app/images/skin1/tu_05.png"></div>
         				<div class="bg-nei-top-zhong" ><img src="/game-yiy-assets/app/images/skin1/bgtop.gif"  v-show="computedGameState=='open'||computedGameState=='started'">
-                  <p  v-show="computedGameState=='started'"><span>游戏倒计时</span><strong>|</strong><span>剩余<b>${timeToEnd}</b>秒</span></p>
+                  <p  v-show="computedGameState=='started'"><span>游戏倒计时</span><strong>|</strong><span>剩余<b>{{timeToEnd}</b>秒</span></p>
                 </div>
         </div>
       </div>
@@ -31,21 +31,21 @@
       </div>
       <div class="fullfill state-open qiandao" v-show="computedGameState=='open'">
 
-          <div class="bg-zhunbei">已有<b>${gamePlayers.length}</b>人准备<span>请耐心等待游戏开始</span></div>
+          <div class="bg-zhunbei">已有<b>{{gamePlayers.length}}</b>人准备<span>请耐心等待游戏开始</span></div>
           <ul class="canyu">
             <li class="qiaodaosf" v-for="player in gamePlayers">
               <img class="qiaodaotx" v-bind:src="player.avatar">
-              <p class="qiaodaoxm">${player.nickname}</p>
+              <p class="qiaodaoxm">{{player.nickname}}</p>
             </li>
           </ul>
           <div class="actions">
-            <button  class="btn yao-btn" @click="startGameHandler">开始摇一摇</button>
+            <button  class="btn btn-primary" @click="handleStartGame">开始游戏</button>
           </div>
        </div>
       <div class="fullfill game-state state-starting " v-show="computedGameState=='starting'">
         <div class="box-title">  <img src="/game-yiy-assets/app/images/skin1/bgtop.gif" class="logo"> </div>
         <div class="box-body">
-          <p class="szbg">${timeToStart}</p>
+          <p class="szbg">{{timeToStart}}</p>
         </div>
       </div>
 
@@ -56,11 +56,11 @@
               <div class="progress-wrap clear-fix">
                 <div class="progress">
                 <div class="progress-bar progress-bar-warning progress-bar-striped active" v-bind:style="{width: player.percent+'%'}">
-                  <div v-bind:class="['progress-value','car'+i]" >${player.score}</div>
+                  <div v-bind:class="['progress-value','car'+i]" >{{player.score}}</div>
                 </div>
                 </div>
               </div>
-            <span class="mingzi">${player.nickname}</span>
+            <span class="mingzi">{{player.nickname}}</span>
             </li>
           </ul>
 
@@ -72,18 +72,18 @@
           <div class="pm-top5">
           <table class="rank  ">
             <tr> <th class="paiming"> 排名</th><th class="xingming">姓名</th><th class="chengji">当前成绩</th></tr>
-            <tr  v-for="(player, i) in computedTop5Players"><td class="paiming"><span v-bind:class="'pm'+i"> ${i+1}</span></td>
-              <td class="xingming"><img v-bind:src="player.avatar"><span  >${player.nickname}</span></td>
-              <td class="chengji"> ${player.score}</td>
+            <tr  v-for="(player, i) in computedTop5Players"><td class="paiming"><span v-bind:class="'pm'+i"> {{i+1}}</span></td>
+              <td class="xingming"><img v-bind:src="player.avatar"><span  >{{player.nickname}}</span></td>
+              <td class="chengji"> {{player.score}}</td>
             </tr>
           </table>
           </div>
           <div class="pm-top10">
             <table class="rank  ">
               <tr> <th class="paiming"> 排名</th><th class="xingming">姓名</th><th class="chengji">当前成绩</th></tr>
-              <tr  v-for="(player, i) in computedTop10Players"><td class="paiming"><span v-bind:class="'pm'+i"> ${i+6}</span></td>
-                <td class="xingming"><img v-bind:src="player.avatar"><span  >${player.nickname}</span></td>
-                <td class="chengji"> ${player.score}</td>
+              <tr  v-for="(player, i) in computedTop10Players"><td class="paiming"><span v-bind:class="'pm'+i"> {{i+6}}</span></td>
+                <td class="xingming"><img v-bind:src="player.avatar"><span  >{{player.nickname}}</span></td>
+                <td class="chengji"> {{player.score}}</td>
               </tr>
             </table>
           </div>
@@ -97,7 +97,7 @@
       <div class="actions">
         <button class="start btn btn-danger btn-lg" @click="resetGameHandler">重置游戏</button>
       </div>
-      <div class="debug"  > ${computedGameState}</div>
+      <div class="debug"  v-show="debug" > {{computedGameState}}</div>
 
     </div>
 
@@ -112,12 +112,12 @@
 </template>
 
 <script>
-
+// 游戏流程
+// PC端（控制端）
+// 准备开始-> 玩家签到 -> 点击开始游戏 ->(开始前倒计时)->游戏进行中-> 游戏结束 ->显示排名
 import io from 'socket.io-client'
 import queryString from 'query-string'
 import { getGameInfoByNumber } from '@/api/dpgame/pintu'
-//const socket = io('http://localhost');
-
 import 'bootstrap/dist/css/bootstrap.css'
 import '@/assets/dpgame/pintu/css/skin/runlin.css'
 
@@ -130,6 +130,7 @@ export default {
   data() {
     return {
       //socket
+      debug: true,
       error: false,
       errorMsg: null,
       loading: true,
@@ -254,7 +255,7 @@ export default {
 			});
 		},
 		// 开始游戏, 玩家开始摇一摇
-		startGameHandler: function(){
+		handleStartGame: function(){
 			var that = this;
 			if( !that.canstart ){
 				return;
@@ -282,11 +283,9 @@ export default {
 			var that = this;
 			// 如果当前游戏开放签到, 每秒取得游戏签到人员信息
 			if( this.computedGameState == 'open'){
-				var i =0
 				this.playerCheckTimerId = setInterval(function(){
 						// 取得游戏用户
 						that.socket.emit('GetGamePlayersEvent', {}, function(data){
-							console.log( `GetGamePlayersEvent ${++i} `, data)
 							that.gamePlayers = data.gamePlayers
 						});
 				}, 1500);
