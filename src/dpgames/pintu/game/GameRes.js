@@ -1,3 +1,5 @@
+const skinResRoot="/static/dp-pintu/skin"
+
 const GameRes = {
   "loadingStyle": 1,
   "maxIncrement": 0,
@@ -511,6 +513,11 @@ const GameRes = {
     "fileName": "背景音乐.mp3",
     "optFlag": 0
   }],
+  skinAssets: {
+    gameStartImg : skinResRoot+'/image/startbtn2.png',
+    tipsImg : skinResRoot+'/image/tipsbtn.png',
+    gameImg : skinResRoot+'/image/gameimg.jpg',
+  },
   "openAccessKey": false
 }
 export default GameRes

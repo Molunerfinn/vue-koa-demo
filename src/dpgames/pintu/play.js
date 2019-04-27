@@ -8,10 +8,6 @@ import Play from './Play.vue'
 import '@/assets/kouhong/css/base.css'
 import '@/assets/dp-pintu/css/game.css'
 
-import axios from 'axios'
-
-Vue.prototype.$http = axios // 类似于vue-resource的调用方法
-
 //import EventBus  from '@/plugins/EventBus'
 //Vue.use(EventBus)
 

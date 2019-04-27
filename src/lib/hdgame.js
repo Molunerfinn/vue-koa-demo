@@ -20,7 +20,6 @@ import Grade from './hdgame/grade'
 import Time from './hdgame/time'
 
 const HdGame = {}
-const arrPro = Array.prototype
 const isReady = true
 const _resRoot = '/static/kouhong'
 const g_config = {
@@ -132,9 +131,13 @@ HdGame.initJsHead = function(hg, _data) {
           return this
         }
         if (Array.isArray(src)) {
-          arrPro.push.apply(group.path, src)
+          src.forEach((v)=> group.path.push(v) )
         } else {
-          group.path.push(src)
+          if (_.isPlainObject(src)) {
+            Object.values(src).forEach((v) => group.path.push(v) )
+          }else{
+            group.path.push(src)
+          }
         }
         return this
       },
@@ -1247,6 +1250,7 @@ HdGame.initCallBack = function(target, arg) {
   return target
 };
 
+HdGame.imgReady = HdUtil.imgReady
 
 HdGame.getBgHeight = function() {
   return Math.max((window).innerWidth * g_config.HWRatio, (window).innerHeight)

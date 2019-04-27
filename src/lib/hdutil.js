@@ -77,5 +77,59 @@ HdUtil.CallBack = function() {
 
 }()
 
+HdUtil.imgReady = function(){
+  let list = [], intervalId = null, tick = function() {
+      for (var e = 0; e < list.length; e++)
+      {
+        list[e].end ? list.splice(e--, 1) : list[e]();
+        if(list.length == 0){
+          clearInterval(intervalId),
+          intervalId = null
+        }
+      }
+  }
+  // e: img|img.src
+  // t: complete callback
+  // n: onload callback
+  // r: onerror callback
+  return function(e, t, n, r) {
+      let i, o, a, c, u, l = new Image;
+      console.log( "imgReady l=",e, l)
+
+      if (e) {
+          ("object" == typeof e) ? l = e: l.src = e
+          if ( l.complete){
+            t(l)
+            return void(n && n(l))
+          }
+          o = l.width,
+          a = l.height,
+          l.onerror = function() {
+              r && r(l),
+              i.end = !0,
+              l = l.onload = l.onerror = null
+          },
+          i = function() {
+              try {
+                  c = l.width
+                  u = l.height
+
+                  if(c !== o || u !== a || c * u > 1024) {
+                    t(l)
+                    i.end = !0
+                  }
+              } catch(e) { console.log(e) }
+          },
+          l && i(),
+          l.onload = function() {
+            ! i.end && i(),
+              n && n.call(l),
+              l = l.onload = l.onerror = null
+          },
+          i.end || (list.push(i), null === intervalId && (intervalId = setInterval(tick, 40)))
+      }
+  }
+}()
+
 
 export default HdUtil

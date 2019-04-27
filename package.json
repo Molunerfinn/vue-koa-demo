@@ -22,6 +22,7 @@
     "cross-fetch": "^3.0.2",
     "dotenv-webpack": "^1.7.0",
     "element-ui": "^1.4.13",
+    "jquery": "^3.4.0",
     "koa": "^2.2.0",
     "koa-bodyparser": "^4.2.0",
     "koa-json": "^2.0.2",
