@@ -258,10 +258,9 @@ export default {
 
       GameArg.readyLayer.addEventListener(LEvent.ENTER_FRAME,(event)=>{
         this.hg.time.updateInFrame( 60);
-
         showTopBar()
         //console.log( " readyLayer onframe event", this.hg.time);
-      });
+      })
       for (var i = 0; i < 1; i++) {
         this.addReadyList(true);
       }
