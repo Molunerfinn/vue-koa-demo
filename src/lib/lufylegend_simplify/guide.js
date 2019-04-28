@@ -28,7 +28,7 @@ class LGuide extends LShape {
                     r: 0,
                     p: 1
                 };
-                this.graphics.add(function() {
+                this.graphics.add(()=> {
                     var canvas = LGlobal.canvas;
                     canvas.save();
                     canvas.beginPath();

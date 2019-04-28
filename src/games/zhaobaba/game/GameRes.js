@@ -471,6 +471,10 @@ const GameRes = {
       gameBgPath: skinResRoot + "/wx/gamebg.jpg",
       homeBgPath: skinResRoot + "/wx/homebg.jpg",
       titleImgPath: skinResRoot + "/wx/titleimg.png",
+      baba0: skinResRoot + "/wx/baba0.png",
+      baba1: skinResRoot + "/wx/baba1.png",
+      baba2: skinResRoot + "/wx/baba2.png",
+      baba3: skinResRoot + "/wx/baba3.png",
     },
     "gameTimeNumDef": 10,
     "soundList": [

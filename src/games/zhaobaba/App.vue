@@ -84,7 +84,7 @@ export default {
 
     window.hg = this.hg
 
-    console.log("created gameState=", this.gameState, this.hg.grade)
+    console.log("created gameState", this.gameState, this.hg.grade, this.skinAssets)
   },
   data() {
     return {
@@ -101,9 +101,9 @@ export default {
         loadToastVisible: false
       },
       skinAssets:{
-        homeBgImg: GameRes.homeBgPath,
-        titleImg: GameRes.titleImgPath,
-        startBtnImg: GameRes.startImgPath
+        homeBgImg: GameRes.skinAssets.homeBgPath,
+        titleImg: GameRes.skinAssets.titleImgPath,
+        startBtnImg: GameRes.skinAssets.startImgPath
       },
       loadToast: {
         isLoading: false,
@@ -192,8 +192,8 @@ export default {
         cookies();
 
         complete(true);
-
-        //hg.fireWith('startGame', self, [false, event, data, showGame]);
+        console.log( 'fire startGame')
+        that.hg.fire('startGame')
       }
 
       Promise.resolve().then(() => {

@@ -15,7 +15,7 @@
       时间<br><span class="time">0</span>
     </div>
   </div>
-  <div id="gameLayerBox" class="editTarget-wrap">
+  <div id="gameLayerBox" class="editTarget-wrap" @touchstart="handleTouchStart">
 
   </div>
   <div class="timeUpImg hide"></div>
@@ -25,6 +25,8 @@
 </template>
 
 <script>
+import $ from 'jquery'
+
 import {
   LInit
 } from '@/lib/lufylegend/utils/Function'
@@ -43,8 +45,8 @@ import {
 } from '@/lib/simplify'
 
 var _gameOver = false;
-const _resRoot = '/static/kouhong'
 
+import GameRes from './GameRes'
 import HdGame from '@/lib/hdgame'
 import {
   GameArg
@@ -60,18 +62,10 @@ import {
 
 // eventBus
 import {
-  GameEndEvent,
   GameScoreChangedEvent
 } from '@/lib/GameEvent'
 
-var game_assets = [
-  "http://7020498.h40.faiusr.com/4/ACgIABAEGAAgjeaCsQUomKbfRTCWATigAQ.png",
-  "http://7020498.h40.faiusr.com/4/ACgIABAEGAAgnOaCsQUorbL-_QEwlgE4oAE.png",
-  "http://7020498.h40.faiusr.com/4/ACgIABAEGAAgmOaCsQUolfa4wQUwlgE4oAE.png",
-  "http://7020498.h40.faiusr.com/4/ACgIABAEGAAgmuaCsQUo_IqD-gMwlgE4oAE.png"
-]
 const _ruleInfo = {}
-
 
 export default {
   name: 'game',
@@ -88,7 +82,7 @@ export default {
     return {
       thief: [],
       rowArray: [],
-      gameBg: require('@/assets/kouhong/image/skin1/wx/ACgIABACGAAg3fDr4AUojqC25gYwgAU4wAw.jpg'),
+      gameBg: null,
       imgData: null,
       game_player: {},
       ui: {
@@ -99,47 +93,17 @@ export default {
   },
   created() {
     this.rem = window.g_rem
-
   },
   mounted() {
     console.log("mounted props=", this.hg, this.command)
     this.handleInitGameData()
 
     this.hg.assets.onReady(() => {
-      console.log(" this.hg.edit = ", this.hg.edit)
-      let clubInfo = this.hg.edit.getImgInfo('club', true);
-      console.log(" hg.assets.onReady clubInfo", clubInfo, "this.hg.assets[clubInfo.path]", this.hg.assets[clubInfo.path])
-      this.clubImg = new LBitmapData(this.hg.assets[clubInfo.path]);
 
-      GameArg.clubH = GameArg.lollyH = clubInfo.height;
-      GameArg.lollyW = clubInfo.width;
-      GameArg.lollyY = clubInfo.top;
-      GameArg.launchY = 10.625 + GameArg.lollyY;
-      GameArg.clubH = GameArg.lollyH = clubInfo.height;
-      GameArg.minRotate = Math.atan((GameArg.lollyW / 2) / (GameArg.lollyH + GameArg.lollyY)) * 180 * 2 / Math.PI + 0.5;
       console.log(" hg.assets.onReady 1")
+      this.gameBg = GameRes.skinAssets.gameBgPath
 
     });
-
-    this.hg.assets.onReady(() => {
-      let ySugar = this.hg.edit.getImgInfo('ySugar')
-      console.log("this.hg.assets=", this.hg.assets)
-      console.log(" hg.assets.onReady ySugar", ySugar, "this.hg.assets[ySugar.path]", this.hg.assets[ySugar.path])
-
-      this.imgData = new LBitmapData(this.hg.assets[ySugar.path]);
-      this.sugarYsize = HdGame.getPosAndSize(this.imgData, {
-        width: 6 * this.rem,
-        height: 6 * this.rem
-      });
-    });
-
-    GameArg.eventBus.$on(GameEndEvent.name, (event) => {
-      console.log("GameEndEvent0")
-      this.hg.sound.play(2);
-      this.hg.time.end();
-      this.endGame(event.target); //lolly
-      console.log("GameEndEvent1")
-    })
 
 
     GameArg.eventBus.$on(GameScoreChangedEvent.name, (event) => {
@@ -164,12 +128,24 @@ export default {
           this.soundIconClass = "soundIconOff soundIcon"
         })
       })
+
+    // document.ready
+    //var bgHeight = $(window).height()<504?504:$(window).height();
+    //$('#gameBgBox').css('height',bgHeight);
+    GameArg.blockSize = ~~($(window).width() / 4);
+    GameArg.gameBoxtop = 0;//~~(5*g_rem);
+    GameArg.hem = ~~($(window).height() - GameArg.gameBoxtop);
+    GameArg.row = Math.ceil(GameArg.hem/GameArg.blockSize);
+    console.log( " GameArg = ", GameArg)
+    //$("#gameLayerBox").css('top',GameArg.gameBoxtop).on("touchstart",function(e){e.preventDefault();e.stopPropagation()});
+
   },
   methods: {
+
     handleStartGame() {
-      if (GameArg.first) {
+      if (GameArg.firstTouch) {
         this.initCanvas();
-        GameArg.first = false;
+        GameArg.firstTouch = false;
       } else {
         this.startGame();
       }
@@ -196,25 +172,15 @@ export default {
 
     handleInitGameData() {
       this.hg.time.init();
-      console.log("handleInitGameData hg.time", this.hg.time)
       this.hg.grade.set(0);
       //$('.timeUpImg').hide();
+      _gameOver = false;
     },
 
     initGame() {
       //初始化游戏头部 头像，计时，分数
       setGameTopBar('#gameTopBar', this.hg)
-
-      GameArg.left = parseInt(0.5 * this.rem);
-      GameArg.top = parseInt(4 * this.rem);
-
-      LGlobal.canvasObj.addEventListener('touchstart', this.canvasDown, false);
-      LGlobal.canvasObj.addEventListener('touchmove', this.canvasMove, false);
-      //LGlobal.canvasObj.addEventListener('touchend', function(){ console.log("LGlobal.canvasObj->touchend")}, false);
-      GameArg.stageLayer = new LSprite(true);
-
-      this.startGame();
-
+      let images = [GameRes.skinAssets.baba0, GameRes.skinAssets.baba2,GameRes.skinAssets.baba3, GameRes.skinAssets.baba1 ]
 
       GameArg.layer = new LSprite(true);
       GameArg.pLayer = new LSprite();
@@ -224,9 +190,9 @@ export default {
       var maskObj = new LSprite();
       maskObj.graphics.drawRect(0, "", [0, 5 * this.rem, LGlobal.width, LGlobal.height - 5 * this.rem]);
       GameArg.layer.mask = maskObj
-      GameArg.imageArray = [0, 2, 3, 1].map(function (i) {
+      GameArg.imageArray = images.map( (imgPath) => {
         return {
-          img: new LBitmapData(this.hg.assets[game_assets[i]])
+          img: new LBitmapData(this.hg.assets[imgPath])
         }
       })
       GameArg.imageArray.map(function (tem, index) {
@@ -240,68 +206,31 @@ export default {
         tem.l = (GameArg.blockSize - w) / 2;
         tem.t = (GameArg.blockSize - h) / 2;
       })
-      GameArg.isOne = false;
       LGlobal.canvasObj.addEventListener('touchstart', this.touchItems, false);
       GameArg.speed = GameArg.blockSize / 200;
-      GameArg.layer.addEventListener(LEvent.ENTER_FRAME, function () {
+      GameArg.layer.addEventListener(LEvent.ENTER_FRAME,  ()=> {
         if (_gameOver) {
           return;
         }
         var dy = this.hg.grade.val * GameArg.blockSize - GameArg.layer.y;
         if (dy > 0) {
+          console.log( "LGlobal.delta= ", LGlobal.delta)
           GameArg.layer.y += GameArg.speed * LGlobal.delta;
         }
+        this.hg.time.updateInFrame( 60);
+        showTopBar()
       })
       this.startGame()
 
     },
 
-    endGame(lolly) {
-      _gameOver = true;
-      LTweenLite.removeAll();
-      if (lolly) {
-        LTweenLite.to(lolly, 0.1, {
-            alpha: 0
-          })
-          .to(lolly, 0.1, {
-            alpha: 1
-          })
-          .to(lolly, 0.1, {
-            alpha: 0
-          })
-          .to(lolly, 0.1, {
-            alpha: 1
-          })
-          .to(lolly, 0.1, {
-            alpha: 0
-          })
-          .to(lolly, 0.1, {
-            alpha: 1
-          })
-          .to(lolly, 0.1, {
-            alpha: 0
-          })
-          .to(lolly, 0.1, {
-            alpha: 1,
-            onComplete: () => {
-              LGlobal.setPauseLoop(true);
-              this.endClear();
-              this.$emit("game-over")
-              //this.gameOver(this.hg.grade.val);
-            }
-          });
-      } else {
-        LGlobal.setPauseLoop(true);
-        this.endClear();
-        this.$emit("game-over")
-      }
+    endGame() {
+       _gameOver = true
+      GameArg.gameFirstTouch = true
+      LGlobal.setPauseLoop(true)
+      this.$emit("game-over")
     },
 
-    endClear() {
-      setTimeout(function () {
-        LGlobal.canvas.clearRect(0, 0, LGlobal.width + 1, LGlobal.height + 1);
-      }, 400);
-    },
     startGame() {
       //HdGame.getGameRule(function (r) {
         //{"rt":0,"success":true,"data":{"info":"{\"startTime\":1556352658970,\"rule\":{\"initTime\":10,\"dataList\":[3,0,3,3,0,3,0,0,3,0,0,2,2,3,3,3,1,0,2,0,3,2,3,2,3,1,2,3,2,3,3,2,1,2,0,1,1,3,0,1,1,1,1,3,2,3,0,1,3,3]}}","sign":"fd13d281aea78ba1294d582205866771"},"msg":"操作成功"}
@@ -310,17 +239,12 @@ export default {
         _ruleInfo.list = '';
 
         if (!HdGame.isplaySucess) {
-          GameArg.first = 0;
+          GameArg.guideRows = 0;
         }
         GameArg.step = 0;
         window.scrollTo(0, 0);
         LGlobal.setPauseLoop(false)
 
-        GameArg.readyLayer.addEventListener(LEvent.ENTER_FRAME,(event)=>{
-          this.hg.time.updateInFrame( 60);
-          showTopBar()
-        });
-        
         GameArg.pLayer.removeAllChild();
         GameArg.gLayer.removeAllChild();
         LTweenLite.removeAll();
@@ -332,51 +256,20 @@ export default {
             this.addRow(true);
           } else {
             this.addRow();
-            if (i === 1 && GameArg.first === 0) {
+            if (i === 1 && GameArg.guideRows === 0) {
               GameArg.guide = new LGuide({
                 x: this.thief[0].x + GameArg.imageArray[0].l,
                 y: this.thief[0].y + GameArg.imageArray[0].t,
                 w: GameArg.imageArray[0].w,
                 h: GameArg.imageArray[0].h
               }).play();
+              console.log( " GameArg.guide =", GameArg.guide)
               GameArg.gLayer.addChild(GameArg.guide);
             }
           }
         }
       //});
 
-    },
-    showTishi() {
-      let tishiImg = this.hg.assets[_resRoot + "/image/bbtzw/tishi.png"]
-      let jtBitmap = new LBitmap(new LBitmapData(tishiImg, 20, 12, 90, 300), 6.875 * this.rem, LGlobal.height - 7.5 * this.rem, 2.25 * this.rem, 7.5 * this.rem)
-      let handBitmap = new LBitmap(new LBitmapData(tishiImg, 220, 30, 84, 95), 7.7 * this.rem, LGlobal.height, 2.1 * this.rem, 2.375 * this.rem)
-      GameArg.mask = new LSprite(true);
-      var maskObj = new LBitmap(new LBitmapData("#000000", 0, 0, LGlobal.width, LGlobal.height));
-      maskObj.alpha = 0.6;
-      GameArg.mask.addChild(maskObj);
-      GameArg.mask.addChild(jtBitmap);
-      GameArg.mask.addChild(handBitmap);
-      console.log("showTishi", LGlobal.width, LGlobal.height, "LTweenLite->", handBitmap)
-      LTweenLite.to(handBitmap, 1, {
-        loop: true,
-        y: LGlobal.height - 7.5 * this.rem,
-        onStart: function (event) {
-          //console.log("onStart ->00 handBitmap.y=", handBitmap.y)
-        },
-        onUpdate: function (event) {
-          //console.log("onUpdate ->01 handBitmap.y=", handBitmap.y)
-        },
-        onComplete: function (event) {
-          //console.log("onComplete ->02 handBitmap.y=", handBitmap.y)
-        }
-      }).to(handBitmap, 0.2, {
-        loop: true,
-        alpha: 0,
-        onComplete: function (event) {
-          handBitmap.alpha = 1;
-          handBitmap.y = LGlobal.height;
-        }
-      });
     },
 
     initCanvas() {
@@ -387,9 +280,11 @@ export default {
       console.log(" LGlobal.width, LGlobal.height", LGlobal.width, LGlobal.height, " window.innerWidth, window.innerHeight", window.innerWidth, window.innerHeight)
       LGlobal.resize(window.innerWidth, window.innerHeight);
     },
+
     addRow(flag) {
       var index;
       var dataList = GameArg.dataList;
+      // n 第n个为爸爸， -1表示没有
       var n = flag ? -1 : dataList[dataList.uid % dataList.length];
       var arr = [];
       GameArg.step++;
@@ -424,6 +319,7 @@ export default {
     // 显示游戏开始前提示动画
 
     touchItems(e) {
+      console.log( "touchItems", 1)
       if (_gameOver) {
         return false;
       }
@@ -431,30 +327,33 @@ export default {
       var x = touch.pageX;
       var y = touch.pageY - GameArg.gameBoxtop;
       var t = this.thief[0];
-      if (y >= GameArg.layer.y + t.y - GameArg.blockSize * 0.5 && y <= GameArg.layer.y + t.y + GameArg.blockSize * 1.5 && x >= t.x && x <= t.x + GameArg.blockSize) {
+      if ( (y >= GameArg.layer.y + t.y - GameArg.blockSize * 0.5) &&
+           (y <= GameArg.layer.y + t.y + GameArg.blockSize * 1.5) &&
+           (x >= t.x ) &&
+           (x <= t.x + GameArg.blockSize)) {
+        console.log( "touchItems", 3)
+        // 如果选择正确
         _ruleInfo.list += (_ruleInfo.list ? ',' : '') + t.uid + ',' + this.toFixed2(x / GameArg.blockSize);
-        if (GameArg.gameStart) {
-          GameArg.gameStart = false;
-          this.gameStart();
+        if (GameArg.gameFirstTouch) {
+          GameArg.gameFirstTouch = false;
+          this.hg.time.start();
         }
-        if (GameArg.first <= 3) {
-          GameArg.first++;
+        if (GameArg.guideRows <= 3) {
+          GameArg.guideRows++;
           GameArg.guide.change({
             x: this.thief[1].x + GameArg.imageArray[0].l,
             y: this.thief[1].y + GameArg.imageArray[0].t
           }).play();
-        } else if (GameArg.first === 4) {
+        } else if (GameArg.guideRows === 4) {
           GameArg.guide.stop();
           GameArg.guide.die();
           GameArg.guide.remove();
-          GameArg.first++;
+          GameArg.guideRows++;
         }
         this.removeLayer();
         this.hg.sound.play(1);
-      } else if (GameArg.first > 4) {
+      } else if (GameArg.guideRows > 4) {
         this.hg.sound.play(2);
-        _gameOver = true;
-        GameArg.gameStart = true;
         this.hg.time.end();
         var bmd = new LBitmapData("#f00000");
         var dy = y - GameArg.layer.y;
@@ -484,8 +383,7 @@ export default {
           .to(bm, 0.1, {
             alpha: 1,
             onComplete: function () {
-              LGlobal.setPauseLoop(true)
-              GameArg.eventBus.$emit( GameEndEvent.name )
+              this.endGame()
               //gameOver(this.hg.grade.val);
               return;
             }
@@ -495,19 +393,26 @@ export default {
 
     //
     removeLayer() {
-      this.hg.grade(1);
-      var crrThief = this.thief.shift();
+      this.hg.grade.inc(1);
+      var crrThief = this.thief.shift(); // 找到当前行的爸爸
+      // 取得爱心图片
       var bm = new LBitmap(GameArg.imageArray[3].img, crrThief.x + GameArg.imageArray[3].l, crrThief.y + GameArg.imageArray[3].t, GameArg.imageArray[3].w, GameArg.imageArray[3].h);
       GameArg.pLayer.addChild(bm);
       crrThief.parent.push(bm);
       bm = null;
       crrThief = null;
+      console.log( "removeLayer", " this.rowArray[0] ", this.rowArray[0], GameArg.layer.y + this.rowArray[0].y)
       if (this.rowArray[0] && GameArg.layer.y + this.rowArray[0].y > GameArg.hem) {
-        this.rowArray.shift().forEach( function (bm, index) {
-          bm && bm.remove();
-        });
+        this.rowArray.shift().forEach((bm, i)=>{
+            bm && bm.remove()
+        })
       }
       this.addRow();
+    },
+    // 禁止对屏幕的touch
+    handleTouchStart( e ){
+      //e.preventDefault()
+      //e.stopPropagation()
     },
 
     GetRandomNum(a, b) {
