@@ -3,6 +3,7 @@ const fs = require('fs')
 const path = require('path')
 const config = require('../config/dbConfig')
 const crypto = require('crypto')
+const { buildCommon } = require( './common' )
 
 var db = {}
 
@@ -53,6 +54,8 @@ modelfiles.forEach((modelfile) => {
     })
   }
 })
+
+buildCommon( db )
 
 db.sequelize = sequelize
 db.Sequelize = Sequelize

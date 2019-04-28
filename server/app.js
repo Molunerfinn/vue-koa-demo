@@ -60,8 +60,8 @@ import gameRoundByCode from './routes/api/game_round_by_code.js'
 router.use('/api/game', gameRoundByCode.routes())
 
 // 游戏过程api
-import gameBase from './routes/gapi/game/base.js'
-router.use('/gapi/base', gameBase.routes())
+import gameBaseByCode from './routes/gapi/game/base_by_code.js'
+router.use('/gapi/base', gameBaseByCode.routes())
 import roundByCode from './routes/gapi/game_round_by_code.js'
 router.use('/gapi/game', roundByCode.routes())
 

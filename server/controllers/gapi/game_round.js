@@ -9,6 +9,7 @@ const { getGameRoundModelByCode } = require('../game_round_helper')
 // const wechatApi = new WechatAPI(wechat_config.appid, wechat_config.secret);
 // var wechatOAuth = new OAuth(wechat_config.appid, wechat_config.secret);
 
+// url /:code/:number
 export default class GameRoundController{
 
     // /**
