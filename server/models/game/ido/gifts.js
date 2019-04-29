@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
     },
 
   }, {
-    tableName:'ido_gifts'
+    tableName:'ido_gifts',
     createdAt: 'created_at',
     updatedAt: 'updated_at'
   })

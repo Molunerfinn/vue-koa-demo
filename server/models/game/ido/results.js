@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: '0'
     },
   }, {
-    tableName:'ido_results'
+    tableName:'ido_results',
     createdAt: 'created_at',
     updatedAt: 'updated_at'
   })

@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
     },
 
   }, {
-    tableName:'ido_player_infos'
+    tableName:'ido_player_infos',
     createdAt: 'created_at',
     updatedAt: 'updated_at',
     hooks: {},

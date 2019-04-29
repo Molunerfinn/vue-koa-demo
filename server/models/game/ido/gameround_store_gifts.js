@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: '0'
     },
   }, {
-    tableName:'ido_gameround_store_gifts'
+    tableName:'ido_gameround_store_gifts',
     createdAt: 'created_at',
     updatedAt: 'updated_at'
   })
