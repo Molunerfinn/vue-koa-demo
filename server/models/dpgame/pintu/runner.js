@@ -1,7 +1,7 @@
 // 处理游戏运行控制逻辑
 // 操作 数据库实现游戏的运行逻辑
 // 这里不创建任何数据库记录，只是读取和跟新状态
-const { DpPintuGameRound, DpPintuGamePlayer } = require('./index')
+const { DpPintuGameRound, DpPintuGamePlayer } = require('../../index')
 const { DpGameRoundStates } = require('../../constant')
 
 // 游戏流程控制
