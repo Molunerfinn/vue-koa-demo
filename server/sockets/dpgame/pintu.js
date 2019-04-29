@@ -142,6 +142,7 @@ export default class DpPintuSocket{
          callback({ gameRoundState: DpGameRoundStates.created })
       });
 
+      // 客户端断开连接事件
       socket.on('disconnect', function(data){
         console.log(`user disconnect ${socket.id}.`);
       });
