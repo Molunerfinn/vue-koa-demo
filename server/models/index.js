@@ -33,13 +33,13 @@ modelfiles.forEach((modelfile) => {
   if( !/(index|runner).js$/.test(modelfile)){
     let model = sequelize.import(modelfile)
     console.log("modelfile=", modelfile, model.name)
-    db[model.name] = model    
+    db[model.name] = model
   }
 })
 
-buildCommon( db )
-
 db.sequelize = sequelize
 db.Sequelize = Sequelize
+
+buildCommon( db )
 
 module.exports = db

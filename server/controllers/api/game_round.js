@@ -1,5 +1,6 @@
 const messageContent = require('../constant')
 const db = require('../../models')
+const { getGameRoundModelByCode } = require('../game_round_helper')
 
 // const WechatAPI = require('co-wechat-api');
 // var OAuth = require('co-wechat-oauth');
@@ -12,22 +13,7 @@ const db = require('../../models')
 
 export default class GameRoundController {
 
-  // code代表游戏类型
-  static getGameRoundModelByCode(code) {
-    if (typeof(code) != 'string') {
-      throw "code requires a string"
-    }
-    let re = new RegExp(code, 'i')
-    let sequelize = db.sequelize
-    let round = null
-    for( let [key, model] of Object.entries(sequelize.models)){
-      if (re.test(model.name)) {
-        round = model
-        break
-      }
-    }
-    return round
-  }
+
   /**
    * get the rounds with options
    * @param {*} ctx
@@ -68,7 +54,7 @@ export default class GameRoundController {
     try {
       // code 在 url 中 或者 在参数中 game_round
       let code = ctx.query.code || gameRoundParams.code
-      let Model = GameRoundController.getGameRoundModelByCode(gameRoundParams.code)
+      let Model = getGameRoundModelByCode(gameRoundParams.code)
 
       let model = await Model.create(gameRoundParams)
 

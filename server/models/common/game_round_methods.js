@@ -2,7 +2,7 @@ import { generateCode } from './helper'
 
 export function bindGameRoundMethods( db ){
 
-  let models = Object.keys(db)
+  let models = Object.values(db)
   models.forEach((model)=>{
     let rex = /([\w]+)GameRound$/
     if( rex.test(model.name)){
