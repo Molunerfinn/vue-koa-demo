@@ -32,20 +32,20 @@ class GameBaseByCode {
       let game_round_id = ctx.params.id
       let cmd = ctx.query.cmd
       if( cmd == 'setAchieve'){     //设置成绩
-        let openid = ctx.query._openId
+        let token = ctx.query.token
         let gameRound = await GameRound.findOne( { where: { number} } )
 
-        let gamePlayer = await GamePlayer.findOne({ where: { game_round_id: gameRound.id, openid} } )
+        let gamePlayer = await GamePlayer.findOne({ where: { game_round_id: gameRound.id, token} } )
         let gamePlayerId = gamePlayer.id
         let score = ctx.query.gameScore
-        let lastMaxScore = (await GameResult.max( "score", { where: {gamePlayerId}})) || 0
+        let lastMaxScore = gamePlayer.score
         //game_result = set_achieve
         let gameResultParams = { game_player_id: gamePlayerId, score, game_round_id:  gameRound.id }
 
         let gameResult = GameResult.build(gameResultParams)
         gameResult.ip = ctx.request.ip
-        gameResult.start_at = ctx.session.game_start_at
-        let result = await GameResult.save()
+        gameResult.start_at = ctx.session.gameStartAt
+        let result = await gameResult.save()
 
         if( gameResult.score > lastMaxScore){
           await gamePlayer.update( {score: gameResult.score })

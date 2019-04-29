@@ -1,6 +1,6 @@
 var moment = require('moment')
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define('ido_game_rounds', {
+  return sequelize.define('IdoGameRound', {
     game_id: DataTypes.BIGINT(11),
     name: DataTypes.STRING,
     creator_id: DataTypes.BIGINT(11),
@@ -184,6 +184,7 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: '0'
     },
   }, {
+    tableName: 'ido_game_rounds',
     createdAt: 'created_at',
     updatedAt: 'updated_at',
     hooks: {},
