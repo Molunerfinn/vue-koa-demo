@@ -12,6 +12,7 @@
 
       <div class="div_1_img" ></div>
       <div class="div_1_p">
+        <button  type="button" @click="share()">分享!</button>
         {{game_rounds}}
         {{stores}}
         {{player}}
@@ -139,7 +140,7 @@
 
 <script>
 import Swiper from 'swiper'
-import { getGameInfo,postSignUp,postThumbUp,postMsg } from '@/api/games/ido'
+import { getGameInfo,postSignUp,postThumbUp,postMsg,shareGame } from '@/api/games/ido'
 // // const queryString = require('query-string');
 // import queryString from 'query-string'
 export default {
@@ -277,6 +278,14 @@ export default {
       }
       // this.next(6)
     },
+    share :function(){
+      var to_player_id='test-id'
+      const data = {to_player_id}
+      shareGame(data).then((res)=>{
+        console.log( 100000, res )
+        return res
+      })
+    },
     countTime: function () {
       // 获取当前时间
       var date = this.getServerTime();
@@ -321,8 +330,6 @@ export default {
     }
   },
   created () {
-    // var aaa = queryString.parse(location.search)
-    // console.log(aaa);
     getGameInfo( location.search ).then((res)=>{
       //console.log( 100000, res )
       return res
