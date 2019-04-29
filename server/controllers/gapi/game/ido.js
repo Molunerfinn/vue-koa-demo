@@ -7,13 +7,10 @@ import {
   IdoPlayerInfo,
   IdoResult,
   IdoStroe
-} from '../../../models/game/ido'
+} from '../../../models'
 import {
   Sequelize
 } from '../../../models'
-import {
-  GameRoundStates
-} from '../../../schema/constant'
 const Op = Sequelize.Op;
 import log4 from 'koa-log4'
 const logger = log4.getLogger('index')
@@ -42,7 +39,7 @@ class Ido {
     console.log('openid:', openid);
     var userInfo = await client.getUser(openid);
     console.log('userInfo:', userInfo);
-    let params = '?openid=' + userInfo.openid + '&headimgurl=' + userInfo.headimgurl + '&nickname=' + encodeURIComponent(userInfo.nickname)+'&to_player_id='+to_player_id
+    let params = '?openid=' + userInfo.openid + '&headimgurl=' + userInfo.headimgurl + '&nickname=' + encodeURIComponent(userInfo.nickname)+'&to_player_id='+to_player_id;
     console.log( 'http://testwx.getstore.cn/ido.html'+params)
     ctx.redirect('http://testwx.getstore.cn/ido.html'+params)
   }

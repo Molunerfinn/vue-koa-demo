@@ -7,7 +7,7 @@
 
 'use strict';
 import fetch from 'node-fetch'
-import { DpPintuGameRound  } from '../../../models/dpgame/pintu'
+import { DpPintuGameRound  } from '../../../models'
 import { Sequelize, GameRoundStates } from '../../../models'
 import { FailMessage } from '../../constant'
 import log4 from 'koa-log4'
