@@ -7,24 +7,58 @@ import {
   IdoPlayerInfo,
   IdoResult,
   IdoStroe
-} from '../../../models/game/ido'
+} from '../../../models'
 import {
   Sequelize
 } from '../../../models'
-import {
-  GameRoundStates
-} from '../../../schema/constant'
 const Op = Sequelize.Op;
 import log4 from 'koa-log4'
 const logger = log4.getLogger('index')
 
+var config = require(`../../../config/wechat.development.json`);
+var wechat_config = config.wechat;
+var OAuth = require('co-wechat-oauth');
+var client = new OAuth(wechat_config.appid, wechat_config.secret);
+
 class Ido {
+  static async login(ctx) {
+    console.log('login');
+    let to_player_id = ctx.query.to_player_id
+    var url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + wechat_config.appid + '&redirect_uri=http://testwx.getstore.cn/gapi/ido/get_wx_info&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect'+'&to_player_id='+to_player_id;
+    ctx.redirect(url)
+  }
+
+  static async get_wx_info(ctx) {
+    let code = ctx.query.code
+    let to_player_id = ctx.query.code
+    var token = await client.getAccessToken(code);
+    console.log('token:', token);
+    var accessToken = token.data.access_token;
+    console.log('accessToken:', accessToken);
+    var openid = token.data.openid;
+    console.log('openid:', openid);
+    var userInfo = await client.getUser(openid);
+    console.log('userInfo:', userInfo);
+    let params = '?openid=' + userInfo.openid + '&headimgurl=' + userInfo.headimgurl + '&nickname=' + encodeURIComponent(userInfo.nickname)+'&to_player_id='+to_player_id;
+    console.log( 'http://testwx.getstore.cn/ido.html'+params)
+    ctx.redirect('http://testwx.getstore.cn/ido.html'+params)
+  }
+
   static async get_start_info(ctx, next) {
 
     let url = ctx.request.url;
-    console.log("url:" + url);
-    let openid = url.substring(url.indexOf('?') + 1);
-    console.log("openid:" + openid);
+    let openid = ctx.query.openid;
+    let nickname = ctx.query.nickname;
+    let headurl = ctx.query.headimgurl;
+    let to_player_id = ctx.query.to_player_id;
+
+    if(to_player_id!=null&&to_player_id!=undefined){
+      console.log('to_player_id =',to_player_id);
+    }else {
+      console.log('to_player_id is null');
+      to_player_id = openid;
+      console.log('to_player_id =',to_player_id);
+    }
 
     //启动时获取game_round
     var round = await IdoGameRound.findOne({
@@ -83,19 +117,35 @@ class Ido {
     if (player == null) { //create a new player
       console.log('create a new player');
       var new_player =
-
         {
           openid: openid,
-          to_player_id: openid,
+          to_player_id: to_player_id,
+          nickname: nickname,
+          headurl: headurl,
           default_store_id: 0
         }
 
       var options = {
-        fields: ['openid', 'to_player_id', 'default_store_id']
+        fields: ['openid', 'to_player_id', 'default_store_id','nickname','headurl']
       }
       let res = await IdoPlayer.create(new_player, options)
 
       player = new_player;
+    }else{
+      var new_player =
+        {
+          openid: openid,
+          to_player_id: to_player_id,
+          nickname: nickname,
+          headurl: headurl,
+          default_store_id: 0
+        }
+      console.log(new_player);
+      let res = await IdoPlayer.update(new_player, {
+        where: {
+          openid: openid
+        }
+      })
     }
 
     //启动时获取player_info
