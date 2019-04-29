@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define('ido_gameround_store_gifts', {
+  return sequelize.define('IdoGameRoundStoreGift', {
     game_round_id: {
       type: DataTypes.BIGINT(11),
       allowNull: false,
@@ -31,6 +31,7 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: '0'
     },
   }, {
+    tableName:'ido_gameround_store_gifts'
     createdAt: 'created_at',
     updatedAt: 'updated_at'
   })

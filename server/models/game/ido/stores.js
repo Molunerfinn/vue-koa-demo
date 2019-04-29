@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define('ido_stores', {
+  return sequelize.define('IdoStroe', {
     store_id: {
       type: DataTypes.BIGINT(11),
       allowNull: false,
@@ -21,6 +21,7 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: '0'
     },
   }, {
+    tableName:'ido_stores'
     createdAt: 'created_at',
     updatedAt: 'updated_at'
   })
