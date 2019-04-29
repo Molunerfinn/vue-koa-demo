@@ -5,7 +5,7 @@ var _timer = null, _timeFlag, _timeLock = 0;
 
 
 // g_config.countsTimeType, g_config.scoreType
-function Time( initTime ){
+function Time( initTime, options={} ){
 
   this.initTime= initTime,
 
@@ -14,15 +14,18 @@ function Time( initTime ){
   this.interval= 140,
   this.range= [70, 280],
   this.target= null,
-  this.isDesc= true, //!g_config.countsTimeType,
   this.acceList= null,
   this.status= "ended",
-  this.updateFlag= false, // 缺省情况下使用，lufy.show事件更新时间。
+
   this.targetFlag= true,  // 是否更新target
   this.gameCostTime= 0,
   this.frameInc= 0;
 
-
+  this.options = {
+    isDesc: true, //  是否为倒计时 !g_config.countsTimeType,
+    updateFlag: false // 缺省情况下使用，lufy.show事件更新时间。
+  }
+  Object.assign( this.options, options )
     //if (this.initTime === 99999) {
     //  return
     //} ! this.target && (this.target = $(".time"));
@@ -61,7 +64,7 @@ const Methods = {
       return
     }
     _timeFlag = new Date().getTime() / 1000;
-    if (this.updateFlag && this.status === "ended") {
+    if (this.options.updateFlag && this.status === "ended") {
       this.status = "runing";
       this.play()
     } else {
@@ -88,7 +91,7 @@ const Methods = {
   setTime() {
     var now = (new Date).getTime() / 1000;
     var delta = now - _timeFlag;
-    var r = this.isDesc ? -1 : 1;
+    var r = this.options.isDesc ? -1 : 1;
     if (this.range[0] > 0 && delta < this.range[0] / 1000) {
       delta = this.range[0] / 1000
     } else {
@@ -99,7 +102,7 @@ const Methods = {
     this.val += r * delta;
     this.pastTime = r * (this.val - this.initTime);
     _timeFlag = now;
-    if (this.isDesc) {
+    if (this.options.isDesc) {
       if (this.acceList) {
         for (var i = 0; i < this.acceList.length; i++) {
           if (this.val <= this.acceList[i] && _timeLock == i) {

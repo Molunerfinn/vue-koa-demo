@@ -9,9 +9,9 @@ if (!Array.isArray) {
 if (!String.format) {
     String.format = function(format) {
         let args = Array.prototype.slice.call(arguments, 1);
-        return format.replace(/{(\d+)}/g, function(match, number) { 
+        return format.replace(/{(\d+)}/g, function(match, number) {
             return typeof args[number] !== 'undefined'
-                ? args[number] 
+                ? args[number]
                 : match;
         });
     };
@@ -79,6 +79,7 @@ export function removeChild(o) {
     ll.LGlobal.stage.removeChild(o);
 }
 export function init(s, c, w, h, f, t) {
+    ll.LGlobal.delta = 0
     ll.LGlobal.speed = s;
     let _f = function() {
         if (ll.LGlobal.canTouch && ll.LGlobal.aspectRatio === LANDSCAPE && window.innerWidth < window.innerHeight) {
@@ -113,7 +114,9 @@ export function init(s, c, w, h, f, t) {
             let now = (new Date()).getTime();
             let check = now - ll.LGlobal._requestAFBaseTime;
             if (check / s >= 1) {
-                ll.LGlobal._requestAFBaseTime += s;
+                // add delta
+                ll.LGlobal.delta = (check > 500 ? 0 : check ) //第一次进入delta会>500
+                ll.LGlobal._requestAFBaseTime += check;
                 ll.LGlobal.onShow();
             }
             _requestAF(loop, s);

@@ -20,7 +20,6 @@ import Grade from './hdgame/grade'
 import Time from './hdgame/time'
 
 const HdGame = {}
-const arrPro = Array.prototype
 const isReady = true
 const _resRoot = '/static/kouhong'
 const g_config = {
@@ -132,9 +131,13 @@ HdGame.initJsHead = function(hg, _data) {
           return this
         }
         if (Array.isArray(src)) {
-          arrPro.push.apply(group.path, src)
+          src.forEach((v)=> group.path.push(v) )
         } else {
-          group.path.push(src)
+          if (_.isPlainObject(src)) {
+            Object.values(src).forEach((v) => group.path.push(v) )
+          }else{
+            group.path.push(src)
+          }
         }
         return this
       },
@@ -352,6 +355,9 @@ HdGame.initJsHead = function(hg, _data) {
     //if (g_config.drawType != 0) {
     //  assetsImage.push(_data.startImg_path, _data.gameBgPath, _resRoot + "/image/lots1.png", _resRoot + "/image/lots2.png")
     //}
+    if( _data.skinAssets != null){
+      hg.assets.add( _data.skinAssets )
+    }
     hg.assets.add(assetsImage);
     hg.assets.add("home", [_data.homeBgPath, _data.titleImg_path]);
     hg.assets.add(_resRoot + "/image/bbtzw/tishi.png");
@@ -1247,6 +1253,7 @@ HdGame.initCallBack = function(target, arg) {
   return target
 };
 
+HdGame.imgReady = HdUtil.imgReady
 
 HdGame.getBgHeight = function() {
   return Math.max((window).innerWidth * g_config.HWRatio, (window).innerHeight)

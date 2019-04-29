@@ -8,7 +8,7 @@ class LShape extends LInteractiveObject {
         this.graphics = new ll.LGraphics();
         this.graphics.parent = this;
     }
-	
+
     _ll_show(c) {
         let s = this;
         s.graphics.ll_show(c);
@@ -94,7 +94,7 @@ class LShape extends LInteractiveObject {
     die() {
         let s = this;
         s.graphics.clear();
-        super.die();
+        //super.die();
     }
 
 }

@@ -496,8 +496,7 @@ body {
 }
 .debug {
 	position:absolute;
-	/*background-color:#F56C6C;
-	*/
-  color:transparent;
+	background-color:#F56C6C;
+  color:#fff;
 	padding:10px;
 }

@@ -2,13 +2,13 @@ import Koa from 'koa'
 import json from 'koa-json'
 import logger from 'koa-logger'
 import auth from './routes/auth.js'
-import api from './routes/api.js'
 import jwt from 'koa-jwt'
 import path from 'path'
 import serve from 'koa-static'
 import historyApiFallback from 'koa2-history-api-fallback'
 import KoaRouter from 'koa-router'
 import koaBodyparser from 'koa-bodyparser'
+import session  from 'koa-session'    // session for flash messages
 import http from 'http'
 
 const app = new Koa()
@@ -44,6 +44,12 @@ app.use(async function (ctx, next) {  //  如果JWT验证失败，返回验证�
   }
 })
 
+// set signed cookie keys for JWT cookie & session cookie
+app.keys = [ 'koa-sample-app' ];
+
+// session for flash messages (uses signed session cookies, with no server storage)
+app.use(session(app)); // note koa-session@3.4.0 is v1 middleware which generates deprecation notice
+
 // app.on('error', function (err, ctx) {
 //  console.log('server error', err)
 // })
@@ -60,8 +66,8 @@ import gameRoundByCode from './routes/api/game_round_by_code.js'
 router.use('/api/game', gameRoundByCode.routes())
 
 // 游戏过程api
-import gameBase from './routes/gapi/game/base.js'
-router.use('/gapi/base', gameBase.routes())
+import gameBaseByCode from './routes/gapi/game/base_by_code.js'
+router.use('/gapi/base', gameBaseByCode.routes())
 import roundByCode from './routes/gapi/game_round_by_code.js'
 router.use('/gapi/game', roundByCode.routes())
 

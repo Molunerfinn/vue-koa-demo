@@ -55,14 +55,14 @@ import {
 //关于玩家的配置信息
 const g_config = {
   scoreType: false,
-  initTime: 10,
+  initTime: 0,
   ipInfo: {
     provice: null,
     city: null
   }
 }
 
-const gameType = 1; // 0抽奖， 1刷记录
+const gameType = 1 // 0抽奖， 1刷记录
 
 export default {
   name: 'app',
@@ -74,13 +74,15 @@ export default {
   created() {
     this.hg.grade = new HdGame.Grade(0)
 
-    this.hg.time = new HdGame.Time(g_config.initTime)
+    this.hg.time = new HdGame.Time(g_config.initTime, { updateFlag: true, isDesc: false })
 
     EventBus.$on(GameBackgroundMusicLoadEvent.name, (event) => {
       this.initBackgroundMusic()
     })
     //simplifyLufylegend( this.hg, window.g_rem )
     HdGame.initJsHead(this.hg, GameRes)
+
+    this.hg.assets.add( GameRes.skinAssets );
 
     window.hg = this.hg
 
@@ -422,7 +424,6 @@ export default {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
   height: 100%;
   width: 100%;

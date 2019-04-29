@@ -6,20 +6,20 @@
 
     <div id="gameTopBar" class="gameTopBar" style="color:;background-color:">
       <div class="userInfoBox">
-        <div class="userImgBox" style="border-color:"><img :src="game_player.avatar" class="userImg" /></div>
+        <div class="userImgBox" style="border-color:"><img :src="gamePlayer.avatar" class="userImg" /></div>
       </div>
       <div class="timeBox">
-        时间<br><span class="time">0</span>
+        时间<br><span class="time">{{time}}</span>
       </div>
     </div>
     <div id="gameImgBox">
       <div id="gameImg" v-show="ui.gameImgVisible"></div>
-      <Puzzle ref="puzzle" :img-url="gameImgUrl" v-show="ui.gameImgWrapVisible"></Puzzle>
+      <Puzzle ref="puzzle" :img-url="skinAssets.gameImg" v-show="ui.gameImgWrapVisible"></Puzzle>
     </div>
     <div class="imgContainer absCenter" style="top:0;">
-      <div id="gameStartBtns" class="slaveImg abs" style="width:7rem;height:2rem;top:21rem;left:4.5rem;" >
-        <img id="gameStartImg" webp_src="http://8171176.h40.faiusr.com/4/29/ACgIABAEGAAgvrijyQUo4NfvyAEwmAI4UQ.png" v-show="ui.gameStartImgVisible"/>
-        <img id="tipsImg" style="display:none;" webp_src="http://8171176.h40.faiusr.com/4/29/ACgIABAEGAAgvLijyQUorPrshgYwmAI4UQ.png" v-show="ui.tipsImgVisible"/>
+      <div id="gameStartBtns" class="slaveImg abs" @click="handleStartGame" style="width:7rem;height:2rem;top:21rem;left:4.5rem;" >
+        <img id="gameStartImg" :src="skinAssets.gameStartImg" v-show="ui.gameStartImgVisible"/>
+        <img id="tipsImg" style="display:none;" :src="skinAssets.tipsImg" v-show="ui.tipsImgVisible"/>
       </div>
     </div>
     <div class="timeUpImg hide"></div>
@@ -31,9 +31,9 @@
 
 <script>
 
-//const _resRoot = '/static/kouhong'
-
-//import HdGame from '@/lib/hdgame'
+import $ from "jquery";
+import HdGame from '@/lib/hdgame'
+import GameRes from './GameRes'
 import GameArg from './GameArg'
 import Puzzle from './Puzzle.vue'
 
@@ -47,11 +47,7 @@ import Puzzle from './Puzzle.vue'
 // eventBus
 import { GameEndEvent,  GameScoreChangedEvent } from '@/lib/GameEvent'
 
-const game_assets = {
-        gameStartBtn : 'http://8171176.h40.faiusr.com/4/29/ACgIABAEGAAgvrijyQUo4NfvyAEwmAI4UQ.png',
-        tipsBtn : 'http://8171176.h40.faiusr.com/4/29/ACgIABAEGAAgvLijyQUorPrshgYwmAI4UQ.png',
-        gameImg : '/static/dp-pintu/image/gameimg.jpg',
-};
+
 
 export default {
   name: 'game',
@@ -70,8 +66,7 @@ export default {
   data () {
     return {
       gameBg: require('@/assets/dp-pintu/image/skin1/wx/gameBg.jpg'),
-      gameImgUrl: '/static/dp-pintu/image/gameimg.jpg',
-      game_player: game_assets.gameImg,
+      gamePlayer: { avatar: '/static/shared/image/avatar.jpg' },
       ui:{
         gameBoxVisible: false,
         gameStartImgVisible: false,
@@ -80,12 +75,18 @@ export default {
         tipsImgVisible: false
       },
       gameOver: false,
-      rem: 20
+      rem: 20,
+      skinAssets: {
+        gameStartImg : '/static/dp-pintu/image/skin/startbtn2.png',
+        tipsImg : '/static/dp-pintu/image/skin/tipsbtn.png',
+        gameImg : '/static/dp-pintu/image/skin/gameimg.jpg',
+      },
+      time: 0
     }
   },
   created(){
     this.rem = window.g_rem
-
+    Object.assign( this.skinAssets, GameRes.skinAssets)
   },
   mounted(){
     console.log( "mounted props=", this.hg, this.command)
@@ -107,10 +108,10 @@ export default {
     })
 
     this.hg.time.on( 'setTime', (e)=>{
+      this.time = e
       console.log( "setTime", e)
     })
     this.hg.time.on('end', this.endGame)
-
 
     this.hg.sound.get("0",
       function (lsound) {
@@ -119,6 +120,21 @@ export default {
 
         }).on("pause", () => {
           this.soundIconClass = "soundIconOff soundIcon"
+        })
+    })
+
+    HdGame.imgReady(this.skinAssets.gameImg, (img)=>{
+        let selector = "#gameImg";
+        let ele = $(selector)
+        console.log("img=",img)
+        //let originSize = query(selector).get([ 'offsetWidth', 'offsetHeight' ])
+        let nowSize = HdGame.Img.calcSize( img.width, img.height, ele.outerWidth(), ele.outerHeight(),HdGame.Img.MODE_SCALE_DEFLATE_FILL);
+        //console.log( " this.skinAssets.gameImg = ", this.skinAssets.gameImg, ele.outerWidth(), ele.outerHeight(),  nowSize )
+        $(selector).css({
+            "background-image":'url("'+this.skinAssets.gameImg+'")',
+            "background-repeat":"no-repeat",
+            "background-position":"center center",
+            "background-size":nowSize.width+"px "+nowSize.height+"px"
         })
     })
   },
@@ -170,8 +186,7 @@ export default {
    initGame() {
          this.hg.time.init();
          //初始化游戏头部 头像，计时，分数
-
-         this.ui.gameImgWrapVisible = true
+         this.ui.gameStartImgVisible = true
          this.ui.tipsImgVisible = false
          this.ui.gameImgWrapVisible = false
          this.ui.gameImgVisible = true
@@ -187,13 +202,13 @@ export default {
       //外部触发游戏开始
       console.log('watch-command new: %s, old: %s', val, oldVal)
       if( val == 'start'){
-        this.handleStartGame()
+        this.initGame()
       }
       if( val == 'restart'){
         this.handleRestartGame()
       }
       if( val== 'initial'){
-        this.handleInitGameData()
+        //this.handleInitGameData()
       }
     }
   }
