@@ -1,12 +1,14 @@
+import Sequelize from 'sequelize'
 import { generateCode } from './helper'
+
+const Op = Sequelize.Op
 
 export function bindGamePlayerMethods( db ){
 
-  let models = Object.keys(db)
+  let models = Object.values(db)
   models.forEach((model)=>{
     let rex = /([\w]+)GamePlayer$/
     if( rex.test(model.name)){
-      //打败了多少 %
       bindMethods( model )
       addHooks( model )
     }
@@ -17,6 +19,7 @@ export function bindGamePlayerMethods( db ){
 }
 
 function bindMethods( model ){
+  console.log( "bindGamePlayerMethods", model.name)
   // 当前最好成绩击败了 多少%
   model.prototype.beat= async function(){
     let position = await this.currentPosition()
@@ -44,7 +47,7 @@ function bindMethods( model ){
 function addHooks( model ){
   model.addHook( 'beforeCreate', 'generate_number', (game, options) => {
 
-   game.number =  generateCode()
+   game.token =  generateCode()
   })
 
 }

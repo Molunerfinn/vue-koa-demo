@@ -9,6 +9,9 @@
 const fetch = require('node-fetch')
 const { getGameRoundModelByCode, getGamePlayerModelByCode, getGameResultModelByCode } = require('../game_round_helper')
 
+// 'getResult' 取得抽奖结果
+//  getRankList' 排行榜
+//  joinGameBehavior 
 // match '/ajax/logAjaxErr_h.jsp', to: 'game_log#log_ajax_error', via: [:get, :post]
 // match '/ajax/log_h.jsp', to: 'game_log#log', via: [:get, :post]
 // match '/ajax/logJsErr_h.jsp', to: 'game_log#log_js_error', via: [:get, :post]
@@ -54,26 +57,20 @@ class GameBaseByCode {
         ret.isSuc = gamePlayer.score >  lastMaxScore
         ret.achieveToken= gamePlayer.token
         ret.score = ( gamePlayer.score )  //bestScore
-        let rank = await gamePlayer.current_position()
+        let rank = await gamePlayer.currentPosition()
         let beat = await gamePlayer.beat()
         ret.rank = rank
         ret.beat = beat
         ret.hasLot =  false
 console.log( "setAchieve= ", ret, "lastMaxScore=", lastMaxScore )
       }else if(cmd == 'getRankList' ){//排行榜
-        let openid = ctx.query._openId
-        let start = parseInt(ctx.query.start)
-        let limit = parseInt(ctx.query.limit)
-        let game_player_id = ctx.query.playerId
-        let game_player = await GamePlayer.findOne({ where: { id: game_player_id, openid} } )
-        let rank_list = await GameBaseByCode.get_rank_list( game_player, start, limit )
-        ret = Object.assign(ret, rank_list )
+
       }else if(cmd == 'getMatchResult' ){//取得比赛投票结果
         //r.merge!( get_match_result )
-      }else if(cmd == 'joinGameBehavior' ){//排行榜
+      }else if(cmd == 'joinGameBehavior' ){//
         //session[:game_start_at] = DateTime.current
         //join_game_behavior
-      }else if(cmd == 'getGiftList' ){//我的奖品
+      }else if(cmd == 'getGiftList' ){//排行榜
         let list = []
         let awardModel = {awardtype:1,cbt:Date(), cet:Date(), deadline:'这是使用期限'}
         // 0: 未领"; 1:已核销 2:未核销 3:已过期 4:已作废 5:已失效
@@ -85,14 +82,33 @@ console.log( "setAchieve= ", ret, "lastMaxScore=", lastMaxScore )
       }else if(cmd == 'getJoinNum' ){//我的奖品
         //r['joinNum'] = get_join_num
       }else if(cmd == 'setPhone' ){//设置联系方式
-        let openid = ctx.query._openId
-        let userInfo = JSON.parse(ctx.request.body.userInfo)
-        console.log( "ctx.request.body ", ctx.request.body,"userInfo=", userInfo  )
-        let game_player_values  = { realname: userInfo.ausername, cellphone: userInfo.aphone } //游戏玩家需要更新的信息 { realname, cellphone }
-        let game_player = await GamePlayer.findOne({ where: { game_round_id, openid} } )
-        await  game_player.update( game_player_values )
+
       }
       // 客户的执行 $.parseJSON(ret) 处理
+      ctx.body = JSON.stringify( ret )
+    }
+
+    static async getRanking(ctx){
+      let ret = { rt: 0, isSuc: true, success: true }
+
+      let openid = ctx.query._openId
+      let start = parseInt(ctx.query.start)
+      let limit = parseInt(ctx.query.limit)
+      let game_player_id = ctx.query.playerId
+      let game_player = await GamePlayer.findOne({ where: { id: game_player_id, openid} } )
+      let rank_list = await GameBaseByCode.get_rank_list( game_player, start, limit )
+      ret = Object.assign(ret, rank_list )
+      ctx.body = JSON.stringify( ret )
+    }
+
+    static async setPhone( ctx ){
+
+      let openid = ctx.query._openId
+      let userInfo = JSON.parse(ctx.request.body.userInfo)
+      console.log( "ctx.request.body ", ctx.request.body,"userInfo=", userInfo  )
+      let game_player_values  = { realname: userInfo.ausername, cellphone: userInfo.aphone } //游戏玩家需要更新的信息 { realname, cellphone }
+      let game_player = await GamePlayer.findOne({ where: { game_round_id, openid} } )
+      await  game_player.update( game_player_values )
       ctx.body = JSON.stringify( ret )
     }
 
