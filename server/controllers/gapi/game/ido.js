@@ -24,7 +24,15 @@ class Ido {
   static async login(ctx) {
     console.log('login');
     let to_player_id = ctx.query.to_player_id
-    var url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + wechat_config.appid + '&redirect_uri=http://testwx.getstore.cn/gapi/ido/get_wx_info&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect'+'&to_player_id='+to_player_id;
+    var url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + wechat_config.appid + '&redirect_uri=http://testwx.getstore.cn/gapi/ido/get_wx_info&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect';
+    ctx.redirect(url)
+  }
+
+  static async share(ctx) {
+    console.log('============share=================');
+    let to_player_id = ctx.query.to_player_id
+    var url = client.getAuthorizeURL(wechat_config.authdomain + '/gapi/ido/get_wx_info?to_player_id='+to_player_id, 'state', 'snsapi_userinfo');
+    console.log('url--:',url);
     ctx.redirect(url)
   }
 
@@ -140,6 +148,7 @@ class Ido {
           headurl: headurl,
           default_store_id: 0
         }
+        player = new_player;
       console.log(new_player);
       let res = await IdoPlayer.update(new_player, {
         where: {

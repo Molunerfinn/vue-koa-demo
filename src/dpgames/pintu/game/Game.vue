@@ -74,7 +74,7 @@ export default {
         gameImgVisible: false,
         tipsImgVisible: false
       },
-      gameOver: false,
+      isgameOver: false,
       rem: 20,
       skinAssets: {
         gameStartImg : '/static/dp-pintu/image/skin/startbtn2.png',
@@ -192,7 +192,7 @@ export default {
          this.ui.gameImgVisible = true
          GameArg.firstFlag = true;
          GameArg.toggleFlag = true;
-         this.gameOver = false;
+         this.isgameOver = false;
      }
 
 
