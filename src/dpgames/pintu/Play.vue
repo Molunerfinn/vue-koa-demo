@@ -1,5 +1,14 @@
 <template>
 <div id="app">
+  <div class="unstarted" v-show="ui.unstarted">
+    unstarted
+  </div>
+  <div class="sign_up" v-show="ui.sign_up">
+    sign_up</br>
+    name:<td><input id="name" ></input></td></br>
+    tel:<td><input id="tel" ></input></td></br>
+    <button  @click="post_msg()" type="button">commit</button>
+  </div>
   <div class="home" v-show="ui.homeVisible">
     <div id="homeBgBox">
       <img id="homeBg" :src="homeBgImg" />
@@ -41,13 +50,16 @@ import GameRes from './game/GameRes'
 import GameArg from './game/GameArg'
 import HdGame from '@/lib/hdgame'
 import {
-  setAchievebycode
+  setAchievebycode,
+  getGameResult,
+  postMsg,
 } from '@/api/base'
 import LoadToast from '@/components/LoadToast.vue'
-import ResultBox from '@/components/ResultBox.vue'
+import ResultBox from '@/components/DpGameResult.vue'
 import {
   GameBackgroundMusicLoadEvent
 } from '@/lib/GameEvent'
+import queryString from 'query-string'
 
 //import {simplifyLufylegend } from '@/lib/simplify'
 //关于玩家的配置信息
@@ -83,10 +95,52 @@ export default {
     this.hg.assets.add( GameRes.skinAssets );
     if( this.debug ){
       window.hg = this.hg
-      window.gameArg = GameArg      
+      window.gameArg = GameArg
     }
 
     console.log("created gameState=", this.gameState, this.hg.grade)
+
+    var params = {
+      openid: 'oF9hV0SyZ6tI_k2WHtpRXqfedRH4'
+    }
+    const parsed = queryString.parse(location.search);
+    var code = 'dppintu';
+    var number = parsed.number;
+    getGameResult(code,number,params).then(data => {
+      console.log(data);
+      var gameInfo = data
+      this.gameState = gameInfo['gameRound'].state
+      this.game_player = gameInfo['gamePlayer']
+
+      if(this.gameState==1){
+        this.ui.unstarted = false
+        this.ui.sign_up = true
+      }
+      if(this.gameState==4){
+        this.ui.unstarted = false
+        this.ui.homeVisible = true
+      }
+
+      // if(this.gameState==5||(gameInfo['gameResult']!==null&&gameInfo['gameResult']!==undefined)){
+      //   var r = gameInfo['ret']
+      //   var arg = {
+      //     isSuc: r.isSuc,
+      //     gameScore: gameInfo['gamePlayer'].score,
+      //     minScore: 0, //到多少分可以抽奖
+      //     bestScore: r.score,
+      //     gameType: gameType,
+      //     rank: r.rank,
+      //     beat: r.beat,
+      //     isEqualDraw: false,
+      //     bestCostTime: r.bestCostTime
+      //   };
+      //
+      //   this.resultBoxParams = arg
+      //   this.resultBoxCommand = "showResult"
+      //   this.resultBoxVisible = true
+      // }
+
+    })
   },
   data() {
     return {
@@ -101,7 +155,9 @@ export default {
       titleImg: require('@/assets/dp-pintu/image/skin1/wx/title.png'),
       startBtnImg: require('@/assets/dp-pintu/image/skin1/wx/start.png'),
       ui: {
-        homeVisible: true, // 初始页面是否可见，游戏时需要隐藏
+        sign_up:false,
+        unstarted:true,
+        homeVisible: false, // 初始页面是否可见，游戏时需要隐藏
         gameBoxVisible: false, // 游戏页面
         ruleImgVisible: true, // 锦囊按钮
         loadToastVisible: false
@@ -116,6 +172,24 @@ export default {
     }
   },
   methods: {
+    post_msg: function () {
+      console.log('post_msg');
+      var realname = document.getElementById('name').value
+      var tel = parseInt(document.getElementById('tel').value)
+
+      const parsed = queryString.parse(location.search);
+      var code = 'dppintu';
+      var number = parsed.number;
+      var data = {
+        openid: this.game_player.openid,
+        realname:realname,
+        tel:tel
+      }
+      postMsg(code,number,data).then((res)=>{
+        //console.log( 100000, res )
+        return res
+      })
+    },
     handleStartGame(event) {
       event.preventDefault()
 
@@ -150,6 +224,7 @@ export default {
           hg.sound.readyPlay(0, 0, 'loop');
         }
       }
+
 
       // 无论是否显示游戏界面都需要调用的功能
       function complete(result) {
@@ -210,7 +285,7 @@ export default {
     handleGameOver(event) {
       console.log('this.hg---:',this.hg);
       this.gameState = "over"
-      this.gameOver(this.hg.grade.val)
+      this.gameOver(this.hg.time.val)
     },
     handleGameRestart() {
       this.gameState = 'restart'
@@ -285,6 +360,7 @@ export default {
       if (isNaN(_gameScore) || _gameScore < 0) {
         _gameScore = 0;
       }
+      _gameScore = parseFloat(_gameScore).toFixed(2);
 
       //  if (gameType != 1 && HdGame.shouldRegInfo(infoType, arguments, this)) {
 
@@ -304,20 +380,25 @@ export default {
         gameId: 50,
         style: 22,
         achieve: HdGame.encodeBase64('"' + _gameScoreStr + '"') + "0jdk7Deh8T2z5W3k0j44dTZmdTOkZGM",
-        openId: this.game_player.openid
+        openid: 'oF9hV0SyZ6tI_k2WHtpRXqfedRH4',
+        // openId: this.game_player.openid,
+        score:_gameScore
         //name: g_config.userName,
         //city_gps: typeof g_config.ipInfo.city != 'undefined' ? g_config.ipInfo.city : '',
         //province_gps: typeof g_config.ipInfo.provice != 'undefined' ? g_config.ipInfo.provice : ''
       };
 
+      const parsed = queryString.parse(location.search);
       var code = 'dppintu';
-      var number = this.game_round.number;
+      var number = parsed.number;
 
-      console.log('code--:',code,'number--:',number);
+      console.log('code--:',code,'  number--:',number);
 
       params.info = JSON.stringify(info);
 
       Object.assign(params, option);
+
+      console.log('params--:',params);
 
       setAchievebycode(code,number,params).then(data => {
         this.hideLoadToast();
