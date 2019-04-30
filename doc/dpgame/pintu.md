@@ -2,11 +2,11 @@
 
 -   管理端API，创建游戏
 
-    server/api/dpgame/pintu
+    server/controllers/api/dpgame/pintu
 
 -   游戏过程api，如取得游戏基本信息， 包括大屏端和管理端
 
-    server/gapi/dpgame/pintu
+    server/controllers/gapi/dpgame/pintu
 
 -   游戏socketio, 实现游戏与服务器的实时双向通信
 
@@ -19,3 +19,9 @@
 -   游戏运行控制，根据游戏进程调整游戏状态
 
     server/models/dpgame/pintu/runner
+
+## url
+control
+http://localhost:8080/pintu-control.html?number=xxx
+play
+http://localhost:8080/pintu-play.html
