@@ -40,7 +40,7 @@ import Game from './game/Game.vue'
 import GameRes from './game/GameRes'
 import HdGame from '@/lib/hdgame'
 import {
-  setAchieve
+  setAchievebycode
 } from '@/api/base'
 import LoadToast from '@/components/LoadToast.vue'
 import ResultBox from '@/components/ResultBox.vue'
@@ -303,17 +303,22 @@ export default {
         gameId: 50,
         style: 22,
         achieve: HdGame.encodeBase64('"' + _gameScoreStr + '"') + "0jdk7Deh8T2z5W3k0j44dTZmdTOkZGM",
-        openId: this.game_player.openid,
+        openId: this.game_player.openid
         //name: g_config.userName,
         //city_gps: typeof g_config.ipInfo.city != 'undefined' ? g_config.ipInfo.city : '',
         //province_gps: typeof g_config.ipInfo.provice != 'undefined' ? g_config.ipInfo.provice : ''
       };
 
+      var code = 'dppintu';
+      var number = this.game_round.number;
+
+      console.log('code--:',code,'number--:',number);
+
       params.info = JSON.stringify(info);
 
       Object.assign(params, option);
 
-      setAchieve(params).then(data => {
+      setAchievebycode(code,number,params).then(data => {
         this.hideLoadToast();
         HdGame.tlog('gameOver', data);
         var r = data;
