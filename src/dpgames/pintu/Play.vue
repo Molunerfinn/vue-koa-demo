@@ -38,6 +38,7 @@
 <script>
 import Game from './game/Game.vue'
 import GameRes from './game/GameRes'
+import GameArg from './game/GameArg'
 import HdGame from '@/lib/hdgame'
 import {
   setAchievebycode
@@ -47,9 +48,6 @@ import ResultBox from '@/components/ResultBox.vue'
 import {
   GameBackgroundMusicLoadEvent
 } from '@/lib/GameEvent'
-import {
-  EventBus
-} from '@/lib/EventBus'
 
 //import {simplifyLufylegend } from '@/lib/simplify'
 //关于玩家的配置信息
@@ -76,20 +74,23 @@ export default {
 
     this.hg.time = new HdGame.Time(g_config.initTime, { updateFlag: true, isDesc: false })
 
-    EventBus.$on(GameBackgroundMusicLoadEvent.name, (event) => {
+    GameArg.eventBus.$on(GameBackgroundMusicLoadEvent.name, (event) => {
       this.initBackgroundMusic()
     })
     //simplifyLufylegend( this.hg, window.g_rem )
     HdGame.initJsHead(this.hg, GameRes)
 
     this.hg.assets.add( GameRes.skinAssets );
-
-    window.hg = this.hg
+    if( this.debug ){
+      window.hg = this.hg
+      window.gameArg = GameArg      
+    }
 
     console.log("created gameState=", this.gameState, this.hg.grade)
   },
   data() {
     return {
+      debug: true,
       soundIconClass: "soundIconOff soundIcon",
       game_player: {},
       hg: {
