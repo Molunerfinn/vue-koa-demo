@@ -95,7 +95,7 @@ export default {
     GameArg.eventBus.$on(GameEndEvent.name, (event)=>{
       this.hg.time.end();
       this.gameOver = true;
-      this.gameOver(this.hg.time.val);
+      this.$emit('game-over')
       console.log( "GameEndEvent1")
     })
 
