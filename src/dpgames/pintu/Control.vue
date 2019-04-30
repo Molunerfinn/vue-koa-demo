@@ -162,7 +162,7 @@ export default {
         that.socket.on('connect', () => {
           that.loading = false;
           console.log("socket.connect=",that.socket.connected); // true
-          //that.bindSocketEvents()
+          that.bindSocketEvents()
         });
         // 游戏已经结束，获取游戏排名
         if( that.gameRoundState == 5){
@@ -214,6 +214,7 @@ export default {
 			}
 			//绑定 游戏开始倒计时事件，点击开始按钮
 			that.socket.on('GameStartingEvent', function(data){
+        console.log('===========gameRoundState============:',that.gameRoundState)
 				that.gameRoundState = data.gameRoundState
 				that.timeToStart = data.timeToStart
 				console.log( 'GameStartingEvent', data)
@@ -223,20 +224,22 @@ export default {
 				that.gameRoundState = 4
 				that.timeToEnd = data.timeToEnd
 				var newGamePlayerScores = data.gamePlayerScores
-				//console.log("newGamePlayerScores=",newGamePlayerScores)
-				for( var i=0; i< newGamePlayerScores.length; i++ ){
-					var playerScore = newGamePlayerScores[i]
-					for( var j=0; j< that.gamePlayers.length; j++ ){
-						var player = that.gamePlayers[j]
-						if( player.id == playerScore.id){
-							//console.log( "player=", player)
-							playerScore.nickname = player.nickname
-							playerScore.avatar = player.avatar
-							break;
-						}
-					}
-				}
-				that.gamePlayerScores = newGamePlayerScores
+				console.log("newGamePlayerScores=",newGamePlayerScores)
+        if(newGamePlayerScores!==null&&newGamePlayerScores!==undefined){
+          for( var i=0; i< newGamePlayerScores.length; i++ ){
+            var playerScore = newGamePlayerScores[i]
+            for( var j=0; j< that.gamePlayers.length; j++ ){
+              var player = that.gamePlayers[j]
+              if( player.id == playerScore.id){
+                //console.log( "player=", player)
+                playerScore.nickname = player.nickname
+                playerScore.avatar = player.avatar
+                break;
+              }
+            }
+          }
+          that.gamePlayerScores = newGamePlayerScores
+        }
 				console.log( 'GameRunningEvent', data )
 			});
 			that.socket.on('GameEndEvent', function(data){
@@ -247,6 +250,7 @@ export default {
 		},
 		// 准备开始，玩家开始注册
 		openGameHandler: function(){
+      console.log( 'openGameHandler')
 			var that = this
 			that.socket.emit('OpenGameEvent', {}, function(data){
 					that.gameRoundState = data.gameRoundState
@@ -263,6 +267,8 @@ export default {
 			that.canstart = false;
 			// 游戏倒计时开始
 			that.socket.emit('StartGameEvent', {}, function(data){
+        that.gameRoundState = data.gameRoundState;
+        console.log("	that.gameRoundState =",	that.gameRoundState );
 				console.log( 'StartGameEvent', data)
 				that.gameRoundState = data.gameRoundState
 			});
@@ -273,6 +279,8 @@ export default {
 		getFinalScores: function(){
 			var that = this;
 			that.socket.emit('GetGamePlayersEvent', {}, function(data){
+        that.gameRoundState = data.gameRoundState;
+        console.log("	that.gameRoundState =",	that.gameRoundState );
 				console.log( "GetGamePlayersEvent=", data )
 				that.gamePlayers = data.gamePlayers
 				that.gamePlayerScores = data.gamePlayers.sort(function(a,b){ return b.score-a.score; })
@@ -296,6 +304,7 @@ export default {
 			var that = this
 			console.log("	emit ResetGameEvent" )
 			that.socket.emit('ResetGameEvent', {}, function(data){
+        console.log('data--:',data)
 					that.gameRoundState = data.gameRoundState;
 					console.log("	that.gameRoundState =",	that.gameRoundState );
 					that.timeToEnd = 3;

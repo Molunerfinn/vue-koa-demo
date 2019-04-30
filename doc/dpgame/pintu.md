@@ -20,8 +20,18 @@
 
     server/models/dpgame/pintu/runner
 
+<<<<<<< HEAD
 ## url
 control
 http://localhost:8080/pintu-control.html?number=xxx
 play
 http://localhost:8080/pintu-play.html
+=======
+## 规则
+# 手机端
+0. 游戏首页可以查看游戏规则
+1. 玩家拼出图片，实时显示玩家成绩。
+2. 玩家关闭游戏，重新进入，如果游戏结束，显示玩家成绩。
+   如果游戏没有结束，同时玩家上次已经拼出图片，显示玩家成绩。
+   如果游戏没有结束，同时玩家上次没有拼出图片，玩家重新开始。
+>>>>>>> de5d779a2b8f8e4c050de982ed557916b5f5745b

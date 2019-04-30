@@ -74,7 +74,7 @@ export default {
         gameImgVisible: false,
         tipsImgVisible: false
       },
-      gameOver: false,
+      isgameOver: false,
       rem: 20,
       skinAssets: {
         gameStartImg : '/static/dp-pintu/image/skin/startbtn2.png',
@@ -94,7 +94,7 @@ export default {
 
     GameArg.eventBus.$on(GameEndEvent.name, (event)=>{
       this.hg.time.end();
-      this.gameOver = true;
+      this.isgameOver = true;
       this.gameOver(this.hg.time.val);
       console.log( "GameEndEvent1")
     })
@@ -192,7 +192,7 @@ export default {
          this.ui.gameImgVisible = true
          GameArg.firstFlag = true;
          GameArg.toggleFlag = true;
-         this.gameOver = false;
+         this.isgameOver = false;
      }
 
 

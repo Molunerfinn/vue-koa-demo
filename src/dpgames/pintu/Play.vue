@@ -207,6 +207,7 @@ export default {
 
     },
     handleGameOver(event) {
+      console.log('this.hg---:',this.hg);
       this.gameState = "over"
       this.gameOver(this.hg.grade.val)
     },
