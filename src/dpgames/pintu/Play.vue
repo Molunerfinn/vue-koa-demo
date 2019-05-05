@@ -9,6 +9,10 @@
     tel:<td><input id="tel" ></input></td></br>
     <button  @click="post_msg()" type="button">commit</button>
   </div>
+  <div class="wait" v-show="ui.wait">
+    wait</br>
+    please wait for start
+  </div>
   <div class="home" v-show="ui.homeVisible">
     <div id="homeBgBox">
       <img id="homeBg" :src="homeBgImg" />
@@ -111,34 +115,36 @@ export default {
       var gameInfo = data
       this.gameState = gameInfo['gameRound'].state
       this.game_player = gameInfo['gamePlayer']
+      console.log('realname',this.game_player.realname);
+      console.log(this.game_player.cellphone);
 
-      if(this.gameState==1){
+      if(this.gameState==1&&(this.game_player.realname==''||this.game_player.cellphone=='')){
         this.ui.unstarted = false
         this.ui.sign_up = true
-      }
-      if(this.gameState==4){
+      }else if (this.gameState==1&&(this.game_player.realname!==''||this.game_player.cellphone!=='')) {
+        this.ui.unstarted = false
+        this.ui.wait = true
+      }else if(this.gameState==4){
         this.ui.unstarted = false
         this.ui.homeVisible = true
-      }
+      }else if(this.gameState==5||(gameInfo['gameResult']!==null&&gameInfo['gameResult']!==undefined)){
+        var r = gameInfo['ret']
+        var arg = {
+          isSuc: r.isSuc,
+          gameScore: gameInfo['gamePlayer'].score,
+          minScore: 0, //到多少分可以抽奖
+          bestScore: r.score,
+          gameType: gameType,
+          rank: r.rank,
+          beat: r.beat,
+          isEqualDraw: false,
+          bestCostTime: r.bestCostTime
+        };
 
-      // if(this.gameState==5||(gameInfo['gameResult']!==null&&gameInfo['gameResult']!==undefined)){
-      //   var r = gameInfo['ret']
-      //   var arg = {
-      //     isSuc: r.isSuc,
-      //     gameScore: gameInfo['gamePlayer'].score,
-      //     minScore: 0, //到多少分可以抽奖
-      //     bestScore: r.score,
-      //     gameType: gameType,
-      //     rank: r.rank,
-      //     beat: r.beat,
-      //     isEqualDraw: false,
-      //     bestCostTime: r.bestCostTime
-      //   };
-      //
-      //   this.resultBoxParams = arg
-      //   this.resultBoxCommand = "showResult"
-      //   this.resultBoxVisible = true
-      // }
+        this.resultBoxParams = arg
+        this.resultBoxCommand = "showResult"
+        this.resultBoxVisible = true
+      }
 
     })
   },
@@ -160,7 +166,8 @@ export default {
         homeVisible: false, // 初始页面是否可见，游戏时需要隐藏
         gameBoxVisible: false, // 游戏页面
         ruleImgVisible: true, // 锦囊按钮
-        loadToastVisible: false
+        loadToastVisible: false,
+        wait: false
       },
       loadToast: {
         isLoading: false,
@@ -187,6 +194,9 @@ export default {
       }
       postMsg(code,number,data).then((res)=>{
         //console.log( 100000, res )
+        this.ui.sign_up = false
+        this.ui.unstarted = false
+        this.ui.wait = true
         return res
       })
     },
