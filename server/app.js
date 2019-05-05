@@ -57,6 +57,9 @@ app.use(session(app)); // note koa-session@3.4.0 is v1 middleware which generate
 router.use('/auth', auth.routes()) // 挂载到koa-router上，同时会让所有的auth的请求路径前面加上'/auth'的请求路径。
 //router.use('/api', jwt({secret: 'vue-koa-demo'}), api.routes()) // 所有走/api/打头的请求都需要经过jwt验证。
 
+import authwx from './routes/authwx.js'
+router.use('/authwx', authwx.routes())
+
 // 游戏管理api
 import gameRound from './routes/api/game_round.js'
 router.use('/api/game_rounds', gameRound.routes())
@@ -68,6 +71,11 @@ router.use('/api/game', gameRoundByCode.routes())
 // 游戏过程api
 import gameBaseByCode from './routes/gapi/base_by_code.js'
 router.use('/gapi/base', gameBaseByCode.routes())
+
+// 大屏游戏过程api
+import dpgameBaseByCode from './routes/gapi/dpbase_by_code.js'
+router.use('/gapi/dpbase', dpgameBaseByCode.routes())
+
 import roundByCode from './routes/gapi/game_round_by_code.js'
 router.use('/gapi/game', roundByCode.routes())
 
