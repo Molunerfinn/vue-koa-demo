@@ -1,6 +1,4 @@
-const router = require('koa-router')({
-  prefix: '/authwx'
-}); // router middleware for koa
+const router = require('koa-router')(); // router middleware for koa
 
 var config = require(`../config/wechat.${process.env.NODE_ENV}.json`);
 var wechat_config = config.wechat;
