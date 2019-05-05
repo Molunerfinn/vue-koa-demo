@@ -5,6 +5,7 @@ const PintuSocketEvent = {
   ResetGameEvent: "ResetGameEvent",
   GameStartingEvent: "GameStartingEvent", // data: countTime
   GameRunningEvent: "GameRunningEvent",
+  GameOpeningEvent: "GameOpeningEvent",
   GameEndEvent: "GameEndEvent",
 }
 // 游戏socketio通讯
@@ -41,8 +42,16 @@ export default class DpPintuSocket {
     // 游戏开始签到事件
     socket.on('OpenGameEvent', async (data, callback) => {
       console.log('OpenGameEvent');
+      const namespace = socket.nsp; // newNamespace.name === '/dynamic-101'
       let runner = new PintuRunner(number)
       let game_round = await runner.openRound()
+      socket.emit('GameOpeningEvent', {
+        gameState: 1
+      });
+      let payload = {
+        gameState: 1
+      }
+      namespace.emit('GameOpeningEvent', payload);
       callback({
         gameRoundState: game_round.state
       })

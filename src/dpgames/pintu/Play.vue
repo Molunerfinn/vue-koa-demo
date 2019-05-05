@@ -17,7 +17,7 @@
     <div id="homeBgBox">
       <img id="homeBg" :src="homeBgImg" />
     </div>
-    <div class="gameInfoBox">
+    <div class="this.gameInfoBox">
       <div class="titleImg imgContainer absCenter">
         <img id="titleImg" class="slaveImg abs" :src="titleImg" style="width:15.232rem;height:5.778666666666667rem;top:2.524rem;left:0.384rem;" />
       </div>
@@ -64,6 +64,7 @@ import {
   GameBackgroundMusicLoadEvent
 } from '@/lib/GameEvent'
 import queryString from 'query-string'
+import io from 'socket.io-client'
 
 //import {simplifyLufylegend } from '@/lib/simplify'
 //关于玩家的配置信息
@@ -86,6 +87,7 @@ export default {
     ResultBox
   },
   created() {
+    var that = this
     this.hg.grade = new HdGame.Grade(0)
 
     this.hg.time = new HdGame.Time(g_config.initTime, { updateFlag: true, isDesc: false })
@@ -110,13 +112,24 @@ export default {
     const parsed = queryString.parse(location.search);
     var code = 'dppintu';
     var number = parsed.number;
+
+    that.socketNameSpace = "/channel-dppintu-"+ number
+    that.socket = io( that.socketNameSpace )
+    console.log( "that.socketNameSpace = ", that.socketNameSpace, that.socket)
+    that.socket.on('connect', () => {
+      that.loading = false;
+      console.log("socket.connect=",that.socket.connected); // true
+      that.bindSocketEvents()
+    });
+
     getGameResult(code,number,params).then(data => {
       console.log(data);
-      var gameInfo = data
-      this.gameState = gameInfo['gameRound'].state
-      this.game_player = gameInfo['gamePlayer']
+      this.gameInfo = data
+      this.gameState = this.gameInfo['gameRound'].state
+      this.game_player = this.gameInfo['gamePlayer']
       console.log('realname',this.game_player.realname);
       console.log(this.game_player.cellphone);
+      console.log('gameResult--:',this.gameInfo['gameResult']!==null&&this.gameInfo['gameResult']!==undefined);
 
       if(this.gameState==1&&(this.game_player.realname==''||this.game_player.cellphone=='')){
         this.ui.unstarted = false
@@ -127,11 +140,13 @@ export default {
       }else if(this.gameState==4){
         this.ui.unstarted = false
         this.ui.homeVisible = true
-      }else if(this.gameState==5||(gameInfo['gameResult']!==null&&gameInfo['gameResult']!==undefined)){
-        var r = gameInfo['ret']
+      }
+      if(this.gameState==5||(this.gameInfo['gameResult']!==null&&this.gameInfo['gameResult']!==undefined)){
+        console.log('5555555555555555');
+        var r = this.gameInfo['ret']
         var arg = {
           isSuc: r.isSuc,
-          gameScore: gameInfo['gamePlayer'].score,
+          gameScore: this.gameInfo['gamePlayer'].score,
           minScore: 0, //到多少分可以抽奖
           bestScore: r.score,
           gameType: gameType,
@@ -151,7 +166,9 @@ export default {
   data() {
     return {
       debug: true,
+      gameInfo:{},
       soundIconClass: "soundIconOff soundIcon",
+      first_start: true,
       game_player: {},
       hg: {
         showGameBox: true
@@ -179,6 +196,69 @@ export default {
     }
   },
   methods: {
+    bindSocketEvents: function(){
+      console.log('bindSocketEvents...')
+      var that = this
+      that.socket.on('GameOpeningEvent', function(data){
+        console.log('GameOpeningEvent');
+				that.gameState = data.gameState
+        that.resultBoxVisible = false
+        console.log('===========gameState============:',that.gameState)
+        if(that.gameState==1&&(that.game_player.realname==''||that.game_player.cellphone=='')){
+          that.ui.unstarted = false
+          that.ui.sign_up = true
+        }else if (that.gameState==1&&(that.game_player.realname!==''||that.game_player.cellphone!=='')) {
+          that.ui.unstarted = false
+          that.ui.wait = true
+        }
+				console.log( 'GameOpeningEvent', data)
+			});
+      that.socket.on('GameStartingEvent', function(data){
+        console.log('===========gameState============:',that.gameState)
+				that.gameState = data.gameState
+				that.timeToStart = data.timeToStart
+				console.log( 'GameStartingEvent', data)
+			});
+			//绑定 游戏倒计时事件，游戏时间倒计时
+			that.socket.on('GameRunningEvent', function(data){
+        console.log('first_start--:',that.first_start);
+        if(that.first_start){
+          that.first_start = false
+          that.ui.wait = false
+          that.gameState = 4
+          that.ui.unstarted = false
+          that.ui.homeVisible = true
+          that.resultBoxVisible = false
+        }
+        if(that.gameInfo['gameResult']!==null&&that.gameInfo['gameResult']!==undefined){
+          var r = that.gameInfo['ret']
+          var arg = {
+            isSuc: r.isSuc,
+            gameScore: that.gameInfo['gamePlayer'].score,
+            minScore: 0, //到多少分可以抽奖
+            bestScore: r.score,
+            gameType: gameType,
+            rank: r.rank,
+            beat: r.beat,
+            isEqualDraw: false,
+            bestCostTime: r.bestCostTime
+          };
+
+          that.resultBoxParams = arg
+          that.resultBoxCommand = "showResult"
+          that.resultBoxVisible = true
+        }
+				console.log( 'GameRunningEvent', data )
+			});
+			that.socket.on('GameEndEvent', function(data){
+				that.gameState = 5
+        that.ui.unstarted = true
+        that.ui.homeVisible = false
+        that.ui.gameBoxVisible = false
+        that.resultBoxVisible = true
+				console.log( 'GameEndEvent', data)
+			});
+  },
     post_msg: function () {
       console.log('post_msg');
       var realname = document.getElementById('name').value
