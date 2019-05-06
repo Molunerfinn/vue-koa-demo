@@ -90,7 +90,7 @@ export default {
     var that = this
     this.hg.grade = new HdGame.Grade(0)
 
-    //this.hg.time = new HdGame.Time(g_config.initTime, { updateFlag: true, isDesc: false })
+    this.hg.time = new HdGame.Time(g_config.initTime, { updateFlag: true, isDesc: false })
 
     GameArg.eventBus.$on(GameBackgroundMusicLoadEvent.name, (event) => {
       this.initBackgroundMusic()
