@@ -57,7 +57,7 @@ import {
   setAchievebycode,
   getGameResult,
   postMsg,
-} from '@/api/base'
+} from '@/api/dpgame/pintu.js'
 import LoadToast from '@/components/LoadToast.vue'
 import ResultBox from '@/components/DpGameResult.vue'
 import {
@@ -141,25 +141,25 @@ export default {
         this.ui.unstarted = false
         this.ui.homeVisible = true
       }
-      if(this.gameState==5||(this.gameInfo['gameResult']!==null&&this.gameInfo['gameResult']!==undefined)){
-        console.log('5555555555555555');
-        var r = this.gameInfo['ret']
-        var arg = {
-          isSuc: r.isSuc,
-          gameScore: this.gameInfo['gamePlayer'].score,
-          minScore: 0, //到多少分可以抽奖
-          bestScore: r.score,
-          gameType: gameType,
-          rank: r.rank,
-          beat: r.beat,
-          isEqualDraw: false,
-          bestCostTime: r.bestCostTime
-        };
-
-        this.resultBoxParams = arg
-        this.resultBoxCommand = "showResult"
-        this.resultBoxVisible = true
-      }
+      // if(this.gameState==5||(this.gameInfo['gameResult']!==null&&this.gameInfo['gameResult']!==undefined)){
+      //   console.log('5555555555555555');
+      //   var r = this.gameInfo['ret']
+      //   var arg = {
+      //     isSuc: r.isSuc,
+      //     gameScore: this.gameInfo['gamePlayer'].score,
+      //     minScore: 0, //到多少分可以抽奖
+      //     bestScore: r.score,
+      //     gameType: gameType,
+      //     rank: r.rank,
+      //     beat: r.beat,
+      //     isEqualDraw: false,
+      //     bestCostTime: r.bestCostTime
+      //   };
+      //
+      //   this.resultBoxParams = arg
+      //   this.resultBoxCommand = "showResult"
+      //   this.resultBoxVisible = true
+      // }
 
     })
   },
@@ -495,12 +495,13 @@ export default {
         HdGame.tlog('gameOver', data);
         var r = data;
         var isShowPoup = true;
+
         if (r.rt == 0) {
           var arg = {
             isSuc: r.isSuc,
-            gameScore: _gameScoreStr,
+            gameScore: r.score,
             minScore: 0, //到多少分可以抽奖
-            bestScore: r.score,
+            bestScore: r.bestScore,
             gameType: gameType,
             rank: r.rank,
             beat: r.beat,

@@ -6,7 +6,7 @@
         				<img src="/game-yiy-assets/app/images/skin1/tu_03.png" class="bg-nei-top-erwei" style="display:none;">
                 <div class="bg-nei-top-right"><span></span><img src="/game-yiy-assets/app/images/skin1/tu_05.png"></div>
         				<div class="bg-nei-top-zhong" ><img src="/game-yiy-assets/app/images/skin1/bgtop.gif"  v-show="computedGameState=='open'||computedGameState=='started'">
-                  <p  v-show="computedGameState=='started'"><span>游戏倒计时</span><strong>|</strong><span>剩余<b>{{timeToEnd}</b>秒</span></p>
+                  <!-- <p  v-show="computedGameState=='started'"><span>游戏倒计时</span><strong>|</strong><span>剩余<b>{{timeToEnd}</b>秒</span></p> -->
                 </div>
         </div>
       </div>
@@ -30,7 +30,7 @@
         </div>
       </div>
       <div class="fullfill state-open qiandao" v-show="computedGameState=='open'">
-
+        <p style="font-size:30px;">剩余30秒</p>
           <div class="bg-zhunbei">已有<b>{{gamePlayers.length}}</b>人准备<span>请耐心等待游戏开始</span></div>
           <ul class="canyu">
             <li class="qiaodaosf" v-for="player in gamePlayers">
@@ -39,7 +39,7 @@
             </li>
           </ul>
           <div class="actions">
-            <button  class="btn btn-primary" @click="handleStartGame">开始游戏</button>
+            <button  class="btn btn-primary" @click="handleStartGame" >开始游戏</button>
           </div>
        </div>
       <div class="fullfill game-state state-starting " v-show="computedGameState=='starting'">
@@ -50,6 +50,7 @@
       </div>
 
       <div class="fullfill game-state state-started" v-show="computedGameState=='started'">
+        <p style="font-size:30px;">剩余{{timeToEnd}}秒</p>
            <ul class="players">
             <li v-for="(player,i ) in computedTop12Players">
               <span class="bg-nei-yd"><img class="avatar" v-bind:src="player.avatar"></span>
@@ -130,6 +131,7 @@ export default {
   data() {
     return {
       //socket
+      s: 30,
       debug: true,
       error: false,
       errorMsg: null,
@@ -205,6 +207,15 @@ export default {
 		},
 	},
   methods: {
+    countTime: function () {
+      var leftTime = this.s
+
+      if (leftTime >= 0) {
+        this.s = leftTime - 1
+      }
+      // 递归每秒调用countTime方法，显示动态时间效果
+      setTimeout(this.countTime(), 1000)
+    },
     //绑定socket事件
 		bindSocketEvents: function(){
 			var that = this
@@ -273,6 +284,7 @@ export default {
 				that.gameRoundState = data.gameRoundState
 			});
 			clearInterval(this.playerCheckTimerId)
+      this.countTime()
 		},
 
 		// 获取游戏排名
