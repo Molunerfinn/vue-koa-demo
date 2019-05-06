@@ -9,7 +9,7 @@
         <div class="userImgBox" style="border-color:"><img :src="gamePlayer.avatar" class="userImg" /></div>
       </div>
       <div class="timeBox">
-        时间<br><span class="time">{{time}}</span>
+        时间<br><span class="time">{{timeToEnd}}</span>
       </div>
     </div>
     <div id="gameImgBox">
@@ -59,7 +59,7 @@ export default {
       type: [String, Number],
       default: 0
     },
-    time: Number // 游戏时间计时
+    timeToEnd: Number // 游戏时间计时
   },
   components:{
     Puzzle
@@ -88,6 +88,7 @@ export default {
   created(){
     this.rem = window.g_rem
     Object.assign( this.skinAssets, GameRes.skinAssets)
+
   },
   mounted(){
     console.log( "mounted props=", this.hg, this.command)
@@ -107,6 +108,8 @@ export default {
       this.hg.sound.play(1);
       console.log( "GameScoreChangedEvent1")
     })
+
+    // this.handleStartGame()
 
     // this.hg.time.on( 'setTime', (e)=>{
     //   this.time = e
@@ -144,9 +147,9 @@ export default {
 
       if(GameArg.firstFlag){
           GameArg.firstFlag = false;
-          this.ui.gameStartImgVisible=false
+          this.ui.gameStartImgVisible=true
           this.ui.gameImgVisible = false
-          this.ui.tipsImgVisible = true
+          this.ui.tipsImgVisible = false
           this.ui.gameImgWrapVisible = true
           this.hg.time.start()
           this.$nextTick( ()=>{
@@ -189,7 +192,7 @@ export default {
          //初始化游戏头部 头像，计时，分数
          this.ui.gameStartImgVisible = true
          this.ui.tipsImgVisible = false
-         this.ui.gameImgWrapVisible = false
+         this.ui.gameImgWrapVisible = true
          this.ui.gameImgVisible = true
          GameArg.firstFlag = true;
          GameArg.toggleFlag = true;

@@ -42,7 +42,7 @@
 
   </div>
 
-  <Game ref="game" :hg="hg" :command="gameState" @game-over="handleGameOver" v-show="ui.gameBoxVisible"> </Game>
+  <Game ref="game" :hg="hg" :timeToEnd="timeToEnd" :command="gameState" @game-over="handleGameOver" v-show="ui.gameBoxVisible"> </Game>
   <LoadToast ref="load-toast" is-loading="loadToast.isLoading"> </LoadToast>
   <ResultBox ref="result-box" :home-callback="home" :again-callback="handleGameRestart" v-show="resultBoxVisible" :params="resultBoxParams" :command="resultBoxCommand"> </ResultBox>
 </div>
@@ -193,7 +193,7 @@ export default {
       resultBoxVisible: false, //游戏结果页面
       resultBoxParams: {},
       resultBoxCommand: null,
-      time: 30
+      timeToEnd: 30
     }
   },
   methods: {
@@ -222,7 +222,7 @@ export default {
 			});
 			//绑定 游戏倒计时事件，游戏时间倒计时
 			that.socket.on('GameRunningEvent', function(data){
-        // that.time = xxx
+        that.timeToEnd = data.timeToEnd
 
         console.log('first_start--:',that.first_start);
         if(that.first_start){
