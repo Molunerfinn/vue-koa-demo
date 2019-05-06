@@ -90,7 +90,7 @@ export default {
     var that = this
     this.hg.grade = new HdGame.Grade(0)
 
-    this.hg.time = new HdGame.Time(g_config.initTime, { updateFlag: true, isDesc: false })
+    //this.hg.time = new HdGame.Time(g_config.initTime, { updateFlag: true, isDesc: false })
 
     GameArg.eventBus.$on(GameBackgroundMusicLoadEvent.name, (event) => {
       this.initBackgroundMusic()
@@ -192,7 +192,8 @@ export default {
       },
       resultBoxVisible: false, //游戏结果页面
       resultBoxParams: {},
-      resultBoxCommand: null
+      resultBoxCommand: null,
+      time: 30
     }
   },
   methods: {
@@ -221,6 +222,8 @@ export default {
 			});
 			//绑定 游戏倒计时事件，游戏时间倒计时
 			that.socket.on('GameRunningEvent', function(data){
+        // that.time = xxx
+
         console.log('first_start--:',that.first_start);
         if(that.first_start){
           that.first_start = false
@@ -375,7 +378,7 @@ export default {
     handleGameOver(event) {
       console.log('this.hg---:',this.hg);
       this.gameState = "over"
-      this.gameOver(this.hg.time.val)
+      this.gameOver(this.time)
     },
     handleGameRestart() {
       this.gameState = 'restart'

@@ -58,7 +58,8 @@ export default {
     command: {
       type: [String, Number],
       default: 0
-    }
+    },
+    time: Number // 游戏时间计时
   },
   components:{
     Puzzle
@@ -81,7 +82,7 @@ export default {
         tipsImg : '/static/dp-pintu/image/skin/tipsbtn.png',
         gameImg : '/static/dp-pintu/image/skin/gameimg.jpg',
       },
-      time: 0
+      //time: 0
     }
   },
   created(){
@@ -107,11 +108,11 @@ export default {
       console.log( "GameScoreChangedEvent1")
     })
 
-    this.hg.time.on( 'setTime', (e)=>{
-      this.time = e
-      console.log( "setTime", e)
-    })
-    this.hg.time.on('end', this.endGame)
+    // this.hg.time.on( 'setTime', (e)=>{
+    //   this.time = e
+    //   console.log( "setTime", e)
+    // })
+    // this.hg.time.on('end', this.endGame)
 
     this.hg.sound.get("0",
       function (lsound) {
