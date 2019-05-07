@@ -104,7 +104,8 @@ export default {
     //simplifyLufylegend( this.hg, window.g_rem )
     HdGame.initJsHead(this.hg, GameRes)
 
-    this.hg.assets.add( GameRes.skinAssets );
+    this.hg.assets.add( GameRes.skinAssets )
+
     if( this.debug ){
       window.hg = this.hg
       window.gameArg = GameArg

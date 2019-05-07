@@ -141,14 +141,18 @@ this.handleStartGame()
             "background-position":"center center",
             "background-size":nowSize.width+"px "+nowSize.height+"px"
         })
-        this.puzzleWidth =  ele.outerWidth()
-        this.puzzleHeight =  ele.outerHeight()
+        this.puzzleWidth =  ele.outerWidth(true)
+        this.puzzleHeight =  ele.outerHeight(true)
         this.$nextTick( ()=>{
           //gameImgWrapVisible 显示之后才能取得 width，height
           this.$refs['puzzle'].initGame()
         })
     })
-
+    this.hg.assets.onload( ()=>{
+      console.log( "hg.assets.onload")
+      let bgHeight = HdGame.getBgHeight();
+      $(".gameBgBox").css("height", bgHeight / this.rem + "rem")
+    })
 
   },
   methods:{

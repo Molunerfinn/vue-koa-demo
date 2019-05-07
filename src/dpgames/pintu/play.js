@@ -5,7 +5,7 @@ import Play from './Play.vue'
 // import ElementUI from 'element-ui'
 // import 'element-ui/lib/theme-default/index.css'
 // import VueRouter from 'vue-router'
-import '@/assets/kouhong/css/base.css'
+import '@/assets/common/css/play-base.css'
 import '@/assets/dp-pintu/css/game.css'
 
 //import EventBus  from '@/plugins/EventBus'

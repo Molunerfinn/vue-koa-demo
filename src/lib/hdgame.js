@@ -5,6 +5,7 @@ import {
 } from '@/lib/simplify'
 
 //import {  EventBus } from '@/lib/EventBus'
+import $ from "jquery"
 import _ from 'lodash'
 import HdUtil from './hdutil'
 
@@ -19,8 +20,7 @@ import Log from './hdgame/log'
 import Grade from './hdgame/grade'
 import Time from './hdgame/time'
 
-const HdGame = {}
-const isReady = true
+const HdGame = { }
 const _resRoot = '/static/kouhong'
 const g_config = {
   initTime: 10,
@@ -227,10 +227,7 @@ HdGame.initJsHead = function(hg, _data) {
 
         function loadEnd() {
           _this.loadComplete = true;
-          // let bgHeight = HdGame.getBgHeight();
-          // if (!HdGame.nootNeedFixHeight) {
-          //   $("#homeBgBox,.gameBgBox").css("height", bgHeight / g_rem + "rem")
-          // }
+
            let onEnd = function() {
              eventBus.fire("load");
           //   if (bgHeight > $(window).height()) {
@@ -244,7 +241,7 @@ HdGame.initJsHead = function(hg, _data) {
         function checkOtherLoaded() {
           setTimeout(function() {
               //假设已经DOM加载成功
-              if (isReady) {
+              if ($.isReady) {
                 console.log("dom is ready!");
                 //if (!g_config.test && g_config.isForbidShareactivity  ) {
                 //  wx.ready(loadEnd)
