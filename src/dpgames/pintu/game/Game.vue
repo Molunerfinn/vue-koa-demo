@@ -14,7 +14,7 @@
     </div>
     <div id="gameImgBox">
       <div id="gameImg" v-show="ui.gameImgVisible"></div>
-      <Puzzle ref="puzzle" :img-url="skinAssets.gameImg" v-show="ui.gameImgWrapVisible"></Puzzle>
+        <Puzzle ref="puzzle" :width="puzzleWidth" :height="puzzleHeight" :img-url="skinAssets.gameImg" v-show="ui.gameImgWrapVisible"></Puzzle>
     </div>
     <div class="imgContainer absCenter" style="top:0;">
       <div id="gameStartBtns" class="slaveImg abs" @click="handleStartGame" style="width:7rem;height:2rem;top:21rem;left:4.5rem;" >
@@ -82,6 +82,8 @@ export default {
         tipsImg : '/static/dp-pintu/image/skin/tipsbtn.png',
         gameImg : '/static/dp-pintu/image/skin/gameimg.jpg',
       },
+      puzzleWidth: 0,
+      puzzleHeight: 0
       //time: 0
     }
   },
@@ -109,7 +111,6 @@ export default {
       console.log( "GameScoreChangedEvent1")
     })
 
-    this.handleStartGame()
 
     // this.hg.time.on( 'setTime', (e)=>{
     //   this.time = e
@@ -140,7 +141,15 @@ export default {
             "background-position":"center center",
             "background-size":nowSize.width+"px "+nowSize.height+"px"
         })
+        this.puzzleWidth =  ele.outerWidth()
+        this.puzzleHeight =  ele.outerHeight()
+        this.$nextTick( ()=>{
+          //gameImgWrapVisible 显示之后才能取得 width，height
+          this.$refs['puzzle'].initGame()
+        })
     })
+
+
   },
   methods:{
     handleStartGame(){
@@ -156,7 +165,6 @@ export default {
           this.$nextTick( ()=>{
             console.log('Tick');
             //gameImgWrapVisible 显示之后才能取得 width，height
-            this.$refs['puzzle'].initGame()
           })
       }else if(GameArg.toggleFlag){
           this.ui.gameImgWrapVisible = false

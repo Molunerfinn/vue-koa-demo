@@ -139,7 +139,8 @@ export default {
         this.ui.wait = true
       }else if(this.gameState==4){
         this.ui.unstarted = false
-        this.ui.homeVisible = true
+        this.ui.homeVisible = false
+        that.ui.gameBoxVisible = true
       }
       // if(this.gameState==5||(this.gameInfo['gameResult']!==null&&this.gameInfo['gameResult']!==undefined)){
       //   console.log('5555555555555555');
@@ -230,7 +231,8 @@ export default {
           that.ui.wait = false
           that.gameState = 4
           that.ui.unstarted = false
-          that.ui.homeVisible = true
+          this.ui.homeVisible = false
+          that.ui.gameBoxVisible = true
           that.resultBoxVisible = false
         }
         if(that.gameInfo['gameResult']!==null&&that.gameInfo['gameResult']!==undefined){
