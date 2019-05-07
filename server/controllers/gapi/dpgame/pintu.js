@@ -35,7 +35,7 @@ class pintu {
     console.log('login');
     let code = ctx.params.code
     let number = ctx.params.number
-    let to_player_id = ctx.query.to_player_id
+
     var url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + wechat_config.appid + '&redirect_uri=http://testwx.getstore.cn/gapi/dppintu/pintu/' + number + '/get_wx_info&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect';
     ctx.redirect(url)
   }
@@ -44,7 +44,7 @@ class pintu {
     console.log('get_wx_info');
     let number = ctx.params.number
     let code = ctx.query.code
-    let to_player_id = ctx.query.code
+
     var token = await client.getAccessToken(code);
     console.log('token:', token);
     var accessToken = token.data.access_token;
@@ -53,7 +53,7 @@ class pintu {
     console.log('openid:', openid);
     var userInfo = await client.getUser(openid);
     console.log('userInfo:', userInfo);
-    let params = '?openid=' + userInfo.openid + '&headimgurl=' + userInfo.headimgurl + '&nickname=' + encodeURIComponent(userInfo.nickname) + '&to_player_id=' + to_player_id + '&number=' + number;
+    let params = '?openid=' + userInfo.openid + '&headimgurl=' + userInfo.headimgurl + '&nickname=' + encodeURIComponent(userInfo.nickname) + '&number=' + number;
     console.log(' http://testwx.getstore.cn/pintu-play.html' + params)
     ctx.redirect('http://testwx.getstore.cn/pintu-play.html' + params)
   }
