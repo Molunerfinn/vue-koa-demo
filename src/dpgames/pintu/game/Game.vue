@@ -109,7 +109,7 @@ export default {
       console.log( "GameScoreChangedEvent1")
     })
 
-    // this.handleStartGame()
+    this.handleStartGame()
 
     // this.hg.time.on( 'setTime', (e)=>{
     //   this.time = e
@@ -151,8 +151,10 @@ export default {
           this.ui.gameImgVisible = false
           this.ui.tipsImgVisible = false
           this.ui.gameImgWrapVisible = true
-          this.hg.time.start()
+          // this.hg.time.start()
+          console.log('handleStartGame');
           this.$nextTick( ()=>{
+            console.log('Tick');
             //gameImgWrapVisible 显示之后才能取得 width，height
             this.$refs['puzzle'].initGame()
           })
@@ -193,7 +195,7 @@ export default {
          this.ui.gameStartImgVisible = true
          this.ui.tipsImgVisible = false
          this.ui.gameImgWrapVisible = true
-         this.ui.gameImgVisible = true
+         this.ui.gameImgVisible = false
          GameArg.firstFlag = true;
          GameArg.toggleFlag = true;
          this.isgameOver = false;
