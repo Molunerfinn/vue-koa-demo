@@ -2,14 +2,13 @@
 
 <div id="gameImgWrap" >
 <div v-for="(piece, index) in pieces" :id="'puzzle-'+index" class="puzzle" :data-index="piece" :style="getPieceStyle(index)"
-  @touchstart="handleTouchStart" @touchend="handleTouchEnd" @touchmove="handletouchMove" @touchcancel="handleTouchCancel">
+  @touchstart.stop.prevent="handleTouchStart" @touchend.stop.prevent="handleTouchEnd" @touchmove.stop.prevent="handletouchMove" @touchcancel.stop.prevent="handleTouchCancel">
 </div>
 </div>
 
 </template>
 
 <script>
-
 import HdGame from '@/lib/hdgame'
 import query from '@/lib/query'
 import { GameEndEvent } from '@/lib/GameEvent'
@@ -36,6 +35,12 @@ export default {
     y: {
       type: Number,  // 猜图纵向
       default: 4
+    },
+    width: {
+      type: Number,  // 猜图总宽度
+    },
+    height: {
+      type: Number,  // 猜图总宽度
     }
   },
   data () {
@@ -59,12 +64,12 @@ export default {
   methods:{
     initGame(){
       //在 wrap 显示之后， clientWidth， clientHeight才有正确的值，然后初始化游戏
-      this.wrap = query(this.wrapSelector).ele()
+      //this.wrap = $(this.wrapSelector)
       this.img = this.imgUrl
-      let style = query(this.wrap).get( ['clientWidth', 'clientHeight'] )
-      console.log( "created", " this.wrap", this.wrap, style)
-      this.w = style.clientWidth
-      this.h = style.clientHeight
+      //let style = query(this.wrap).get( ['clientWidth', 'clientHeight'] )
+      console.log( "initGame", " this.wrap", this.width, this.height)
+      this.w = this.width
+      this.h = this.height
       this.sizeW = Math.ceil(this.w / this.x);
       this.sizeH = Math.ceil(this.h / this.y);
       this.w = this.sizeW * this.x;
