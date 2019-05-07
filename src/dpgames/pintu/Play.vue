@@ -9,9 +9,15 @@
     tel:<td><input id="tel" ></input></td></br>
     <button  @click="post_msg()" type="button">commit</button>
   </div>
-  <div class="wait" v-show="ui.wait">
-    wait</br>
-    please wait for start
+  <div class="home" v-show="ui.wait">
+    <div id="homeBgBox">
+      <img id="homeBg" :src="homeBgImg" />
+    </div>
+    <div class="this.gameInfoBox">
+      <div class="titleImg imgContainer absCenter">
+        <img id="titleImg" class="slaveImg abs" :src="titleImg" style="width:15.232rem;height:5.778666666666667rem;top:2.524rem;left:0.384rem;" />
+      </div>
+    </div>
   </div>
   <div class="home" v-show="ui.homeVisible">
     <div id="homeBgBox">
@@ -139,8 +145,7 @@ export default {
         this.ui.wait = true
       }else if(this.gameState==4){
         this.ui.unstarted = false
-        this.ui.homeVisible = false
-        that.ui.gameBoxVisible = true
+        this.ui.homeVisible = true
       }
       // if(this.gameState==5||(this.gameInfo['gameResult']!==null&&this.gameInfo['gameResult']!==undefined)){
       //   console.log('5555555555555555');
@@ -231,7 +236,7 @@ export default {
           that.ui.wait = false
           that.gameState = 4
           that.ui.unstarted = false
-          this.ui.homeVisible = false
+          that.ui.homeVisible = false
           that.ui.gameBoxVisible = true
           that.resultBoxVisible = false
         }

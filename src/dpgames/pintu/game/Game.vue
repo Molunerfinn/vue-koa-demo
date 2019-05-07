@@ -111,7 +111,7 @@ export default {
       console.log( "GameScoreChangedEvent1")
     })
 
-
+this.handleStartGame()
     // this.hg.time.on( 'setTime', (e)=>{
     //   this.time = e
     //   console.log( "setTime", e)
@@ -156,9 +156,9 @@ export default {
 
       if(GameArg.firstFlag){
           GameArg.firstFlag = false;
-          this.ui.gameStartImgVisible=true
+          this.ui.gameStartImgVisible=false
           this.ui.gameImgVisible = false
-          this.ui.tipsImgVisible = false
+          this.ui.tipsImgVisible = true
           this.ui.gameImgWrapVisible = true
           // this.hg.time.start()
           console.log('handleStartGame');
