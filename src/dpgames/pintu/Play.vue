@@ -1,31 +1,25 @@
 <template>
 <div id="app">
-  <div class="unstarted" v-show="ui.unstarted">
-    unstarted
-  </div>
+
   <div class="sign_up" v-show="ui.sign_up">
     sign_up</br>
     name:<td><input id="name" ></input></td></br>
     tel:<td><input id="tel" ></input></td></br>
     <button  @click="post_msg()" type="button">commit</button>
   </div>
-  <div class="home" v-show="ui.wait">
-    <div id="homeBgBox">
-      <img id="homeBg" :src="homeBgImg" />
-    </div>
-    <div class="this.gameInfoBox">
-      <div class="titleImg imgContainer absCenter">
-        <img id="titleImg" class="slaveImg abs" :src="titleImg" style="width:15.232rem;height:5.778666666666667rem;top:2.524rem;left:0.384rem;" />
-      </div>
-    </div>
-  </div>
+
   <div class="home" v-show="ui.homeVisible">
-    <div id="homeBgBox">
-      <img id="homeBg" :src="homeBgImg" />
+    <div class="unstarted" v-show="ui.unstarted">
+      unstarted
     </div>
-    <div class="this.gameInfoBox">
-      <div class="titleImg imgContainer absCenter">
-        <img id="titleImg" class="slaveImg abs" :src="titleImg" style="width:15.232rem;height:5.778666666666667rem;top:2.524rem;left:0.384rem;" />
+    <div v-show="ui.wait">
+      <div id="homeBgBox">
+        <img id="homeBg" :src="homeBgImg" />
+      </div>
+      <div class="this.gameInfoBox">
+        <div class="titleImg imgContainer absCenter">
+          <img id="titleImg" class="slaveImg abs" :src="titleImg" style="width:15.232rem;height:5.778666666666667rem;top:2.524rem;left:0.384rem;" />
+        </div>
       </div>
     </div>
 
@@ -42,9 +36,9 @@
       <div class="totalPlayHint">您还有 <span class="totalPlayCount specil"></span> 次参与机会</div>
       <div class="dayPlayHint4Total">今天有 <span class="count specil todayPlayCount"></span> 次</div>
     </div>
-    <div id="startBtn" class="startBtn imgContainer absCenter" style="top:0rem;">
+    <!-- <div id="startBtn" class="startBtn imgContainer absCenter" style="top:0rem;">
       <img @touchend="handleStartGame" id="startBtnImg" class="slaveImg abs" :src="startBtnImg" style="width: 6.66rem; height: 2.449333333333334rem;    top: 19.706666666666667rem;  left: 4.67rem;" />
-    </div>
+    </div> -->
 
   </div>
 
@@ -112,12 +106,13 @@ export default {
 
     console.log("created gameState=", this.gameState, this.hg.grade)
 
-    var params = {
-      openid: 'oF9hV0SyZ6tI_k2WHtpRXqfedRH4'
-    }
     const parsed = queryString.parse(location.search);
     var code = 'dppintu';
     var number = parsed.number;
+
+    var params = {
+      parsed: parsed
+    }
 
     that.socketNameSpace = "/channel-dppintu-"+ number
     that.socket = io( that.socketNameSpace )
@@ -138,11 +133,13 @@ export default {
       console.log('gameResult--:',this.gameInfo['gameResult']!==null&&this.gameInfo['gameResult']!==undefined);
 
       if(this.gameState==1&&(this.game_player.realname==''||this.game_player.cellphone=='')){
+        this.ui.homeVisible = false
         this.ui.unstarted = false
         this.ui.sign_up = true
       }else if (this.gameState==1&&(this.game_player.realname!==''||this.game_player.cellphone!=='')) {
         this.ui.unstarted = false
         this.ui.wait = true
+        this.ui.homeVisible = true
       }else if(this.gameState==4){
         this.ui.unstarted = false
         this.ui.homeVisible = true
@@ -186,7 +183,7 @@ export default {
       ui: {
         sign_up:false,
         unstarted:true,
-        homeVisible: false, // 初始页面是否可见，游戏时需要隐藏
+        homeVisible: true, // 初始页面是否可见，游戏时需要隐藏
         gameBoxVisible: false, // 游戏页面
         ruleImgVisible: true, // 锦囊按钮
         loadToastVisible: false,
@@ -476,19 +473,19 @@ export default {
       //g_config.awardPhone && (info.aphone = g_config.awardPhone);
       //g_config.awardAddress && (info.aadress = g_config.awardAddress);
       //info.ip = '60.20.175.68';
+      const parsed = queryString.parse(location.search);
       var params = {
         gameId: 50,
         style: 22,
         achieve: HdGame.encodeBase64('"' + _gameScoreStr + '"') + "0jdk7Deh8T2z5W3k0j44dTZmdTOkZGM",
-        openid: 'oF9hV0SyZ6tI_k2WHtpRXqfedRH4',
         // openId: this.game_player.openid,
-        score:_gameScore
+        score:_gameScore,
+        parsed:parsed
         //name: g_config.userName,
         //city_gps: typeof g_config.ipInfo.city != 'undefined' ? g_config.ipInfo.city : '',
         //province_gps: typeof g_config.ipInfo.provice != 'undefined' ? g_config.ipInfo.provice : ''
       };
 
-      const parsed = queryString.parse(location.search);
       var code = 'dppintu';
       var number = parsed.number;
 

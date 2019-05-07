@@ -53,7 +53,7 @@ class pintu {
     console.log('openid:', openid);
     var userInfo = await client.getUser(openid);
     console.log('userInfo:', userInfo);
-    let params = '?openid=' + userInfo.openid + '&headimgurl=' + userInfo.headimgurl + '&nickname=' + encodeURIComponent(userInfo.nickname) + '&to_player_id=' + to_player_id+'&number='+number;
+    let params = '?openid=' + userInfo.openid + '&headimgurl=' + userInfo.headimgurl + '&nickname=' + encodeURIComponent(userInfo.nickname) + '&to_player_id=' + to_player_id + '&number=' + number;
     console.log(' http://testwx.getstore.cn/pintu-play.html' + params)
     ctx.redirect('http://testwx.getstore.cn/pintu-play.html' + params)
   }
@@ -90,7 +90,8 @@ class pintu {
     console.log('==========getGameResult============');
     let code = ctx.params.code
     let number = ctx.params.number
-    let openid = ctx.request.body.openid
+    let parsed = ctx.request.body.parsed
+    let openid = parsed.openid
 
     let GameRound = getGameRoundModelByCode(code)
     let GamePlayer = getGamePlayerModelByCode(code)
@@ -108,6 +109,20 @@ class pintu {
         openid: openid,
       }
     })
+
+    if (gamePlayer == null || gamePlayer == undefined) {
+      var new_player = {
+        openid: parsed.openid,
+        nickname: parsed.nickname,
+        avatar: parsed.headimgurl,
+        game_round_id: gameRound.id,
+      }
+
+      var options = {
+        fields: ['openid', 'nickname', 'avatar', 'game_round_id']
+      }
+      gamePlayer = await GamePlayer.create(new_player, options)
+    }
 
     let gameResult = await GameResult.findOne({
       where: {
@@ -157,7 +172,9 @@ class pintu {
 
     let number = ctx.params.number
     let game_round_id = ctx.params.id
-    let openid = ctx.request.body.openid
+    let parsed = ctx.request.body.parsed
+    console.log('parsed-----------:',parsed);
+    let openid = parsed.openid
     let cmd = 'setAchieve'
     if (cmd == 'setAchieve') { //设置成绩
       let gameRound = await GameRound.findOne({
