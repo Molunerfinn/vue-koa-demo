@@ -1,9 +1,8 @@
 <template>
 
-<div id="gameImgWrap" >
-<div v-for="(piece, index) in pieces" :id="'puzzle-'+index" class="puzzle" :data-index="piece" :style="getPieceStyle(index)"
-  @touchstart.stop.prevent="handleTouchStart" @touchend.stop.prevent="handleTouchEnd" @touchmove.stop.prevent="handletouchMove" @touchcancel.stop.prevent="handleTouchCancel">
-</div>
+<div id="gameImgWrap" @touchstart.stop.prevent="handleTouchStart" @touchend.stop.prevent="handleTouchEnd" @touchmove.stop.prevent="handletouchMove" @touchcancel.stop.prevent="handleTouchCancel">
+  <div v-for="(piece, index) in pieces" :id="'puzzle-'+index" class="puzzle" :data-index="piece" :style="getPieceStyle(index)"  >
+  </div>
 </div>
 
 </template>
@@ -59,12 +58,12 @@ export default {
     }
   },
   mounted(){
-
   },
   methods:{
     initGame(){
       //在 wrap 显示之后， clientWidth， clientHeight才有正确的值，然后初始化游戏
       //this.wrap = $(this.wrapSelector)
+
       this.img = this.imgUrl
       //let style = query(this.wrap).get( ['clientWidth', 'clientHeight'] )
       console.log( "initGame", " this.wrap", this.width, this.height)
@@ -121,6 +120,7 @@ console.log( "getPieceStyle", "piece=", piece, "xy=",originPosition)
       this.pieces = arr
     },
     handleTouchStart(event){
+      console.log( "handleTouchStart" )
       let that = this
       event.preventDefault();
       event.stopPropagation();
