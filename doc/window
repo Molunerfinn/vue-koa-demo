@@ -4,3 +4,6 @@ $(window).width()与window.innerWidth的区别
 
 # 安卓微信页面的调试
 https://www.cnblogs.com/imwtr/p/8445031.html
+
+# 微信jssdk npm
+https://github.com/yanxi-me/weixin-js-sdk

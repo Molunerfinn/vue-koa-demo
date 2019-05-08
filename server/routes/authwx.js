@@ -1,23 +1,22 @@
 const router = require('koa-router')(); // router middleware for koa
 
-var config = require(`../config/wechat.${process.env.NODE_ENV}.json`);
-var wechat_config = config.wechat;
+var weixinConfig = require('../config/weixin');
 
 var OAuth = require('co-wechat-oauth');
 const URL = require("url");
-var client = new OAuth(wechat_config.appid, wechat_config.secret);
+var client = new OAuth(weixinConfig.appid, weixinConfig.secret);
 
 // 处理所有游戏的授权链接
 router.get('/game', async (ctx)=> {
   let gameurl = ctx.query.gameurl
-  var url = client.getAuthorizeURL(wechat_config.authdomain + '/authwx/gameshare-done?gameurl='+gameurl, 'state', 'snsapi_userinfo');
+  var url = client.getAuthorizeURL(weixinConfig.authdomain + '/authwx/gameshare-done?gameurl='+gameurl, 'state', 'snsapi_userinfo');
   ctx.redirect( url )
 })
 
 // 处理所有游戏的分享链接
 router.get('/gameshare', async (ctx)=> {
   let shareurl = ctx.query.shareurl
-  var url = client.getAuthorizeURL(wechat_config.authdomain + '/authwx/gameshare-done?gameurl='+shareurl, 'state', 'snsapi_userinfo');
+  var url = client.getAuthorizeURL(weixinConfig.authdomain + '/authwx/gameshare-done?gameurl='+shareurl, 'state', 'snsapi_userinfo');
   ctx.redirect( url )
 })
 
