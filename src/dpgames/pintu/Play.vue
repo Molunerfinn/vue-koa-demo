@@ -42,13 +42,15 @@
 
   </div>
 
-  <Game ref="game" :hg="hg" :timeToEnd="timeToEnd" :command="gameState" @game-over="handleGameOver" v-show="ui.gameBoxVisible"> </Game>
+  <Game ref="game" :hg="hg" :gamePlayer="gamePlayer" :timeToEnd="timeToEnd" :command="gameState" @game-over="handleGameOver" v-show="ui.gameBoxVisible"> </Game>
   <LoadToast ref="load-toast" is-loading="loadToast.isLoading"> </LoadToast>
   <ResultBox ref="result-box" :home-callback="home" :again-callback="handleGameRestart" v-show="resultBoxVisible" :params="resultBoxParams" :command="resultBoxCommand"> </ResultBox>
 </div>
 </template>
 
 <script>
+import wx from 'weixin-js-sdk'
+
 import Game from './game/Game.vue'
 import GameRes from './game/GameRes'
 import GameArg from './game/GameArg'
@@ -87,12 +89,14 @@ export default {
     ResultBox
   },
   created() {
+    console.log( "wx=", wx)
     var that = this
     this.hg.grade = new HdGame.Grade(0)
 
     this.hg.time = new HdGame.Time(g_config.initTime, { updateFlag: true, isDesc: false })
 
     GameArg.eventBus.$on(GameBackgroundMusicLoadEvent.name, (event) => {
+      console.log( "GameBackgroundMusicLoadEvent")
       this.initBackgroundMusic()
     })
     //simplifyLufylegend( this.hg, window.g_rem )
@@ -128,22 +132,23 @@ export default {
       //console.log(data);
       this.gameInfo = data
       this.gameState = this.gameInfo['gameRound'].state
-      this.game_player = this.gameInfo['gamePlayer']
-      //console.log('realname',this.game_player.realname);
-      //console.log(this.game_player.cellphone);
+      this.gamePlayer = this.gameInfo['gamePlayer']
+      //console.log('realname',this.gamePlayer.realname);
+      //console.log(this.gamePlayer.cellphone);
       //console.log('gameResult--:',this.gameInfo['gameResult']!==null&&this.gameInfo['gameResult']!==undefined);
 
-      if(this.gameState==1&&(this.game_player.realname==''||this.game_player.cellphone=='')){
+      if(this.gameState==1&&(this.gamePlayer.realname==''||this.gamePlayer.cellphone=='')){
         this.ui.homeVisible = false
         this.ui.unstarted = false
         this.ui.sign_up = true
-      }else if (this.gameState==1&&(this.game_player.realname!==''||this.game_player.cellphone!=='')) {
+      }else if (this.gameState==1&&(this.gamePlayer.realname!==''||this.gamePlayer.cellphone!=='')) {
         this.ui.unstarted = false
         this.ui.wait = true
         this.ui.homeVisible = true
       }else if(this.gameState==4){
         this.ui.unstarted = false
-        this.ui.homeVisible = true
+        this.ui.homeVisible = false
+        this.ui.gameBoxVisible = true
       }
       if(this.gameState==5||(this.gameInfo['gameResult']!==null&&this.gameInfo['gameResult']!==undefined)){
         //console.log('5555555555555555');
@@ -171,9 +176,8 @@ export default {
     return {
       debug: true,
       gameInfo:{},
-      soundIconClass: "soundIconOff soundIcon",
       first_start: true,
-      game_player: {},
+      gamePlayer: {},
       hg: {
         showGameBox: true
       },
@@ -209,10 +213,10 @@ export default {
 				that.gameState = data.gameState
         that.resultBoxVisible = false
         //console.log('===========gameState============:',that.gameState)
-        if(that.gameState==1&&(that.game_player.realname==''||that.game_player.cellphone=='')){
+        if(that.gameState==1&&(that.gamePlayer.realname==''||that.gamePlayer.cellphone=='')){
           that.ui.unstarted = false
           that.ui.sign_up = true
-        }else if (that.gameState==1&&(that.game_player.realname!==''||that.game_player.cellphone!=='')) {
+        }else if (that.gameState==1&&(that.gamePlayer.realname!==''||that.gamePlayer.cellphone!=='')) {
           that.ui.unstarted = false
           that.ui.wait = true
         }
@@ -276,7 +280,7 @@ export default {
       var code = 'dppintu';
       var number = parsed.number;
       var data = {
-        openid: this.game_player.openid,
+        openid: this.gamePlayer.openid,
         realname:realname,
         tel:tel
       }
@@ -468,7 +472,7 @@ export default {
       var _gameScoreStr = _gameScore + '';
 
       var info = {
-        headImg: this.game_player.avatar
+        headImg: this.gamePlayer.avatar
       };
       //g_config.awardUsername && (info.ausername = g_config.awardUsername);
       //g_config.awardPhone && (info.aphone = g_config.awardPhone);
@@ -479,7 +483,7 @@ export default {
         gameId: 50,
         style: 22,
         achieve: HdGame.encodeBase64('"' + _gameScoreStr + '"') + "0jdk7Deh8T2z5W3k0j44dTZmdTOkZGM",
-        // openId: this.game_player.openid,
+        // openId: this.gamePlayer.openid,
         score:_gameScore,
         parsed:parsed
         //name: g_config.userName,
@@ -608,9 +612,6 @@ export default {
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
   height: 100%;
   width: 100%;

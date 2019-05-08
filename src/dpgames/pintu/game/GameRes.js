@@ -74,34 +74,6 @@ const GameRes = {
       ]
     },
     {
-      "name": "theGetPricePicTwo",
-      "pos": {
-        "left": "1.2rem",
-        "top": "1.5rem"
-      },
-      "size": {
-        "width": "13.5rem",
-        "height": "16.75rem"
-      },
-      "path": [
-        ["/static/dp-pintu/image/faiImg2.png"]
-      ]
-    },
-    {
-      "name": "theGetPricePicThree",
-      "pos": {
-        "left": "0rem",
-        "top": "0rem"
-      },
-      "size": {
-        "width": "4rem",
-        "height": "4rem"
-      },
-      "path": [
-        ["/static/dp-pintu/image/faiImg3.png"]
-      ]
-    },
-    {
       "name": "lotsPot",
       "pos": {
         "left": "4.9rem",

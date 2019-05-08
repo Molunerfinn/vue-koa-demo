@@ -1,3 +1,5 @@
+@charset "utf-8";
+
 @media only screen and (device-width:375px) and (device-height:812px) and (-webkit-device-pixel-ratio:3) {
 	.home {
 		overflow: hidden!important;
@@ -28,7 +30,8 @@
 	}
 }
 
-body{overflow-x:hidden;background-color:#fff!important;-webkit-user-select:none;
+body{
+	overflow-x:hidden;background-color:#fff!important;-webkit-user-select:none;
   /*margin: 0;*/
 }
 input::-webkit-inner-spin-button{margin:0;-webkit-appearance:none!important}

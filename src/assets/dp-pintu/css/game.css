@@ -5,6 +5,9 @@
     font-size: 100%;
     -webkit-tap-highlight-color: transparent;
 }
+html{
+  height: 100%;  
+}
 body{
   	margin: 0;
     padding: 0;
@@ -17,9 +20,7 @@ body{
     -webkit-touch-callout: none;
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -moz-box-orient: vertical;
     -webkit-box-align: stretch;
-    -moz-box-align: stretch;
     position: relative;
 }
 

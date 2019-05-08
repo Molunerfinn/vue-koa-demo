@@ -23,7 +23,7 @@
       </div>
     </div>
     <div class="timeUpImg hide"></div>
-    <div class="soundIconOff soundIcon" style="z-index:700" ></div>
+    <div :class="[{ soundIconOff: soundoff }, 'soundIcon']" style="z-index:700" @touchstart="handlePlaySound"></div>
 
   </div>
 
@@ -59,6 +59,10 @@ export default {
       type: [String, Number],
       default: 0
     },
+    gamePlayer: {
+      type: Object,
+      default: { avatar: '/static/shared/image/avatar.jpg' }
+    },
     timeToEnd: Number // 游戏时间计时
   },
   components:{
@@ -67,7 +71,6 @@ export default {
   data () {
     return {
       gameBg: require('@/assets/dp-pintu/image/skin1/wx/gameBg.jpg'),
-      gamePlayer: { avatar: '/static/shared/image/avatar.jpg' },
       ui:{
         gameBoxVisible: false,
         gameStartImgVisible: false,
@@ -83,7 +86,8 @@ export default {
         gameImg : '/static/dp-pintu/image/skin/gameimg.jpg',
       },
       puzzleWidth: 0,
-      puzzleHeight: 0
+      puzzleHeight: 0,
+      soundoff: true
       //time: 0
     }
   },
@@ -111,7 +115,7 @@ export default {
       console.log( "GameScoreChangedEvent1")
     })
 
-this.handleStartGame()
+    this.handleStartGame()
     // this.hg.time.on( 'setTime', (e)=>{
     //   this.time = e
     //   console.log( "setTime", e)
@@ -119,12 +123,14 @@ this.handleStartGame()
     // this.hg.time.on('end', this.endGame)
 
     this.hg.sound.get("0",
-      function (lsound) {
+       (lsound)=> {
         lsound.on("play", () => {
-          this.soundIconClass = "soundIcon"
+          console.log( "sound on play")
+          this.soundoff = false
 
         }).on("pause", () => {
-          this.soundIconClass = "soundIconOff soundIcon"
+          console.log( "sound on pause")
+          this.soundoff = true
         })
     })
 
@@ -201,7 +207,7 @@ this.handleStartGame()
       //$('.timeUpImg').hide();
     },
 
-   initGame() {
+    initGame() {
          this.hg.time.init();
          //初始化游戏头部 头像，计时，分数
          this.ui.gameStartImgVisible = true
@@ -211,7 +217,23 @@ this.handleStartGame()
          GameArg.firstFlag = true;
          GameArg.toggleFlag = true;
          this.isgameOver = false;
-     }
+    },
+    handlePlaySound( event ){
+      var soundPauseCord = "soundPause|" + this.gamePlayer.game_round_id + "|" + this.gamePlayer.openId;
+
+      console.log( "handlePlaySound", (new Date()).getTime())
+      event.stopPropagation();
+      event.preventDefault();
+      if ( !this.soundoff ) {
+        this.hg.sound.allowPlay = false;
+        this.hg.sound.pauseAll();
+        HdGame.setLocalStorage(soundPauseCord, "-")
+      } else {
+        this.hg.sound.allowPlay = true;
+        this.hg.sound.readyPlay(0, 0, "loop");
+        HdGame.removeLocalStorage(soundPauseCord)
+      }
+    }
 
 
   },
