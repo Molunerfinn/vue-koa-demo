@@ -10,7 +10,7 @@ async getWxJsConfig(ctx) {
       let shareurl = ctx.query.shareurl
       var param = {
        debug: false,
-       jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage'],
+       jsApiList: ['updateAppMessageShareData', 'updateTimelineShareData'],
        url: url
       };
       let ticket = await wechatApi.getLatestTicket()

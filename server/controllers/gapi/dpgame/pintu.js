@@ -13,10 +13,13 @@ const {
   getGameResultModelByCode
 } = require('../../game_round_helper')
 
-var config = require(`../../../config/wechat.development.json`);
-var wechat_config = config.wechat;
+var config = require(`../../../config/weixin.js`);
 var OAuth = require('co-wechat-oauth');
-var client = new OAuth(wechat_config.appid, wechat_config.secret);
+var client = new OAuth(config.appid, config.secret);
+
+const WechatAPI = require('co-wechat-api');
+const wechatApi = new WechatAPI(config.appid, config.secret);
+var wechatOAuth = new OAuth(config.appid, config.secret);
 
 
 // 'getResult' 取得抽奖结果
@@ -36,7 +39,7 @@ class pintu {
     let code = ctx.params.code
     let number = ctx.params.number
 
-    var url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + wechat_config.appid + '&redirect_uri=http://testwx.getstore.cn/gapi/dppintu/pintu/' + number + '/get_wx_info&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect';
+    var url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + config.appid + '&redirect_uri=http://testwx.getstore.cn/gapi/dppintu/pintu/' + number + '/get_wx_info&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect';
     ctx.redirect(url)
   }
 
@@ -86,8 +89,79 @@ class pintu {
     ctx.body = res
   }
 
+  static async getWxJsConfig(ctx) {
+    try {
+      console.log('getWxJsConfig  ctx------:', ctx.request.body);
+      let url = ctx.request.body.url
+      let shareurl = ctx.query.shareurl
+      var param = {
+        debug: false,
+        jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage'],
+        url: url
+      };
+      let ticket = await wechatApi.getLatestTicket()
+      console.debug("getLatestTicket=", ticket, "url=", url)
+
+      let data = await wechatApi.getJsConfig(param);
+
+      if (shareurl) {
+        //var link = wechatOAuth.getAuthorizeURL(config.authdomain + '/wapi/v1/wechatauth/gameshareurl-done?shareurl='+shareurl, 'state', 'snsapi_userinfo');
+        var link = config.authdomain + '/wapi/v1/wechatauth/gameshareurl?shareurl=' + encodeURIComponent(shareurl)
+        data.link = link
+      }
+      console.debug(" getWxJsConfig data = ", data)
+      ctx.body = data
+      ctx.status = 200
+    } catch (error) {
+      ctx.throw(messageContent.ResponeStatus.CommonError, 'can not get wx js config fail' + ': ' + error, {
+        expose: true
+      })
+    }
+  }
+
   static async getGameResult(ctx) {
+    try {
+      let url = ctx.header.referer
+      console.log("url=======", url)
+      // let shareurl = `${GAME_HOST}/game-${game_round.code}/${game_round.id}/checkin-wx?to_game_player_id=${to_game_player.id}`
+
+      let body = {
+        url: url
+      }
+      let apiurl = 'http://testwx.getstore.cn/gapi/dppintu/dppintu/getWxJsConfig'
+      console.log("playWx url=", apiurl)
+
+      let res = await fetch(apiurl, {
+        timeout: 2000,
+        body: JSON.stringify(body),
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        method: 'post'
+      })
+      if (res) {
+        let data = await res.json()
+        console.log("playWx data=", data)
+        var wx_config = {
+          appId: data['appId'],
+          timestamp: data['timestamp'],
+          nonceStr: data['nonceStr'],
+          signature: data['signature']
+        }
+
+        // const link = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx617b20b7ded64c67&redirect_uri=http%3A%2F%2Ftestwx.getstore.cn%2Fwapi%2Fv1%2Fwechatauth%2Fgameshareurl-done%3Fgameurl%3Dhttp%3A%2F%2Ftestwx.getstore.cn%2Fgame-bargain%2F${game_round.id}%2Fcheckin-wx%3Fto_game_player_id%3D${to_game_player.id}&response_type=code&scope=snsapi_userinfo&state=state#wechat_redirect`
+        // const link = `${GAME_HOST}/game-bargain/${game_round_id}/checkin-wx?to_game_player_id=${to_game_player.id}`
+        // add default shareurl, or js error.
+        // wx_share = {
+        //   link: data['link'] || shareurl,
+        //   // img_url: `${GAME_HOST}/game-kouhong-assets/app/images/share.jpg`
+        // }
+      }
+    } catch (err) {
+      console.error("got error-", err);
+    }
     console.log('==========getGameResult============');
+
     let code = ctx.params.code
     let number = ctx.params.number
     let parsed = ctx.request.body.parsed
@@ -97,64 +171,69 @@ class pintu {
     let GamePlayer = getGamePlayerModelByCode(code)
     let GameResult = getGameResultModelByCode(code)
 
-    let gameRound = await GameRound.findOne({
-      where: {
-        number
-      }
-    })
+    if (openid == null || openid == undefined) {
+      ctx.body = null
+    } else {
+      let gameRound = await GameRound.findOne({
+        where: {
+          number
+        }
+      })
 
-    let gamePlayer = await GamePlayer.findOne({
-      where: {
-        game_round_id: gameRound.id,
-        openid: openid,
-      }
-    })
+      let gamePlayer = await GamePlayer.findOne({
+        where: {
+          game_round_id: gameRound.id,
+          openid: openid,
+        }
+      })
 
-    if (gamePlayer == null || gamePlayer == undefined) {
-      var new_player = {
-        openid: parsed.openid,
-        nickname: parsed.nickname,
-        avatar: parsed.headimgurl,
-        game_round_id: gameRound.id,
+      if (gamePlayer == null || gamePlayer == undefined) {
+        var new_player = {
+          openid: parsed.openid,
+          nickname: parsed.nickname,
+          avatar: parsed.headimgurl,
+          game_round_id: gameRound.id,
+        }
+
+        var options = {
+          fields: ['openid', 'nickname', 'avatar', 'game_round_id']
+        }
+        gamePlayer = await GamePlayer.create(new_player, options)
       }
 
-      var options = {
-        fields: ['openid', 'nickname', 'avatar', 'game_round_id']
+      let gameResult = await GameResult.findOne({
+        where: {
+          game_player_id: gamePlayer.id,
+          game_round_id: gameRound.id,
+        }
+      })
+
+      let ret = {
+        rt: 0,
+        isSuc: true,
+        success: true
       }
-      gamePlayer = await GamePlayer.create(new_player, options)
+
+      ret.playerId = gamePlayer.id //required to set g_config.playerId
+      ret.isSuc = gamePlayer.score < gamePlayer.max_score
+      ret.achieveToken = gamePlayer.token
+      ret.score = (gamePlayer.max_score) //bestScore
+      let rank = await gamePlayer.currentPosition()
+      let beat = await gamePlayer.beat()
+      ret.rank = rank
+      ret.beat = beat
+      ret.hasLot = false
+
+      let gameInfo = {
+        gameRound: gameRound,
+        gamePlayer: gamePlayer,
+        gameResult: gameResult,
+        wx_config: wx_config,
+        ret: ret
+      }
+
+      ctx.body = gameInfo
     }
-
-    let gameResult = await GameResult.findOne({
-      where: {
-        game_player_id: gamePlayer.id,
-        game_round_id: gameRound.id,
-      }
-    })
-
-    let ret = {
-      rt: 0,
-      isSuc: true,
-      success: true
-    }
-
-    ret.playerId = gamePlayer.id //required to set g_config.playerId
-    ret.isSuc = gamePlayer.score < gamePlayer.max_score
-    ret.achieveToken = gamePlayer.token
-    ret.score = (gamePlayer.max_score) //bestScore
-    let rank = await gamePlayer.currentPosition()
-    let beat = await gamePlayer.beat()
-    ret.rank = rank
-    ret.beat = beat
-    ret.hasLot = false
-
-    let gameInfo = {
-      gameRound: gameRound,
-      gamePlayer: gamePlayer,
-      gameResult: gameResult,
-      ret: ret
-    }
-
-    ctx.body = gameInfo
 
   }
 
@@ -173,7 +252,7 @@ class pintu {
     let number = ctx.params.number
     let game_round_id = ctx.params.id
     let parsed = ctx.request.body.parsed
-    console.log('parsed-----------:',parsed);
+    console.log('parsed-----------:', parsed);
     let openid = parsed.openid
     let cmd = 'setAchieve'
     if (cmd == 'setAchieve') { //设置成绩
