@@ -93,7 +93,7 @@ class GameBaseByCode {
     ret.isSuc = gamePlayer.score < gamePlayer.max_score
     ret.achieveToken = gamePlayer.token
     ret.score = (gamePlayer.max_score) //bestScore
-    let rank = await gamePlayer.currentPosition()
+    let rank = await gamePlayer.currentPositionDesc()
     let beat = await gamePlayer.beat()
     ret.rank = rank
     ret.beat = beat
@@ -169,7 +169,7 @@ class GameBaseByCode {
       ret.isSuc = gamePlayer.score < lastMaxScore
       ret.achieveToken = gamePlayer.token
       ret.score = (gamePlayer.max_score) //bestScore
-      let rank = await gamePlayer.currentPosition()
+      let rank = await gamePlayer.currentPositionDesc()
       let beat = await gamePlayer.beat()
       ret.rank = rank
       ret.beat = beat

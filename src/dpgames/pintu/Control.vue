@@ -135,6 +135,7 @@ export default {
   data() {
     return {
       //socket
+      MAX_TIME: 9999.99,
       s: 30,
       debug: true,
       error: false,
@@ -245,13 +246,23 @@ export default {
               }
             }
           }
-          that.gamePlayerScores = newGamePlayerScores
+            that.gamePlayerScores = newGamePlayerScores
+            for(var k=0; k< that.gamePlayerScores.length; k++){
+              if(that.gamePlayerScores[k].score == that.MAX_TIME){
+                that.gamePlayerScores[k].score = 0
+              }
+            }
         }
 				console.log( 'GameRunningEvent', data )
 			});
 			that.socket.on('GameEndEvent', function(data){
 				that.gameRoundState = data.gameRoundState
-				that.gamePlayerScores = data.gamePlayerScores
+        that.gamePlayerScores = data.gamePlayerScores
+        for(var i=0; i< that.gamePlayerScores.length; i++){
+          if(that.gamePlayerScores[i].score == that.MAX_TIME){
+            that.gamePlayerScores[i].score = 0
+          }
+        }
 				console.log( 'GameEndEvent', data)
 			});
 		},

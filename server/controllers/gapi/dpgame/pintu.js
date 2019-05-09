@@ -5,6 +5,7 @@
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
 
 'use strict';
+var MAX_TIME = 9999.99
 
 const fetch = require('node-fetch')
 const {
@@ -193,6 +194,8 @@ class pintu {
           nickname: parsed.nickname,
           avatar: parsed.headimgurl,
           game_round_id: gameRound.id,
+          score: MAX_TIME,
+          max_score: MAX_TIME
         }
 
         var options = {
@@ -217,9 +220,13 @@ class pintu {
       ret.playerId = gamePlayer.id //required to set g_config.playerId
       ret.isSuc = gamePlayer.score < gamePlayer.max_score
       ret.achieveToken = gamePlayer.token
-      ret.score = (gamePlayer.max_score) //bestScore
-      let rank = await gamePlayer.currentPosition()
-      let beat = await gamePlayer.beat()
+      ret.score = gamePlayer.score
+      ret.bestScore = (gamePlayer.max_score) //bestScore
+      if (gamePlayer.score == MAX_TIME) {
+        ret.score = 0
+      }
+      let rank = await gamePlayer.currentPositionAsc()
+      let beat = await gamePlayer.beatAsc()
       ret.rank = rank
       ret.beat = beat
       ret.hasLot = false
@@ -304,9 +311,12 @@ class pintu {
       ret.isSuc = gamePlayer.score < lastMaxScore
       ret.achieveToken = gamePlayer.token
       ret.score = gameResult.score
+      if (gameResult.score == MAX_TIME) {
+        ret.score = 0
+      }
       ret.bestScore = (gamePlayer.max_score) //bestScore
-      let rank = await gamePlayer.currentPosition()
-      let beat = await gamePlayer.beat()
+      let rank = await gamePlayer.currentPositionAsc()
+      let beat = await gamePlayer.beatAsc()
       ret.rank = rank
       ret.beat = beat
       ret.hasLot = false

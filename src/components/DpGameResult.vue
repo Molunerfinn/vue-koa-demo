@@ -8,7 +8,7 @@
       <div class="optContainer" style="height: 18.6rem; overflow-y:auto;">
         <div id="resule-status-head">
           <div class="resule-status-userImg" :style="style.statusUserImg">
-            <img :src="gamePlayerAvatar" />
+            <img v-bind:src="params.headImg">
           </div>
           <div id="resule-status-ribbon" class="resule-status-ribbon"></div>
         </div>
@@ -23,8 +23,8 @@
           <p id="bestArg" style="margin-top:0.5rem">最佳成绩为：<span class="resuleArg">{{params.bestScore}}</span><span class="result-scoreUnit"><span class="gameScoreUnit">秒</span></span>
           </p>
           <p id="bestCostTime" style="display: none">达到最佳成绩用时：<span class="resuleArg">{{params.bestCostTime}}</span><span class="result-scoreUnit">秒</span></p>
-          <p id="bestRank">最佳排名为：<span class="result-scoreUnit2">NO.</span><span class="resuleArg">{{params.rank}}</span></p>
-
+          <p id="bestRank">当前排名为：<span class="result-scoreUnit2">NO.</span><span class="resuleArg">{{params.rank}}</span></p>
+          <p>成功击败<span class="resuleArg">{{params.beat}}</span>%的玩家</p>
           <div id="rank_showRule" style="text-decoration:underline;margin:0.7rem 0rem;" class="hide" onclick="showRule();">活动规则</div>
 
           <!-- <div id="resule-status-count" style="margin-top:0.6rem" v-show="ui.statusCount">
@@ -52,16 +52,16 @@
             <div class="resule-button resule-one-button resule-status-send hide">领取礼品</div>
             <div class="resule-button resule-one-button resule-status-rightNow hide">马上PK</div>
           </div>
-          <div class="resule-foot-two">
+          <!-- <div class="resule-foot-two">
             <div  @touchstart="handlePlayAgain" class="resule-button resule-status-again restart-again ">再玩一次</div>
-          </div>
+          </div> -->
         </div>
       </div>
       <div class="attentionBox">
         <div class=" resule-foot-box">
           <div id="drawMenuBtnBox" class="menuBtnBox resule-foot-two">
             <div  @touchend="handleSeeRank" id="resule_seeRank_show" class="resule-button resule-status-seeRank">排行榜</div>
-            <div @touchend="handleGoHome" class="resule-button resule-status-home">返回首页</div>
+            
           </div>
         </div>
         <div class="hdskillInfo skillInfo theRunningAdClass"><a class="theSpecialTarget" href="http://mp.weixin.qq.com/s?__biz=MjM5MTk5MjI3OA==&#x26;mid=209854000&#x26;idx=1&#x26;sn=82241d924839270d3ea820ad2d56c01b#rd">我也要创建活动</a>

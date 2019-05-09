@@ -149,8 +149,8 @@ export default class DpPintuSocket {
           }, 1000);
           //namespace.emit('GameStartEvent');
           callback({
-          gameRoundState: DpGameRoundStates.completed
-        })
+            gameRoundState: DpGameRoundStates.completed
+          })
           return
         }
         countTime--;

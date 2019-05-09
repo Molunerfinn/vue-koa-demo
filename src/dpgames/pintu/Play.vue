@@ -204,7 +204,8 @@ export default {
           rank: r.rank,
           beat: r.beat,
           isEqualDraw: false,
-          bestCostTime: r.bestCostTime
+          bestCostTime: r.bestCostTime,
+          headImg: this.gamePlayer.avatar
         };
 
         this.resultBoxParams = arg
@@ -550,7 +551,7 @@ export default {
         HdGame.tlog('gameOver', data);
         var r = data;
         var isShowPoup = true;
-
+        console.log('this.gamePlayer.avatar----------:',this.gamePlayer.avatar);
         if (r.rt == 0) {
           var arg = {
             isSuc: r.isSuc,
@@ -565,7 +566,8 @@ export default {
             //totalCount: drawTotalLimit - totalCount < 0 ? 0 : (drawTotalLimit - totalCount),
             isEqualDraw: false,
             //gameCostTime: consumption,
-            bestCostTime: r.bestCostTime
+            bestCostTime: r.bestCostTime,
+            headImg: this.gamePlayer.avatar
           };
 
           g_config.playerId = r.playerId;
