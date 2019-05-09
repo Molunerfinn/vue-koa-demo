@@ -3,9 +3,9 @@
     <div class="Panel Top">
       <div  >
         <div class="bg-nei-top">
-        				<img src="/game-yiy-assets/app/images/skin1/tu_03.png" class="bg-nei-top-erwei" style="display:none;">
-                <div class="bg-nei-top-right"><span></span><img src="/game-yiy-assets/app/images/skin1/tu_05.png"></div>
-        				<div class="bg-nei-top-zhong" ><img src="/game-yiy-assets/app/images/skin1/bgtop.gif"  v-show="computedGameState=='open'||computedGameState=='started'">
+        				<img src="~@/assets/dp-pintu/image/skin1/tu_03.png" class="bg-nei-top-erwei" style="display:none;">
+                <div class="bg-nei-top-right"><span></span><img src="~@/assets/dp-pintu/image/skin1/tu_05.png"></div>
+        				<div class="bg-nei-top-zhong" ><img src="~@/assets/dp-pintu/image/skin1/wx/bgtop.gif"  v-show="computedGameState=='open'||computedGameState=='started'">
                   <!-- <p  v-show="computedGameState=='started'"><span>游戏倒计时</span><strong>|</strong><span>剩余<b>{{timeToEnd}</b>秒</span></p> -->
                 </div>
         </div>
@@ -16,9 +16,9 @@
       <div class="bg-nei-bottom1" v-show="computedGameState=='open'||computedGameState=='started'">
       </div>
       <div class="fullfill  game-state state-created" v-show="computedGameState=='created'">
-        <div class="box-title">  <img src="/game-yiy-assets/app/images/skin1/bgtop.gif"> </div>
+        <div class="box-title">  <img src="~@/assets/dp-pintu/image/skin1/wx/bgtop.gif"> </div>
         <div class="box-body">
-          <div>    <img src="/game-yiy-assets/app/images/skin1/yao_02.png">      </div>
+          <div>    <img src="~@/assets/dp-pintu/image/skin1/yao_02.png">      </div>
           <button class="start btn yao-btn btn-primary" @click="openGameHandler" >准备开始</button>
         </div>
       </div>
@@ -43,7 +43,7 @@
           </div>
        </div>
       <div class="fullfill game-state state-starting " v-show="computedGameState=='starting'">
-        <div class="box-title">  <img src="/game-yiy-assets/app/images/skin1/bgtop.gif" class="logo"> </div>
+        <div class="box-title">  <img src="~@/assets/dp-pintu/image/skin1/wx/bgtop.gif" class="logo"> </div>
         <div class="box-body">
           <p class="szbg">{{timeToStart}}</p>
         </div>
@@ -68,7 +68,7 @@
       </div>
 
       <div class="fullfill game-state state-completed" v-show="computedGameState=='completed'">
-        <div class="box-title">  <img src="/game-yiy-assets/app/images/skin1/pm_03.png" class="logo"> </div>
+        <div class="box-title">  <img src="~@/assets/dp-pintu/image/skin1/pm_03.png" class="logo"> </div>
         <div class="player-rank clearfix">
           <div class="pm-top5">
           <table class="rank  ">
@@ -121,6 +121,10 @@ import queryString from 'query-string'
 import { getGameInfoByNumber } from '@/api/dpgame/pintu'
 import 'bootstrap/dist/css/bootstrap.css'
 import '@/assets/dpgame/pintu/css/skin/runlin.css'
+
+import '@/assets/dp-pintu/css/bootstrap.min.css'
+import '@/assets/dp-pintu/css/basic.css'
+import '@/assets/dp-pintu/css/game-yiy.css'
 
 const skin = 'runlin'
 
