@@ -207,19 +207,11 @@ export default {
 			return this.gamePlayerScores.slice(5,10)
 		},
 		computedTop12Players(){
-			return this.gamePlayerScores.slice(0,10)
+			return this.gamePlayerScores.slice(0,12)
 		},
 	},
   methods: {
-    countTime: function () {
-      var leftTime = this.s
 
-      if (leftTime >= 0) {
-        this.s = leftTime - 1
-      }
-      // 递归每秒调用countTime方法，显示动态时间效果
-      setTimeout(this.countTime(), 1000)
-    },
     //绑定socket事件
 		bindSocketEvents: function(){
 			var that = this
@@ -282,24 +274,25 @@ export default {
 			that.canstart = false;
 			// 游戏倒计时开始
 			that.socket.emit('StartGameEvent', {}, function(data){
-        that.gameRoundState = data.gameRoundState;
         console.log("	that.gameRoundState =",	that.gameRoundState );
 				console.log( 'StartGameEvent', data)
 				that.gameRoundState = data.gameRoundState
 			});
 			clearInterval(this.playerCheckTimerId)
-      this.countTime()
 		},
 
 		// 获取游戏排名
 		getFinalScores: function(){
+      console.log('getFinalScores-------:');
 			var that = this;
 			that.socket.emit('GetGamePlayersEvent', {}, function(data){
         that.gameRoundState = data.gameRoundState;
         console.log("	that.gameRoundState =",	that.gameRoundState );
 				console.log( "GetGamePlayersEvent=", data )
 				that.gamePlayers = data.gamePlayers
-				that.gamePlayerScores = data.gamePlayers.sort(function(a,b){ return b.score-a.score; })
+        console.log('that.gamePlayers----:',that.gamePlayers);
+				that.gamePlayerScores = that.gamePlayers.sort(function(a,b){ return a.score-b.score; })
+        console.log('gamePlayerScores-----:',that.gamePlayerScores);
 			});
 		},
 		// 开放游戏签到，获取签到人员

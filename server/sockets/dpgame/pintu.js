@@ -109,7 +109,7 @@ export default class DpPintuSocket {
                 }
                 runner.getAllPlayers().then((players) => {
                   players.sort((a, b) => {
-                    return b.score - a.score
+                    return a.score - b.score
                   })
                   payload.gamePlayerScores = players
                   namespace.emit('GameEndEvent', payload);

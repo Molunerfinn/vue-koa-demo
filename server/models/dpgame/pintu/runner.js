@@ -68,7 +68,7 @@ class PintuRunner {
     let players = await this.getAllPlayers()
 
     players.sort((a, b) => {
-      return b.score - a.score
+      return a.score - b.score
     })
     return players
   }
