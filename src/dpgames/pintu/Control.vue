@@ -30,7 +30,7 @@
         </div>
       </div>
       <div class="fullfill state-open qiandao" v-show="computedGameState=='open'">
-        <p style="font-size:30px;">剩余30秒</p>
+        <!-- <p style="font-size:30px;">剩余{{timeToEnd}}秒</p> -->
           <div class="bg-zhunbei">已有<b>{{gamePlayers.length}}</b>人准备<span>请耐心等待游戏开始</span></div>
           <ul class="canyu">
             <li class="qiaodaosf" v-for="player in gamePlayers">

@@ -39,6 +39,7 @@ export default class DpPintuSocket {
 
   // 绑定大屏游戏页面触发的事件
   static async bindPlay(socket, number) {
+
     // 游戏开始签到事件
     socket.on('OpenGameEvent', async (data, callback) => {
       console.log('OpenGameEvent');
@@ -76,7 +77,6 @@ export default class DpPintuSocket {
       console.log("StartGameEvent rooms=", socket.rooms);
 
       let countTime = 3
-      let runningTime = 30
       let number = getGameRoundNumber(socket)
 
       //let game_round = await MemoryDbOperation.GetRoundById(game_round_id)
@@ -84,6 +84,7 @@ export default class DpPintuSocket {
       //改变游戏状态
       let runner = new PintuRunner(number)
       let gameRound = await runner.startRound()
+      let runningTime = gameRound.duration
 
       // 这时游戏状态是started
       callback({

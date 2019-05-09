@@ -131,6 +131,7 @@ export default {
     getGameResult(code,number,params).then(data => {
       //console.log(data);
       this.gameInfo = data
+      this.timeToEnd = this.gameInfo['gameRound'].duretion
       this.gameState = this.gameInfo['gameRound'].state
       this.gamePlayer = this.gameInfo['gamePlayer']
       this.wx_config = this.gameInfo['wx_config']
