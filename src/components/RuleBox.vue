@@ -72,10 +72,7 @@
 
            <!--<div id="" style="font-size: 0.6rem; position: relative;" class="noMove">投诉</div>-->
          </div>
-         <div class='attentionBox'>
-           <div class='hdskillInfo skillInfo theRunningAdClass'><a class="theSpecialTarget" href='http://mp.weixin.qq.com/s?__biz=MjM5MTk5MjI3OA==&#x26;mid=209854000&#x26;idx=1&#x26;sn=82241d924839270d3ea820ad2d56c01b#rd'>我也要创建活动</a><span class='gotoFlag'><i></i></span></div>
-           <div class='holdBox'></div>
-         </div>
+
        </div>
 
        <div id="rankBox" class="poupMain" _flag="1" style="-webkit-overflow-scrolling:touch;">
@@ -93,6 +90,13 @@
                      <th>成绩</th>
                    </tr>
                  </thead>
+                 <tr class="rankInfo" v-for="(player,i) in gamePlayerRank">
+                   <td>排行</td>
+                   <td><div><img class="userImg" :src="player.avatar"   /> </div></td>
+                   <td class="userName" > {{player.nickname}}</td>
+                   <td> ${player.score} 秒</td>
+                 </tr>
+
                </table>
              </div>
            </div>
@@ -100,10 +104,7 @@
              <table id="rankInfoBox" class="rankTable" cellspacing="0" cellpadding="0" style="margin-top: 0;"></table>
            </div>
          </div>
-         <div class='attentionBox'>
-           <div class='hdskillInfo skillInfo theRunningAdClass'><a class="theSpecialTarget" href='http://mp.weixin.qq.com/s?__biz=MjM5MTk5MjI3OA==&#x26;mid=209854000&#x26;idx=1&#x26;sn=82241d924839270d3ea820ad2d56c01b#rd'>我也要创建活动</a><span class='gotoFlag'><i></i></span></div>
-           <div class='holdBox'></div>
-         </div>
+
        </div>
 
        <div id="awardBox" class="poupMain" _flag="3">
@@ -128,7 +129,6 @@
            <div class='menuBtnBox'>
              <a class='menuName'>关注我们</a>
            </div>
-           <div class='hdskillInfo skillInfo theRunningAdClass'><a class="theSpecialTarget" href='http://mp.weixin.qq.com/s?__biz=MjM5MTk5MjI3OA==&#x26;mid=209854000&#x26;idx=1&#x26;sn=82241d924839270d3ea820ad2d56c01b#rd'>我也要创建活动</a><span class='gotoFlag'><i></i></span></div>
            <div class='holdBox'></div>
          </div>
        </div>
@@ -199,6 +199,7 @@ export default {
       style:{
         statusUserImg: {}
       },
+      gamePlayerRank: [],
       menuLen: 2
     }
   },
@@ -278,16 +279,18 @@ export default {
         $(".poupSlideBar .slideBarTip").css("left", (13.25 / this.menuLen) * flag + "rem")
 
         if (flag === 0) {
-          this.poupRank()
+          this.poupRule()
         } else
         if (flag === 1) {
-          this.poupRule()
+          this.poupRank()
         }
     },
     poupRank(){
+      $('.poupMain').not("#rankBox").hide()
       $("#rankBox").show()
     },
     poupRule(){
+      $('.poupMain').not("#ruleBox").hide()
       $("#ruleBox").show()
     }
   },
