@@ -260,6 +260,7 @@ export default {
         console.log('data.gameRoundState----:',data.gameRoundState);
 				that.gameRoundState = data.gameRoundState
         that.gamePlayerScores = data.gamePlayerScores
+        that.timeToStart = 3
         for(var i=0; i< that.gamePlayerScores.length; i++){
           if(that.gamePlayerScores[i].score == that.MAX_TIME){
             that.gamePlayerScores[i].score = 0

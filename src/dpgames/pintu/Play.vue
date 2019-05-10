@@ -180,6 +180,9 @@ export default {
       }
       if(this.gameState==GameState.completed||(this.gameInfo['gameResult']!==null&&this.gameInfo['gameResult']!==undefined)){
         var r = this.gameInfo['ret']
+        if(this.gameInfo['gamePlayer'].score == 9999.99){
+          this.gameInfo['gamePlayer'].score = 0
+        }
         var arg = {
           isSuc: r.isSuc,
           gameScore: this.gameInfo['gamePlayer'].score,
