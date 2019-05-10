@@ -47,10 +47,10 @@ export default class DpPintuSocket {
       let runner = new PintuRunner(number)
       let game_round = await runner.openRound()
       socket.emit('GameOpeningEvent', {
-        gameState: 1
+        gameState: 'open'
       });
       let payload = {
-        gameState: 1
+        gameState: 'open'
       }
       namespace.emit('GameOpeningEvent', payload);
       callback({
@@ -77,6 +77,7 @@ export default class DpPintuSocket {
       console.log("StartGameEvent rooms=", socket.rooms);
 
       let countTime = 3
+
       let number = getGameRoundNumber(socket)
 
       //let game_round = await MemoryDbOperation.GetRoundById(game_round_id)
@@ -100,35 +101,27 @@ export default class DpPintuSocket {
           clearInterval(countTimeId);
           // 触发客户端的开始游戏事件
           var runningTimeId = setInterval(function() {
-            if (runningTime <= 0) {
+            if (runningTime <= 1) {
               clearInterval(runningTimeId);
               console.log('......socket:broadcast:GameEndEvent')
-              runner.endRound().then(() => {
-                // 广播游戏结束。并广播成绩
-                let payload = {
-                  gameRoundState: DpGameRoundStates.completed
-                }
-                runner.getAllPlayers().then((players) => {
-                  players.sort((a, b) => {
-                    return a.score - b.score
-                  })
-                  payload.gamePlayerScores = players
-                  namespace.emit('GameEndEvent', payload);
-                  socket.emit('GameEndEvent', payload);
-                }).catch(function(err) {
-                  console.log("GameEndEvent", err)
+              let payload = {
+                gameRoundState: DpGameRoundStates.completed
+              }
+              runner.getAllPlayers().then((players) => {
+                players.sort((a, b) => {
+                  return a.score - b.score
                 })
-                return;
-              })
-            }
-            let lastRunningTime = runningTime
-            // 广播游戏结束倒计时，触发客户端的倒计时事件
-            let payload = {
-              timeToEnd: lastRunningTime,
-              gameRoundState: DpGameRoundStates.started
-            }
+                payload.gamePlayerScores = players
+                namespace.emit('GameEndEvent', payload);
+                runner.endRound()
 
-            namespace.emit('GameRunningEvent', payload);
+              }).catch(function(err) {
+                console.log("GameEndEvent", err)
+              })
+              return;
+            }
+            let lastRunningTime = runningTime -1
+
             // PC端 返回玩家成绩
             runner.getPlayerScores().then((players) => {
               let cachedPlayers = players
@@ -138,9 +131,10 @@ export default class DpPintuSocket {
                   player.percent = player.score * 100 / 1500;
               })
               var topPlayers = cachedPlayers.slice(0, 20)
-              socket.emit('GameRunningEvent', {
+              namespace.emit('GameRunningEvent', {
                 timeToEnd: lastRunningTime,
-                gamePlayerScores: topPlayers
+                gamePlayerScores: topPlayers,
+                gameRoundState: DpGameRoundStates.started
               });
               console.log(`......socket:broadcast->${namespace.name}:startGame${runningTime} - ${cachedPlayers.length}`)
             }).catch(function(err) {
@@ -161,7 +155,6 @@ export default class DpPintuSocket {
           timeToStart: countTime
         }
         namespace.emit('GameStartingEvent', payload);
-        socket.emit('GameStartingEvent', payload);
 
         console.log(`......socket:broadcast->${namespace.name}:startingGame${countTime}`)
       }, 1000);

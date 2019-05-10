@@ -121,6 +121,7 @@ import queryString from 'query-string'
 import { getGameInfoByNumber } from '@/api/dpgame/pintu'
 import 'bootstrap/dist/css/bootstrap.css'
 import '@/assets/dpgame/pintu/css/skin/runlin.css'
+import GameState from '@/lib/GameState'
 
 import '@/assets/dp-pintu/css/bootstrap.min.css'
 import '@/assets/dp-pintu/css/basic.css'
@@ -172,7 +173,7 @@ export default {
           that.bindSocketEvents()
         });
         // 游戏已经结束，获取游戏排名
-        if( that.gameRoundState == 5){
+        if( that.gameRoundState == GameState.completed){
           that.getFinalScores();
         }
         this.loading = false
@@ -191,13 +192,13 @@ export default {
 		},
 		computedGameState(){
 			switch (this.gameRoundState) {
-				case 0: return 'created';
-				case 1: return 'open';
-				case 2: return 'ready';
-				case 3: return 'starting';
-				case 4: return 'started';
-				case 5: return 'completed';
-				case 6: return 'disabled';
+				case 'created': return 'created';
+				case 'open': return 'open';
+				case 'ready': return 'ready';
+				case 'starting': return 'starting';
+				case 'started': return 'started';
+				case 'completed': return 'completed';
+				case 'disabled': return 'disabled';
 				default: return 'unkonwn'
 			}
 		},
@@ -229,7 +230,7 @@ export default {
 			});
 			//绑定 游戏倒计时事件，游戏时间倒计时
 			that.socket.on('GameRunningEvent', function(data){
-				that.gameRoundState = 4
+				that.gameRoundState = GameState.started
 				that.timeToEnd = data.timeToEnd
 				var newGamePlayerScores = data.gamePlayerScores
 				console.log("newGamePlayerScores=",newGamePlayerScores)
@@ -256,6 +257,7 @@ export default {
 				console.log( 'GameRunningEvent', data )
 			});
 			that.socket.on('GameEndEvent', function(data){
+        console.log('data.gameRoundState----:',data.gameRoundState);
 				that.gameRoundState = data.gameRoundState
         that.gamePlayerScores = data.gamePlayerScores
         for(var i=0; i< that.gamePlayerScores.length; i++){

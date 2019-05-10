@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
     return sequelize.define('DpPintuGameRound', {
         game_id: DataTypes.BIGINT(11),
         name: DataTypes.STRING,
-        state: { type: DataTypes.BIGINT(11), defaultValue: 0 },
+        state: { type: DataTypes.STRING(24), defaultValue: 'created' },
         creator_id: DataTypes.BIGINT(11),
         start_at: DataTypes.DATE,
         end_at: DataTypes.DATE,
