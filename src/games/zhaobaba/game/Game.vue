@@ -19,7 +19,7 @@
 
   </div>
   <div class="timeUpImg hide"></div>
-  <div class="soundIconOff soundIcon" style="z-index:700"></div>
+  <div :class="[{ soundIconOff: soundoff }, 'soundIcon']" style="z-index:700" @touchstart="handlePlaySound"></div>
 
 </div>
 </template>
@@ -76,6 +76,10 @@ export default {
     command: {
       type: [String, Number],
       default: 0
+    },
+    gamePlayer: {
+      type: Object,
+      default: { avatar: '/static/shared/image/avatar.jpg' }
     }
   },
   data() {
@@ -88,6 +92,7 @@ export default {
       ui: {
         gameBoxVisible: false
       },
+      soundoff: true,
       rem: 20
     }
   },
@@ -120,15 +125,16 @@ export default {
 
 
     this.hg.sound.get("0",
-      function (lsound) {
+       (lsound)=> {
         lsound.on("play", () => {
-          this.soundIconClass = "soundIcon"
+          console.log( "sound on play")
+          this.soundoff = false
 
         }).on("pause", () => {
-          this.soundIconClass = "soundIconOff soundIcon"
+          console.log( "sound on pause")
+          this.soundoff = true
         })
-      })
-
+    })
     // document.ready
     //var bgHeight = $(window).height()<504?504:$(window).height();
     //$('#gameBgBox').css('height',bgHeight);
@@ -150,7 +156,7 @@ export default {
         this.startGame();
       }
 
-      // hg.sound.play("startButton")
+      //this.hg.sound.play("startButton")
       // hg.sound.get("0",
       // function(sound) {
       //   if (g_config.style != 51 && g_config.style != 49 && g_config.style != 9 && g_config.style != 48 && g_config.style != 57 && g_config.style != 62 && g_config.style != 58 && g_config.style != 65 && g_config.style != 69) {
@@ -176,7 +182,22 @@ export default {
       //$('.timeUpImg').hide();
       _gameOver = false;
     },
+    handlePlaySound( event ){
+      var soundPauseCord = "soundPause|" + this.gamePlayer.game_round_id + "|" + this.gamePlayer.openId;
 
+      console.log( "handlePlaySound", (new Date()).getTime())
+      event.stopPropagation();
+      event.preventDefault();
+      if ( !this.soundoff ) {
+        this.hg.sound.allowPlay = false;
+        this.hg.sound.pauseAll();
+        HdGame.setLocalStorage(soundPauseCord, "-")
+      } else {
+        this.hg.sound.allowPlay = true;
+        this.hg.sound.readyPlay(0, 0, "loop");
+        HdGame.removeLocalStorage(soundPauseCord)
+      }
+    },
     initGame() {
       //初始化游戏头部 头像，计时，分数
       setGameTopBar('#gameTopBar', this.hg)
