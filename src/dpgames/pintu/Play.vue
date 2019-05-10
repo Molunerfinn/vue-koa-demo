@@ -22,11 +22,7 @@
         </div>
       </div>
     </div>
-    <div id='joinNumLine' class='joinNumLine absCenter'
-      style='top:23.424rem;left:3.3706666666666667rem;color:rgb(255,255,255);font-size:0.5546666666666666rem; text-shadow:rgb(255,62,7) -1px -1px 0px, rgb(255,62,7) 0px -1px 0px, rgb(255,62,7) 1px -1px 0px, rgb(255,62,7) 1px 0px 0px, rgb(255,62,7) 1px 1px 0px, rgb(255,62,7) 0px 1px 0px, rgb(255,62,7) -1px 1px 0px, rgb(255,62,7) -1px 0px 0px;'>
-      已有 <span id='joinNum' class="specil"
-        style="color:rgb(255,255,255);font-size:0.5546666666666666rem;text-shadow:rgb(255,62,7) -1px -1px 0px, rgb(255,62,7) 0px -1px 0px, rgb(255,62,7) 1px -1px 0px, rgb(255,62,7) 1px 0px 0px, rgb(255,62,7) 1px 1px 0px, rgb(255,62,7) 0px 1px 0px, rgb(255,62,7) -1px 1px 0px, rgb(255,62,7) -1px 0px 0px;">4346</span>
-      人参加活动</div>
+
     <div id="playInfo" class="abs editTarget-playInfo hide" style="width:9rem;text-align:center;">
       <div class="dayPlayHint">您今天还有 <span id="count" class="specil todayPlayCount"></span> 次参与机会</div>
       <div class="totalPlayHint">您还有 <span class="totalPlayCount specil"></span> 次参与机会</div>
@@ -48,6 +44,7 @@ import Game from './game/Game.vue'
 import GameRes from './game/GameRes'
 import GameArg from './game/GameArg'
 import HdGame from '@/lib/hdgame'
+import GameState from '@/lib/GameState'
 import {
   setAchievebycode,
   getGameResult,
@@ -165,23 +162,23 @@ export default {
         // config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
         console.log('ERROR MESSEGE---:',res);
       });
-    
-      if(this.gameState==4&&this.gamePlayer.token==undefined){
-        this.gameState=0
-      }else if(this.gameState==1&&this.gamePlayer.token==undefined){
+
+      if(this.gameState==GameState.started&&this.gamePlayer.token==undefined){
+        this.gameState=GameState.created
+      }else if(this.gameState==GameState.open&&this.gamePlayer.token==undefined&&this.gameInfo['gameRound'].contact_required==1){
         this.ui.homeVisible = false
         this.ui.unstarted = false
         this.ui.sign_up = true
-      }else if (this.gameState==1&&this.gamePlayer.token!==undefined) {
+      }else if (this.gameState==GameState.open&&(this.gamePlayer.token!==undefined||this.gameInfo['gameRound'].contact_required==0)) {
         this.ui.unstarted = false
         this.ui.wait = true
         this.ui.homeVisible = true
-      }else if(this.gameState==4){
+      }else if(this.gameState==GameState.started){
         this.ui.unstarted = false
         this.ui.homeVisible = false
         this.ui.gameBoxVisible = true
       }
-      if(this.gameState==5||(this.gameInfo['gameResult']!==null&&this.gameInfo['gameResult']!==undefined)){
+      if(this.gameState==GameState.completed||(this.gameInfo['gameResult']!==null&&this.gameInfo['gameResult']!==undefined)){
         var r = this.gameInfo['ret']
         var arg = {
           isSuc: r.isSuc,
@@ -242,12 +239,14 @@ export default {
       that.socket.on('GameOpeningEvent', function(data){
 				that.gameState = data.gameState
         that.resultBoxVisible = false
-        if(that.gameState==1&&that.gamePlayer.token==undefined){
+        if(that.gameState==GameState.open&&that.gamePlayer.token==undefined&&that.gameInfo['gameRound'].contact_required==1){
+          that.ui.homeVisible = false
           that.ui.unstarted = false
           that.ui.sign_up = true
-        }else if (that.gameState==1&&that.gamePlayer.token!==undefined) {
+        }else if (that.gameState==GameState.open&&(that.gamePlayer.token!==undefined||that.gameInfo['gameRound'].contact_required==0)) {
           that.ui.unstarted = false
           that.ui.wait = true
+          that.ui.homeVisible = true
         }
 			});
       that.socket.on('GameStartingEvent', function(data){
@@ -261,7 +260,7 @@ export default {
         if(that.first_start){
           that.first_start = false
           that.ui.wait = false
-          that.gameState = 4
+          that.gameState = GameState.started
           that.ui.unstarted = false
           that.ui.homeVisible = false
           that.ui.gameBoxVisible = true
@@ -288,7 +287,7 @@ export default {
 				//console.log( 'GameRunningEvent', data )
 			});
 			that.socket.on('GameEndEvent', function(data){
-				that.gameState = 5
+				that.gameState = GameState.completed
         that.ui.unstarted = true
         that.ui.homeVisible = false
         that.ui.gameBoxVisible = false
