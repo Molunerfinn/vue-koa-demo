@@ -122,8 +122,7 @@ console.log( "getPieceStyle", "piece=", piece, "xy=",originPosition)
     handleTouchStart(event){
       console.log( "handleTouchStart" )
       let that = this
-      event.preventDefault();
-      event.stopPropagation();
+
       if (_gameOver || that.currentTarget) {
         return;
       }
@@ -141,8 +140,7 @@ console.log( "getPieceStyle", "piece=", piece, "xy=",originPosition)
       query(target).set({'z-index': '10'});
     },
     handletouchMove(event){
-      event.preventDefault();
-      event.stopPropagation();
+
       let that = this
       let target = event.target
       if (_gameOver || that.currentTarget !== target) {
@@ -168,8 +166,7 @@ console.log( "getPieceStyle", "piece=", piece, "xy=",originPosition)
       }
     },
     handleTouchEnd(event){
-      event.preventDefault();
-      event.stopPropagation();
+
       let target = event.target
       if (_gameOver || this.currentTarget !== target) {
         return;
@@ -177,8 +174,7 @@ console.log( "getPieceStyle", "piece=", piece, "xy=",originPosition)
       this.touchendFn();
     },
     handleTouchCancel(event){
-      event.preventDefault();
-      event.stopPropagation();
+    
       let target = event.target
       if (_gameOver || this.currentTarget !== target) {
         return;

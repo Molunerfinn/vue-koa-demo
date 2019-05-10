@@ -6,7 +6,7 @@
     </div>
     <div class="gameInfoBox">
       <div class="titleImg imgContainer absCenter">
-        <img id="titleImg" class="slaveImg abs" :src="skinAssets.titleImg" style="width:15.232rem;height:5.778666666666667rem;top:2.524rem;left:0.384rem;" />
+        <img id="titleImg" class="slaveImg abs" :src="skinAssets.titleImg" style="width:8.8rem;height:6.55rem;top:0.75rem;left:3.65rem;" />
       </div>
     </div>
 
@@ -24,7 +24,7 @@
       <div class="dayPlayHint4Total">今天有 <span class="count specil todayPlayCount"></span> 次</div>
     </div>
     <div id="startBtn" class="startBtn imgContainer absCenter" style="top:0rem;">
-      <img @touchend="handleStartGame" id="startBtnImg" class="slaveImg abs" :src="skinAssets.startBtnImg" style="width: 6.66rem; height: 2.449333333333334rem;    top: 19.706666666666667rem;  left: 4.67rem;" />
+      <img @touchend="handleStartGame" id="startBtnImg" class="slaveImg abs" :src="skinAssets.startBtnImg" style="width:7.35rem;height:2.25rem;top:16.55rem;left:4.6rem;" />
     </div>
 
   </div>
@@ -32,6 +32,7 @@
   <Game ref="game" :hg="hg" :command="gameState" @game-over="handleGameOver" v-show="ui.gameBoxVisible"> </Game>
   <LoadToast ref="load-toast" is-loading="loadToast.isLoading"> </LoadToast>
   <ResultBox ref="result-box" :home-callback="home" :again-callback="handleGameRestart" v-show="resultBoxVisible" :params="resultBoxParams" :command="resultBoxCommand"> </ResultBox>
+  <RuleBox :ruleIconUrl="skinAssets.ruleIconPath" :game-round="gameRound" :command="ruleBoxCommand"> </RuleBox>
 </div>
 </template>
 
@@ -44,6 +45,7 @@ import {
 } from '@/api/base'
 import LoadToast from '@/components/LoadToast.vue'
 import ResultBox from '@/components/ResultBox.vue'
+import RuleBox from '@/components/RuleBox.vue'
 import {
   GameBackgroundMusicLoadEvent
 } from '@/lib/GameEvent'
@@ -69,7 +71,8 @@ export default {
   components: {
     Game,
     LoadToast,
-    ResultBox
+    ResultBox,
+    RuleBox
   },
   created() {
     this.hg.grade = new HdGame.Grade(0)
@@ -89,7 +92,8 @@ export default {
   data() {
     return {
       soundIconClass: "soundIconOff soundIcon",
-      game_player: {},
+      gamePlayer: {},
+      gameRound: {},
       hg: {
         showGameBox: true
       },
@@ -97,10 +101,10 @@ export default {
       ui: {
         homeVisible: true, // 初始页面是否可见，游戏时需要隐藏
         gameBoxVisible: false, // 游戏页面
-        ruleImgVisible: true, // 锦囊按钮
         loadToastVisible: false
       },
       skinAssets:{
+        ruleIconPath: GameRes.skinAssets.ruleIconPath,
         homeBgImg: GameRes.skinAssets.homeBgPath,
         titleImg: GameRes.skinAssets.titleImgPath,
         startBtnImg: GameRes.skinAssets.startImgPath
@@ -109,6 +113,7 @@ export default {
         isLoading: false,
         text: null
       },
+      ruleBoxCommand: null,
       resultBoxVisible: false, //游戏结果页面
       resultBoxParams: {},
       resultBoxCommand: null
@@ -119,6 +124,7 @@ export default {
       event.preventDefault()
 
       let that = this
+      that.ruleBoxCommand = 'hideIcon'
       //点击开始按钮，开始游戏
       console.log(`handleStartGame=${this.gameState}`)
 
@@ -292,7 +298,7 @@ export default {
       var _gameScoreStr = _gameScore + '';
 
       var info = {
-        headImg: this.game_player.avatar
+        headImg: this.gamePlayer.avatar
       };
       //g_config.awardUsername && (info.ausername = g_config.awardUsername);
       //g_config.awardPhone && (info.aphone = g_config.awardPhone);
@@ -302,7 +308,7 @@ export default {
         gameId: 50,
         style: 22,
         achieve: HdGame.encodeBase64('"' + _gameScoreStr + '"') + "0jdk7Deh8T2z5W3k0j44dTZmdTOkZGM",
-        openId: this.game_player.openid,
+        openId: this.gamePlayer.openid,
         //name: g_config.userName,
         //city_gps: typeof g_config.ipInfo.city != 'undefined' ? g_config.ipInfo.city : '',
         //province_gps: typeof g_config.ipInfo.provice != 'undefined' ? g_config.ipInfo.provice : ''

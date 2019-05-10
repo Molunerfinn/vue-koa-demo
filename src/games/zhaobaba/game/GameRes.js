@@ -467,6 +467,7 @@ const GameRes = {
     "homeBgPath": skinResRoot + "/wx/homebg.jpg",
     "titleImg_path": skinResRoot + "/wx/titleimg.png",
     skinAssets: {
+      ruleIconPath: skinResRoot + "/wx/ruleicon.png",
       startImgPath: skinResRoot + "/wx/startbtn.png",
       gameBgPath: skinResRoot + "/wx/gamebg.jpg",
       homeBgPath: skinResRoot + "/wx/homebg.jpg",
