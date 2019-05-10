@@ -245,15 +245,6 @@ export default {
     },
 
     // 点击查看成绩
-    handleSeeRank( event ){
-        event.preventDefault();
-        event.stopPropagation();
-        // if (g_config.createTime > 1520265601000 && gameType == 1) {
-        //   window.showRule()
-        // } else {
-        //   window.showRank()
-        // }
-    },
     setSlideBar(isAnimation){
 
         var anFlag = isAnimation;
@@ -264,26 +255,26 @@ export default {
         } else {
           $("#poupInfoBox").addClass("retrans")
         }
-        $(".gameBox,.home,.body").addClass("overflow-y-hidden");
+        //$(".gameBox,.home,.body").addClass("overflow-y-hidden");
     },
     showTab( flag ){
       $("#poupInfoBox").show();
       $(".poupTitleMune").removeClass("checked");
 
-        $(".poupTitleBox .poupTitleMune").each(function(i, value) {
-          if ($.trim($(this).attr("_flag")) == flag) {
-            $(this).addClass("checked")
-          }
-        })
-
-        $(".poupSlideBar .slideBarTip").css("left", (13.25 / this.menuLen) * flag + "rem")
-
-        if (flag === 0) {
-          this.poupRule()
-        } else
-        if (flag === 1) {
-          this.poupRank()
+      $(".poupTitleBox .poupTitleMune").each(function(i, value) {
+        if ($.trim($(this).attr("_flag")) == flag) {
+          $(this).addClass("checked")
         }
+      })
+
+      $(".poupSlideBar .slideBarTip").css("left", (13.25 / this.menuLen) * flag + "rem")
+
+      if (flag === 0) {
+        this.poupRule()
+      } else
+      if (flag === 1) {
+        this.poupRank()
+      }
     },
     poupRank(){
       $('.poupMain').not("#rankBox").hide()
