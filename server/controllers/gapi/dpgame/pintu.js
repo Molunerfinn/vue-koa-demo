@@ -65,7 +65,6 @@ class pintu {
   static async postMsg(ctx) {
     let code = ctx.params.code
     let number = ctx.params.number
-    let openid = ctx.request.body.openid
     let GameRound = getGameRoundModelByCode(code)
     let GamePlayer = getGamePlayerModelByCode(code)
     let realname = ctx.request.body.realname
@@ -75,18 +74,16 @@ class pintu {
         number
       }
     })
+    let new_player = ctx.request.body.gamePlayer
+    new_player.score = MAX_TIME
+    new_player.max_score = MAX_TIME
+    console.log('new_player', new_player);
 
-    let gamePlayer = await GamePlayer.findOne({
-      where: {
-        game_round_id: gameRound.id,
-        openid: openid,
-      }
-    })
-    console.log('gamePlayer', gamePlayer);
-    let res = await gamePlayer.update({
-      realname: realname,
-      cellphone: cellphone
-    })
+    var options = {
+      fields: ['openid', 'nickname', 'avatar', 'game_round_id', 'realname', 'tel','score','max_score','token']
+    }
+    let res = await GamePlayer.create(new_player, options)
+
     ctx.body = res
   }
 
@@ -189,7 +186,7 @@ class pintu {
       })
 
       if (gamePlayer == null || gamePlayer == undefined) {
-        var new_player = {
+        gamePlayer = {
           openid: parsed.openid,
           nickname: parsed.nickname,
           avatar: parsed.headimgurl,
@@ -198,45 +195,46 @@ class pintu {
           max_score: MAX_TIME
         }
 
-        var options = {
-          fields: ['openid', 'nickname', 'avatar', 'game_round_id']
+        var gameInfo = {
+          gameRound: gameRound,
+          gamePlayer: gamePlayer,
+          wx_config: wx_config
         }
-        gamePlayer = await GamePlayer.create(new_player, options)
-      }
+      } else {
+        let gameResult = await GameResult.findOne({
+          where: {
+            game_player_id: gamePlayer.id,
+            game_round_id: gameRound.id,
+          }
+        })
 
-      let gameResult = await GameResult.findOne({
-        where: {
-          game_player_id: gamePlayer.id,
-          game_round_id: gameRound.id,
+        let ret = {
+          rt: 0,
+          isSuc: true,
+          success: true
         }
-      })
 
-      let ret = {
-        rt: 0,
-        isSuc: true,
-        success: true
-      }
+        ret.playerId = gamePlayer.id //required to set g_config.playerId
+        ret.isSuc = gamePlayer.score < gamePlayer.max_score
+        ret.achieveToken = gamePlayer.token
+        ret.score = gamePlayer.score
+        ret.bestScore = (gamePlayer.max_score) //bestScore
+        if (gamePlayer.score == MAX_TIME) {
+          ret.score = 0
+        }
+        let rank = await gamePlayer.currentPositionAsc()
+        let beat = await gamePlayer.beatAsc()
+        ret.rank = rank
+        ret.beat = beat
+        ret.hasLot = false
 
-      ret.playerId = gamePlayer.id //required to set g_config.playerId
-      ret.isSuc = gamePlayer.score < gamePlayer.max_score
-      ret.achieveToken = gamePlayer.token
-      ret.score = gamePlayer.score
-      ret.bestScore = (gamePlayer.max_score) //bestScore
-      if (gamePlayer.score == MAX_TIME) {
-        ret.score = 0
-      }
-      let rank = await gamePlayer.currentPositionAsc()
-      let beat = await gamePlayer.beatAsc()
-      ret.rank = rank
-      ret.beat = beat
-      ret.hasLot = false
-
-      let gameInfo = {
-        gameRound: gameRound,
-        gamePlayer: gamePlayer,
-        gameResult: gameResult,
-        wx_config: wx_config,
-        ret: ret
+        var gameInfo = {
+          gameRound: gameRound,
+          gamePlayer: gamePlayer,
+          gameResult: gameResult,
+          wx_config: wx_config,
+          ret: ret
+        }
       }
 
       ctx.body = gameInfo
