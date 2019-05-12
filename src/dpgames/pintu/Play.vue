@@ -120,7 +120,7 @@ export default {
     }
 
     that.socketNameSpace = "/channel-dppintu-"+ number
-    that.socket = io( that.socketNameSpace )
+    that.socket = io( that.socketNameSpace , { transports: [ 'websocket' ] })
     //console.log( "that.socketNameSpace = ", that.socketNameSpace, that.socket)
     that.socket.on('connect', () => {
       that.loading = false;
