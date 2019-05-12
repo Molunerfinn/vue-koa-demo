@@ -277,58 +277,59 @@ class pintu {
       })
       console.log(DpGameRoundStates.started);
       if (gameRound.state == DpGameRoundStates.started) {
-        let gamePlayer = await GamePlayer.findOne({
-          where: {
-            game_round_id: gameRound.id,
-            openid: openid,
-          }
-        })
-        let start_at = gameRound.start_at
-        let now = new Date();
-        console.log('now--:', now);
-        let gamePlayerId = gamePlayer.id
-        let score = now - start_at
-        let s = Math.floor(score / 1000) - 4
-        let ss = Math.floor(score % 1000)
-        score = parseFloat(s + '.' + ss)
-        console.log('time--:', score);
-        let lastMaxScore = gamePlayer.max_score
-        console.log('lastMaxScore--:', lastMaxScore);
-        //game_result = set_achieve
-        let gameResultParams = {
-          game_player_id: gamePlayerId,
-          score: score,
-          game_round_id: gameRound.id,
-          start_at: gameRound.start_at
-        }
 
-        console.log('gameResultParams--:', gameResultParams);
+                let gamePlayer = await GamePlayer.findOne({
+                  where: {
+                    game_round_id: gameRound.id,
+                    openid: openid,
+                  }
+                })
+                let start_at = gameRound.start_at
+                let now = new Date();
+                console.log('now--:', now);
+                let gamePlayerId = gamePlayer.id
+                let score = now - start_at
+                let s = Math.floor(score / 1000) - 3
+                let ss = Math.floor(score % 1000)
+                score = parseFloat(s + '.' + ss)
+                console.log('time--:', score);
+                let lastMaxScore = gamePlayer.max_score
+                console.log('lastMaxScore--:', lastMaxScore);
+                //game_result = set_achieve
+                let gameResultParams = {
+                  game_player_id: gamePlayerId,
+                  score: score,
+                  game_round_id: gameRound.id,
+                  start_at: gameRound.start_at
+                }
 
-        let gameResult = GameResult.build(gameResultParams)
-        let result = await gameResult.save()
-        await gamePlayer.update({
-          score: gameResult.score
-        })
+                console.log('gameResultParams--:', gameResultParams);
 
-        if (gameResult.score < lastMaxScore) {
-          await gamePlayer.update({
-            max_score: gameResult.score
-          })
-        }
-        ret.playerId = gamePlayer.id //required to set g_config.playerId
-        ret.isSuc = gamePlayer.score < lastMaxScore
-        ret.achieveToken = gamePlayer.token
-        ret.score = gameResult.score
-        if (gameResult.score == MAX_TIME) {
-          ret.score = 0
-        }
-        ret.bestScore = (gamePlayer.max_score) //bestScore
-        let rank = await gamePlayer.currentPositionAsc()
-        let beat = await gamePlayer.beatAsc()
-        ret.rank = rank
-        ret.beat = beat
-        ret.hasLot = false
-        console.log("setAchieve= ", ret, "lastMaxScore=", lastMaxScore)
+                let gameResult = GameResult.build(gameResultParams)
+                let result = await gameResult.save()
+                await gamePlayer.update({
+                  score: gameResult.score
+                })
+
+                if (gameResult.score < lastMaxScore) {
+                  await gamePlayer.update({
+                    max_score: gameResult.score
+                  })
+                }
+                ret.playerId = gamePlayer.id //required to set g_config.playerId
+                ret.isSuc = gamePlayer.score < gameRound.duration
+                ret.achieveToken = gamePlayer.token
+                ret.score = gameResult.score
+                if (gameResult.score == MAX_TIME) {
+                  ret.score = 0
+                }
+                ret.bestScore = (gamePlayer.max_score) //bestScore
+                let rank = await gamePlayer.currentPositionAsc()
+                let beat = await gamePlayer.beatAsc()
+                ret.rank = rank
+                ret.beat = beat
+                ret.hasLot = false
+                console.log("setAchieve= ", ret, "lastMaxScore=", lastMaxScore)
       }
     }
     // else if(cmd == 'getRankList' ){//排行榜

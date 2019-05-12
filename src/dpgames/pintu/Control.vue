@@ -166,10 +166,8 @@ export default {
         that.socketNameSpace = "/channel-dppintu-"+ res.number
         that.gameRoundState = res.state
         that.socket = io( that.socketNameSpace )
-        console.log( "that.socketNameSpace = ", that.socketNameSpace, that.socket)
         that.socket.on('connect', () => {
           that.loading = false;
-          console.log("socket.connect=",that.socket.connected); // true
           that.bindSocketEvents()
         });
         // 游戏已经结束，获取游戏排名
@@ -217,30 +215,25 @@ export default {
     //绑定socket事件
 		bindSocketEvents: function(){
 			var that = this
-			console.log('bindSocketEvents...')
 			if( that.computedGameState == 'open'){
 				that.openGame()
 			}
 			//绑定 游戏开始倒计时事件，点击开始按钮
 			that.socket.on('GameStartingEvent', function(data){
-        console.log('===========gameRoundState============:',that.gameRoundState)
 				that.gameRoundState = data.gameRoundState
 				that.timeToStart = data.timeToStart
-				console.log( 'GameStartingEvent', data)
 			});
 			//绑定 游戏倒计时事件，游戏时间倒计时
 			that.socket.on('GameRunningEvent', function(data){
 				that.gameRoundState = GameState.started
 				that.timeToEnd = data.timeToEnd
 				var newGamePlayerScores = data.gamePlayerScores
-				console.log("newGamePlayerScores=",newGamePlayerScores)
         if(newGamePlayerScores!==null&&newGamePlayerScores!==undefined){
           for( var i=0; i< newGamePlayerScores.length; i++ ){
             var playerScore = newGamePlayerScores[i]
             for( var j=0; j< that.gamePlayers.length; j++ ){
               var player = that.gamePlayers[j]
               if( player.id == playerScore.id){
-                //console.log( "player=", player)
                 playerScore.nickname = player.nickname
                 playerScore.avatar = player.avatar
                 break;
@@ -254,10 +247,8 @@ export default {
               }
             }
         }
-				console.log( 'GameRunningEvent', data )
 			});
 			that.socket.on('GameEndEvent', function(data){
-        console.log('data.gameRoundState----:',data.gameRoundState);
 				that.gameRoundState = data.gameRoundState
         that.gamePlayerScores = data.gamePlayerScores
         that.timeToStart = 3
@@ -266,16 +257,13 @@ export default {
             that.gamePlayerScores[i].score = 0
           }
         }
-				console.log( 'GameEndEvent', data)
 			});
 		},
 		// 准备开始，玩家开始注册
 		openGameHandler: function(){
-      console.log( 'openGameHandler')
 			var that = this
 			that.socket.emit('OpenGameEvent', {}, function(data){
 					that.gameRoundState = data.gameRoundState
-					console.log("	OpenGameEvent data",data )
 					that.openGame()
 			});
 		},
@@ -288,8 +276,6 @@ export default {
 			that.canstart = false;
 			// 游戏倒计时开始
 			that.socket.emit('StartGameEvent', {}, function(data){
-        console.log("	that.gameRoundState =",	that.gameRoundState );
-				console.log( 'StartGameEvent', data)
 				that.gameRoundState = data.gameRoundState
 			});
 			clearInterval(this.playerCheckTimerId)
@@ -297,16 +283,11 @@ export default {
 
 		// 获取游戏排名
 		getFinalScores: function(){
-      console.log('getFinalScores-------:');
 			var that = this;
 			that.socket.emit('GetGamePlayersEvent', {}, function(data){
         that.gameRoundState = data.gameRoundState;
-        console.log("	that.gameRoundState =",	that.gameRoundState );
-				console.log( "GetGamePlayersEvent=", data )
 				that.gamePlayers = data.gamePlayers
-        console.log('that.gamePlayers----:',that.gamePlayers);
 				that.gamePlayerScores = that.gamePlayers.sort(function(a,b){ return a.score-b.score; })
-        console.log('gamePlayerScores-----:',that.gamePlayerScores);
 			});
 		},
 		// 开放游戏签到，获取签到人员
@@ -325,11 +306,8 @@ export default {
 		// 重置游戏
 		resetGameHandler: function(){
 			var that = this
-			console.log("	emit ResetGameEvent" )
 			that.socket.emit('ResetGameEvent', {}, function(data){
-        console.log('data--:',data)
 					that.gameRoundState = data.gameRoundState;
-					console.log("	that.gameRoundState =",	that.gameRoundState );
 					that.timeToEnd = 3;
 					that.canstart = true;
 					clearInterval(that.playerCheckTimerId);

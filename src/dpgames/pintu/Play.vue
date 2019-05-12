@@ -79,14 +79,12 @@ export default {
     ResultBox
   },
   created() {
-    console.log( "wx=", wx)
     var that = this
     this.hg.grade = new HdGame.Grade(0)
 
     this.hg.time = new HdGame.Time(g_config.initTime, { updateFlag: true, isDesc: false })
 
     GameArg.eventBus.$on(GameBackgroundMusicLoadEvent.name, (event) => {
-      console.log( "GameBackgroundMusicLoadEvent")
       this.initBackgroundMusic()
     })
     //simplifyLufylegend( this.hg, window.g_rem )
@@ -115,13 +113,11 @@ export default {
     });
 
     getGameResult(code,number,params).then(data => {
-      //console.log(data);
       this.gameInfo = data
       this.timeToEnd = this.gameInfo['gameRound'].duretion
       this.gameState = this.gameInfo['gameRound'].state
       this.gamePlayer = this.gameInfo['gamePlayer']
       this.wx_config = this.gameInfo['wx_config']
-      console.log('wx_configwx_config------:',this.wx_config);
 
       wx.config({
         debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
@@ -143,7 +139,6 @@ export default {
           imgUrl: '', // 分享图标
           success: function () {
             // 设置成功
-            console.log('updateAppMessageShareData success');
           }
         })
 
@@ -153,14 +148,12 @@ export default {
           imgUrl: '', // 分享图标
           success: function () {
             // 设置成功
-            console.log('updateTimelineShareData success');
           }
         })
       });
 
       wx.error(function(res){
         // config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
-        console.log('ERROR MESSEGE---:',res);
       });
 
       if(this.gameState==GameState.started&&this.gamePlayer.token==undefined){
@@ -287,19 +280,17 @@ export default {
           that.resultBoxCommand = "showResult"
           that.resultBoxVisible = true
         }
-				//console.log( 'GameRunningEvent', data )
 			});
 			that.socket.on('GameEndEvent', function(data){
 				that.gameState = GameState.completed
+        that.gameOver(that.time)
         that.ui.unstarted = true
         that.ui.homeVisible = false
         that.ui.gameBoxVisible = false
         that.resultBoxVisible = true
-				//console.log( 'GameEndEvent', data)
 			});
   },
     post_msg: function () {
-      //console.log('post_msg');
       var realname = document.getElementById('name').value
       var tel = parseInt(document.getElementById('tel').value)
 
@@ -312,7 +303,6 @@ export default {
         gamePlayer: this.gamePlayer
       }
       postMsg(code,number,data).then((res)=>{
-        ////console.log( 100000, res )
         this.gamePlayer = res
         this.ui.sign_up = false
         this.ui.unstarted = false
@@ -461,8 +451,8 @@ export default {
         this.hideLoadToast();
         HdGame.tlog('gameOver', data);
         var r = data;
+        console.log('rrrrrrr',r);
         var isShowPoup = true;
-        console.log('this.gamePlayer.avatar----------:',this.gamePlayer.avatar);
         if (r.rt == 0) {
           var arg = {
             isSuc: r.isSuc,
@@ -541,7 +531,6 @@ export default {
 
     },
     initBackgroundMusic() {
-      //console.log("initBackgroundMusic->sound")
     },
 
     showLoadToast(text) {
