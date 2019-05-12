@@ -23,11 +23,22 @@
       </div>
     </div>
 
+
+    <div id='joinNumLine' class='joinNumLine absCenter'
+      style='top:23.424rem;left:3.3706666666666667rem;color:rgb(255,255,255);font-size:0.5546666666666666rem; text-shadow:rgb(255,62,7) -1px -1px 0px, rgb(255,62,7) 0px -1px 0px, rgb(255,62,7) 1px -1px 0px, rgb(255,62,7) 1px 0px 0px, rgb(255,62,7) 1px 1px 0px, rgb(255,62,7) 0px 1px 0px, rgb(255,62,7) -1px 1px 0px, rgb(255,62,7) -1px 0px 0px;'>
+      已有 <span id='joinNum' class="specil"
+        style="color:rgb(255,255,255);font-size:0.5546666666666666rem;text-shadow:rgb(255,62,7) -1px -1px 0px, rgb(255,62,7) 0px -1px 0px, rgb(255,62,7) 1px -1px 0px, rgb(255,62,7) 1px 0px 0px, rgb(255,62,7) 1px 1px 0px, rgb(255,62,7) 0px 1px 0px, rgb(255,62,7) -1px 1px 0px, rgb(255,62,7) -1px 0px 0px;">4346</span>
+      人参加活动</div>
+
+
     <div id="playInfo" class="abs editTarget-playInfo hide" style="width:9rem;text-align:center;">
       <div class="dayPlayHint">您今天还有 <span id="count" class="specil todayPlayCount"></span> 次参与机会</div>
       <div class="totalPlayHint">您还有 <span class="totalPlayCount specil"></span> 次参与机会</div>
       <div class="dayPlayHint4Total">今天有 <span class="count specil todayPlayCount"></span> 次</div>
     </div>
+    <!-- <div id="startBtn" class="startBtn imgContainer absCenter" style="top:0rem;">
+      <img @touchend="handleStartGame" id="startBtnImg" class="slaveImg abs" :src="startBtnImg" style="width: 6.66rem; height: 2.449333333333334rem;    top: 19.706666666666667rem;  left: 4.67rem;" />
+    </div> -->
 
   </div>
 
@@ -39,12 +50,12 @@
 
 <script>
 import wx from 'weixin-js-sdk'
+import GameState from '@/lib/GameState'
 
 import Game from './game/Game.vue'
 import GameRes from './game/GameRes'
 import GameArg from './game/GameArg'
 import HdGame from '@/lib/hdgame'
-import GameState from '@/lib/GameState'
 import {
   setAchievebycode,
   getGameResult,
@@ -97,6 +108,8 @@ export default {
       window.gameArg = GameArg
     }
 
+    //console.log("created gameState=", this.gameState, this.hg.grade)
+
     const parsed = queryString.parse(location.search);
     var code = 'dppintu';
     var number = parsed.number;
@@ -107,14 +120,15 @@ export default {
 
     that.socketNameSpace = "/channel-dppintu-"+ number
     that.socket = io( that.socketNameSpace )
+    //console.log( "that.socketNameSpace = ", that.socketNameSpace, that.socket)
     that.socket.on('connect', () => {
       that.loading = false;
+      //console.log("socket.connect=",that.socket.connected); // true
       that.bindSocketEvents()
     });
 
     getGameResult(code,number,params).then(data => {
       this.gameInfo = data
-      this.timeToEnd = this.gameInfo['gameRound'].duretion
       this.gameState = this.gameInfo['gameRound'].state
       this.gamePlayer = this.gameInfo['gamePlayer']
       this.wx_config = this.gameInfo['wx_config']
@@ -156,22 +170,21 @@ export default {
         // config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
       });
 
-      if(this.gameState==GameState.started&&this.gamePlayer.token==undefined){
-        this.gameState=GameState.created
-      }else if(this.gameState==GameState.open&&this.gamePlayer.token==undefined&&this.gameInfo['gameRound'].contact_required==1){
+      if(this.gameState==1&&(this.gamePlayer.realname==''||this.gamePlayer.cellphone=='')){
         this.ui.homeVisible = false
         this.ui.unstarted = false
         this.ui.sign_up = true
-      }else if (this.gameState==GameState.open&&(this.gamePlayer.token!==undefined||this.gameInfo['gameRound'].contact_required==0)) {
+      }else if (this.gameState==1&&(this.gamePlayer.realname!==''||this.gamePlayer.cellphone!=='')) {
         this.ui.unstarted = false
         this.ui.wait = true
         this.ui.homeVisible = true
-      }else if(this.gameState==GameState.started){
+      }else if(this.gameState==4){
         this.ui.unstarted = false
         this.ui.homeVisible = false
         this.ui.gameBoxVisible = true
       }
-      if(this.gameState==GameState.completed||(this.gameInfo['gameResult']!==null&&this.gameInfo['gameResult']!==undefined)){
+      if(this.gameState==5||(this.gameInfo['gameResult']!==null&&this.gameInfo['gameResult']!==undefined)){
+        //console.log('5555555555555555');
         var r = this.gameInfo['ret']
         if(this.gameInfo['gamePlayer'].score == 9999.99){
           this.gameInfo['gamePlayer'].score = 0
@@ -185,8 +198,7 @@ export default {
           rank: r.rank,
           beat: r.beat,
           isEqualDraw: false,
-          bestCostTime: r.bestCostTime,
-          headImg: this.gamePlayer.avatar
+          bestCostTime: r.bestCostTime
         };
 
         this.resultBoxParams = arg
@@ -231,32 +243,37 @@ export default {
   },
   methods: {
     bindSocketEvents: function(){
+      //console.log('bindSocketEvents...')
       var that = this
       that.socket.on('GameOpeningEvent', function(data){
+        //console.log('GameOpeningEvent');
 				that.gameState = data.gameState
         that.resultBoxVisible = false
-        if(that.gameState==GameState.open&&that.gamePlayer.token==undefined&&that.gameInfo['gameRound'].contact_required==1){
-          that.ui.homeVisible = false
+        //console.log('===========gameState============:',that.gameState)
+        if(that.gameState==1&&(that.gamePlayer.realname==''||that.gamePlayer.cellphone=='')){
           that.ui.unstarted = false
           that.ui.sign_up = true
-        }else if (that.gameState==GameState.open&&(that.gamePlayer.token!==undefined||that.gameInfo['gameRound'].contact_required==0)) {
+        }else if (that.gameState==1&&(that.gamePlayer.realname!==''||that.gamePlayer.cellphone!=='')) {
           that.ui.unstarted = false
           that.ui.wait = true
-          that.ui.homeVisible = true
         }
+				//console.log( 'GameOpeningEvent', data)
 			});
       that.socket.on('GameStartingEvent', function(data){
+        //console.log('===========gameState============:',that.gameState)
 				that.gameState = data.gameState
 				that.timeToStart = data.timeToStart
+				//console.log( 'GameStartingEvent', data)
 			});
 			//绑定 游戏倒计时事件，游戏时间倒计时
 			that.socket.on('GameRunningEvent', function(data){
         that.timeToEnd = data.timeToEnd
 
+        //console.log('first_start--:',that.first_start);
         if(that.first_start){
           that.first_start = false
           that.ui.wait = false
-          that.gameState = GameState.started
+          that.gameState = 4
           that.ui.unstarted = false
           that.ui.homeVisible = false
           that.ui.gameBoxVisible = true
@@ -297,10 +314,10 @@ export default {
       const parsed = queryString.parse(location.search);
       var code = 'dppintu';
       var number = parsed.number;
-      this.gamePlayer.realname = realname
-      this.gamePlayer.tel = tel
       var data = {
-        gamePlayer: this.gamePlayer
+        openid: this.gamePlayer.openid,
+        realname:realname,
+        tel:tel
       }
       postMsg(code,number,data).then((res)=>{
         this.gamePlayer = res
@@ -309,23 +326,36 @@ export default {
         this.ui.wait = true
         return res
       })
-
-      this.ui.unstarted = false
-      this.ui.wait = true
-      this.ui.homeVisible = true
     },
     handleStartGame(event) {
       event.preventDefault()
 
       let that = this
+      //点击开始按钮，开始游戏
+      //console.log(`handleStartGame=${this.gameState}`)
 
+      // HdGame.tlog("startBtnAjax：", "调用了");
       this.activateSound();
+      //HdGame.ajaxLoad.show();
 
+      // $.Deferred('resolve')
+      //   .then(checkAreaLimit)
+      //   .then(checkGameState)
+      //   .then(checkJoinNum)
+      //   .then(checkLuckDrawAndBlack)
+      //   .then(checkForcedAttention)
+      //   .then(checkAccessKeyOnce)
+      //   .then(beforeStartGame)
+      //   .then(handleResult)
+      //   .fail(handleFail);
       function showGame() {
 
+        //$('.homeBtnBox,.bottomSkill').hide();
+        //$('.footerBox').hide();
         that.ui.homeVisible = false
         that.ui.gameBoxVisible = true
-
+        //$('.home, #ruleImg').hide();
+        //$('.gameBox').show();
         let hg = that.hg
         if (typeof hg.sound.cache[0] !== 'undefined' && typeof hg.sound.cache[0].playing !== 'undefined' && !hg.sound.cache[0].playing) {
           hg.sound.readyPlay(0, 0, 'loop');
@@ -335,7 +365,12 @@ export default {
 
       // 无论是否显示游戏界面都需要调用的功能
       function complete(result) {
+        //this.hideLoadToast();
+        //HdGame.otherAjaxComplete();
 
+        // if (callback) {
+        //   callback.call(self, result, event, data, showGame);
+        // }
       }
       // 不满足显示界面的条件
       function handleFail() {
@@ -344,32 +379,48 @@ export default {
 
       function handleResult() {
         function logs() {
-
+          // HdGame.logDog(1000002, 22);
+          // HdGame.LogFaiOpenId(1000230, 0);
+          // HdGame.logObjDog(1000092, 1, 50);
         }
 
         function cookies() {
-
+          // var cookOpt = {
+          //   domain: 'hd.getstore.cn',
+          //   expires: 1,
+          //   path: '/'
+          // };
+          //$.cookie('gps_province', HdGame.encodeUrl(g_config.ipInfo.provice), cookOpt);
+          //$.cookie('gps_city', HdGame.encodeUrl(g_config.ipInfo.city), cookOpt);
         }
 
         showGame();
 
+        //console.log('showGameBox: ' + that.hg.showGameBox);
+
         logs();
+
+        //HdGame.addJoinGameBehavior();
 
         cookies();
 
         complete(true);
 
+        //hg.fireWith('startGame', self, [false, event, data, showGame]);
       }
 
       Promise.resolve().then(() => {
+        //console.log(" then->handleResult")
         handleResult()
         this.gameState = 'start'
       }).catch((error) => {
+        //console.log(" catch->handleFail", error)
         handleFail()
       })
 
     },
     handleGameOver(event) {
+      //console.log('this.hg---:',this.hg);
       this.gameState = "over"
       this.gameOver(this.time)
     },
@@ -378,20 +429,30 @@ export default {
       this.resultBoxVisible = false
     },
     home() {
-
+      //$('#ruleImg').show();
+      //$('.homeBtnBox').show();
+      //$('.footerBox').show();
+      //$('.gameBox').hide();
       this.ui.gameBoxVisible = false
       this.startBtnDelay();
       this.ui.homeVisible = true
 
       this.resultBoxVisible = false
-
+      //$('.home').show();
+      //$('#poupInfoBox').hide();
+      //$('.resuleBox').hide();
       this.gameState = 'initial'
       this.hg.fire('home');
     },
     startBtnDelay() {
+      //$('.titleImg').removeClass('titleDown').addClass('titleDown');
+      //$('#startBtnImg').removeClass('startTada');
 
       this.hg.sound.pauseAll();
 
+      //setTimeout(function() {
+      //  $('#startBtnImg').addClass('startTada');
+      //}, 1000);
     },
     activateSound() { //兼容ios下 WebAudio类型的对象无法自动播放，必须在点击事件中播放过一次，才允许播放
       try {
@@ -418,7 +479,18 @@ export default {
     gameOver(_gameScore, callBack, option, showAjaxBar) {
 
       if (_gameScore === 'fail') {
-          setTimeout(function () {
+        setTimeout(function () {
+          // HdGame.resulePoup.show({
+          //   isSuc: false,
+          //   gameScore: "fail", //闯关失败
+          //   minScore: 50,
+          //   bestScore: '20',
+          //   gameType: gameType,
+          //   rank: 0,
+          //   count: drawTimesLimit - count < 0 ? 0 : (drawTimesLimit - count),
+          //   isLimitDrawTotal: isLimitDraw,
+          //   totalCount: drawTotalLimit - totalCount < 0 ? 0 : (drawTotalLimit - totalCount)
+          // });
         }, 900);
         return;
       }
@@ -426,27 +498,45 @@ export default {
         _gameScore = 0;
       }
       _gameScore = parseFloat(_gameScore).toFixed(2);
+
+      //  if (gameType != 1 && HdGame.shouldRegInfo(infoType, arguments, this)) {
+
+      //$('.ajaxLoadBg').show();
+      //$('.ajaxLoadBar').addClass('ajaxLoad');
       this.showLoadToast('数据加载中');
       var _gameScoreStr = _gameScore + '';
 
       var info = {
         headImg: this.gamePlayer.avatar
       };
-
+      //g_config.awardUsername && (info.ausername = g_config.awardUsername);
+      //g_config.awardPhone && (info.aphone = g_config.awardPhone);
+      //g_config.awardAddress && (info.aadress = g_config.awardAddress);
+      //info.ip = '60.20.175.68';
       const parsed = queryString.parse(location.search);
       var params = {
         gameId: 50,
         style: 22,
         achieve: HdGame.encodeBase64('"' + _gameScoreStr + '"') + "0jdk7Deh8T2z5W3k0j44dTZmdTOkZGM",
+        // openId: this.gamePlayer.openid,
         score:_gameScore,
         parsed:parsed
+        //name: g_config.userName,
+        //city_gps: typeof g_config.ipInfo.city != 'undefined' ? g_config.ipInfo.city : '',
+        //province_gps: typeof g_config.ipInfo.provice != 'undefined' ? g_config.ipInfo.provice : ''
       };
 
       var code = 'dppintu';
       var number = parsed.number;
+
+      //console.log('code--:',code,'  number--:',number);
+
       params.info = JSON.stringify(info);
 
       Object.assign(params, option);
+
+      //console.log('params--:',params);
+
       setAchievebycode(code,number,params).then(data => {
         this.hideLoadToast();
         HdGame.tlog('gameOver', data);
@@ -462,12 +552,18 @@ export default {
             gameType: gameType,
             rank: r.rank,
             beat: r.beat,
+            //count: drawTimesLimit - count < 0 ? 0 : (drawTimesLimit - count),
+            //isLimitDrawTotal: isLimitDraw,
+            //totalCount: drawTotalLimit - totalCount < 0 ? 0 : (drawTotalLimit - totalCount),
             isEqualDraw: false,
-            bestCostTime: r.bestCostTime,
-            headImg: this.gamePlayer.avatar
+            //gameCostTime: consumption,
+            bestCostTime: r.bestCostTime
           };
 
           g_config.playerId = r.playerId;
+
+          //callBack && (isShowPoup = callBack(callBackArg, r));
+          //$('#timeUpImg,.timeUpImg').removeClass('tada');
           this.resultBoxParams = arg
           this.resultBoxCommand = "showResult"
           this.resultBoxVisible = true //显示游戏结果
@@ -496,6 +592,9 @@ export default {
               gameType: gameType,
               rank: '--',
               beat: '--',
+              //count: drawTimesLimit - count < 0 ? 0 : (drawTimesLimit - count),
+              //isLimitDrawTotal: isLimitDraw,
+              //totalCount: drawTotalLimit - totalCount < 0 ? 0 : (drawTotalLimit - totalCount),
               isEqualDraw: false
             });
           }

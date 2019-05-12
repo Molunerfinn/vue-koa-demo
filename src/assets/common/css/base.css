@@ -148,7 +148,7 @@ to{opacity:0}
 #poupInfoBox .poupSlideBar{position:absolute;bottom:0;left:0;width:13.25rem}
 #regAwardMain{max-height:19.2rem}
 #regAwardMain .playerName span{display:inline-block}
-#poupInfoBox .slideBarTip{height:3px;max-width:3.2rem;background:#fff}
+#poupInfoBox .slideBarTip{height:3px;background:#fff}
 #poupInfoBox .slideBarTip::after{position:absolute;right:0;bottom:0;left:0;margin:auto;width:0;border-right:.4rem solid transparent;border-bottom:.45rem solid #fff;border-left:.4rem solid transparent;content:''}
 #poupInfoBox .transitionPanel{position:absolute}
 #poupInfoBox .transitionPanel.ontransition{-webkit-transition:left 0s;transition:left 0s}
