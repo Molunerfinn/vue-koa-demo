@@ -1,6 +1,14 @@
 <template>
 <div id="app">
+  <div class="sign_up" v-show="ui.sign_up">
+    sign_up</br>
+    name:<td><input id="name" ></input></td></br>
+    tel:<td><input id="tel" ></input></td></br>
+    <button  @click="post_msg()" type="button">commit</button>
+  </div>
+
   <div class="home" v-show="ui.homeVisible">
+
     <div id="homeBgBox">
       <img id="homeBg" :src="skinAssets.homeBgImg" />
     </div>
@@ -29,22 +37,25 @@
 
   </div>
 
-  <Game ref="game" :hg="hg" :command="gameState" @game-over="handleGameOver" v-show="ui.gameBoxVisible"> </Game>
+  <Game ref="game" :hg="hg" :command="gameState" :dataList="dataList" :gamePlayer="gamePlayer" @game-over="handleGameOver" v-show="ui.gameBoxVisible"> </Game>
   <LoadToast ref="load-toast" is-loading="loadToast.isLoading"> </LoadToast>
   <ResultBox ref="result-box" :home-callback="home" :again-callback="handleGameRestart" v-show="resultBoxVisible" :params="resultBoxParams" :command="resultBoxCommand"> </ResultBox>
-  <RuleBox :ruleIconUrl="skinAssets.ruleIconPath" :game-round="gameRound" :command="ruleBoxCommand"> </RuleBox>
+  <RuleBox :ruleIconUrl="skinAssets.ruleIconPath" :game-round="gameRound" :params="resultBoxParams" :command="ruleBoxCommand"> </RuleBox>
 </div>
 </template>
 
 <script>
+import wx from 'weixin-js-sdk'
 import Game from './game/Game.vue'
 import GameRes from './game/GameRes'
 import HdGame from '@/lib/hdgame'
 import {
-  setAchieve
-} from '@/api/base'
+  setAchievebycode,
+  postMsg,
+  getGameResult
+} from '@/api/games/zhaobaba'
 import LoadToast from '@/components/LoadToast.vue'
-import ResultBox from '@/components/ResultBox.vue'
+import ResultBox from './zhaobabaResult.vue'
 import RuleBox from '@/components/RuleBox.vue'
 import {
   GameBackgroundMusicLoadEvent
@@ -52,6 +63,7 @@ import {
 import {
   EventBus
 } from '@/lib/EventBus'
+import queryString from 'query-string'
 
 //import {simplifyLufylegend } from '@/lib/simplify'
 //关于玩家的配置信息
@@ -87,11 +99,75 @@ export default {
 
     window.hg = this.hg
 
-    console.log("created gameState", this.gameState, this.hg.grade, this.skinAssets)
+    const parsed = queryString.parse(location.search);
+    var code = 'zhaobaba';
+    var number = parsed.number;
+
+    var params = {
+      parsed: parsed
+    }
+
+    getGameResult(code,number,params).then(data => {
+      this.gameInfo = data
+      console.log('getGameResult------:',data);
+      this.gameRound = this.gameInfo['gameRound']
+      this.gameState = this.gameRound.state
+      this.gamePlayer = this.gameInfo['gamePlayer']
+      this.dataList = this.gameInfo['dataList']
+
+      if(this.gamePlayer.token==undefined){
+        this.ui.homeVisible = false
+        this.ui.unstarted = false
+        this.ui.sign_up = true
+      }else if (this.gamePlayer.token!==undefined) {
+        this.ui.homeVisible = true
+      }
+
+      this.wx_config = this.gameInfo['wx_config']
+
+      wx.config({
+        debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+        appId: this.wx_config.appId, // 必填，公众号的唯一标识
+        timestamp: this.wx_config.timestamp, // 必填，生成签名的时间戳
+        nonceStr: this.wx_config.nonceStr, // 必填，生成签名的随机串
+        signature: this.wx_config.signature,// 必填，签名
+        jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage'] // 必填，需要使用的JS接口列表
+      });
+
+      var number = this.gameRound.number;
+
+      let that = this
+      wx.ready(function () {   //需在用户可能点击分享按钮前就先调用
+
+        wx.onMenuShareAppMessage({
+          title: that.gameRound.name, // 分享标题
+          desc: that.gameRound.name, // 分享描述
+          link: 'http://testwx.getstore.cn/authwx/game?gameurl=http://testwx.getstore.cn/zhaobaba.html?number='+number, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+          imgUrl: '', // 分享图标
+          success: function () {
+            // 设置成功
+          }
+        })
+
+        wx.onMenuShareTimeline({
+          title: that.gameRound.name, // 分享标题
+          link: 'http://testwx.getstore.cn/authwx/game?gameurl=http://testwx.getstore.cn/zhaobaba.html?number='+number, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+          imgUrl: '', // 分享图标
+          success: function () {
+            // 设置成功
+          }
+        })
+      });
+
+      wx.error(function(res){
+        // config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
+      });
+    })
   },
   data() {
     return {
       soundIconClass: "soundIconOff soundIcon",
+      dataList:[],
       gamePlayer: {},
       gameRound: {},
       hg: {
@@ -101,7 +177,8 @@ export default {
       ui: {
         homeVisible: true, // 初始页面是否可见，游戏时需要隐藏
         gameBoxVisible: false, // 游戏页面
-        loadToastVisible: false
+        loadToastVisible: false,
+        sign_up: false
       },
       skinAssets:{
         ruleIconPath: GameRes.skinAssets.ruleIconPath,
@@ -120,6 +197,25 @@ export default {
     }
   },
   methods: {
+    post_msg: function () {
+      var realname = document.getElementById('name').value
+      var tel = parseInt(document.getElementById('tel').value)
+
+      const parsed = queryString.parse(location.search);
+      var code = 'dppintu';
+      var number = parsed.number;
+      var data = {
+        gamePlayer: this.gamePlayer,
+        realname:realname,
+        tel:tel
+      }
+      postMsg(code,number,data).then((res)=>{
+        this.gamePlayer = res
+        this.ui.sign_up = false
+        this.ui.homeVisible = true
+        return res
+      })
+    },
     handleStartGame(event) {
       event.preventDefault()
 
@@ -269,56 +365,37 @@ export default {
     },
     // 游戏结束，设置游戏成绩
     gameOver(_gameScore, callBack, option, showAjaxBar) {
-
+      console.log('_gameScore-----:',_gameScore);
       if (_gameScore === 'fail') {
         setTimeout(function () {
-          // HdGame.resulePoup.show({
-          //   isSuc: false,
-          //   gameScore: "fail", //闯关失败
-          //   minScore: 50,
-          //   bestScore: '20',
-          //   gameType: gameType,
-          //   rank: 0,
-          //   count: drawTimesLimit - count < 0 ? 0 : (drawTimesLimit - count),
-          //   isLimitDrawTotal: isLimitDraw,
-          //   totalCount: drawTotalLimit - totalCount < 0 ? 0 : (drawTotalLimit - totalCount)
-          // });
         }, 900);
         return;
       }
       if (isNaN(_gameScore) || _gameScore < 0) {
         _gameScore = 0;
       }
-
-      //  if (gameType != 1 && HdGame.shouldRegInfo(infoType, arguments, this)) {
-
-      //$('.ajaxLoadBg').show();
-      //$('.ajaxLoadBar').addClass('ajaxLoad');
       this.showLoadToast('数据加载中');
       var _gameScoreStr = _gameScore + '';
 
       var info = {
         headImg: this.gamePlayer.avatar
       };
-      //g_config.awardUsername && (info.ausername = g_config.awardUsername);
-      //g_config.awardPhone && (info.aphone = g_config.awardPhone);
-      //g_config.awardAddress && (info.aadress = g_config.awardAddress);
-      //info.ip = '60.20.175.68';
+      const parsed = queryString.parse(location.search);
+
       var params = {
-        gameId: 50,
-        style: 22,
-        achieve: HdGame.encodeBase64('"' + _gameScoreStr + '"') + "0jdk7Deh8T2z5W3k0j44dTZmdTOkZGM",
         openId: this.gamePlayer.openid,
-        //name: g_config.userName,
-        //city_gps: typeof g_config.ipInfo.city != 'undefined' ? g_config.ipInfo.city : '',
-        //province_gps: typeof g_config.ipInfo.provice != 'undefined' ? g_config.ipInfo.provice : ''
+        score: _gameScoreStr,
+        parsed: parsed
       };
 
       params.info = JSON.stringify(info);
 
       Object.assign(params, option);
+      var code = 'zhaobaba';
+      var number = parsed.number;
 
-      setAchieve(params).then(data => {
+console.log('params----:',params);
+      setAchievebycode(code,number,params).then(data => {
         this.hideLoadToast();
         HdGame.tlog('gameOver', data);
         var r = data;
@@ -326,28 +403,21 @@ export default {
         if (r.rt == 0) {
           var arg = {
             isSuc: r.isSuc,
-            gameScore: _gameScoreStr,
+            gameScore: r.score,
             minScore: 0, //到多少分可以抽奖
-            bestScore: r.score,
+            bestScore: r.bestScore,
             gameType: gameType,
             rank: r.rank,
             beat: r.beat,
-            //count: drawTimesLimit - count < 0 ? 0 : (drawTimesLimit - count),
-            //isLimitDrawTotal: isLimitDraw,
-            //totalCount: drawTotalLimit - totalCount < 0 ? 0 : (drawTotalLimit - totalCount),
             isEqualDraw: false,
-            //gameCostTime: consumption,
-            bestCostTime: r.bestCostTime
+            bestCostTime: r.bestCostTime,
+            headImg: this.gamePlayer.avatar
           };
 
           g_config.playerId = r.playerId;
-
-          //callBack && (isShowPoup = callBack(callBackArg, r));
-          //$('#timeUpImg,.timeUpImg').removeClass('tada');
           this.resultBoxParams = arg
           this.resultBoxCommand = "showResult"
-          this.resultBoxVisible = true //显示游戏结果
-          //PlayInfo.addPlayTimes(1);
+          this.resultBoxVisible = true
           g_config.achieveToken = r.achieveToken;
         } else if (r.rt == 11) {
           alert("已被检测到有作弊行为，再次被检测将永久禁止参与本游戏！");
