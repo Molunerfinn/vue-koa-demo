@@ -56,16 +56,20 @@ router.post('/', wechat(wechat_config).middleware(async (message, ctx) => {
         type: 'text',
         content: content
       }
-  }else if (  matches=/^g([a-z]+)([0-9]+)/.exec( message.Content )) {
-    // gdppintu9
+  }else if (  matches=/^gu([a-z]+)([0-9]+)/.exec( message.Content )) {
+    // gudppintu9
     let code = matches[1]
     let model = getGameRoundModelByCode( code )
     let gid =   matches[2]
-    let user = await api.getUser( message.FromUserName );
+
+    //let user = await api.getUser( message.FromUserName )
     let gameround =  await model.findById( parseInt(gid) )
+
+    let url = config.authdomain + '/authwx/gameshareurl?shareurl=' + encodeURIComponent(gameround.playPath)
+
       return {
         type: 'text',
-        content: `<a href="${game_host}/game-${gameround.code}/${gid}/checkin-wx?openid=${message.FromUserName}&nickname=${user.nickname}&headimgurl=${(user.headimgurl)}"> ${gameround.name} </a>`
+        content: `<a href="${url}"> ${gameround.name} </a>`
       }
 
   } else {
