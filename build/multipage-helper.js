@@ -132,8 +132,9 @@ function readDirSync( ){
       let name = path.basename(filePath, '.js');
       let ns = filePath.split('/')
       let id = ns[ns.length-2]
+
       ns[ns.length -1] = `${name}.html`
-      let moduleId = [id, name].join('-')
+      let moduleId = ['dp'+ id, name].join('-') // 这里的 dp+id 必须和 gameround.code 一致
       moduleList.push( { moduleID: moduleId, moduleEntry: filePath, moduleHTML:  ns.join('/') } )
   })
 }
