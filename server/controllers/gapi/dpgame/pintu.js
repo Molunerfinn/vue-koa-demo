@@ -14,7 +14,7 @@ const {
   getGameResultModelByCode
 } = require('../../game_round_helper')
 
-var config = require(`../../../config/weixin.js`);
+var config = require('../../../config/weixin.js');
 var OAuth = require('co-wechat-oauth');
 var client = new OAuth(config.appid, config.secret);
 
