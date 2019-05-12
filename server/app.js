@@ -68,6 +68,10 @@ import gameRoundByCode from './routes/api/game_round_by_code.js'
 // 支持路径 /api/game/:code/
 router.use('/api/game', gameRoundByCode.routes())
 
+// 微信api
+import wechat from './routes/api/wechat.js'
+router.use('/api/wechat', wechat.routes())
+
 // 游戏过程api
 import gameBaseByCode from './routes/gapi/base_by_code.js'
 router.use('/gapi/base', gameBaseByCode.routes())

@@ -1784,6 +1784,16 @@ co-wechat-oauth@^2.0.1:
   dependencies:
     httpx "^2.1.1"
 
+co-wechat@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.npm.taobao.org/co-wechat/download/co-wechat-2.3.0.tgz#089ea0d5986f0338d39137ddfc8b93235a28cde6"
+  integrity sha1-CJ6g1ZhvAzjTkTfd/IuTI1oozeY=
+  dependencies:
+    ejs ">=1.0.0"
+    raw-body "^2.2.0"
+    wechat-crypto "0.0.2"
+    xml2js "0.4.4"
+
 co@^4.6.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/co/-/co-4.6.0.tgz#6ea6bdf3d853ae54ccb8e47bfa0bf3f9031fb184"
@@ -2631,6 +2641,11 @@ editorconfig@^0.13.2:
 ee-first@1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/ee-first/-/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"
+
+ejs@>=1.0.0:
+  version "2.6.1"
+  resolved "https://registry.npm.taobao.org/ejs/download/ejs-2.6.1.tgz#498ec0d495655abc6f23cd61868d926464071aa0"
+  integrity sha1-SY7A1JVlWrxvI81hho2SZGQHGqA=
 
 ejs@^2.5.6:
   version "2.5.6"
@@ -7353,6 +7368,11 @@ sax@0.5.x:
   version "0.5.8"
   resolved "https://registry.yarnpkg.com/sax/-/sax-0.5.8.tgz#d472db228eb331c2506b0e8c15524adb939d12c1"
 
+sax@0.6.x:
+  version "0.6.1"
+  resolved "https://registry.npm.taobao.org/sax/download/sax-0.6.1.tgz#563b19c7c1de892e09bfc4f2fc30e3c27f0952b9"
+  integrity sha1-VjsZx8HeiS4Jv8Ty/DDjwn8JUrk=
+
 sax@^1.2.1, sax@^1.2.4:
   version "1.2.4"
   resolved "https://registry.npmjs.org/sax/-/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
@@ -8705,6 +8725,11 @@ webpack@^3.12.0:
     webpack-sources "^1.0.1"
     yargs "^8.0.2"
 
+wechat-crypto@0.0.2:
+  version "0.0.2"
+  resolved "https://registry.npm.taobao.org/wechat-crypto/download/wechat-crypto-0.0.2.tgz#a55443ec0810f4c1992a293a27860839700c6369"
+  integrity sha1-pVRD7AgQ9MGZKik6J4YIOXAMY2k=
+
 weixin-js-sdk@^1.4.0-test:
   version "1.4.0-test"
   resolved "http://registry.npm.taobao.org/weixin-js-sdk/download/weixin-js-sdk-1.4.0-test.tgz#612bbafcc97ad84f5afe6dc84701534cc59fc3ca"
@@ -8856,6 +8881,19 @@ xml-char-classes@^1.0.0:
 xml-name-validator@^2.0.1:
   version "2.0.1"
   resolved "https://registry.npmjs.org/xml-name-validator/-/xml-name-validator-2.0.1.tgz#4d8b8f1eccd3419aa362061becef515e1e559635"
+
+xml2js@0.4.4:
+  version "0.4.4"
+  resolved "https://registry.npm.taobao.org/xml2js/download/xml2js-0.4.4.tgz#3111010003008ae19240eba17497b57c729c555d"
+  integrity sha1-MREBAAMAiuGSQOuhdJe1fHKcVV0=
+  dependencies:
+    sax "0.6.x"
+    xmlbuilder ">=1.0.0"
+
+xmlbuilder@>=1.0.0:
+  version "13.0.1"
+  resolved "https://registry.npm.taobao.org/xmlbuilder/download/xmlbuilder-13.0.1.tgz#0770a63c8672e38eea413ed13080de4fdc01f0ef"
+  integrity sha1-B3CmPIZy447qQT7RMIDeT9wB8O8=
 
 xmlhttprequest-ssl@~1.5.4:
   version "1.5.5"
