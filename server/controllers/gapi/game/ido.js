@@ -15,8 +15,7 @@ const Op = Sequelize.Op;
 import log4 from 'koa-log4'
 const logger = log4.getLogger('index')
 
-var config = require(`../../../config/wechat.development.json`);
-var wechat_config = config.wechat;
+var wechat_config = require('../../../config/weixin.js');
 var OAuth = require('co-wechat-oauth');
 var client = new OAuth(wechat_config.appid, wechat_config.secret);
 

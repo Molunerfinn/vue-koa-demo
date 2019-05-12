@@ -14,7 +14,7 @@ const {
   getGameResultModelByCode
 } = require('../../game_round_helper')
 
-var config = require(`../../../config/weixin.js`);
+var config = require('../../../config/weixin.js');
 var OAuth = require('co-wechat-oauth');
 var client = new OAuth(config.appid, config.secret);
 
@@ -180,6 +180,8 @@ class pintu {
           number
         }
       })
+      gameRound.playPath = GameRound.getPlayPath()
+      gameRound.contralPath = GameRound.getContralPath()
 
       let gamePlayer = await GamePlayer.findOne({
         where: {
@@ -275,6 +277,8 @@ class pintu {
           number
         }
       })
+      gameRound.playPath = GameRound.getPlayPath()
+      gameRound.contralPath = GameRound.getContralPath()
       console.log(DpGameRoundStates.started);
       if (gameRound.state == DpGameRoundStates.started) {
 

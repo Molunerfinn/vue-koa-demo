@@ -5,7 +5,7 @@ import DpPintuSocket from'./dpgame/pintu'
 
 export function sockets( server ){
   // {adapter: redisAdapter({ host: '127.0.0.1', port: 6379 })}
-  const io = IO(server)
+  const io = IO(server, { transports: [ 'websocket' ] })
   // 拼图socket
   DpPintuSocket.bind(io)
   return io
