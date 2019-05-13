@@ -13,7 +13,7 @@ import { FailMessage } from '../../constant'
 import log4 from 'koa-log4'
 const logger = log4.getLogger('index')
 
-const GAME_HOST = process.env.GAME_HOST || 'gm.vwweixin.faw-vw.com'
+const GAME_URL_BASE = process.env.GAME_URL_BASE || 'gm.vwweixin.faw-vw.com'
 const GET_WX_PARAM_URL = process.env.GET_WX_PARAM_URL
 const Op = Sequelize.Op;
 
@@ -142,7 +142,7 @@ console.log( "before to_game_player_id")
       try{
         // 分享链接应使用 checkin-wx，以便检查是否创建用户
         // link = http://client.vw-dealer-wechat.faw-vw.com/wechatclient/game/#{game_round_id}/cupcheck_in/gotoGame.html?appid=#{appid}&code=null&state=null
-        let shareurl = `${GAME_HOST}/game-${game_round.code}/${game_round.id}/checkin-wx?to_game_player_id=${to_game_player.id}`
+        let shareurl = `${GAME_URL_BASE}/game-${game_round.code}/${game_round.id}/checkin-wx?to_game_player_id=${to_game_player.id}`
         let apiurl = `${GET_WX_PARAM_URL}?authorizerAppid=${game_round.appid}&url=${encodeURIComponent(url)}&shareurl=${encodeURIComponent(shareurl)}`
         console.log( "playWx url=", apiurl)
         let res = await fetch(apiurl, { timeout:2000, method:'post' })
@@ -152,8 +152,8 @@ console.log( "before to_game_player_id")
           logger.info("playWx data=",data)
           wx_config = {  appId: data['appId'], timestamp: data['timestamp'], nonceStr:data['nonceStr'],signature:data['signature']}
           //const link = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx617b20b7ded64c67&redirect_uri=http%3A%2F%2Ftestwx.getstore.cn%2Fwapi%2Fv1%2Fwechatauth%2Fgameshareurl-done%3Fgameurl%3Dhttp%3A%2F%2Ftestwx.getstore.cn%2Fgame-bargain%2F${game_round.id}%2Fcheckin-wx%3Fto_game_player_id%3D${to_game_player.id}&response_type=code&scope=snsapi_userinfo&state=state#wechat_redirect`
-          //const link = `${GAME_HOST}/game-bargain/${game_round_id}/checkin-wx?to_game_player_id=${to_game_player.id}`
-          wx_share = { link: data['link'], img_url: `${GAME_HOST}/game-bargain-assets/app/images/share.jpg`}
+          //const link = `${GAME_URL_BASE}/game-bargain/${game_round_id}/checkin-wx?to_game_player_id=${to_game_player.id}`
+          wx_share = { link: data['link'], img_url: `${GAME_URL_BASE}/game-bargain-assets/app/images/share.jpg`}
         }
       }catch(err){
         logger.error("got error-",err)
@@ -161,7 +161,7 @@ console.log( "before to_game_player_id")
       }
 
       //const link = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx617b20b7ded64c67&redirect_uri=http%3A%2F%2Ftestwx.getstore.cn%2Fwapi%2Fv1%2Fwechatauth%2Fgameshareurl-done%3Fgameurl%3Dhttp%3A%2F%2Ftestwx.getstore.cn%2Fgame-bargain%2F${game_round.id}%2Fcheckin-wx%3Fto_game_player_id%3D${to_game_player.id}&response_type=code&scope=snsapi_userinfo&state=state#wechat_redirect`
-      //const link = `${GAME_HOST}/game-bargain/${game_round_id}/checkin-wx?to_game_player_id=${to_game_player.id}`
+      //const link = `${GAME_URL_BASE}/game-bargain/${game_round_id}/checkin-wx?to_game_player_id=${to_game_player.id}`
 
       ctx.body = { game_round, game_player_rank, game_player, to_game_player, game_result, game_result_rank, wx_config, wx_share }
       console.log(1, "gameInfoWx")
