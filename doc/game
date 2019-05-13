@@ -1,0 +1,16 @@
+game_round.code 使用说明
+
+1. 使用的路径中
+/api/game/{code}/createRound
+
+2. 游戏构建及路径
+对于h5游戏，游戏路径为
+/{code}.html
+对于大屏游戏，游戏路径为
+/{code}-play.html
+/{code}-control.html
+
+3. GameRound及相关model(GamePlayer, GameResult)的命名
+{Code}{model}, 如 pintu,  PintuGameRound
+                  dppingtu,  DpPintuGameRound
+当创建游戏时，使用 code = PintuGameRound.name.replace('GameRound', '').lowercase 
