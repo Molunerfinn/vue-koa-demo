@@ -5,9 +5,9 @@ import fetch from '@/config/fetch'
  * @param {*} data - game_round_id，game_player_id
  */
 
-var basePath = '/gapi/zhaobaba'
+var basePath = '/gapi/games/zhaobaba'
 
-export const getGameResult = ( number, data) => fetch(basePath + '/' + number + '/gameresult', data, 'POST')
+export const getGameResult = ( number, data) => fetch(basePath + '/' + number + '/getInfo', data, 'POST')
 
 export const postMsg = ( number, data) => fetch(basePath + '/' + number + '/postmsg', data, 'POST')
 

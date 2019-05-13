@@ -1,3 +1,9 @@
+# 关于 nodejs 命名规范
+https://github.com/felixge/node-style-guide
+
+# 关于 nodejs 注释 使用jsdoc
+https://www.cnblogs.com/chris-oil/p/4067415.html?utm_source=tuicool&utm_medium=referral
+
 # 关于 model 名称 和 code 的命名
 保持model.name  和 code 是同样的前缀，api/game_rounds/  可以根据code 找到 model
 
