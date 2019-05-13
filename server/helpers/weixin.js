@@ -1,4 +1,4 @@
-var wechatConfig = require('../../config/weixin');
+var wechatConfig = require('../config/weixin');
 
 
 export function getWxAuthUrlBase() {
