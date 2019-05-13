@@ -58,6 +58,7 @@ router.post('/', wechat(wechatConfig).middleware(async (message, ctx) => {
         content: content
       }
   }else if (  matches=/^gu([a-z]+)([0-9]+)/.exec( message.Content )) {
+    console.log('matches------:',matches);
     // ex. gudppintu9
     let code = matches[1]
     let model = getGameRoundModelByCode( code )
@@ -65,9 +66,8 @@ router.post('/', wechat(wechatConfig).middleware(async (message, ctx) => {
 
     //let user = await api.getUser( message.FromUserName )
     let gameround =  await model.findById( parseInt(gid) )
-    let query = queryString.stringify({ shareurl: gameround.getPlayPath() })
-    let url = getAuthUrlBase() + '?' + query
-
+    let query =  gameround.getPlayPath()
+    let url = getWxAuthUrlBase() + '?' + query
     return {
       type: 'text',
       content: `<a href="${url}"> ${gameround.name} </a>`
