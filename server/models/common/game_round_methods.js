@@ -10,25 +10,25 @@ export function bindGameRoundMethods( db ){
       if( /^Dp/.test( model.name) ){
         bindDpMethods(model)
       }else{
-        bindDpMethods(model)
+        bindMethods(model)
       }
       addHooks( model )
     }
   })
 
   function bindDpMethods(model) {
-    console.log("bindGameRoundMethods", model.name)
-    model.prototype.getPlayPath = async function() {
+    console.log("bindDpMethods", model.name)
+    model.prototype.getPlayPath = function() {
       return `/${this.code}-play.html?number=${this.number}`
     }
-    model.prototype.getControlPath = async function() {
+    model.prototype.getControlPath = function() {
       return `/${this.code}-control.html?number=${this.number}`
     }
   }
 
   function bindMethods(model) {
-    console.log("bindGameRoundMethods", model.name)
-    model.prototype.playPath = async function() {
+    console.log("bindMethods", model.name)
+    model.prototype.getPlayPath = function() {
       return `/${this.code}.html?number=${this.number}`
     }
 

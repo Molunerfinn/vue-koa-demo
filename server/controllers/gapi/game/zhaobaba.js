@@ -71,7 +71,7 @@ class zhaobaba {
     let new_player = ctx.request.body.gamePlayer
     new_player.score = 0
     new_player.max_score = 0
-    console.log('new_player', new_player);
+
 
     var options = {
       fields: ['openid', 'nickname', 'avatar', 'game_round_id', 'realname', 'tel', 'score', 'max_score', 'token']
@@ -105,7 +105,7 @@ class zhaobaba {
       ctx.body = data
       ctx.status = 200
     } catch (error) {
-      ctx.throw(messageContent.ResponeStatus.CommonError, 'can not get wx js config fail' + ': ' + error, {
+      ctx.throw( 'can not get wx js config fail' + ': ' + error, {
         expose: true
       })
     }
@@ -121,7 +121,6 @@ class zhaobaba {
         url: url
       }
       let apiurl = 'http://testwx.getstore.cn/gapi/zhaobaba/zhaobaba/getWxJsConfig'
-      console.log("playWx url=", apiurl)
 
       let res = await fetch(apiurl, {
         timeout: 2000,
@@ -133,21 +132,12 @@ class zhaobaba {
       })
       if (res) {
         let data = await res.json()
-        console.log("playWx data=", data)
         var wx_config = {
           appId: data['appId'],
           timestamp: data['timestamp'],
           nonceStr: data['nonceStr'],
           signature: data['signature']
         }
-
-        // const link = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx617b20b7ded64c67&redirect_uri=http%3A%2F%2Ftestwx.getstore.cn%2Fwapi%2Fv1%2Fwechatauth%2Fgameshareurl-done%3Fgameurl%3Dhttp%3A%2F%2Ftestwx.getstore.cn%2Fgame-bargain%2F${game_round.id}%2Fcheckin-wx%3Fto_game_player_id%3D${to_game_player.id}&response_type=code&scope=snsapi_userinfo&state=state#wechat_redirect`
-        // const link = `${GAME_HOST}/game-bargain/${game_round_id}/checkin-wx?to_game_player_id=${to_game_player.id}`
-        // add default shareurl, or js error.
-        // wx_share = {
-        //   link: data['link'] || shareurl,
-        //   // img_url: `${GAME_HOST}/game-kouhong-assets/app/images/share.jpg`
-        // }
       }
     } catch (err) {
       console.error("got error-", err);
@@ -162,95 +152,98 @@ class zhaobaba {
     let GameRound = getGameRoundModelByCode(code)
     let GamePlayer = getGamePlayerModelByCode(code)
     let GameResult = getGameResultModelByCode(code)
-
-    console.log(GameRound, '------', GamePlayer, '------', GameResult);
-
-
     let gameRound = await GameRound.findOne({
       where: {
         number
       }
     })
 
-    let gamePlayer = await GamePlayer.findOne({
-      where: {
-        game_round_id: gameRound.id,
-        openid: openid,
-      }
-    })
+    if (gameRound != null) {
 
-    if (gamePlayer == null || gamePlayer == undefined) {
-      gamePlayer = {
-        openid: parsed.openid,
-        nickname: parsed.nickname,
-        avatar: parsed.headimgurl,
-        game_round_id: gameRound.id,
-        score: 0,
-        max_score: 0
-      }
-      if (gameRound.contact_required == 0) {
-        var options = {
-          fields: ['openid', 'nickname', 'avatar', 'game_round_id', 'score', 'max_score', 'token']
-        }
-        let res = await GamePlayer.create(gamePlayer, options)
-      }
+      let playPath = gameRound.getPlayPath()
 
-      var dataList = [];
-      for (var i = 0; i < 50; i++) {
-        dataList.push(Math.round(Math.random() * 3)); //可均衡获取0到1的随机整数。
-      }
-
-      console.log('dataList-----:', dataList);
-
-      var gameInfo = {
-        gameRound: gameRound,
-        gamePlayer: gamePlayer,
-        wx_config: wx_config,
-        dataList: dataList
-      }
-    } else {
-      let gameResult = await GameResult.findOne({
+      let gamePlayer = await GamePlayer.findOne({
         where: {
-          game_player_id: gamePlayer.id,
           game_round_id: gameRound.id,
+          openid: openid,
         }
       })
 
-      let ret = {
-        rt: 0,
-        isSuc: true,
-        success: true
+      if (gamePlayer == null || gamePlayer == undefined) {
+
+        gamePlayer = {
+          openid: parsed.openid,
+          nickname: parsed.nickname,
+          avatar: parsed.headimgurl,
+          game_round_id: gameRound.id,
+          score: 0,
+          max_score: 0
+        }
+        if (gameRound.contact_required == 0) {
+          var options = {
+            fields: ['openid', 'nickname', 'avatar', 'game_round_id', 'score', 'max_score', 'token']
+          }
+          let res = await GamePlayer.create(gamePlayer, options)
+        }
+
+        var dataList = [];
+        for (var i = 0; i < 50; i++) {
+          dataList.push(Math.round(Math.random() * 3)); //可均衡获取0到1的随机整数。
+        }
+
+        var gameInfo = {
+          gameRound: gameRound,
+          gamePlayer: gamePlayer,
+          wx_config: wx_config,
+          dataList: dataList,
+          playPath: playPath
+        }
+      } else {
+
+        let gameResult = await GameResult.findOne({
+          where: {
+            game_player_id: gamePlayer.id,
+            game_round_id: gameRound.id,
+          }
+        })
+
+        let ret = {
+          rt: 0,
+          isSuc: true,
+          success: true
+        }
+
+        ret.playerId = gamePlayer.id //required to set g_config.playerId
+        ret.isSuc = gamePlayer.score < gamePlayer.max_score
+        ret.achieveToken = gamePlayer.token
+        ret.score = gamePlayer.score
+        ret.bestScore = (gamePlayer.max_score) //bestScore
+        let rank = await gamePlayer.currentPositionDesc()
+        let beat = await gamePlayer.beat()
+        ret.rank = rank
+        ret.beat = beat
+        ret.hasLot = false
+
+        var dataList = [];
+        for (var i = 0; i < 50; i++) {
+          dataList.push(Math.round(Math.random() * 3)); //可均衡获取0到1的随机整数。
+        }
+
+        var gameInfo = {
+          gameRound: gameRound,
+          gamePlayer: gamePlayer,
+          gameResult: gameResult,
+          wx_config: wx_config,
+          ret: ret,
+          dataList: dataList,
+          playPath: playPath
+        }
       }
 
-      ret.playerId = gamePlayer.id //required to set g_config.playerId
-      ret.isSuc = gamePlayer.score < gamePlayer.max_score
-      ret.achieveToken = gamePlayer.token
-      ret.score = gamePlayer.score
-      ret.bestScore = (gamePlayer.max_score) //bestScore
-      let rank = await gamePlayer.currentPositionDesc()
-      let beat = await gamePlayer.beat()
-      ret.rank = rank
-      ret.beat = beat
-      ret.hasLot = false
-
-      var dataList = [];
-      for (var i = 0; i < 50; i++) {
-        dataList.push(Math.round(Math.random() * 3)); //可均衡获取0到1的随机整数。
-      }
-
-      console.log('dataList-----:', dataList);
-
-      var gameInfo = {
-        gameRound: gameRound,
-        gamePlayer: gamePlayer,
-        gameResult: gameResult,
-        wx_config: wx_config,
-        ret: ret,
-        dataList: dataList
-      }
+      ctx.body = gameInfo
+    } else {
+      ctx.body = null
     }
-
-    ctx.body = gameInfo
   }
 
   static async setAchieve(ctx) {
@@ -269,8 +262,6 @@ class zhaobaba {
     let game_round_id = ctx.params.id
     let parsed = ctx.request.body.parsed
     let score = ctx.request.body.score
-    console.log('ctx.request.body', ctx.request.body);
-    console.log('score-----------:', score);
     let openid = parsed.openid
     let cmd = 'setAchieve'
     if (cmd == 'setAchieve') { //设置成绩
@@ -279,6 +270,7 @@ class zhaobaba {
           number
         }
       })
+
       let gamePlayer = await GamePlayer.findOne({
         where: {
           game_round_id: gameRound.id,
@@ -294,8 +286,6 @@ class zhaobaba {
         score: score,
         game_round_id: gameRound.id,
       }
-
-      console.log('gameResultParams--:', gameResultParams);
 
       let gameResult = GameResult.build(gameResultParams)
       let result = await gameResult.save()
@@ -321,58 +311,42 @@ class zhaobaba {
       ret.hasLot = false
       console.log("setAchieve= ", ret, "lastMaxScore=", lastMaxScore)
     }
-    // else if(cmd == 'getRankList' ){//排行榜
-    //
-    // }else if(cmd == 'getMatchResult' ){//取得比赛投票结果
-    //   //r.merge!( get_match_result )
-    // }else if(cmd == 'joinGameBehavior' ){//
-    //   //session[:game_start_at] = DateTime.current
-    //   //join_game_behavior
-    // }else if(cmd == 'getGiftList' ){//排行榜
-    //   let list = []
-    //   let awardModel = {awardtype:1,cbt:Date(), cet:Date(), deadline:'这是使用期限'}
-    //   // 0: 未领"; 1:已核销 2:未核销 3:已过期 4:已作废 5:已失效
-    //   let award = { anwei: false, awardLevel: 0, level: 1, codeStatus: 0, awardCode: 'awardCode', awardStyle:'几等奖', awardName:'奖品名称', awardInfo: awardModel.to_json }
-    //   list.push( award )
-    //   ret.list = list
-    // }else if(cmd == 'getResult' ){//取得抽奖结果
-    //   //r.merge!( get_rank_list )
-    // }else if(cmd == 'getJoinNum' ){//我的奖品
-    //   //r['joinNum'] = get_join_num
-    // }else if(cmd == 'setPhone' ){//设置联系方式
-    //
-    // }
-    // 客户的执行 $.parseJSON(ret) 处理
+
     ctx.body = JSON.stringify(ret)
   }
 
   static async getRanking(ctx) {
-    let ret = {
-      rt: 0,
-      isSuc: true,
-      success: true
-    }
+    console.log('==========getRanking============');
+    let code = ctx.params.code
+    let GameRound = getGameRoundModelByCode(code)
+    let GamePlayer = getGamePlayerModelByCode(code)
 
-    let openid = ctx.query._openId
-    let start = parseInt(ctx.query.start)
-    let limit = parseInt(ctx.query.limit)
-    let game_player_id = ctx.query.playerId
-    let game_player = await GamePlayer.findOne({
+    let number = ctx.params.number
+
+    let gameRound = await GameRound.findOne({
       where: {
-        id: game_player_id,
-        openid
+        number
       }
     })
-    let rank_list = await GameBaseByCode.get_rank_list(game_player, start, limit)
-    ret = Object.assign(ret, rank_list)
-    ctx.body = JSON.stringify(ret)
+
+    let gamePlayer = await GamePlayer.findAll({
+      where: {
+        game_round_id: gameRound.id
+      },
+      order: [
+        ['max_score', 'DESC']
+      ],
+    })
+
+    console.log('gamePlayer+++++:',gamePlayer);
+
+    ctx.body = JSON.stringify(gamePlayer)
   }
 
   static async setPhone(ctx) {
 
     let openid = ctx.query._openId
     let userInfo = JSON.parse(ctx.request.body.userInfo)
-    console.log("ctx.request.body ", ctx.request.body, "userInfo=", userInfo)
     let game_player_values = {
       realname: userInfo.ausername,
       cellphone: userInfo.aphone

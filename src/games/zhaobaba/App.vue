@@ -56,7 +56,7 @@ import {
 } from '@/api/games/zhaobaba'
 import LoadToast from '@/components/LoadToast.vue'
 import ResultBox from './zhaobabaResult.vue'
-import RuleBox from '@/components/RuleBox.vue'
+import RuleBox from './RuleBox.vue'
 import {
   GameBackgroundMusicLoadEvent
 } from '@/lib/GameEvent'
@@ -114,6 +114,9 @@ export default {
       this.gameState = this.gameRound.state
       this.gamePlayer = this.gameInfo['gamePlayer']
       this.dataList = this.gameInfo['dataList']
+      this.playPath = this.gameInfo['playPath']
+
+      console.log('playPath',this.gameRound.playPath);
 
       if(this.gamePlayer.token==undefined){
         this.ui.homeVisible = false
@@ -134,15 +137,13 @@ export default {
         jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage'] // 必填，需要使用的JS接口列表
       });
 
-      var number = this.gameRound.number;
-
       let that = this
       wx.ready(function () {   //需在用户可能点击分享按钮前就先调用
 
         wx.onMenuShareAppMessage({
           title: that.gameRound.name, // 分享标题
           desc: that.gameRound.name, // 分享描述
-          link: 'http://testwx.getstore.cn/authwx/game?gameurl=http://testwx.getstore.cn/zhaobaba.html?number='+number, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+          link: 'http://testwx.getstore.cn/authwx/game?gameurl='+that.playPath, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
           imgUrl: '', // 分享图标
           success: function () {
             // 设置成功
@@ -151,7 +152,7 @@ export default {
 
         wx.onMenuShareTimeline({
           title: that.gameRound.name, // 分享标题
-          link: 'http://testwx.getstore.cn/authwx/game?gameurl=http://testwx.getstore.cn/zhaobaba.html?number='+number, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+          link: 'http://testwx.getstore.cn/authwx/game?gameurl='+that.playPath, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
           imgUrl: '', // 分享图标
           success: function () {
             // 设置成功

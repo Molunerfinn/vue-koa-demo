@@ -149,7 +149,7 @@
 </template>
 
 <script>
-
+import $ from "jquery";
 import HdGame from '@/lib/hdgame'
 export default {
   props: {
@@ -175,6 +175,7 @@ export default {
   },
   data() {
     return {
+      menuLen: 2,
       ui:{
         statusBox: true,
         statusScrollWrap: true
@@ -198,48 +199,68 @@ export default {
   methods: {
     // 返回首页
     handleGoHome(event) {
-      //this.giftBox = $("#resule-gift-box");
-      //this.resuleBox = $(".resuleBox");
-      //this.statusBox = $("#resule-status-box");
-
-      //$(document).on("touchend", ".resule-status-home , .resule-gift-home, .resule-gift-home2",
-
       event.preventDefault();
       event.stopPropagation();
-      // HdGame.logDog(1000015);
-      // HdGame.fadIn(that.resuleBox,
-      //   function () {
-      //     that.giftBox.hide();
-      //     that.statusBox.hide();
-      //     $(".gameBox,.home,.body").removeClass("overflow-y-hidden");
-      //   });
       this.homeCallback();
 
     },
     // 再玩一次
     handlePlayAgain( event){
-       //HdGame.ajaxLoad.show();
-
-       //HdGame.ajaxLoad.hide();
-       //$(".gameBox,.home,.body").removeClass("overflow-y-hidden");
-       // HdGame.fadIn(that.resuleBox,
-       // function() {
-       //   that.giftBox.hide();
-       //   that.statusBox.hide()
-       // })
 
        this.againCallback();
 
     },
     // 点击查看成绩
     handleSeeRank( event ){
-        event.preventDefault();
-        event.stopPropagation();
-        // if (g_config.createTime > 1520265601000 && gameType == 1) {
-        //   window.showRule()
-        // } else {
-        //   window.showRank()
-        // }
+        var silkBag = $("#ruleImg");
+        var popupX = silkBag.offset().left + silkBag.width() / 2 + "px ";
+        var popupY = silkBag.offset().top + silkBag.height() / 2 + "px";
+        $("#poupInfoBox").css({
+          "transform-origin": popupX + popupY,
+          "-webkit-transform-origin": popupX + popupY
+        });
+
+        this.setSlideBar(true)
+        this.showTab( 0 )
+    },// 点击查看成绩
+    setSlideBar(isAnimation){
+
+        var anFlag = isAnimation;
+        if (anFlag) {
+          if (!$("#poupInfoBox").hasClass("enlarge")) {
+            $("#poupInfoBox").addClass("enlarge")
+          }
+        } else {
+          $("#poupInfoBox").addClass("retrans")
+        }
+        //$(".gameBox,.home,.body").addClass("overflow-y-hidden");
+    },
+    showTab( flag ){
+      console.log('showTab',flag);
+      $("#poupInfoBox").show();
+      $(".poupTitleMune").removeClass("checked");
+
+      $(".poupTitleBox .poupTitleMune").each(function(i, value) {
+        if ($.trim($(this).attr("_flag")) == flag) {
+          $(this).addClass("checked")
+        }
+      })
+
+      $(".poupSlideBar .slideBarTip").css("left", (13.25 / this.menuLen) * flag + "rem")
+
+      if (flag === 0) {
+        this.poupRule()
+      } else
+      if (flag === 1) {
+        this.poupRank()
+      }
+    },poupRank(){
+      $('.poupMain').not("#rankBox").hide()
+      $("#rankBox").show()
+    },
+    poupRule(){
+      $('.poupMain').not("#ruleBox").hide()
+      $("#ruleBox").show()
     },
     showResult(){
       var resuleDef = {
@@ -343,6 +364,7 @@ export default {
 
     }
   }
+
 }
 </script>
 
