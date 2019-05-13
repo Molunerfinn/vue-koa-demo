@@ -38,7 +38,7 @@ export function bindGameRoundMethods( db ){
 
 function addHooks( model ){
   model.addHook( 'beforeCreate', 'generate_number', (game, options) => {
-
+   game.code = model.name.replace('GameRound','').toLowerCase()
    game.number =  generateCode()
   })
 

@@ -65,7 +65,7 @@ export default class GameRoundController {
       }
     } catch (error) {
       console.log( " error ", error )
-      ctx.throw(messageContent.ResponeStatus.CommonError, `create round fail: ` + error, {
+      ctx.throw(messageContent.ResponeStatus.UnprocessableEntity, `create round fail: ` + error, {
         expose: true
       })
     }
@@ -90,28 +90,30 @@ export default class GameRoundController {
   //     })
   //   }
   // }
-  // /**
-  //  * show game round
-  //  * @param {*} req
-  //  * @param {*} res
-  //  */
-  // async showRound(ctx) {
-  //   try {
-  //     var gameroundid = parseInt(ctx.params.id)
-  //     var round = await game_rounds.findOne({
-  //       //attributes: ['id', 'name', 'state', 'start_at', 'end_at'],
-  //       where: {
-  //         id: gameroundid
-  //       }
-  //     })
-  //     ctx.body = round
-  //     ctx.status = 200
-  //   } catch (error) {
-  //     ctx.throw(messageContent.ResponeStatus.CommonError, `show round ${ctx.params.id} fail: ` + error, {
-  //       expose: true
-  //     })
-  //   }
-  // }
+  /**
+   * show game round
+   * @param {*} req
+   * @param {*} res
+   */
+  async showRound(ctx) {
+    try {
+      var gameroundid = parseInt(ctx.params.id)
+      let Model = getGameRoundModelByCode(gameRoundParams.code)
+
+      var round = await Model.findOne({
+        //attributes: ['id', 'name', 'state', 'start_at', 'end_at'],
+        where: {
+          id: gameroundid
+        }
+      })
+      ctx.body = round
+      ctx.status = 200
+    } catch (error) {
+      ctx.throw(messageContent.ResponeStatus.CommonError, `show round ${ctx.params.id} fail: ` + error, {
+        expose: true
+      })
+    }
+  }
   // /**
   //  * delete round will delete the player of the round and the award of the player
   //  * @param {} req
