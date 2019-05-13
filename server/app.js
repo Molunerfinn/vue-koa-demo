@@ -99,6 +99,10 @@ router.use('/gapi/dppintu', gamePintu.routes())
 import gameZhaobaba from './routes/gapi/game/zhaobaba.js'
 router.use('/gapi/zhaobaba', gameZhaobaba.routes())
 
+import games from './routes/gapi/games.js'
+//'/gapi/games/:code/:number/'
+router.use('/gapi/games', games.routes())
+
 app.use(router.routes()) // 将路由规则挂载到Koa上。
 app.use(historyApiFallback())
 app.use(serve(path.resolve('dist'))) // 将webpack打包好的项目目录作为Koa静态文件服务的目录

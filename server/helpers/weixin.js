@@ -8,8 +8,8 @@ function getWxAuthUrlBase() {
 }
 
 function getWxJsConfigApiUrl() {
-
-  return '/gapi/weixin/getJsConfig'
+  let gameURLBase = process.env.GAME_URL_BASE
+  return gameURLBase + '/gapi/weixin/getJsConfig'
 }
 export {
   getWxJsConfigApiUrl,

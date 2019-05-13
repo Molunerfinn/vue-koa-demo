@@ -53,13 +53,13 @@ class zhaobaba {
   static async getGameResult(ctx) {
     try {
       let url = ctx.header.referer
-      console.log("url=======", url)
-      // let shareurl = `${GAME_HOST}/game-${game_round.code}/${game_round.id}/checkin-wx?to_game_player_id=${to_game_player.id}`
+      console.log("url=======", url,  getWxJsConfigApiUrl())
+      // let shareurl = `${GAME_URL_BASE}/game-${game_round.code}/${game_round.id}/checkin-wx?to_game_player_id=${to_game_player.id}`
 
       let body = {
         url: url
       }
-      let apiurl = 'http://testwx.getstore.cn/gapi/zhaobaba/zhaobaba/getWxJsConfig'
+      let apiurl = getWxJsConfigApiUrl()
 
       let res = await fetch(apiurl, {
         timeout: 2000,

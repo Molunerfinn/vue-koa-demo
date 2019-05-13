@@ -10,7 +10,7 @@ const queryString = require('query-string')
 const { getGameRoundModelByCode } = require('../../helpers/model')
 const { getWxAuthUrlBase } = require('../../helpers/weixin')
 
-const game_host = process.env.GAME_HOST
+const game_host = process.env.GAME_URL_BASE
 var wechatConfig = require('../../config/weixin');
 
 var api = new WechatAPI(wechatConfig.appid, wechatConfig.secret);

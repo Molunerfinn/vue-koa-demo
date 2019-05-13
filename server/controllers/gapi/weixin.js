@@ -1,5 +1,10 @@
-export default class WeixinController {
+const messageContent = require('../constant')
 
+var config = require('../../config/weixin');
+const WechatAPI = require('co-wechat-api');
+const wechatApi = new WechatAPI(config.appid, config.secret);
+
+export default class WeixinController {
 
   /**
    *
@@ -8,7 +13,7 @@ export default class WeixinController {
    *            ctx.query.shareurl
    */
   static async getWxJsConfig(ctx) {
-    try {
+    //try {
       let url = ctx.query.url
       let shareurl = ctx.query.shareurl
       var param = {
@@ -28,11 +33,11 @@ export default class WeixinController {
       console.debug(" getWxJsConfig data = ", data)
       ctx.body = data
 
-    } catch (error) {
-      ctx.throw(messageContent.ResponeStatus.CommonError, 'can not get wx js config fail' + ': ' + error, {
-        expose: true
-      })
-    }
+    // } catch (error) {
+    //   ctx.throw(messageContent.ResponeStatus.CommonError, 'can not get wx js config fail' + ': ' + error, {
+    //     expose: true
+    //   })
+    // }
   }
 
 
