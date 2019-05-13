@@ -23,6 +23,7 @@ import {
 class zhaobaba {
 
   static async postMsg(ctx) {
+    console.log('ctx.params---:',ctx.params);
     let code = ctx.params.code
     let number = ctx.params.number
     let GameRound = getGameRoundModelByCode(code)
@@ -34,6 +35,7 @@ class zhaobaba {
         number
       }
     })
+    console.log('gameRound--:',gameRound);
     let new_player = ctx.request.body.gamePlayer
     new_player.score = 0
     new_player.max_score = 0
