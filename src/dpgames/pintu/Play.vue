@@ -113,7 +113,7 @@ export default {
       that.bindSocketEvents()
     });
 
-    getGameResult(code,number,params).then(data => {
+    getGameResult(number,params).then(data => {
       this.gameInfo = data
       this.gameRound = this.gameInfo['gameRound']
       this.timeToEnd = this.gameRound.duretion
@@ -304,7 +304,7 @@ export default {
       var data = {
         gamePlayer: this.gamePlayer
       }
-      postMsg(code,number,data).then((res)=>{
+      postMsg(number,data).then((res)=>{
         this.gamePlayer = res
         this.ui.sign_up = false
         this.ui.unstarted = false
@@ -449,7 +449,7 @@ export default {
       params.info = JSON.stringify(info);
 
       Object.assign(params, option);
-      setAchievebycode(code,number,params).then(data => {
+      setAchievebycode(number,params).then(data => {
         this.hideLoadToast();
         HdGame.tlog('gameOver', data);
         var r = data;

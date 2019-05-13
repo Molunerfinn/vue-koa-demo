@@ -221,12 +221,11 @@ export default {
 
     const parsed = queryString.parse(location.search);
     console.log('parsed======:',parsed);
-    var code = 'zhaobaba';
     var number = parsed.number;
     var params = {
       parsed: parsed
     }
-    getRanking(code,number,params).then(data => {
+    getRanking(number,params).then(data => {
       this.gamePlayerRank = data
       if(this.gamePlayerRank == null){
         this.ui.noRank = true

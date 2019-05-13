@@ -1,6 +1,6 @@
 const messageContent = require('../constant')
 const db = require('../../models')
-const { getGameRoundModelByCode } = require('../game_round_helper')
+const { getGameRoundModelByCode } = require('../../helpers/model')
 
 // const WechatAPI = require('co-wechat-api');
 // var OAuth = require('co-wechat-oauth');

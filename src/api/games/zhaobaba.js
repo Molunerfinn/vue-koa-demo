@@ -7,11 +7,10 @@ import fetch from '@/config/fetch'
 
 var basePath = '/gapi/zhaobaba'
 
+export const getGameResult = ( number, data) => fetch(basePath + '/' + number + '/gameresult', data, 'POST')
 
-export const getGameResult = (code, number, data) => fetch(basePath + '/' + code + '/' + number + '/gameresult', data, 'POST')
+export const postMsg = ( number, data) => fetch(basePath + '/' + number + '/postmsg', data, 'POST')
 
-export const postMsg = (code, number, data) => fetch(basePath + '/' + code + '/' + number + '/postmsg', data, 'POST')
+export const setAchievebycode = ( number, data) => fetch(basePath + '/' + number + '/setAchieve', data, 'POST')
 
-export const setAchievebycode = (code, number, data) => fetch(basePath + '/' + code + '/' + number + '/setAchieve', data, 'POST')
-
-export const getRanking = (code, number, data) => fetch(basePath + '/' + code + '/' + number + '/getRanking', data, 'POST')
+export const getRanking = ( number, data) => fetch(basePath + '/' + number + '/getRanking', data, 'POST')

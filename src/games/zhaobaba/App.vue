@@ -100,14 +100,13 @@ export default {
     window.hg = this.hg
 
     const parsed = queryString.parse(location.search);
-    var code = 'zhaobaba';
     var number = parsed.number;
 
     var params = {
       parsed: parsed
     }
 
-    getGameResult(code,number,params).then(data => {
+    getGameResult(number,params).then(data => {
       this.gameInfo = data
       console.log('getGameResult------:',data);
       this.gameRound = this.gameInfo['gameRound']
@@ -203,14 +202,13 @@ export default {
       var tel = parseInt(document.getElementById('tel').value)
 
       const parsed = queryString.parse(location.search);
-      var code = 'dppintu';
       var number = parsed.number;
       var data = {
         gamePlayer: this.gamePlayer,
         realname:realname,
         tel:tel
       }
-      postMsg(code,number,data).then((res)=>{
+      postMsg(number,data).then((res)=>{
         this.gamePlayer = res
         this.ui.sign_up = false
         this.ui.homeVisible = true
@@ -392,11 +390,10 @@ export default {
       params.info = JSON.stringify(info);
 
       Object.assign(params, option);
-      var code = 'zhaobaba';
       var number = parsed.number;
 
 console.log('params----:',params);
-      setAchievebycode(code,number,params).then(data => {
+      setAchievebycode(number,params).then(data => {
         this.hideLoadToast();
         HdGame.tlog('gameOver', data);
         var r = data;

@@ -11,50 +11,16 @@ const {
   getGameRoundModelByCode,
   getGamePlayerModelByCode,
   getGameResultModelByCode
-} = require('../../game_round_helper')
+} = require('../../../helpers/model')
 
-var config = require(`../../../config/weixin.js`);
-var OAuth = require('co-wechat-oauth');
-var client = new OAuth(config.appid, config.secret);
-
-const WechatAPI = require('co-wechat-api');
-const wechatApi = new WechatAPI(config.appid, config.secret);
-var wechatOAuth = new OAuth(config.appid, config.secret);
+const{
+  getWxJsConfigApiUrl
+} = require('../../../helpers/weixin')
 import {
   GameRoundStates
 } from '../../../models/constant'
 
 class zhaobaba {
-  static async contactInfo(ctx) {
-    let context = {}
-    await ctx.render('games/common/contactInfo', context);
-  }
-  static async login(ctx) {
-    console.log('login');
-    let code = ctx.params.code
-    let number = ctx.params.number
-
-    var url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + config.appid + '&redirect_uri=http://testwx.getstore.cn/gapi/zhaobaba/zhaobaba/' + number + '/get_wx_info&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect';
-    ctx.redirect(url)
-  }
-
-  static async get_wx_info(ctx) {
-    console.log('get_wx_info');
-    let number = ctx.params.number
-    let code = ctx.query.code
-
-    var token = await client.getAccessToken(code);
-    console.log('token:', token);
-    var accessToken = token.data.access_token;
-    console.log('accessToken:', accessToken);
-    var openid = token.data.openid;
-    console.log('openid:', openid);
-    var userInfo = await client.getUser(openid);
-    console.log('userInfo:', userInfo);
-    let params = '?openid=' + userInfo.openid + '&headimgurl=' + userInfo.headimgurl + '&nickname=' + encodeURIComponent(userInfo.nickname) + '&number=' + number;
-    console.log(' http://testwx.getstore.cn/zhaobaba.html' + params)
-    ctx.redirect('http://testwx.getstore.cn/zhaobaba.html' + params)
-  }
 
   static async postMsg(ctx) {
     let code = ctx.params.code
@@ -81,35 +47,6 @@ class zhaobaba {
     ctx.body = res
   }
 
-  static async getWxJsConfig(ctx) {
-    try {
-      console.log('getWxJsConfig  ctx------:', ctx.request.body);
-      let url = ctx.request.body.url
-      let shareurl = ctx.query.shareurl
-      var param = {
-        debug: false,
-        jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage'],
-        url: url
-      };
-      let ticket = await wechatApi.getLatestTicket()
-      console.debug("getLatestTicket=", ticket, "url=", url)
-
-      let data = await wechatApi.getJsConfig(param);
-
-      if (shareurl) {
-        //var link = wechatOAuth.getAuthorizeURL(config.authdomain + '/wapi/v1/wechatauth/gameshareurl-done?shareurl='+shareurl, 'state', 'snsapi_userinfo');
-        var link = config.authdomain + '/wapi/v1/wechatauth/gameshareurl?shareurl=' + encodeURIComponent(shareurl)
-        data.link = link
-      }
-      console.debug(" getWxJsConfig data = ", data)
-      ctx.body = data
-      ctx.status = 200
-    } catch (error) {
-      ctx.throw( 'can not get wx js config fail' + ': ' + error, {
-        expose: true
-      })
-    }
-  }
 
   static async getGameResult(ctx) {
     try {

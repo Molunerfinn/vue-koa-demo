@@ -12,7 +12,7 @@ const {
   getGameRoundModelByCode,
   getGamePlayerModelByCode,
   getGameResultModelByCode
-} = require('../../game_round_helper')
+} = require('../../../helpers/model')
 
 var config = require('../../../config/weixin.js');
 var OAuth = require('co-wechat-oauth');

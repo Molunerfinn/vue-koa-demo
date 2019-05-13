@@ -46,7 +46,7 @@ export default async (url = '', data = {}, type = 'GET', method = 'fetch') => {
       return responseJson
     } catch (error) {
 
-      console.log(error)
+      console.log(url+error)
       throw new Error(error)
 
     }

@@ -11,7 +11,7 @@ const {
   getGameRoundModelByCode,
   getGamePlayerModelByCode,
   getGameResultModelByCode
-} = require('../game_round_helper')
+} = require('../../helpers/model')
 
 // 'getResult' 取得抽奖结果
 //  getRankList' 排行榜
