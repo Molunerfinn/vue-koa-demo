@@ -2,19 +2,20 @@
 
 'use strict';
 
-const router = require('koa-router')(); // router middleware for koa
-const fs = require('fs');
-const http = require('http');
-const wechat = require('co-wechat');
-const WechatAPI = require('co-wechat-api');
+const router = require('koa-router')() // router middleware for koa
+const wechat = require('co-wechat')
+const WechatAPI = require('co-wechat-api')
+const queryString = require('query-string')
+
 const { getGameRoundModelByCode } = require('../../helpers/model')
+const { getWxAuthUrlBase } = require('../../helpers/weixin')
 
 const game_host = process.env.GAME_HOST
-var wechat_config = require('../../config/weixin');
+var wechatConfig = require('../../config/weixin');
 
-var api = new WechatAPI(wechat_config.appid, wechat_config.secret);
+var api = new WechatAPI(wechatConfig.appid, wechatConfig.secret);
 
-router.post('/', wechat(wechat_config).middleware(async (message, ctx) => {
+router.post('/', wechat(wechatConfig).middleware(async (message, ctx) => {
   // TODO
   let matches = null
   console.log("message = ", message)
@@ -57,20 +58,20 @@ router.post('/', wechat(wechat_config).middleware(async (message, ctx) => {
         content: content
       }
   }else if (  matches=/^gu([a-z]+)([0-9]+)/.exec( message.Content )) {
-    // gudppintu9
+    // ex. gudppintu9
     let code = matches[1]
     let model = getGameRoundModelByCode( code )
     let gid =   matches[2]
 
     //let user = await api.getUser( message.FromUserName )
     let gameround =  await model.findById( parseInt(gid) )
+    let query = queryString.stringify({ shareurl: gameround.getPlayPath() })
+    let url = getAuthUrlBase() + '?' + query
 
-    let url = config.authdomain + '/authwx/gameshareurl?shareurl=' + encodeURIComponent(gameround.playPath)
-
-      return {
-        type: 'text',
-        content: `<a href="${url}"> ${gameround.name} </a>`
-      }
+    return {
+      type: 'text',
+      content: `<a href="${url}"> ${gameround.name} </a>`
+    }
 
   } else {
     return {
@@ -79,7 +80,7 @@ router.post('/', wechat(wechat_config).middleware(async (message, ctx) => {
     };
   }
 }))
-router.get('/', wechat(wechat_config).middleware(async (message, ctx) => {
+router.get('/', wechat(wechatConfig).middleware(async (message, ctx) => {
   // echo for handshake
   return {
     content: message.Content,
