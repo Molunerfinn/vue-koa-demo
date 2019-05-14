@@ -196,58 +196,9 @@ export default {
     },
     // 点击查看成绩
     handleSeeRank( event ){
-        this.$emit('getRank')
-        var silkBag = $("#ruleImg");
-        var popupX = silkBag.offset().left + silkBag.width() / 2 + "px ";
-        var popupY = silkBag.offset().top + silkBag.height() / 2 + "px";
-        $("#poupInfoBox").css({
-          "transform-origin": popupX + popupY,
-          "-webkit-transform-origin": popupX + popupY
-        });
-
-        this.setSlideBar(true)
-        this.showTab( 1 )
+        this.$emit('getRank')      
     },// 点击查看成绩
-    setSlideBar(isAnimation){
 
-        var anFlag = isAnimation;
-        if (anFlag) {
-          if (!$("#poupInfoBox").hasClass("enlarge")) {
-            $("#poupInfoBox").addClass("enlarge")
-          }
-        } else {
-          $("#poupInfoBox").addClass("retrans")
-        }
-        //$(".gameBox,.home,.body").addClass("overflow-y-hidden");
-    },
-    showTab( flag ){
-      console.log('showTab',flag);
-      $("#poupInfoBox").show();
-      $(".poupTitleMune").removeClass("checked");
-
-      $(".poupTitleBox .poupTitleMune").each(function(i, value) {
-        if ($.trim($(this).attr("_flag")) == flag) {
-          $(this).addClass("checked")
-        }
-      })
-
-      $(".poupSlideBar .slideBarTip").css("left", (13.25 / this.menuLen) * flag + "rem")
-      $("#poupInfoBox .poupMain").height($("#poupInfoBox").height() - $(".poupHead").outerHeight()  );
-
-      if (flag === 0) {
-        this.poupRule()
-      } else
-      if (flag === 1) {
-        this.poupRank()
-      }
-    },poupRank(){
-      $('.poupMain').not("#rankBox").hide()
-      $("#rankBox").show()
-    },
-    poupRule(){
-      $('.poupMain').not("#ruleBox").hide()
-      $("#ruleBox").show()
-    },
     showResult(){
       var resuleDef = {
         isSuc: false,

@@ -77,8 +77,8 @@
 
        <div id="rankBox" class="poupMain" _flag="1" style="-webkit-overflow-scrolling:touch;">
          <div class="poupMainInfo">
-           <div id="noRank" class='' v-show="ui.noRank">暂无排名</div>
-           <div id="rankMain" class="getRankHeight" v-show="ui.rankMain">
+           <div id="noRank" class='' v-show="!hasRank">暂无排名</div>
+           <div id="rankMain" class="getRankHeight" v-show="hasRank">
              <div style="margin-top:0.7rem;margin-left: 0.25rem;">当前排名：<span id="rank"></span> （只显示前<span id="showRankNum">100</span>名）</div>
              <div style="padding:0rem 0.5rem">
                <table class="rankTable" cellspacing="0" cellpadding="0">
@@ -204,12 +204,12 @@ export default {
       style:{
         statusUserImg: {}
       },
-
       menuLen: 2
     }
   },
-
   created() {
+    window.$ = $
+
     HdGame.imgReady(this.ruleIconUrl, (img)=>{
       $("#ruleImg").css({
 				"background-size": "100% 100%",
@@ -221,12 +221,16 @@ export default {
   },
   mounted(){
     $(".poupTitleBox .poupTitleMune,.poupTitleBox .slideBarTip").css("width", 13.25 / this.menuLen + "rem");
-
+  },
+  computed:{
+    hasRank(){
+      return this.gamePlayerRank.length > 0
+    }
   },
   methods: {
     handleSeeRank( event ){
         this.$emit('getRank')
-      },
+    },
     //
     handleShowPopup(){
       var silkBag = $("#ruleImg");
@@ -243,16 +247,8 @@ export default {
     handleHidePopup(){
       var poupInfoBox = $("#poupInfoBox");
       poupInfoBox.removeClass("enlarge").removeClass("retrans");
-
       poupInfoBox.hide()
-
     },
-    // 返回首页
-    handleGoHome(event) {
-
-
-    },
-
     // 点击查看成绩
     setSlideBar(isAnimation){
 
@@ -308,11 +304,6 @@ export default {
       if( val == 'showResult'){
         this.showResult()
       }
-
-    },
-    gamePlayerRank: function(val, oldVal){
-      this.gamePlayerRank = val
-      console.log('this.gamePlayerRank----:',this.gamePlayerRank);
     }
   }
 }
