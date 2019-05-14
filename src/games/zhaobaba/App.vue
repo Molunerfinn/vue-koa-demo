@@ -40,7 +40,7 @@
   <Game ref="game" :hg="hg" :command="gameState" :dataList="dataList" :gamePlayer="gamePlayer" @game-over="handleGameOver" v-show="ui.gameBoxVisible"> </Game>
   <LoadToast ref="load-toast" is-loading="loadToast.isLoading"> </LoadToast>
   <ResultBox ref="result-box" @homeBtnClicked="home" @rankBtnClicked="getRank" @Restart="handleGameRestart" v-show="resultBoxVisible" :params="resultBoxParams" :command="resultBoxCommand"> </ResultBox>
-  <RuleBox :ruleIconUrl="skinAssets.ruleIconPath" :game-round="gameRound" :game-player="gamePlayer" :params="resultBoxParams" :command="ruleBoxCommand"> </RuleBox>
+  <RuleBox :ruleIconUrl="skinAssets.ruleIconPath" :game-round="gameRound" :game-player="gamePlayer" :params="resultBoxParams" :command="ruleBoxCommand" @commandDone="handleResetRuleCommand"> </RuleBox>
 </div>
 </template>
 
@@ -226,7 +226,8 @@ export default {
       event.preventDefault()
 
       let that = this
-      that.ruleBoxCommand = 'hideIcon'
+      this.ruleBoxCommand = 'hideIcon'
+
       //点击开始按钮，开始游戏
       console.log(`handleStartGame=${this.gameState}`)
 
@@ -321,6 +322,10 @@ export default {
     handleGameRestart() {
       this.gameState = 'restart'
       this.resultBoxVisible = false
+    },
+    // rulebox 处理完命令以后，需要重置，以便下次使用同样命令时也可以触发
+    handleResetRuleCommand(){
+      this.ruleBoxCommand = null
     },
     //
     getRank(event){

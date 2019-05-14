@@ -318,6 +318,8 @@ export default {
       if( val == 'showRank'){
         this.handleShowPopup( 1 )
       }
+      this.$emit('commandDone')
+
     }
   }
 }
