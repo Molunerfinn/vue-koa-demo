@@ -39,7 +39,7 @@
 
   <Game ref="game" :hg="hg" :command="gameState" :dataList="dataList" :gamePlayer="gamePlayer" @game-over="handleGameOver" v-show="ui.gameBoxVisible"> </Game>
   <LoadToast ref="load-toast" is-loading="loadToast.isLoading"> </LoadToast>
-  <ResultBox ref="result-box" :home-callback="home" :again-callback="handleGameRestart" v-show="resultBoxVisible" :params="resultBoxParams" :command="resultBoxCommand"> </ResultBox>
+  <ResultBox ref="result-box" @gohome="home" @Restart="handleGameRestart" v-show="resultBoxVisible" :params="resultBoxParams" :command="resultBoxCommand"> </ResultBox>
   <RuleBox :ruleIconUrl="skinAssets.ruleIconPath" :game-round="gameRound" :params="resultBoxParams" :command="ruleBoxCommand"> </RuleBox>
 </div>
 </template>
@@ -329,6 +329,7 @@ export default {
       //$('#poupInfoBox').hide();
       //$('.resuleBox').hide();
       this.gameState = 'initial'
+      this.ruleBoxCommand = 'showIcon'
       this.hg.fire('home');
     },
     startBtnDelay() {

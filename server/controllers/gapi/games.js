@@ -163,10 +163,12 @@ export default class GamesController {
         await gamePlayer.update({
           max_score: gameResult.score
         })
+      }else{
+        ret.isSuc = false
+        ret.success = false
       }
 
       ret.playerId = gamePlayer.id //required to set g_config.playerId
-      ret.isSuc = true
       ret.achieveToken = gamePlayer.token
       ret.score = gameResult.score
 
@@ -212,8 +214,6 @@ export default class GamesController {
         ['max_score', 'DESC']
       ],
     })
-
-    console.log('gamePlayer+++++:',gamePlayer);
 
     ctx.body = JSON.stringify(gamePlayer)
     } catch (error) {
