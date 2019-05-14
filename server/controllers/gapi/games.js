@@ -207,7 +207,13 @@ export default class GamesController {
       }
     })
 
+<<<<<<< HEAD
     let res = await GamePlayer.findAllAndCount({
+=======
+    // limit 100, return { gamePlayers: [], page: 1, pageSize: 100, total: 103 }
+    // 还需要查询当前玩家的成绩
+    let gamePlayer = await GamePlayer.findAll({
+>>>>>>> bf8231686600f164716a18c6baedfda73d6a63d8
       where: {
         game_round_id: gameRound.id
       },

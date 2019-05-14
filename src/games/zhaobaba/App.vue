@@ -73,8 +73,8 @@
 
   <Game ref="game" :hg="hg" :command="gameState" :dataList="dataList" :gamePlayer="gamePlayer" @game-over="handleGameOver" v-show="ui.gameBoxVisible"> </Game>
   <LoadToast ref="load-toast" is-loading="loadToast.isLoading"> </LoadToast>
-  <ResultBox ref="result-box" @gohome="home" @getRank="getRank" @Restart="handleGameRestart" v-show="resultBoxVisible" :params="resultBoxParams" :command="resultBoxCommand"> </ResultBox>
-  <RuleBox :ruleIconUrl="skinAssets.ruleIconPath"  @getRank="getRank" :gamePlayerRank="gamePlayerRank" :game-round="gameRound" :params="resultBoxParams" :command="ruleBoxCommand"> </RuleBox>
+  <ResultBox ref="result-box" @homeBtnClicked="home" @rankBtnClicked="getRank" @Restart="handleGameRestart" v-show="resultBoxVisible" :params="resultBoxParams" :command="resultBoxCommand"> </ResultBox>
+  <RuleBox :ruleIconUrl="skinAssets.ruleIconPath" :game-round="gameRound" :game-player="gamePlayer" :params="resultBoxParams" :command="ruleBoxCommand"> </RuleBox>
 </div>
 </template>
 
@@ -87,11 +87,10 @@ import weui from 'weui.js'
 import {
   setAchievebycode,
   postMsg,
-  getGameResult,
-  getRanking
+  getGameResult
 } from '@/api/games/zhaobaba'
 import LoadToast from '@/components/LoadToast.vue'
-import ResultBox from './zhaobabaResult.vue'
+import ResultBox from './ResultBox.vue'
 import RuleBox from './RuleBox.vue'
 import {
   GameBackgroundMusicLoadEvent
@@ -282,9 +281,6 @@ export default {
         that.ruleBoxCommand = 'showIcon'
       }
     },
-    handleSeeRule( event ){
-        this.$emit('getRank')
-    },
     handleStartGame(event) {
       event.preventDefault()
 
@@ -385,23 +381,10 @@ export default {
       this.gameState = 'restart'
       this.resultBoxVisible = false
     },
+    //
     getRank(event){
-      const parsed = queryString.parse(location.search);
-      console.log('parsed======:',parsed);
-      var number = parsed.number;
-      var params = {
-        parsed: parsed
-      }
-      getRanking(number,params).then(data => {
-        var rankInfo = data
-        this.gamePlayerRank = rankInfo['allPlayer']
-        this.gamePlayer = rankInfo['thisPlayer']
-        if(this.gamePlayerRank == null){
-          this.ui.noRank = true
-        }else{
-          this.ui.rankMain = true
-        }
-      })
+      console.log("App - getRank ")
+      this.ruleBoxCommand = 'showRank'
     },
     home() {
       //$('#ruleImg').show();
@@ -584,10 +567,8 @@ console.log('params----:',params);
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
   height: 100%;
   width: 100%;
