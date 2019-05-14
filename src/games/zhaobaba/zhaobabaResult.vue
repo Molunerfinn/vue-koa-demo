@@ -45,16 +45,17 @@
           <div class="resule-foot-two">
             <div  @touchstart="handlePlayAgain" class="resule-button resule-status-again restart-again ">再玩一次</div>
           </div>
+
         </div>
       </div>
       <div class="attentionBox">
         <div class=" resule-foot-box">
           <div id="drawMenuBtnBox" class="menuBtnBox resule-foot-two">
             <div  @touchend="handleSeeRank" id="resule_seeRank_show" class="resule-button resule-status-seeRank">排行榜</div>
-
+            <div @touchend="handleGoHome" class="resule-button resule-status-home">返回首页</div>
           </div>
         </div>
-      
+
         <div class="holdBox"></div>
       </div>
     </div>
