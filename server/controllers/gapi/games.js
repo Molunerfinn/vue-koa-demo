@@ -79,7 +79,7 @@ export default class GamesController {
       let number = ctx.params.number
       console.log("showRoundByNumber= ", ctx.params)
       let Model = getGameRoundModelByCode(code)
-      console.log('Model--:',Model);
+      console.log('Model--:', Model);
 
       let gameRound = await Model.findOne({
         where: {
@@ -96,7 +96,7 @@ export default class GamesController {
 
       let GamePlayer = getGamePlayerModelByCode(code)
 
-      console.log('new_player--:',new_player);
+      console.log('new_player--:', new_player);
       var options = {
         fields: ['openid', 'nickname', 'avatar', 'game_round_id', 'realname', 'tel', 'score', 'max_score', 'token']
       }
@@ -163,7 +163,7 @@ export default class GamesController {
         await gamePlayer.update({
           max_score: gameResult.score
         })
-      }else{
+      } else {
         ret.isSuc = false
         ret.success = false
       }
@@ -194,49 +194,45 @@ export default class GamesController {
    */
   static async getRanking(ctx) {
     try {
-    let code = ctx.params.code
-    let GameRound = getGameRoundModelByCode(code)
-    let GamePlayer = getGamePlayerModelByCode(code)
+      let code = ctx.params.code
+      let GameRound = getGameRoundModelByCode(code)
+      let GamePlayer = getGamePlayerModelByCode(code)
 
-    let number = ctx.params.number
-    let openid = ctx.request.body.openid
+      let number = ctx.params.number
+      let openid = ctx.request.body.openid
 
-    let gameRound = await GameRound.findOne({
-      where: {
-        number
+      let gameRound = await GameRound.findOne({
+        where: {
+          number
+        }
+      })
+
+      let res = await GamePlayer.findAll({
+        where: {
+          game_round_id: gameRound.id
+        },
+        limit: 100,
+        order: [
+          ['max_score', 'DESC']
+        ],
+      })
+
+      let thisPlayer = await GamePlayer.findOne({
+        where: {
+          game_round_id: gameRound.id,
+          openid: openid
+        }
+      })
+
+      let rankInfo = {
+        allPlayer: res,
+        thisPlayer: thisPlayer,
+        page: 1,
+        pageSize: 100,
+        total: 100
       }
-    })
-
-<<<<<<< HEAD
-    let res = await GamePlayer.findAllAndCount({
-=======
-    // limit 100, return { gamePlayers: [], page: 1, pageSize: 100, total: 103 }
-    // 还需要查询当前玩家的成绩
-    let gamePlayer = await GamePlayer.findAll({
->>>>>>> bf8231686600f164716a18c6baedfda73d6a63d8
-      where: {
-        game_round_id: gameRound.id
-      },
-      limit: 100,
-      order: [
-        ['max_score', 'DESC']
-      ],
-    })
-
-    let thisPlayer = GamePlayer.findOne({
-      where :{
-        game_round_id: gameRound.id,
-        openid: openid
-      }
-    })
-
-    let rankInfo = {
-      allPlayer: res.rows,
-      thisPlayer: thisPlayer,
-      page: 1,
-      total: res.count
-    }
-    ctx.body = rankInfo
+      console.log('rankInfo====:',rankInfo);
+      ctx.body = rankInfo
     } catch (error) {
       ctx.throw(messageContent.ResponeStatus.CommonError, `show round ${ctx.params.id} fail: ` + error, {
         expose: true

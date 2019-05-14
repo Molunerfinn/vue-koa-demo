@@ -208,7 +208,8 @@ export default {
         statusUserImg: {}
       },
       gamePlayerRank: [],
-      menuLen: 2
+      menuLen: 2,
+      thisPlayer:{}
     }
   },
   created() {
@@ -292,7 +293,10 @@ export default {
         openid: this.gamePlayer.openid
       }
       getRanking(this.gameRound.number, params).then(data => {
-        this.gamePlayerRank = data
+        var rankInfo = data
+        console.log('rankInfo====:',rankInfo);
+        this.gamePlayerRank = rankInfo['allPlayer']
+        this.thisPlayer = rankInfo['thisPlayer']
       })
       $('.poupMain').not("#rankBox").hide()
       $("#rankBox").show()
