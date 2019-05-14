@@ -196,6 +196,7 @@ export default {
     },
     // 点击查看成绩
     handleSeeRank( event ){
+        this.$emit('getRank')
         var silkBag = $("#ruleImg");
         var popupX = silkBag.offset().left + silkBag.width() / 2 + "px ";
         var popupY = silkBag.offset().top + silkBag.height() / 2 + "px";
