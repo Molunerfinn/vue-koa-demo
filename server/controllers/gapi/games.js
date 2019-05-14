@@ -192,13 +192,30 @@ export default class GamesController {
    */
   static async getRanking(ctx) {
     try {
-      let code = ctx.params.code
-      let number = ctx.params.number
-      console.log("showRoundByNumber= ", ctx.params)
-      let Model = getGameRoundModelByCode(code)
-      ctx.body = {
-        success: true
+    let code = ctx.params.code
+    let GameRound = getGameRoundModelByCode(code)
+    let GamePlayer = getGamePlayerModelByCode(code)
+
+    let number = ctx.params.number
+
+    let gameRound = await GameRound.findOne({
+      where: {
+        number
       }
+    })
+
+    let gamePlayer = await GamePlayer.findAll({
+      where: {
+        game_round_id: gameRound.id
+      },
+      order: [
+        ['max_score', 'DESC']
+      ],
+    })
+
+    console.log('gamePlayer+++++:',gamePlayer);
+
+    ctx.body = JSON.stringify(gamePlayer)
     } catch (error) {
       ctx.throw(messageContent.ResponeStatus.CommonError, `show round ${ctx.params.id} fail: ` + error, {
         expose: true

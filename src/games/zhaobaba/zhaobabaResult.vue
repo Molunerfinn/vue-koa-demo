@@ -27,17 +27,7 @@
           <p>成功击败<span class="resuleArg">{{params.beat}}</span>%的玩家</p>
           <div id="rank_showRule" style="text-decoration:underline;margin:0.7rem 0rem;" class="hide" onclick="showRule();">活动规则</div>
 
-          <!-- <div id="resule-status-count" style="margin-top:0.6rem" v-show="ui.statusCount">
-            <p class="totalDraw">您还有 <span id="totalDrawCount" class="resuleArg">{{params.totalCount}}</span> 次抽奖机会</p>
-            <p class="dayDraw">今天还有 <span class="resuleArg dayDrawCount">{{params.count}}</span> 次机会抽奖</p>
-            <p class="dayDraw4Total hide">今天可抽 <span class="resuleArg dayDrawCount"></span> 次</p>
-          </div> -->
 
-          <!-- <div id="resule-status-playinfo" style="margin-top:0.6rem">
-            <p class="dayPlayHint">今天还有 <span class="resuleArg todayPlayCount"></span> 次参与机会</p>
-            <p class="totalPlayHint">您还有 <span class="resuleArg totalPlayCount"></span> 次参与机会</p>
-            <p class="dayPlayHint4Total">今天可参与 <span class="resuleArg todayPlayCount"></span> 次</p>
-          </div> -->
         </div>
         <div id="resule-status-other" class="hide">
           <p style="font-size:0.8rem;font-weight:bold;">通关并且</p>
@@ -64,9 +54,7 @@
 
           </div>
         </div>
-        <div class="hdskillInfo skillInfo theRunningAdClass"><a class="theSpecialTarget" href="http://mp.weixin.qq.com/s?__biz=MjM5MTk5MjI3OA==&#x26;mid=209854000&#x26;idx=1&#x26;sn=82241d924839270d3ea820ad2d56c01b#rd">我也要创建活动</a>
-          <span class="gotoFlag"><i></i></span>
-        </div>
+      
         <div class="holdBox"></div>
       </div>
     </div>
