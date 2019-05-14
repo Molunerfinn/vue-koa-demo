@@ -146,9 +146,6 @@ export default {
       type: Object,
       default: {}
     },
-    homeCallback: {
-      type: Function
-    },
     againCallback: {
       type: Function
     },
@@ -188,15 +185,13 @@ export default {
   methods: {
     // 返回首页
     handleGoHome(event) {
-      event.preventDefault();
-      event.stopPropagation();
-      this.homeCallback();
+      this.$emit('gohome')
 
     },
     // 再玩一次
     handlePlayAgain( event){
-
-       this.againCallback();
+      this.$emit('Restart')
+       // this.againCallback();
 
     },
     // 点击查看成绩
@@ -287,7 +282,7 @@ export default {
         //游戏成功
         HdGame.isplaySucess = true;
         this.ui.statusBird = false
-        //$("#resule-status-ribbon").removeClass("resule-status-faiRibbon").removeClass("resule-status-faiRegRibbon").addClass("resule-status-ribbon");
+        $("#resule-status-ribbon").removeClass("resule-status-faiRibbon").removeClass("resule-status-faiRegRibbon").addClass("resule-status-ribbon");
         this.style.statusUserImg = {borderColor: "#70D572"}
         this.ui.statusMinscore = false
         this.ui.statusCount = true
@@ -323,7 +318,7 @@ export default {
       } else {
         //游戏失败, 飞乌鸦
         this.ui.statusBird = true
-        //$("#resule-status-ribbon").removeClass("resule-status-ribbon").addClass("resule-status-faiRegRibbon")
+        $("#resule-status-ribbon").removeClass("resule-status-ribbon").addClass("resule-status-faiRegRibbon")
         this.style.statusUserImg = {borderColor: "#B5B5B5"}
 
         this.ui.statusMinscore = true
