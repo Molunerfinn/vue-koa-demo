@@ -9,25 +9,6 @@ const {
 } = require('../../helpers/weixin')
 
 export default class GamesController {
-
-  // /**
-  //  * update round information, such as name, description
-  //  * @param {*} ctx
-  //  */
-  // async updateRound(ctx) {
-  //     var gameroundid = parseInt(ctx.params.id)
-  //     var game_round = ctx.request.body.game_round
-  //     try {
-  //         // tmp <Array.<affectedCount, affectedRows>>
-  //         var tmp = await dbOperation.MySqlOperation.UpdateRound(gameroundid, game_round)
-  //         console.log("dbOperation.MySqlOperation.UpdateRound1=", tmp )
-  //         if(tmp.length === 1){
-  //           ctx.status = 200
-  //         }
-  //     } catch (error) {
-  //         ctx.throw(messageContent.ResponeStatus.CommonError, `update round ${gameroundid} fail: ` + error, { expose: true })
-  //     }
-  // },
   /**
    * 取得游戏相关信息，并返回客户端，初始化游戏
    * @param {*}
@@ -77,8 +58,9 @@ export default class GamesController {
       playerInfo = await gamePlayer.getInfo()
     }
     // 每个游戏 GameRound
+    let url = ctx.header.referer
     let gameInfo = await gameRound.getInfo()
-    let wxConfig = getWxJsConfig()
+    let wxConfig = getWxJsConfig(url)
     var allInfo = {
       gameRound: gameInfo,
       gamePlayer: playerInfo,
@@ -97,13 +79,13 @@ export default class GamesController {
       let number = ctx.params.number
       console.log("showRoundByNumber= ", ctx.params)
       let Model = getGameRoundModelByCode(code)
+      console.log('Model--:',Model);
 
       let gameRound = await Model.findOne({
         where: {
           number
         }
       })
-
       let new_player = ctx.request.body.gamePlayer
       let realname = ctx.request.body.realname
       let cellphone = ctx.request.body.tel
@@ -114,7 +96,13 @@ export default class GamesController {
 
       let GamePlayer = getGamePlayerModelByCode(code)
 
-      GamePlayer.addPlayer(new_player)
+      console.log('new_player--:',new_player);
+      var options = {
+        fields: ['openid', 'nickname', 'avatar', 'game_round_id', 'realname', 'tel', 'score', 'max_score', 'token']
+      }
+      let gamePlayer = await GamePlayer.create(new_player, options)
+
+      ctx.body = gamePlayer
 
     } catch (error) {
       ctx.throw(messageContent.ResponeStatus.CommonError, `show round ${ctx.params.id} fail: ` + error, {
@@ -125,10 +113,71 @@ export default class GamesController {
 
   static async setAchieve(ctx) {
     try {
+      console.log('===========setAchieve============');
+      let ret = {
+        rt: 0,
+        isSuc: true,
+        success: true
+      }
       let code = ctx.params.code
+      let GameRound = getGameRoundModelByCode(code)
+      let GamePlayer = getGamePlayerModelByCode(code)
+      let GameResult = getGameResultModelByCode(code)
+
       let number = ctx.params.number
-      console.log("showRoundByNumber= ", ctx.params)
-      let Model = getGameRoundModelByCode(code)
+      let game_round_id = ctx.params.id
+      let parsed = ctx.request.body.parsed
+      let score = ctx.request.body.score
+      let openid = parsed.openid
+
+      let gameRound = await GameRound.findOne({
+        where: {
+          number
+        }
+      })
+
+      let gamePlayer = await GamePlayer.findOne({
+        where: {
+          game_round_id: gameRound.id,
+          openid: openid,
+        }
+      })
+
+      let gameResultParams = {
+        game_player_id: gamePlayerId,
+        score: score,
+        game_round_id: gameRound.id,
+      }
+
+      let gamePlayerId = gamePlayer.id
+      let lastMaxScore = gamePlayer.max_score
+
+      let gameResult = GameResult.build(gameResultParams)
+      let result = await gameResult.save()
+
+      await gamePlayer.update({
+        score: gameResult.score
+      })
+
+      if (gameResult.score > lastMaxScore) {
+        await gamePlayer.update({
+          max_score: gameResult.score
+        })
+      }
+
+      ret.playerId = gamePlayer.id //required to set g_config.playerId
+      ret.isSuc = true
+      ret.achieveToken = gamePlayer.token
+      ret.score = gameResult.score
+
+      ret.bestScore = gamePlayer.max_score //bestScore
+      let rank = await gamePlayer.currentPositionDesc()
+      let beat = await gamePlayer.beat()
+      ret.rank = rank
+      ret.beat = beat
+      ret.hasLot = false
+
+      ctx.body = JSON.stringify(ret)
 
     } catch (error) {
       ctx.throw(messageContent.ResponeStatus.CommonError, `show round ${ctx.params.id} fail: ` + error, {

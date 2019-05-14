@@ -9,7 +9,7 @@ var basePath = '/gapi/games/zhaobaba'
 
 export const getGameResult = ( number, data) => fetch(basePath + '/' + number + '/getInfo', data, 'POST')
 
-export const postMsg = ( number, data) => fetch(basePath + '/' + number + '/postmsg', data, 'POST')
+export const postMsg = ( number, data) => fetch(basePath + '/' + number + '/addPlayer', data, 'POST')
 
 export const setAchievebycode = ( number, data) => fetch(basePath + '/' + number + '/setAchieve', data, 'POST')
 

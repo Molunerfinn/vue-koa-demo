@@ -28,7 +28,6 @@ function bindMethods(model) {
   model.prototype.getInfo = getInfo
 }
 
-
 // 返回到游戏端的信息, 用于显示游戏成绩信息
 async function  getInfo(   ){
 
