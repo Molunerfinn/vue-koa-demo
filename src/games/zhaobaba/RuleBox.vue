@@ -1,18 +1,18 @@
 <template>
   <!-- 锦囊 -->
  <div class="ruleBox" >
-   <div class="ruleImg imgContainer absCenter" _mouseIn="0" @click="handleShowPopup" v-show="ui.iconVisible">
+   <div class="ruleImg imgContainer absCenter" _mouseIn="0" @touchstart="handleShowPopup" v-show="ui.iconVisible">
      <div id="ruleImg" class="slaveImg abs notNeedFatherChage outSpecialDivAutoFit hd-img-fillDiv ruleImgAnimate" style='width: 3rem; height: 3rem; top: 0.15rem; left: 12.85rem;'></div>
    </div>
 
    <div id="poupInfoBox">
      <div class="poupHead">
        <div class="poupTitleBox">
-         <div id="actionExpBtn" class="poupTitleMune checked" _flag="0" @click="showTab( 0 )">
+         <div id="actionExpBtn" class="poupTitleMune checked" _flag="0" @touchstart="showTab( 0 )">
            <div class="item">活动说明</div>
          </div>
 
-         <div id="ranBtn" class="poupTitleMune " _flag="1"  @click="showTab( 1 )">
+         <div id="ranBtn" class="poupTitleMune " _flag="1"  @touchstart="showTab( 1 )">
            <div class="item">排行榜</div>
          </div>
 
@@ -28,7 +28,7 @@
            <div class="slideBarTip transitionPanel"></div>
          </div>
        </div>
-       <div class="poupClose" @click="handleHidePopup"></div>
+       <div class="poupClose" @touchstart="handleHidePopup"></div>
        <div style="clear:both; height:0"></div>
      </div>
      <div id="popTabBox" class="popTabBox transitionPanel" style="left:0">
