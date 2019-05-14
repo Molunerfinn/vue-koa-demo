@@ -231,6 +231,7 @@ export default {
       })
 
       $(".poupSlideBar .slideBarTip").css("left", (13.25 / this.menuLen) * flag + "rem")
+      $("#poupInfoBox .poupMain").height($("#poupInfoBox").height() - $(".poupHead").outerHeight()  );
 
       if (flag === 0) {
         this.poupRule()
