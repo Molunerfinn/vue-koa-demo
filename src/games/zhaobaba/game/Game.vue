@@ -6,7 +6,7 @@
 
   <div id="gameTopBar" class="gameTopBar" style="color:;background-color:">
     <div class="userInfoBox">
-      <div class="userImgBox" style="border-color:"><img :src="game_player.avatar" class="userImg" /></div>
+      <div class="userImgBox" style="border-color:"><img :src="gamePlayer.avatar" class="userImg" /></div>
 
       <div id="grade" class="grade">0</div>
 
