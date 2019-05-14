@@ -8,10 +8,6 @@ import 'weui/dist/style/weui.css'
 import '@/assets/common/css/base.css'
 import '@/assets/kouhong/css/game.css'
 
-import axios from 'axios'
-
-Vue.prototype.$http = axios // 类似于vue-resource的调用方法
-
 //import EventBus  from '@/plugins/EventBus'
 //Vue.use(EventBus)
 
