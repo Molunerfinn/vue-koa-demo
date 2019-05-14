@@ -80,6 +80,8 @@ function getInfo() {
     name: this.name,
     desc: this.desc,
     award_desc: this.award_desc,
+    start_at: this.start_at,
+    end_at: this.end_at,
     dataList,
     playPath
   }

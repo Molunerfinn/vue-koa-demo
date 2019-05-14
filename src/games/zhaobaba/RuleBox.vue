@@ -62,7 +62,7 @@
 
            <div id="gameDateTime" class="poupLine" data-sortKey="c">
              <div class="mainTitle">活动时间</div>
-             <p><span id="startDate">{{gameRound.displayStartAt}}</span>&nbsp;-&nbsp;<span id="endDate">{{gameRound.displayEndAt}}</span></p>
+             <p><span id="startDate">{{gameRound.start_at}}</span>&nbsp;-&nbsp;<span id="endDate">{{gameRound.end_at}}</span></p>
            </div>
            <div class="hostLine poupLine hide" data-sortKey="d">
              <div class="mainTitle">主办单位</div>

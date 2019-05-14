@@ -205,7 +205,7 @@ export default {
         });
 
         this.setSlideBar(true)
-        this.showTab( 0 )
+        this.showTab( 1 )
     },// 点击查看成绩
     setSlideBar(isAnimation){
 
