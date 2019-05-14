@@ -112,8 +112,8 @@ export default {
       this.gameRound = this.gameInfo['gameRound']
       this.gameState = this.gameRound.state
       this.gamePlayer = this.gameInfo['gamePlayer']
-      this.dataList = this.gameInfo['dataList']
-      this.playPath = this.gameInfo['playPath']
+      this.dataList = this.gameRound.dataList
+      this.playPath = this.gameRound.playPath
 
       console.log('playPath',this.gameRound.playPath);
 
