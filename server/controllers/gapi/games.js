@@ -199,6 +199,7 @@ export default class GamesController {
     let GamePlayer = getGamePlayerModelByCode(code)
 
     let number = ctx.params.number
+    let openid = ctx.request.body.openid
 
     let gameRound = await GameRound.findOne({
       where: {
@@ -206,16 +207,30 @@ export default class GamesController {
       }
     })
 
-    let gamePlayer = await GamePlayer.findAll({
+    let res = await GamePlayer.findAllAndCount({
       where: {
         game_round_id: gameRound.id
       },
+      limit: 100,
       order: [
         ['max_score', 'DESC']
       ],
     })
 
-    ctx.body = JSON.stringify(gamePlayer)
+    let thisPlayer = GamePlayer.findOne({
+      where :{
+        game_round_id: gameRound.id,
+        openid: openid
+      }
+    })
+
+    let rankInfo = {
+      allPlayer: res.rows,
+      thisPlayer: thisPlayer,
+      page: 1,
+      total: res.count
+    }
+    ctx.body = rankInfo
     } catch (error) {
       ctx.throw(messageContent.ResponeStatus.CommonError, `show round ${ctx.params.id} fail: ` + error, {
         expose: true

@@ -393,7 +393,9 @@ export default {
         parsed: parsed
       }
       getRanking(number,params).then(data => {
-        this.gamePlayerRank = data
+        var rankInfo = data
+        this.gamePlayerRank = rankInfo['allPlayer']
+        this.gamePlayer = rankInfo['thisPlayer']
         if(this.gamePlayerRank == null){
           this.ui.noRank = true
         }else{
