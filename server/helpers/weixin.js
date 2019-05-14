@@ -2,9 +2,9 @@ const wechatConfig = require('../config/weixin');
 const fetch = require('node-fetch')
 
 
-export function getWxAuthUrlBase() {
-
-  return wechatConfig.authdomain + '/authwx/gameshareurl'
+export function getWxAuthApiUrl() {
+  let gameURLBase = process.env.GAME_URL_BASE
+  return gameURLBase + '/authwx/game'
 
 }
 

@@ -8,7 +8,7 @@ const WechatAPI = require('co-wechat-api')
 const queryString = require('query-string')
 
 const { getGameRoundModelByCode } = require('../../helpers/model')
-const { getWxAuthUrlBase } = require('../../helpers/weixin')
+const { getWxAuthApiUrl } = require('../../helpers/weixin')
 
 const game_host = process.env.GAME_URL_BASE
 var wechatConfig = require('../../config/weixin');
@@ -67,7 +67,7 @@ router.post('/', wechat(wechatConfig).middleware(async (message, ctx) => {
     //let user = await api.getUser( message.FromUserName )
     let gameround =  await model.findById( parseInt(gid) )
     let query =  gameround.getPlayPath()
-    let url = getWxAuthUrlBase() + '?' + query
+    let url = getWxAuthApiUrl() + '?gameurl=' + query
     return {
       type: 'text',
       content: `<a href="${url}"> ${gameround.name} </a>`
