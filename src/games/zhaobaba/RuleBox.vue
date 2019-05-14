@@ -1,7 +1,7 @@
 <template>
   <!-- 锦囊 -->
  <div class="ruleBox" >
-   <div class="ruleImg imgContainer absCenter" _mouseIn="0" @touchstart="handleShowPopup" v-show="ui.iconVisible">
+   <div class="ruleImg imgContainer absCenter" _mouseIn="0" @touchend="handleSeeRank" @touchstart="handleShowPopup" v-show="ui.iconVisible">
      <div id="ruleImg" class="slaveImg abs notNeedFatherChage outSpecialDivAutoFit hd-img-fillDiv ruleImgAnimate" style='width: 3rem; height: 3rem; top: 0.15rem; left: 12.85rem;'></div>
    </div>
 
@@ -177,10 +177,6 @@
 <script>
 import $ from "jquery";
 import HdGame from '@/lib/hdgame'
-import {
-  getRanking
-} from '@/api/games/zhaobaba'
-import queryString from 'query-string'
 
 export default {
   props: {
@@ -191,6 +187,9 @@ export default {
 
     command:{
       default: 'none' // 可选值: showResult, showGift
+    },
+    gamePlayerRank:{
+      type: Array
     }
   },
   data() {
@@ -205,7 +204,7 @@ export default {
       style:{
         statusUserImg: {}
       },
-      gamePlayerRank: [],
+
       menuLen: 2
     }
   },
@@ -219,27 +218,15 @@ export default {
       this.ui.iconVisible = true
     })
 
-    const parsed = queryString.parse(location.search);
-    console.log('parsed======:',parsed);
-    var number = parsed.number;
-    var params = {
-      parsed: parsed
-    }
-    getRanking(number,params).then(data => {
-      this.gamePlayerRank = data
-      if(this.gamePlayerRank == null){
-        this.ui.noRank = true
-      }else{
-        this.ui.rankMain = true
-      }
-      console.log('this.gamePlayerRank------:',this.gamePlayerRank);
-    })
   },
   mounted(){
     $(".poupTitleBox .poupTitleMune,.poupTitleBox .slideBarTip").css("width", 13.25 / this.menuLen + "rem");
 
   },
   methods: {
+    handleSeeRank( event ){
+        this.$emit('getRank')
+      },
     //
     handleShowPopup(){
       var silkBag = $("#ruleImg");
@@ -322,6 +309,10 @@ export default {
         this.showResult()
       }
 
+    },
+    gamePlayerRank: function(val, oldVal){
+      this.gamePlayerRank = val
+      console.log('this.gamePlayerRank----:',this.gamePlayerRank);
     }
   }
 }

@@ -39,8 +39,8 @@
 
   <Game ref="game" :hg="hg" :command="gameState" :dataList="dataList" :gamePlayer="gamePlayer" @game-over="handleGameOver" v-show="ui.gameBoxVisible"> </Game>
   <LoadToast ref="load-toast" is-loading="loadToast.isLoading"> </LoadToast>
-  <ResultBox ref="result-box" @gohome="home" @Restart="handleGameRestart" v-show="resultBoxVisible" :params="resultBoxParams" :command="resultBoxCommand"> </ResultBox>
-  <RuleBox :ruleIconUrl="skinAssets.ruleIconPath" :game-round="gameRound" :params="resultBoxParams" :command="ruleBoxCommand"> </RuleBox>
+  <ResultBox ref="result-box" @gohome="home" @getRank="getRank" @Restart="handleGameRestart" v-show="resultBoxVisible" :params="resultBoxParams" :command="resultBoxCommand"> </ResultBox>
+  <RuleBox :ruleIconUrl="skinAssets.ruleIconPath"  @getRank="getRank" :gamePlayerRank="gamePlayerRank" :game-round="gameRound" :params="resultBoxParams" :command="ruleBoxCommand"> </RuleBox>
 </div>
 </template>
 
@@ -52,7 +52,8 @@ import HdGame from '@/lib/hdgame'
 import {
   setAchievebycode,
   postMsg,
-  getGameResult
+  getGameResult,
+  getRanking
 } from '@/api/games/zhaobaba'
 import LoadToast from '@/components/LoadToast.vue'
 import ResultBox from './zhaobabaResult.vue'
@@ -173,6 +174,7 @@ export default {
     return {
       soundIconClass: "soundIconOff soundIcon",
       dataList:[],
+      gamePlayerRank: [],
       gamePlayer: {},
       gameRound: {},
       hg: {
@@ -202,6 +204,7 @@ export default {
     }
   },
   methods: {
+
     post_msg: function () {
       var realname = document.getElementById('name').value
       var tel = parseInt(document.getElementById('tel').value)
@@ -219,6 +222,9 @@ export default {
         this.ui.homeVisible = true
         return res
       })
+    },
+    handleSeeRule( event ){
+        this.$emit('getRank')
     },
     handleStartGame(event) {
       event.preventDefault()
@@ -319,6 +325,22 @@ export default {
     handleGameRestart() {
       this.gameState = 'restart'
       this.resultBoxVisible = false
+    },
+    getRank(event){
+      const parsed = queryString.parse(location.search);
+      console.log('parsed======:',parsed);
+      var number = parsed.number;
+      var params = {
+        parsed: parsed
+      }
+      getRanking(number,params).then(data => {
+        this.gamePlayerRank = data
+        if(this.gamePlayerRank == null){
+          this.ui.noRank = true
+        }else{
+          this.ui.rankMain = true
+        }
+      })
     },
     home() {
       //$('#ruleImg').show();
