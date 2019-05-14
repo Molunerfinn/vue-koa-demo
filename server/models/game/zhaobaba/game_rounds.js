@@ -93,4 +93,5 @@ function getRandomList() {
   for (var i = 0; i < 50; i++) {
     dataList.push(Math.round(Math.random() * 3)); //可均衡获取0到1的随机整数。
   }
+  return dataList
 }
