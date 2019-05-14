@@ -10,6 +10,7 @@ var client = new OAuth(weixinConfig.appid, weixinConfig.secret);
 router.get('/game', async (ctx)=> {
   let gameurl = ctx.query.gameurl
   var url = client.getAuthorizeURL(weixinConfig.authdomain + '/authwx/gameshare-done?gameurl='+gameurl, 'state', 'snsapi_userinfo');
+  console.log( "auth2-url", url)
   ctx.redirect( url )
 })
 
