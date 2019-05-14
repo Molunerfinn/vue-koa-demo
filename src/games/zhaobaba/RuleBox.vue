@@ -1,7 +1,7 @@
 <template>
   <!-- 锦囊 -->
  <div class="ruleBox" >
-   <div class="ruleImg imgContainer absCenter" _mouseIn="0" @touchend="handleSeeRank" @touchstart="handleShowPopup" v-show="ui.iconVisible">
+   <div class="ruleImg imgContainer absCenter" _mouseIn="0"  @touchstart="handleShowPopup" v-show="ui.iconVisible">
      <div id="ruleImg" class="slaveImg abs notNeedFatherChage outSpecialDivAutoFit hd-img-fillDiv ruleImgAnimate" style='width: 3rem; height: 3rem; top: 0.15rem; left: 12.85rem;'></div>
    </div>
 
@@ -75,7 +75,7 @@
 
        </div>
 
-       <div id="rankBox" class="poupMain" _flag="1" style="-webkit-overflow-scrolling:touch;">
+       <div id="rankBox" class="poupMain hide" _flag="1" style="-webkit-overflow-scrolling:touch;">
          <div class="poupMainInfo">
            <div id="noRank" class='' v-show="!hasRank">暂无排名</div>
            <div id="rankMain" class="getRankHeight" v-show="hasRank">
@@ -107,7 +107,7 @@
 
        </div>
 
-       <div id="awardBox" class="poupMain" _flag="3">
+       <div id="awardBox" class="poupMain hide" _flag="3">
          <div id="awardInfoBox">
            <div id="awardInfo">
              <div style="line-height: 2.6rem">暂无中奖记录</div>
@@ -133,7 +133,7 @@
          </div>
        </div>
 
-       <div id="regAwardBox" class="poupMain" _flag="4" style="-webkit-overflow-scrolling:touch;">
+       <div id="regAwardBox" class="poupMain hide" _flag="4" style="-webkit-overflow-scrolling:touch;">
          <div class="poupMainInfo">
            <div id="noRegAward" class="hide" style="margin-left:3px;">尚未公布获奖名单，详情请查看活动说明</div>
            <div id="regAwardMain" style="display:none;">
@@ -175,7 +175,11 @@
 </template>
 
 <script>
-import $ from "jquery";
+import $ from "jquery"
+import {
+  getRanking
+} from '@/api/games/zhaobaba'
+
 import HdGame from '@/lib/hdgame'
 
 export default {
@@ -184,12 +188,11 @@ export default {
       type: Object
     },
     ruleIconUrl: String, // 锦囊按钮图片
-
     command:{
       default: 'none' // 可选值: showResult, showGift
     },
-    gamePlayerRank:{
-      type: Array
+    gamePlayer:{
+      type: Object
     }
   },
   data() {
@@ -204,6 +207,7 @@ export default {
       style:{
         statusUserImg: {}
       },
+      gamePlayerRank: [],
       menuLen: 2
     }
   },
@@ -221,6 +225,8 @@ export default {
   },
   mounted(){
     $(".poupTitleBox .poupTitleMune,.poupTitleBox .slideBarTip").css("width", 13.25 / this.menuLen + "rem");
+    $("#poupInfoBox .poupMain").height($("#poupInfoBox").height() - $(".poupHead").outerHeight() - g_rem * 0);
+
   },
   computed:{
     hasRank(){
@@ -228,11 +234,9 @@ export default {
     }
   },
   methods: {
-    handleSeeRank( event ){
-        this.$emit('getRank')
-    },
+
     //
-    handleShowPopup(){
+    handleShowPopup( flag ){
       var silkBag = $("#ruleImg");
       var popupX = silkBag.offset().left + silkBag.width() / 2 + "px ";
       var popupY = silkBag.offset().top + silkBag.height() / 2 + "px";
@@ -242,7 +246,7 @@ export default {
       });
 
       this.setSlideBar(true)
-      this.showTab( 0 )
+      this.showTab( flag  )
     },
     handleHidePopup(){
       var poupInfoBox = $("#poupInfoBox");
@@ -283,6 +287,13 @@ export default {
       }
     },
     poupRank(){
+
+      var params = {
+        openid: this.gamePlayer.openid
+      }
+      getRanking(this.gameRound.number, params).then(data => {
+        this.gamePlayerRank = data
+      })
       $('.poupMain').not("#rankBox").hide()
       $("#rankBox").show()
     },
@@ -294,7 +305,7 @@ export default {
   watch: {
     command: function (val, oldVal) {
       //外部触发游戏开始
-      console.log('watch-command new: %s, old: %s', val, oldVal)
+      console.log('rulebox','watch-command new: %s, old: %s', val, oldVal)
       if( val == 'showIcon'){
         this.ui.iconVisible = true
       }
@@ -303,6 +314,9 @@ export default {
       }
       if( val == 'showResult'){
         this.showResult()
+      }
+      if( val == 'showRank'){
+        this.handleShowPopup( 1 )
       }
     }
   }

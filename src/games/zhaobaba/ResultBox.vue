@@ -140,6 +140,7 @@
 <script>
 import $ from "jquery";
 import HdGame from '@/lib/hdgame'
+
 export default {
   props: {
     params: { // 游戏成绩相关数据
@@ -185,7 +186,7 @@ export default {
   methods: {
     // 返回首页
     handleGoHome(event) {
-      this.$emit('gohome')
+      this.$emit('homeBtnClicked')
 
     },
     // 再玩一次
@@ -196,8 +197,9 @@ export default {
     },
     // 点击查看成绩
     handleSeeRank( event ){
-        this.$emit('getRank')      
-    },// 点击查看成绩
+      console.log( " handleSeeRank ")
+      this.$emit('rankBtnClicked')
+    },
 
     showResult(){
       var resuleDef = {
