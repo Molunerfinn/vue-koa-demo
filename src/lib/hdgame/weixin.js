@@ -1,7 +1,7 @@
 import wx from 'weixin-js-sdk'
 import Logger from './log'
 import { decodeHtml } from './encode'
-import { removeUrlArg } from './url'
+// import { removeUrlArg } from './url'
 const m_debug = false
 const wxConfigArg = { }
 
@@ -13,14 +13,15 @@ const wxConfigArg = { }
 
 export function initWxConfig(wxConfig){
 
-  Logger.tlog("HdGame.initWxConfig");
+console.log('wxConfig--------:',wxConfig);
   wx.config({
     debug: true,
     appId: wxConfig.appId,
     timestamp: wxConfig.timestamp,
     nonceStr: wxConfig.nonceStr,
     signature: wxConfig.signature,
-    jsApiList: ["checkJsApi", "onMenuShareTimeline", "onMenuShareAppMessage", "onMenuShareQQ", "onMenuShareWeibo", "hideMenuItems", "showMenuItems", "hideAllNonBaseMenuItem", "showAllNonBaseMenuItem", "startRecord", "stopRecord", "onRecordEnd", "playVoice", "pauseVoice", "stopVoice", "uploadVoice", "downloadVoice", "translateVoice", "chooseImage", "previewImage", "uploadImage", "downloadImage", "getNetworkType", "openLocation", "getLocation", "hideOptionMenu", "showOptionMenu", "closeWindow", "scanQRCode", "chooseWXPay", "openProductSpecificView", "addCard", "chooseCard", "openCard"]
+    jsApiList:[]
+    // jsApiList: ["checkJsApi", "onMenuShareTimeline", "onMenuShareAppMessage", "onMenuShareQQ", "onMenuShareWeibo", "hideMenuItems", "showMenuItems", "hideAllNonBaseMenuItem", "showAllNonBaseMenuItem", "startRecord", "stopRecord", "onRecordEnd", "playVoice", "pauseVoice", "stopVoice", "uploadVoice", "downloadVoice", "translateVoice", "chooseImage", "previewImage", "uploadImage", "downloadImage", "getNetworkType", "openLocation", "getLocation", "hideOptionMenu", "showOptionMenu", "closeWindow", "scanQRCode", "chooseWXPay", "openProductSpecificView", "addCard", "chooseCard", "openCard"]
   });
   wx.error(function(res){
     // config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
@@ -33,7 +34,9 @@ export function setWxShare(wxShareArg, desc, url, callBack) {
   //    desc = desc.replace(new RegExp(item.sensword, "g"), item.adVance)
   //  })
   desc = decodeHtml(desc);
-  url = removeUrlArg(url, "code", "state");
+  // url = removeUrlArg(url, "code", "state");
+  url = wxShareArg.link
+  console.log('share url =====================',url);
 
 
   var pyqUrl = url;
@@ -49,7 +52,6 @@ export function setWxShare(wxShareArg, desc, url, callBack) {
         desc: desc,
         link: url,
         imgUrl: wxConfigShareImg,
-        type: "link",
         success: function() {
 
         },

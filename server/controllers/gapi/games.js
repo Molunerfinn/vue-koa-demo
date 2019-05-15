@@ -59,8 +59,10 @@ export default class GamesController {
     }
     // 每个游戏 GameRound
     let url = ctx.header.referer
+    console.log('url===================:',url);
     let gameInfo = await gameRound.getInfo()
-    let wxConfig = getWxJsConfig(url)
+    let wxConfig = await getWxJsConfig(url)
+    console.log('wxConfig=======:',wxConfig);
     var allInfo = {
       gameRound: gameInfo,
       gamePlayer: playerInfo,

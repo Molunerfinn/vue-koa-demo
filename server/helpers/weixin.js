@@ -27,6 +27,8 @@ export async function getWxJsConfig( url ){
     }
     let apiurl = getWxJsConfigApiUrl()
 
+    console.log('apiurl========:',apiurl);
+
     let res = await fetch(apiurl, {
       timeout: 2000,
       body: JSON.stringify(body),

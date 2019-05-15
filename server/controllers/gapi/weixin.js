@@ -18,7 +18,7 @@ export default class WeixinController {
       let shareurl = ctx.query.shareurl
       var param = {
         debug: false,
-        jsApiList: ['updateAppMessageShareData', 'updateTimelineShareData'],
+        jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage'],
         url: url
       };
       let ticket = await wechatApi.getLatestTicket()

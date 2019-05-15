@@ -167,11 +167,12 @@ export default {
       }
 
       let wxConfig = this.gameInfo['wxConfig']
+      console.log('App wxConfig=======:',wxConfig);
       if( wxConfig ){
         HdGame.initWxConfig( wxConfig )
 
         let wxShareArg = { title: this.gameRound.name,
-          link: gameUrlBase + '/authwx/game?gameurl='+this.playPath,
+          link: gameUrlBase + '/authwx/game?gameurl='+gameUrlBase+this.playPath,
           imgUrl: gameUrlBase + '/static/game/zhaobaba/image/share.jpg'
         }
         HdGame.setWxShare( wxShareArg )
