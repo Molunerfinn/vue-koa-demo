@@ -216,6 +216,7 @@ export default {
     window.$ = $
   },
   mounted(){
+    // mounted 之后 document 才有ruleIme，可以设置css
     HdGame.imgReady(this.ruleIconUrl, (img)=>{
       console.log( "imgReady", this.ruleIconUrl)
       $("#ruleImg").css({
@@ -224,7 +225,7 @@ export default {
       })
       this.ui.iconVisible = true
     })
-    
+
     $(".poupTitleBox .poupTitleMune,.poupTitleBox .slideBarTip").css("width", 13.25 / this.menuLen + "rem");
     $("#poupInfoBox .poupMain").height($("#poupInfoBox").height() - $(".poupHead").outerHeight()  );
 

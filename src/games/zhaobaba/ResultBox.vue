@@ -273,7 +273,7 @@ export default {
       } else {
         //游戏失败, 飞乌鸦
         this.ui.statusBird = true
-        $("#resule-status-ribbon").removeClass("resule-status-ribbon").addClass("resule-status-faiRegRibbon")
+        $("#resule-status-ribbon").removeClass("resule-status-ribbon").addClass("resule-status-faiRibbon")
         this.style.statusUserImg = {borderColor: "#B5B5B5"}
 
         this.ui.statusMinscore = true
@@ -286,7 +286,6 @@ export default {
         this.ui.statusHome = true
 
         //$("#resule-status-bird").removeClass("resule-status-birdfly").addClass("resule-status-birdfly");
-
         this.ui.statusBeatPercent = false
         HdGame.isplaySucess = false
       }
