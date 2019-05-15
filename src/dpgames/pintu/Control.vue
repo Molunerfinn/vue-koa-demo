@@ -165,7 +165,7 @@ export default {
       getGameInfoByNumber( parsed.number ).then((res)=>{
         that.socketNameSpace = "/channel-dppintu-"+ res.number
         that.gameRoundState = res.state
-        that.socket = io( that.socketNameSpace )
+        that.socket = io( that.socketNameSpace , { transports: [ 'websocket' ] })
         that.socket.on('connect', () => {
           that.loading = false;
           that.bindSocketEvents()
