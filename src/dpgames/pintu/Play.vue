@@ -39,7 +39,6 @@
 
 <script>
 import wx from 'weixin-js-sdk'
-import GameState from '@/lib/GameState'
 
 import Game from './game/Game.vue'
 import GameRes from './game/GameRes'
@@ -99,7 +98,7 @@ export default {
     }
 
     const parsed = queryString.parse(location.search);
-    var code = 'dppintu';
+
     var number = parsed.number;
 
     var params = {
@@ -129,9 +128,6 @@ export default {
         signature: this.wx_config.signature,// 必填，签名
         jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage'] // 必填，需要使用的JS接口列表
       });
-
-      var number = this.gameRound.number;
-
 
       wx.ready(function () {   //需在用户可能点击分享按钮前就先调用
         wx.onMenuShareAppMessage({
@@ -297,7 +293,6 @@ export default {
       var tel = parseInt(document.getElementById('tel').value)
 
       const parsed = queryString.parse(location.search);
-      var code = 'dppintu';
       var number = parsed.number;
       this.gamePlayer.realname = realname
       this.gamePlayer.tel = tel
@@ -444,7 +439,6 @@ export default {
         parsed:parsed
       };
 
-      var code = 'dppintu';
       var number = parsed.number;
       params.info = JSON.stringify(info);
 

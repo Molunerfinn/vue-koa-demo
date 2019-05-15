@@ -19,10 +19,15 @@ import Img from './hdgame/img'
 import Log from './hdgame/log'
 import Grade from './hdgame/grade'
 import Time from './hdgame/time'
+import { initWxConfig, setWxShare } from './hdgame/weixin'
+
 import { getLocalStorage, removeLocalStorage, setLocalStorage, getCookie, setCookie } from './hdgame/storage'
 
 
-const HdGame = { getLocalStorage, removeLocalStorage, setLocalStorage, getCookie, setCookie }
+const HdGame = {
+  getLocalStorage, removeLocalStorage, setLocalStorage, getCookie, setCookie,
+  initWxConfig, setWxShare
+}
 const _resRoot = '/static/kouhong'
 const g_config = {
   initTime: 10,
@@ -1546,5 +1551,10 @@ HdGame.shuffle = shuffle
 
 //
 HdGame.isSupportWebp = false
+
+
+// weixin
+
+HdGame.wxConfigArg = {}
 
 export default HdGame

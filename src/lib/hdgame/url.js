@@ -8,21 +8,20 @@ export function jointUrlArg(root, arg) {
 
 export function jointParams(params) {
   var s = [];
-  $.each(params,
-  function(key, val) {
+  for( let [key,val] in Object.entries(params))
+  {
     s.push(key + "=" + val)
-  });
+  }
   return s.join("&")
 }
 
 export function removeUrlArg() {
-  var argsArray = arrPro.slice.call(arguments);
+  var argsArray = Array.from(arguments);
   if (argsArray.length < 2) {
     return
   }
   var urlInfo = parseURL(argsArray.shift());
-  $.each(argsArray,
-  function(index, item) {
+  argsArray.forEach( function(item, index) {
     if (urlInfo.params.hasOwnProperty(item)) {
       delete urlInfo.params[item]
     }
@@ -56,10 +55,10 @@ export function  parseURL(url) {
       }
       return ret
     })(),
-    file: (a.pathname.match(/\/([^\/?#]+)$/i) || [, ""])[1],
+    file: (a.pathname.match(/\/([^\/?#]+)$/i) || ['', ''])[1],
     hash: a.hash.replace("#", ""),
     path: a.pathname.replace(/^([^\/])/, "/$1"),
-    relative: (a.href.match(/tps?:\/\/[^\/]+(.+)/) || [, ""])[1],
+    relative: (a.href.match(/tps?:\/\/[^\/]+(.+)/) || ['', ''])[1],
     segments: a.pathname.replace(/^\//, "").split("/")
   }
 }

@@ -1,25 +1,34 @@
+import wx from 'weixin-js-sdk'
 import Logger from './log'
 import { decodeHtml } from './encode'
 import { removeUrlArg } from './url'
-const wxConfig = {};
+const m_debug = false
 const wxConfigArg = { }
 
-function initWxConfig(arg){
+
+//appId: wxConfig.appId, // 必填，公众号的唯一标识
+//timestamp: wxConfig.timestamp, // 必填，生成签名的时间戳
+//nonceStr: wxConfig.nonceStr, // 必填，生成签名的随机串
+//signature: wxConfig.signature,// 必填，签名
+
+export function initWxConfig(wxConfig){
 
   Logger.tlog("HdGame.initWxConfig");
   wx.config({
-    debug: false,
-    appId: arg.jsSdkAppid,
-    timestamp: arg.timestamp,
-    nonceStr: arg.nonce_str,
-    signature: arg.signature,
+    debug: true,
+    appId: wxConfig.appId,
+    timestamp: wxConfig.timestamp,
+    nonceStr: wxConfig.nonceStr,
+    signature: wxConfig.signature,
     jsApiList: ["checkJsApi", "onMenuShareTimeline", "onMenuShareAppMessage", "onMenuShareQQ", "onMenuShareWeibo", "hideMenuItems", "showMenuItems", "hideAllNonBaseMenuItem", "showAllNonBaseMenuItem", "startRecord", "stopRecord", "onRecordEnd", "playVoice", "pauseVoice", "stopVoice", "uploadVoice", "downloadVoice", "translateVoice", "chooseImage", "previewImage", "uploadImage", "downloadImage", "getNetworkType", "openLocation", "getLocation", "hideOptionMenu", "showOptionMenu", "closeWindow", "scanQRCode", "chooseWXPay", "openProductSpecificView", "addCard", "chooseCard", "openCard"]
   });
-
+  wx.error(function(res){
+    // config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
+  });
 }
 
 
-function setWxShare(desc, url, callBack) {
+export function setWxShare(wxShareArg, desc, url, callBack) {
   //  g_config.$$sensitWordAndAdvance.forEach(function(item) {
   //    desc = desc.replace(new RegExp(item.sensword, "g"), item.adVance)
   //  })
@@ -30,13 +39,13 @@ function setWxShare(desc, url, callBack) {
   var pyqUrl = url;
 
   wx.ready(function() {
-    var wxConfigShareImg = arg.shareImg;
+    var wxConfigShareImg = wxShareArg.shareImg;
     if (!/^http:/.test(wxConfigShareImg) && /^\/\//.test(wxConfigShareImg)) {
       wxConfigShareImg = "http:" + wxConfigShareImg
     }
     try {
       wx.onMenuShareAppMessage({
-        title: HdGame.decodeHtml(arg.activeName),
+        title: decodeHtml(decodeHtml.activeName),
         desc: desc,
         link: url,
         imgUrl: wxConfigShareImg,
@@ -47,7 +56,7 @@ function setWxShare(desc, url, callBack) {
         cancel: function() {},
         fail: function(res) {
           alert("分享失败请退出微信重新登录！");
-          HdGame.logStd("wxShareFailErr", JSON.stringify(res), 2)
+          Logger.logStd("wxShareFailErr", JSON.stringify(res), 2)
         }
       });
       wx.onMenuShareTimeline({
@@ -55,20 +64,20 @@ function setWxShare(desc, url, callBack) {
         link: pyqUrl,
         imgUrl: wxConfigShareImg,
         success: function(res) {
-          var setShareNum = function() {
-            $.ajax({
-              type: "post",
-              url: g_config.ajaxUrl + "hdgame_h.jsp?cmd=setShareNum&aid=" + g_config.aid + "&gameId=" + g_config.gameId + "&openId=" + g_config.openId + "&type=pyq&shareDeep=" + g_config.shareDeep,
-              error: function(data) {
-                if (m_debug) {
-                  alert("服务繁忙，请稍候重试")
-                }
-              },
-              success: function(data) {
-
-              }
-            })
-          };
+          // var setShareNum = function() {
+          //   $.ajax({
+          //     type: "post",
+          //     url: g_config.ajaxUrl + "hdgame_h.jsp?cmd=setShareNum&aid=" + g_config.aid + "&gameId=" + g_config.gameId + "&openId=" + g_config.openId + "&type=pyq&shareDeep=" + g_config.shareDeep,
+          //     error: function(data) {
+          //       if (m_debug) {
+          //         alert("服务繁忙，请稍候重试")
+          //       }
+          //     },
+          //     success: function(data) {
+          //
+          //     }
+          //   })
+          // };
           //if (HdGame.isIPhone()) {
           //  setTimeout(setShareNum, 100)
           //} else {
@@ -82,17 +91,19 @@ function setWxShare(desc, url, callBack) {
           }
         }
       });
-      HdGame.tlog("当前分享朋友链接：", url);
-      HdGame.tlog("当前分享朋友圈链接：", pyqUrl)
+      Logger.tlog("当前分享朋友链接：", url);
+      Logger.tlog("当前分享朋友圈链接：", pyqUrl)
     } catch(e) {
       alert(e.message)
     }
   });
-  HdGame.wxConfigArg.desc = desc;
-  HdGame.wxConfigArg.url = url;
-  HdGame.wxConfigArg.callBack = callBack;
-  HdGame.wxConfigArg.pyqUrl = pyqUrl;
+  wxConfigArg.desc = desc;
+  wxConfigArg.url = url;
+  wxConfigArg.callBack = callBack;
+  wxConfigArg.pyqUrl = pyqUrl;
   //g_config._minapp_findAct && (wx.miniProgram.postMessage({
   //  data: HdGame.getminData()
   //}))
+
+  return  wxConfigArg
 }

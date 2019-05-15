@@ -74,12 +74,12 @@
   <Game ref="game" :hg="hg" :command="gameState" :dataList="dataList" :gamePlayer="gamePlayer" @game-over="handleGameOver" v-show="ui.gameBoxVisible"> </Game>
   <LoadToast ref="load-toast" is-loading="loadToast.isLoading"> </LoadToast>
   <ResultBox ref="result-box" @homeBtnClicked="home" @rankBtnClicked="getRank" @Restart="handleGameRestart" v-show="resultBoxVisible" :params="resultBoxParams" :command="resultBoxCommand"> </ResultBox>
-  <RuleBox :ruleIconUrl="skinAssets.ruleIconPath" :game-round="gameRound" :game-player="gamePlayer" :params="resultBoxParams" :command="ruleBoxCommand"> </RuleBox>
+  <RuleBox :ruleIconUrl="skinAssets.ruleIconPath" :game-round="gameRound" :game-player="gamePlayer" :params="resultBoxParams" :command="ruleBoxCommand" @commandDone="handleResetRuleCommand"> </RuleBox>
 </div>
 </template>
 
 <script>
-import wx from 'weixin-js-sdk'
+
 import Game from './game/Game.vue'
 import GameRes from './game/GameRes'
 import HdGame from '@/lib/hdgame'
@@ -110,7 +110,7 @@ const g_config = {
     city: null
   }
 }
-
+const gameUrlBase = process.env.GAME_URL_BASE
 const gameType = 1; // 0抽奖， 1刷记录
 
 export default {
@@ -166,42 +166,17 @@ export default {
         this.ui.homeVisible = true
       }
 
-      this.wx_config = this.gameInfo['wxConfig']
+      let wxConfig = this.gameInfo['wxConfig']
+      if( wxConfig ){
+        HdGame.initWxConfig( wxConfig )
 
-      wx.config({
-        debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
-        appId: this.wx_config.appId, // 必填，公众号的唯一标识
-        timestamp: this.wx_config.timestamp, // 必填，生成签名的时间戳
-        nonceStr: this.wx_config.nonceStr, // 必填，生成签名的随机串
-        signature: this.wx_config.signature,// 必填，签名
-        jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage'] // 必填，需要使用的JS接口列表
-      });
+        let wxShareArg = { title: this.gameRound.name,
+          link: gameUrlBase + '/authwx/game?gameurl='+this.playPath,
+          imgUrl: gameUrlBase + '/static/game/zhaobaba/image/share.jpg'
+        }
+        HdGame.setWxShare( wxShareArg )
+      }
 
-      let that = this
-      wx.ready(function () {   //需在用户可能点击分享按钮前就先调用
-
-        wx.onMenuShareAppMessage({
-          title: that.gameRound.name, // 分享标题
-          desc: '点击查看详情', // 分享描述
-          link: 'http://testwx.getstore.cn/authwx/game?gameurl='+that.playPath, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-          imgUrl: '', // 分享图标
-          success: function () {
-            // 设置成功
-          }
-        })
-
-        wx.onMenuShareTimeline({
-          title: that.gameRound.name, // 分享标题
-          link: 'http://testwx.getstore.cn/authwx/game?gameurl='+that.playPath, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-          imgUrl: '', // 分享图标
-          success: function () {
-            // 设置成功
-          }
-        })
-      })
-      wx.error(function(res){
-        // config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
-      });
       document.title = this.gameRound.name
     })
   },
@@ -285,7 +260,8 @@ export default {
       event.preventDefault()
 
       let that = this
-      that.ruleBoxCommand = 'hideIcon'
+      this.ruleBoxCommand = 'hideIcon'
+
       //点击开始按钮，开始游戏
       console.log(`handleStartGame=${this.gameState}`)
 
@@ -380,6 +356,10 @@ export default {
     handleGameRestart() {
       this.gameState = 'restart'
       this.resultBoxVisible = false
+    },
+    // rulebox 处理完命令以后，需要重置，以便下次使用同样命令时也可以触发
+    handleResetRuleCommand(){
+      this.ruleBoxCommand = null
     },
     //
     getRank(event){
