@@ -214,17 +214,17 @@ export default {
   },
   created() {
     window.$ = $
-
-    HdGame.imgReady(this.ruleIconUrl, (img)=>{
-      $("#ruleImg").css({
-				"background-size": "100% 100%",
-				"background-image":"url("+this.ruleIconUrl+")",
-			})
-      this.ui.iconVisible = true
-    })
-
   },
   mounted(){
+    HdGame.imgReady(this.ruleIconUrl, (img)=>{
+      console.log( "imgReady", this.ruleIconUrl)
+      $("#ruleImg").css({
+        "background-size": "100% 100%",
+        "background-image":"url("+this.ruleIconUrl+")",
+      })
+      this.ui.iconVisible = true
+    })
+    
     $(".poupTitleBox .poupTitleMune,.poupTitleBox .slideBarTip").css("width", 13.25 / this.menuLen + "rem");
     $("#poupInfoBox .poupMain").height($("#poupInfoBox").height() - $(".poupHead").outerHeight()  );
 
