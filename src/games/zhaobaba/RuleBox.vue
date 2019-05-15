@@ -214,17 +214,18 @@ export default {
   },
   created() {
     window.$ = $
-
+  },
+  mounted(){
+    // mounted 之后 document 才有ruleIme，可以设置css
     HdGame.imgReady(this.ruleIconUrl, (img)=>{
+      console.log( "imgReady", this.ruleIconUrl)
       $("#ruleImg").css({
-				"background-size": "100% 100%",
-				"background-image":"url("+this.ruleIconUrl+")",
-			})
+        "background-size": "100% 100%",
+        "background-image":"url("+this.ruleIconUrl+")",
+      })
       this.ui.iconVisible = true
     })
 
-  },
-  mounted(){
     $(".poupTitleBox .poupTitleMune,.poupTitleBox .slideBarTip").css("width", 13.25 / this.menuLen + "rem");
     $("#poupInfoBox .poupMain").height($("#poupInfoBox").height() - $(".poupHead").outerHeight()  );
 

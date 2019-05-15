@@ -93,7 +93,7 @@ HdUtil.imgReady = function(){
   // n: onload callback
   // r: onerror callback
   return function(e, t, n, r) {
-      let i, o, a, c, u, l = new Image;
+      let i, o, a, c, u, l = new Image();
       console.log( "imgReady l=",e, l)
 
       if (e) {
