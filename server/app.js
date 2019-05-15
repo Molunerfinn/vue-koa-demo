@@ -105,7 +105,7 @@ router.use('/gapi/games', games.routes())
 
 app.use(router.routes()) // 将路由规则挂载到Koa上。
 app.use(historyApiFallback())
-app.use(serve(path.resolve('dist'))) // 将webpack打包好的项目目录作为Koa静态文件服务的目录
+app.use(serve(path.resolve('public'))) // 将webpack打包好的项目目录作为Koa静态文件服务的目录
 
 // export default app.listen(port, () => {
 //  console.log(`Koa is listening in ${port}`)
