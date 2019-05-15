@@ -82,6 +82,7 @@ function getInfo() {
     award_desc: this.award_desc,
     start_at: this.start_at,
     end_at: this.end_at,
+    contact_required: this.contact_required,
     dataList,
     playPath
   }

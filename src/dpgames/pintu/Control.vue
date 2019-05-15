@@ -300,6 +300,7 @@ export default {
 						// 取得游戏用户
 						that.socket.emit('GetGamePlayersEvent', {}, function(data){
 							that.gamePlayers = data.gamePlayers
+              console.log('gamePlayers---:',that.gamePlayers);
 						});
 				}, 1500);
 			}
