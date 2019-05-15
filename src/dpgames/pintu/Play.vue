@@ -106,7 +106,7 @@ export default {
     }
 
     that.socketNameSpace = "/channel-dppintu-"+ number
-    that.socket = io( that.socketNameSpace )
+    that.socket = io( that.socketNameSpace , { transports: [ 'websocket' ] })
     that.socket.on('connect', () => {
       that.loading = false;
       that.bindSocketEvents()
@@ -114,11 +114,12 @@ export default {
 
     getGameResult(number,params).then(data => {
       this.gameInfo = data
+      console.log('gameInfo=======:',this.gameInfo);
       this.gameRound = this.gameInfo['gameRound']
       this.timeToEnd = this.gameRound.duretion
       this.gameState = this.gameRound.state
       this.gamePlayer = this.gameInfo['gamePlayer']
-      this.wx_config = this.gameInfo['wx_config']
+      this.wx_config = this.gameInfo['wxConfig']
 
       wx.config({
         debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
@@ -231,8 +232,12 @@ export default {
     bindSocketEvents: function(){
       var that = this
       that.socket.on('GameOpeningEvent', function(data){
+        console.log('GameOpeningEvent');
+        console.log(data);
 				that.gameState = data.gameState
         that.resultBoxVisible = false
+        console.log(that.gameInfo['gameRound']);
+        console.log(that.gameInfo['gameRound'].contact_required==1);
         if(that.gameState==GameState.open&&that.gamePlayer.token==undefined&&that.gameInfo['gameRound'].contact_required==1){
           that.ui.homeVisible = false
           that.ui.unstarted = false

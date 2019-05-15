@@ -16,14 +16,19 @@ export default class GamesController {
    */
   static async getInfo(ctx) {
     //try {
+    console.log('=================getinfo================');
     let code = ctx.params.code
     let number = ctx.params.number
     let parsed = ctx.request.body.parsed || {}
     let openid = parsed.openid
 
+    console.log('openid=======:',openid);
+
     let GameRound = getGameRoundModelByCode(code)
     let GamePlayer = getGamePlayerModelByCode(code)
     let GameResult = getGameResultModelByCode(code)
+
+    console.log(GameRound+'===='+GamePlayer+'======'+GameResult);
 
     // 取得游戏信息
     let gameRound = await GameRound.findOne({

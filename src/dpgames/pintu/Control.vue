@@ -165,7 +165,7 @@ export default {
       getGameInfoByNumber( parsed.number ).then((res)=>{
         that.socketNameSpace = "/channel-dppintu-"+ res.number
         that.gameRoundState = res.state
-        that.socket = io( that.socketNameSpace )
+        that.socket = io( that.socketNameSpace , { transports: [ 'websocket' ] })
         that.socket.on('connect', () => {
           that.loading = false;
           that.bindSocketEvents()
@@ -262,6 +262,7 @@ export default {
 		// 准备开始，玩家开始注册
 		openGameHandler: function(){
 			var that = this
+      console.log('openGameHandler==:');
 			that.socket.emit('OpenGameEvent', {}, function(data){
 					that.gameRoundState = data.gameRoundState
 					that.openGame()
