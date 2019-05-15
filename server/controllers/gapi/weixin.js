@@ -9,13 +9,13 @@ export default class WeixinController {
   /**
    *
    * @param {*} ctx
-   *            ctx.query.url
-   *            ctx.query.shareurl
+   *            ctx.body.url
+   *            ctx.body.shareurl
    */
   static async getWxJsConfig(ctx) {
     //try {
-      let url = ctx.query.url
-      let shareurl = ctx.query.shareurl
+      let url = ctx.request.body.url
+      let shareurl = ctx.request.body.shareurl
       var param = {
         debug: false,
         jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage'],

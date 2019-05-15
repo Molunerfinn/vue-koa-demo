@@ -11,16 +11,17 @@ module.exports = (sequelize, DataTypes) => {
     creator_id: DataTypes.BIGINT(11),
     start_at: DataTypes.DATE,
     end_at: DataTypes.DATE,
-    desc: DataTypes.TEXT,
+    desc: DataTypes.TEXT,         //游戏描述
     award_desc: DataTypes.TEXT,
-    duration: {
+    host: DataTypes.STRING(128),  //游戏主办方
+    duration: {                   //游戏时间，多少秒
       type: DataTypes.BIGINT(11),
       defaultValue: '0'
     },
-    code: {
+    code: {                       //缺省值为空，必填
       type: DataTypes.STRING(24),
       allowNull: false,
-      defaultValue: 'zhaobaba'
+      defaultValue: ''
     },
     appid: {
       type: DataTypes.STRING(64),
