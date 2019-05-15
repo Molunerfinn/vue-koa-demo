@@ -274,7 +274,7 @@ to{transform:rotate(0)}
 #informResultBox>h3{margin:0;margin-top:.8rem;color:#000;font-size:.8rem}
 #informResultBox>p{margin:0;margin-top:.8rem;padding:0 .625rem;color:#999;font-size:.6rem;line-height:.9rem}
 #informResultBox .confirm-btn{width:14.75rem}
-.logoImgBox{top:0}
+.logoImgBox{top:0; left: 0}
 #logoImg{z-index:120}
 .hostName{color:#fff000;text-decoration:none}
 .attentionBox{position:absolute;bottom:.3rem;left:0;width:100%;text-align:center;font-size:.7rem}
