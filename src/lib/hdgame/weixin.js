@@ -15,13 +15,12 @@ export function initWxConfig(wxConfig){
 
 console.log('wxConfig--------:',wxConfig);
   wx.config({
-    debug: true,
+    debug: false,
     appId: wxConfig.appId,
     timestamp: wxConfig.timestamp,
     nonceStr: wxConfig.nonceStr,
     signature: wxConfig.signature,
-    jsApiList:[]
-    // jsApiList: ["checkJsApi", "onMenuShareTimeline", "onMenuShareAppMessage", "onMenuShareQQ", "onMenuShareWeibo", "hideMenuItems", "showMenuItems", "hideAllNonBaseMenuItem", "showAllNonBaseMenuItem", "startRecord", "stopRecord", "onRecordEnd", "playVoice", "pauseVoice", "stopVoice", "uploadVoice", "downloadVoice", "translateVoice", "chooseImage", "previewImage", "uploadImage", "downloadImage", "getNetworkType", "openLocation", "getLocation", "hideOptionMenu", "showOptionMenu", "closeWindow", "scanQRCode", "chooseWXPay", "openProductSpecificView", "addCard", "chooseCard", "openCard"]
+    jsApiList: ["checkJsApi", "onMenuShareTimeline", "onMenuShareAppMessage", "onMenuShareQQ", "onMenuShareWeibo", "hideMenuItems", "showMenuItems", "hideAllNonBaseMenuItem", "showAllNonBaseMenuItem", "startRecord", "stopRecord", "onRecordEnd", "playVoice", "pauseVoice", "stopVoice", "uploadVoice", "downloadVoice", "translateVoice", "chooseImage", "previewImage", "uploadImage", "downloadImage", "getNetworkType", "openLocation", "getLocation", "hideOptionMenu", "showOptionMenu", "closeWindow", "scanQRCode", "chooseWXPay", "openProductSpecificView", "addCard", "chooseCard", "openCard"]
   });
   wx.error(function(res){
     // config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
@@ -37,8 +36,6 @@ export function setWxShare(wxShareArg, desc, url, callBack) {
   // url = removeUrlArg(url, "code", "state");
   url = wxShareArg.link
   console.log('share url =====================',url);
-
-
   var pyqUrl = url;
 
   wx.ready(function() {
@@ -48,7 +45,7 @@ export function setWxShare(wxShareArg, desc, url, callBack) {
     }
     try {
       wx.onMenuShareAppMessage({
-        title: decodeHtml(decodeHtml.activeName),
+        title: decodeHtml(wxShareArg.name),
         desc: desc,
         link: url,
         imgUrl: wxConfigShareImg,

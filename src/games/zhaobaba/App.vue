@@ -53,7 +53,7 @@
     </div>
 
 
-    <div id='joinNumLine' class='joinNumLine absCenter'
+    <div id='joinNumLine' class='joinNumLine absCenter hide'
       style='top:23.424rem;left:3.3706666666666667rem;color:rgb(255,255,255);font-size:0.5546666666666666rem; text-shadow:rgb(255,62,7) -1px -1px 0px, rgb(255,62,7) 0px -1px 0px, rgb(255,62,7) 1px -1px 0px, rgb(255,62,7) 1px 0px 0px, rgb(255,62,7) 1px 1px 0px, rgb(255,62,7) 0px 1px 0px, rgb(255,62,7) -1px 1px 0px, rgb(255,62,7) -1px 0px 0px;'>
       已有 <span id='joinNum' class="specil"
         style="color:rgb(255,255,255);font-size:0.5546666666666666rem;text-shadow:rgb(255,62,7) -1px -1px 0px, rgb(255,62,7) 0px -1px 0px, rgb(255,62,7) 1px -1px 0px, rgb(255,62,7) 1px 0px 0px, rgb(255,62,7) 1px 1px 0px, rgb(255,62,7) 0px 1px 0px, rgb(255,62,7) -1px 1px 0px, rgb(255,62,7) -1px 0px 0px;">4346</span>
@@ -69,6 +69,9 @@
       <img @touchend="handleStartGame" id="startBtnImg" class="slaveImg abs" :src="skinAssets.startBtnImg" style="width:7.35rem;height:2.25rem;top:16.55rem;left:4.6rem;" />
     </div>
 
+    <div id="logoImgBox" class="logoImgBox imgContainer absCenter" style="">
+      <img id="logoImg" class="slaveImg abs" :src="skinAssets.logoImgPath" style="width:auto;height:2.5rem;top:0.4rem;left:0.4rem;" />
+    </div>
   </div>
 
   <Game ref="game" :hg="hg" :command="gameState" :dataList="dataList" :gamePlayer="gamePlayer" @game-over="handleGameOver" v-show="ui.gameBoxVisible"> </Game>
@@ -199,6 +202,7 @@ export default {
         sign_up: false
       },
       skinAssets:{
+        logoImgPath: GameRes.skinAssets.logoImgPath,
         ruleIconPath: GameRes.skinAssets.ruleIconPath,
         homeBgImg: GameRes.skinAssets.homeBgPath,
         titleImg: GameRes.skinAssets.titleImgPath,
