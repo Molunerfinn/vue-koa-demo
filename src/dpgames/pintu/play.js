@@ -7,6 +7,7 @@ import Play from './Play.vue'
 // import VueRouter from 'vue-router'
 import '@/assets/common/css/play-base.css'
 import '@/assets/dp-pintu/css/game.css'
+import 'weui/dist/style/weui.css'
 
 //import EventBus  from '@/plugins/EventBus'
 //Vue.use(EventBus)

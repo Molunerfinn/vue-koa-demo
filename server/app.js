@@ -103,6 +103,10 @@ import games from './routes/gapi/games.js'
 //'/gapi/games/:code/:number/'
 router.use('/gapi/games', games.routes())
 
+import dpgames from './routes/gapi/dpgames.js'
+//'/gapi/games/:code/:number/'
+router.use('/gapi/dpgames', dpgames.routes())
+
 app.use(router.routes()) // 将路由规则挂载到Koa上。
 app.use(historyApiFallback())
 app.use(serve(path.resolve('dist'))) // 将webpack打包好的项目目录作为Koa静态文件服务的目录

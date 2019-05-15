@@ -489,6 +489,12 @@ const GameRes = {
     gameStartImg : skinResRoot+'/image/startbtn2.png',
     tipsImg : skinResRoot+'/image/tipsbtn.png',
     gameImg : skinResRoot+'/image/gameimg.jpg',
+    logoImgPath: skinResRoot + "/wx/logo.png",
+    ruleIconPath: skinResRoot + "/wx/ruleicon.png",
+    startImgPath: skinResRoot + "/wx/startbtn.png",
+    gameBgPath: skinResRoot + "/wx/gamebg.jpg",
+    homeBgPath: skinResRoot + "/wx/homebg.jpg",
+    titleImgPath: skinResRoot + "/wx/titleimg.png",
   },
   "openAccessKey": false
 }

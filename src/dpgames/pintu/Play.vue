@@ -1,11 +1,44 @@
 <template>
 <div id="app">
-
   <div class="sign_up" v-show="ui.sign_up">
-    sign_up</br>
-    name:<td><input id="name" ></input></td></br>
-    tel:<td><input id="tel" ></input></td></br>
-    <button  @click="post_msg()" type="button">commit</button>
+        <div class="weui-toptips weui-toptips_warn js_tooltips"></div>
+        <div id="awardUserInfoBox" class="page  input js_show">
+            <div class="awardUserInfoTitle">
+                <h2>填写联系信息</h2>
+                <p class="tipsColor">为了方便兑奖，请先填写您的联系信息</p>
+            </div>
+
+            <div class="awardUserInfoForm">
+                <div class="weui-cells weui-cells_form">
+                  <div style="center"><img  v-bind:src="gamePlayer.avatar"></div>
+                    <div class="weui-cell contactInput-ausername contactInput">
+                        <div class="weui-cell__hd"><label class="weui-label">姓名</label></div>
+                        <div class="weui-cell__bd">
+                            <input style="margin:0px;border: none;" id="name" class="weui-input theInputDecide textInput" propname="姓名" propkey="ausername" type="text" placeholder="请输入姓名">
+                        </div>
+                        <div class="weui-cell__ft warnIcon hide">
+                            <i class="weui-icon-warn"></i>
+                        </div>
+                    </div>
+                    <div class="weui-cell contactInput-aphone contactInput">
+                        <div class="weui-cell__hd"><label class="weui-label">联系电话</label></div>
+                        <div class="weui-cell__bd">
+                            <input style="margin:0px;border: none;" id="tel" class="weui-input theInputDecide textInput" propname="联系电话" propkey="aphone" type="text" placeholder="请输入联系电话">
+                        </div>
+                        <div class="weui-cell__ft warnIcon phoneWarn hide">
+                            <i class="weui-icon-warn"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="weui-cells__tips">
+                注:若因未填写资料或资料填写错误导致无法兑奖，主办方不承担相关法律责任;
+            </div>
+            <div class="weui-btn-area">
+                <a class="weui-btn weui-btn_primary userSubmitBtn" @click="post_msg()" href="javascript:" id="showTooltips">提交</a>
+            </div>
+        </div>
   </div>
 
   <div class="home" v-show="ui.homeVisible">
@@ -33,13 +66,14 @@
 
   <Game ref="game" :hg="hg" :gamePlayer="gamePlayer" :timeToEnd="timeToEnd" :command="gameState" @game-over="handleGameOver" v-show="ui.gameBoxVisible"> </Game>
   <LoadToast ref="load-toast" is-loading="loadToast.isLoading"> </LoadToast>
-  <ResultBox ref="result-box" :home-callback="home" :again-callback="handleGameRestart" v-show="resultBoxVisible" :params="resultBoxParams" :command="resultBoxCommand"> </ResultBox>
+  <ResultBox ref="result-box" :home-callback="home" @rankBtnClicked="getRank" :again-callback="handleGameRestart" v-show="resultBoxVisible" :params="resultBoxParams" :command="resultBoxCommand"> </ResultBox>
+  <RuleBox :ruleIconUrl="skinAssets.ruleIconPath" :game-round="gameRound" :game-player="gamePlayer" :params="resultBoxParams" :command="ruleBoxCommand" @commandDone="handleResetRuleCommand"> </RuleBox>
 </div>
 </template>
 
 <script>
 import wx from 'weixin-js-sdk'
-
+import weui from 'weui.js'
 import Game from './game/Game.vue'
 import GameRes from './game/GameRes'
 import GameArg from './game/GameArg'
@@ -51,7 +85,8 @@ import {
   postMsg,
 } from '@/api/dpgame/pintu.js'
 import LoadToast from '@/components/LoadToast.vue'
-import ResultBox from '@/components/DpGameResult.vue'
+import ResultBox from './ResultBox.vue'
+import RuleBox from './RuleBox.vue'
 import {
   GameBackgroundMusicLoadEvent
 } from '@/lib/GameEvent'
@@ -76,7 +111,8 @@ export default {
   components: {
     Game,
     LoadToast,
-    ResultBox
+    ResultBox,
+    RuleBox
   },
   created() {
     var that = this
@@ -202,6 +238,7 @@ export default {
       wx_config:{},
       first_start: true,
       gamePlayer: {},
+      gameRound:{},
       hg: {
         showGameBox: true
       },
@@ -218,6 +255,13 @@ export default {
         loadToastVisible: false,
         wait: false
       },
+      skinAssets:{
+        logoImgPath: GameRes.skinAssets.logoImgPath,
+        ruleIconPath: GameRes.skinAssets.ruleIconPath,
+        homeBgImg: GameRes.skinAssets.homeBgPath,
+        titleImg: GameRes.skinAssets.titleImgPath,
+        startBtnImg: GameRes.skinAssets.startImgPath
+      },
       loadToast: {
         isLoading: false,
         text: null
@@ -225,6 +269,7 @@ export default {
       resultBoxVisible: false, //游戏结果页面
       resultBoxParams: {},
       resultBoxCommand: null,
+      ruleBoxCommand: null,
       timeToEnd: 30
     }
   },
@@ -236,6 +281,7 @@ export default {
         console.log(data);
 				that.gameState = data.gameState
         that.resultBoxVisible = false
+        console.log("that.gameInfo====:",that.gameInfo);
         console.log(that.gameInfo['gameRound']);
         console.log(that.gameInfo['gameRound'].contact_required==1);
         if(that.gameState==GameState.open&&that.gamePlayer.token==undefined&&that.gameInfo['gameRound'].contact_required==1){
@@ -294,27 +340,48 @@ export default {
 			});
   },
     post_msg: function () {
+      console.log('========post_msg========');
+      var msg_is_ok = true
       var realname = document.getElementById('name').value
       var tel = parseInt(document.getElementById('tel').value)
 
-      const parsed = queryString.parse(location.search);
-      var number = parsed.number;
-      this.gamePlayer.realname = realname
-      this.gamePlayer.tel = tel
-      var data = {
-        gamePlayer: this.gamePlayer
+      if (realname == '') {
+        weui.form.showErrorTips({
+          ele: document.getElementById("name"),
+          msg: '姓名不能为空'
+        });
+        msg_is_ok = false
       }
-      postMsg(number,data).then((res)=>{
-        this.gamePlayer = res
-        this.ui.sign_up = false
+
+      var tel0 = /^1\d{10}$/
+      var ema = document.getElementById('tel').value
+      if (tel0.test(ema) == false) {
+          weui.form.showErrorTips({
+            ele: document.getElementById("tel"),
+            msg: '电话格式错误'
+          });
+          msg_is_ok = false
+      }
+      if(msg_is_ok){
+        const parsed = queryString.parse(location.search);
+        var number = parsed.number;
+        var data = {
+          gamePlayer: this.gamePlayer,
+          realname:realname,
+          tel:tel
+        }
+        postMsg(number,data).then((res)=>{
+          this.gamePlayer = res
+          this.ui.sign_up = false
+          this.ui.homeVisible = true
+          return res
+        })
         this.ui.unstarted = false
         this.ui.wait = true
-        return res
-      })
-
-      this.ui.unstarted = false
-      this.ui.wait = true
-      this.ui.homeVisible = true
+        this.ui.homeVisible = true
+        let that = this
+        that.ruleBoxCommand = 'showIcon'
+      }
     },
     handleStartGame(event) {
       event.preventDefault()
@@ -343,6 +410,9 @@ export default {
       function handleFail() {
         complete(false);
       }
+
+      // rulebox 处理完命令以后，需要重置，以便下次使用同样命令时也可以触发
+
 
       function handleResult() {
         function logs() {
@@ -452,7 +522,15 @@ export default {
         this.hideLoadToast();
         HdGame.tlog('gameOver', data);
         var r = data;
-        console.log('rrrrrrr',r);
+
+        if(r.score==9999.99){
+          r.score=0
+        }
+        if(r.bestScore==9999.99){
+          r.bestScore=0
+        }
+
+          console.log('rrrrrrr',r);
         var isShowPoup = true;
         if (r.rt == 0) {
           var arg = {
@@ -530,6 +608,13 @@ export default {
 
       params = info = option = null;
 
+    },
+    handleResetRuleCommand(){
+      this.ruleBoxCommand = null
+    },
+    getRank(event){
+      console.log("App - getRank ")
+      this.ruleBoxCommand = 'showRank'
     },
     initBackgroundMusic() {
     },
