@@ -1787,7 +1787,6 @@ co-wechat-oauth@^2.0.1:
 co-wechat@^2.3.0:
   version "2.3.0"
   resolved "https://registry.npm.taobao.org/co-wechat/download/co-wechat-2.3.0.tgz#089ea0d5986f0338d39137ddfc8b93235a28cde6"
-  integrity sha1-CJ6g1ZhvAzjTkTfd/IuTI1oozeY=
   dependencies:
     ejs ">=1.0.0"
     raw-body "^2.2.0"
@@ -2652,7 +2651,6 @@ ee-first@1.1.1:
 ejs@>=1.0.0:
   version "2.6.1"
   resolved "https://registry.npm.taobao.org/ejs/download/ejs-2.6.1.tgz#498ec0d495655abc6f23cd61868d926464071aa0"
-  integrity sha1-SY7A1JVlWrxvI81hho2SZGQHGqA=
 
 ejs@^2.5.6:
   version "2.5.6"
@@ -4769,6 +4767,10 @@ joi@^6.10.1:
     moment "2.x.x"
     topo "1.x.x"
 
+jquery.qrcode@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/jquery.qrcode/-/jquery.qrcode-1.0.3.tgz#98ad34deb7f401d72981c6769790cbd38aaa39f0"
+
 jquery@^3.4.0:
   version "3.4.0"
   resolved "https://registry.npm.taobao.org/jquery/download/jquery-3.4.0.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fjquery%2Fdownload%2Fjquery-3.4.0.tgz#8de513fa0fa4b2c7d2e48a530e26f0596936efdf"
@@ -6817,7 +6819,6 @@ q@^1.1.2:
 qrcode@^1.3.3:
   version "1.3.3"
   resolved "https://registry.npm.taobao.org/qrcode/download/qrcode-1.3.3.tgz#5ef50c0c890cffa1897f452070f0f094936993de"
-  integrity sha1-XvUMDIkM/6GJf0UgcPDwlJNpk94=
   dependencies:
     can-promise "0.0.1"
     dijkstrajs "^1.0.1"
@@ -6837,9 +6838,16 @@ qs@~6.3.0:
   version "6.3.0"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.3.0.tgz#f403b264f23bc01228c74131b407f18d5ea5d442"
 
-query-string@4.2.3, query-string@^4.1.0:
+query-string@^4.1.0:
   version "4.2.3"
   resolved "https://registry.npm.taobao.org/query-string/download/query-string-4.2.3.tgz#9f27273d207a25a8ee4c7b8c74dcd45d556db822"
+  dependencies:
+    object-assign "^4.1.0"
+    strict-uri-encode "^1.0.0"
+
+query-string@^4.2.3:
+  version "4.3.4"
+  resolved "https://registry.yarnpkg.com/query-string/-/query-string-4.3.4.tgz#bbb693b9ca915c232515b228b1a02b609043dbeb"
   dependencies:
     object-assign "^4.1.0"
     strict-uri-encode "^1.0.0"
@@ -7379,7 +7387,6 @@ sax@0.5.x:
 sax@0.6.x:
   version "0.6.1"
   resolved "https://registry.npm.taobao.org/sax/download/sax-0.6.1.tgz#563b19c7c1de892e09bfc4f2fc30e3c27f0952b9"
-  integrity sha1-VjsZx8HeiS4Jv8Ty/DDjwn8JUrk=
 
 sax@^1.2.1, sax@^1.2.4:
   version "1.2.4"
@@ -8736,7 +8743,6 @@ webpack@^3.12.0:
 wechat-crypto@0.0.2:
   version "0.0.2"
   resolved "https://registry.npm.taobao.org/wechat-crypto/download/wechat-crypto-0.0.2.tgz#a55443ec0810f4c1992a293a27860839700c6369"
-  integrity sha1-pVRD7AgQ9MGZKik6J4YIOXAMY2k=
 
 weixin-js-sdk@^1.4.0-test:
   version "1.4.0-test"
@@ -8893,7 +8899,6 @@ xml-name-validator@^2.0.1:
 xml2js@0.4.4:
   version "0.4.4"
   resolved "https://registry.npm.taobao.org/xml2js/download/xml2js-0.4.4.tgz#3111010003008ae19240eba17497b57c729c555d"
-  integrity sha1-MREBAAMAiuGSQOuhdJe1fHKcVV0=
   dependencies:
     sax "0.6.x"
     xmlbuilder ">=1.0.0"
@@ -8901,7 +8906,6 @@ xml2js@0.4.4:
 xmlbuilder@>=1.0.0:
   version "13.0.1"
   resolved "https://registry.npm.taobao.org/xmlbuilder/download/xmlbuilder-13.0.1.tgz#0770a63c8672e38eea413ed13080de4fdc01f0ef"
-  integrity sha1-B3CmPIZy447qQT7RMIDeT9wB8O8=
 
 xmlhttprequest-ssl@~1.5.4:
   version "1.5.5"
