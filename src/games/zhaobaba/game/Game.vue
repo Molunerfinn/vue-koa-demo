@@ -164,16 +164,6 @@ export default {
         this.startGame();
       }
 
-      //this.hg.sound.play("startButton")
-      // hg.sound.get("0",
-      // function(sound) {
-      //   if (g_config.style != 51 && g_config.style != 49 && g_config.style != 9 && g_config.style != 48 && g_config.style != 57 && g_config.style != 62 && g_config.style != 58 && g_config.style != 65 && g_config.style != 69) {
-      //     if (g_config.style == 27 && !HdGame.getLocalStorage(soundPauseCord)) {
-      //       hg.sound.allowPlay = true
-      //     }
-      //     hg.sound.readyPlay(0, 0, "loop")
-      //   }
-      // })
     },
 
     handleRestartGame() {

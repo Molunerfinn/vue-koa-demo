@@ -22,13 +22,13 @@ export default class GamesController {
     let parsed = ctx.request.body.parsed || {}
     let openid = parsed.openid
 
-    console.log('openid=======:',openid);
+    console.log('openid=======:', openid);
 
     let GameRound = getGameRoundModelByCode(code)
     let GamePlayer = getGamePlayerModelByCode(code)
     let GameResult = getGameResultModelByCode(code)
 
-    console.log(GameRound+'===='+GamePlayer+'======'+GameResult);
+    console.log(GameRound + '====' + GamePlayer + '======' + GameResult);
 
     // 取得游戏信息
     let gameRound = await GameRound.findOne({
@@ -64,10 +64,10 @@ export default class GamesController {
     }
     // 每个游戏 GameRound
     let url = ctx.header.referer
-    console.log('url===================:',url);
+    console.log('url===================:', url);
     let gameInfo = await gameRound.getInfo()
     let wxConfig = await getWxJsConfig(url)
-    console.log('wxConfig=======:',wxConfig);
+    console.log('wxConfig=======:', wxConfig);
     var allInfo = {
       gameRound: gameInfo,
       gamePlayer: playerInfo,
@@ -238,12 +238,25 @@ export default class GamesController {
         pageSize: 100,
         total: 100
       }
-      console.log('rankInfo====:',rankInfo);
+      console.log('rankInfo====:', rankInfo);
       ctx.body = rankInfo
     } catch (error) {
       ctx.throw(messageContent.ResponeStatus.CommonError, `show round ${ctx.params.id} fail: ` + error, {
         expose: true
       })
     }
+  }
+
+  static async getRoundState(ctx) {
+    let code = ctx.params.code
+    let GameRound = getGameRoundModelByCode(code)
+    let number = ctx.params.number
+
+    let gameRound = await GameRound.findOne({
+      where: {
+        number
+      }
+    })
+    ctx.body = gameRound.getInfo();
   }
 }

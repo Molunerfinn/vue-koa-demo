@@ -7,5 +7,6 @@ router.post('/setAchieve', game.setAchieve)
 router.post('/getInfo', game.getInfo)
 router.post('/addPlayer', game.addPlayer)
 router.post('/getRanking', game.getRanking)
+router.post('/getRoundState', game.getRoundState)
 
 export default router
