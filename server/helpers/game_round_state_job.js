@@ -2,9 +2,12 @@ const {
   CronJob
 } = require('cron')
 const moment = require('moment')
-const db = require('../models/index')
+const {getGameRoundModelByCode} = require('./model')
 
 const { GameRoundStates }  = require('../models/constant')
+const { Sequelize } = require('../models')
+const Op = Sequelize.Op;
+
 /**
  * 为当前的游戏添加计划任务，定时开始游戏，结束游戏
  * @param {*} gameround
@@ -20,7 +23,7 @@ function addGameRoundStartJob(gameround) {
     //游戏状态为 ‘新建’， 才可以开始
     console.log(" gameround.start_at= ", gameround.start_at.toLocaleString())
     if ((gameround.start_at > new Date()) && (gameround.state == GameRoundStates.created)) {
-      let Model = db[gameround.modelName]
+      let Model = getGameRoundModelByCode( gameround.code )
       let startDate = gameround.start_at
       let gameRoundId = gameround.id
       const job = new CronJob({
@@ -61,7 +64,7 @@ function addGameRoundEndJob(gameround) {
     //游戏状态为 ‘新建’， 才可以开始
     console.log(" gameround.start_at= ", gameround.start_at.toLocaleString())
     if ((gameround.end_at > new Date()) && (gameround.state != GameRoundStates.completed)) {
-      let Model = db[gameround.modelName]
+      let Model = getGameRoundModelByCode( gameround.code )
       let startDate = gameround.end_at
       let gameRoundId = gameround.id
       const job = new CronJob({
