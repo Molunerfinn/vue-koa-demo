@@ -63,7 +63,7 @@ function bindMethods(model) {
       where: {
         game_round_id: this.game_round_id,
         score: {
-          [Op.gt]: this.score
+          [Op.gt]: this.max_score
         }
       }
     })
@@ -71,7 +71,7 @@ function bindMethods(model) {
     let eqcount = await model.count({
       where: {
         game_round_id: this.game_round_id,
-        score: this.score,
+        score: this.max_score,
         created_at: {
           [Op.lt]: this.created_at
         },
@@ -99,7 +99,7 @@ function bindMethods(model) {
       where: {
         game_round_id: this.game_round_id,
         score: {
-          [Op.lt]: this.score
+          [Op.lt]: this.max_score
         }
       }
     })
@@ -107,7 +107,7 @@ function bindMethods(model) {
     let eqcount = await model.count({
       where: {
         game_round_id: this.game_round_id,
-        score: this.score,
+        score: this.max_score,
         created_at: {
           [Op.lt]: this.created_at
         },
