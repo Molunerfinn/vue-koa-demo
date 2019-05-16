@@ -87,17 +87,17 @@ import weixin from './routes/gapi/weixin.js'
 router.use('/gapi/weixin', weixin.routes())
 
 
-import gameBargain from './routes/gapi/game/bargain.js'
-router.use('/gapi/bargain', gameBargain.routes())
+//import gameBargain from './routes/gapi/game/bargain.js'
+//router.use('/gapi/bargain', gameBargain.routes())
 
-import gameIdo from './routes/gapi/game/ido.js'
-router.use('/gapi/ido', gameIdo.routes())
+//import gameIdo from './routes/gapi/game/ido.js'
+//router.use('/gapi/ido', gameIdo.routes())
 
-import gamePintu from './routes/gapi/dpgame/pintu.js'
-router.use('/gapi/dppintu', gamePintu.routes())
+//import gamePintu from './routes/gapi/dpgame/pintu.js'
+//router.use('/gapi/dppintu', gamePintu.routes())
 
-import gameZhaobaba from './routes/gapi/game/zhaobaba.js'
-router.use('/gapi/zhaobaba', gameZhaobaba.routes())
+//import gameZhaobaba from './routes/gapi/game/zhaobaba.js'
+//router.use('/gapi/zhaobaba', gameZhaobaba.routes())
 
 import games from './routes/gapi/games.js'
 //'/gapi/games/:code/:number/'
