@@ -4,6 +4,7 @@
       <div  >
         <div id="qrcodeCanvas"></div>
         <div class="bg-nei-top">
+                <img src="" id="share-qrcode-img">
         				<img src="~@/assets/dp-pintu/image/skin1/tu_03.png" class="bg-nei-top-erwei" style="display:none;">
                 <div class="bg-nei-top-right"><span></span><img src="~@/assets/dp-pintu/image/skin1/tu_05.png"></div>
         				<div class="bg-nei-top-zhong" ><img src="~@/assets/dp-pintu/image/skin1/wx/bgtop.gif"  v-show="computedGameState=='open'||computedGameState=='started'">
@@ -21,7 +22,6 @@
         <div class="box-body">
           <div>    <img src="~@/assets/dp-pintu/image/skin1/yao_02.png">      </div>
           <button class="start btn yao-btn btn-primary" @click="openGameHandler" >准备开始</button>
-          <img src="" id="share-qrcode-img">
         </div>
       </div>
 
@@ -386,6 +386,12 @@ export default {
 }
 .base{
 
+}
+#share-qrcode-img{
+  position:absolute;
+  left:5vw;
+  width:auto;
+  height: 60%;
 }
 
 .dp-pintu {
