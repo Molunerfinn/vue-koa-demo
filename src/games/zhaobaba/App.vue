@@ -92,7 +92,8 @@ import weui from 'weui.js'
 import {
   setAchievebycode,
   postMsg,
-  getGameResult
+  getGameResult,
+  getRoundState
 } from '@/api/games/zhaobaba'
 import LoadToast from '@/components/LoadToast.vue'
 import MessageBox from '@/components/MessageBox.vue'
@@ -225,8 +226,7 @@ export default {
     }
   },
   methods: {
-
-    post_msg: function () {
+  post_msg: function () {
       console.log('========post_msg========');
       var msg_is_ok = true
       var realname = document.getElementById('name').value
@@ -269,8 +269,20 @@ export default {
     },
     handleStartGame(event) {
       event.preventDefault()
-      this.messageBoxCommand = "show"
+      const parsed = queryString.parse(location.search);
+      var number = parsed.number;
 
+      var data = {
+        number: number
+      }
+
+      getRoundState(number,data).then((res)=>{
+        this.gameRound = res
+        console.log("gameRound.state---:",this.gameRound.state);
+        if(this.gameRound.state == "created"){
+          console.log("game has not open");
+        }
+      })
 
       let that = this
       this.ruleBoxCommand = 'hideIcon'
