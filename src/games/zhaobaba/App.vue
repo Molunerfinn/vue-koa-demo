@@ -300,7 +300,6 @@
           number: number
         }
         let that = this
-        this.ruleBoxCommand = 'hideIcon'
         await getRoundState(number, data).then(res => {
           this.gameRound = res
           console.log('gameRound.state---:', this.gameRound.state)
@@ -322,6 +321,7 @@
         console.log(`handleStartGame=${this.gameState}`)
         this.activateSound()
         function showGame() {
+          that.ruleBoxCommand = 'hideIcon'
           that.ui.homeVisible = false
           that.ui.gameBoxVisible = true
           let hg = that.hg
