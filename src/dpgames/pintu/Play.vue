@@ -234,6 +234,7 @@ export default {
   data() {
     return {
       debug: true,
+      hasFinish: false,
       gameInfo:{},
       wx_config:{},
       first_start: true,
@@ -489,27 +490,13 @@ export default {
     // 游戏结束，设置游戏成绩
     gameOver(_gameScore, callBack, option, showAjaxBar) {
 
-      if (_gameScore === 'fail') {
-          setTimeout(function () {
-        }, 900);
-        return;
-      }
-      if (isNaN(_gameScore) || _gameScore < 0) {
-        _gameScore = 0;
-      }
-      _gameScore = parseFloat(_gameScore).toFixed(2);
-      this.showLoadToast('数据加载中');
-      var _gameScoreStr = _gameScore + '';
-
       var info = {
         headImg: this.gamePlayer.avatar
       };
-
       const parsed = queryString.parse(location.search);
       var params = {
         gameId: 50,
         style: 22,
-        achieve: HdGame.encodeBase64('"' + _gameScoreStr + '"') + "0jdk7Deh8T2z5W3k0j44dTZmdTOkZGM",
         score:_gameScore,
         parsed:parsed
       };
@@ -518,96 +505,43 @@ export default {
       params.info = JSON.stringify(info);
 
       Object.assign(params, option);
-      setAchievebycode(number,params).then(data => {
-        this.hideLoadToast();
-        HdGame.tlog('gameOver', data);
-        var r = data;
+      if(this.hasFinish == false){
+        setAchievebycode(number,params).then(data => {
+          this.hideLoadToast();
+          HdGame.tlog('gameOver', data);
+          var r = data;
 
-        if(r.score==9999.99){
-          r.score=0
-        }
-        if(r.bestScore==9999.99){
-          r.bestScore=0
-        }
-
+          if(r.score==9999.99){
+            r.score=0
+          }
+          if(r.bestScore==9999.99){
+            r.bestScore=0
+          }
           console.log('rrrrrrr',r);
-        var isShowPoup = true;
-        if (r.rt == 0) {
-          var arg = {
-            isSuc: r.isSuc,
-            gameScore: r.score,
-            minScore: 0, //到多少分可以抽奖
-            bestScore: r.bestScore,
-            gameType: gameType,
-            rank: r.rank,
-            beat: r.beat,
-            isEqualDraw: false,
-            bestCostTime: r.bestCostTime,
-            headImg: this.gamePlayer.avatar
-          };
-
-          g_config.playerId = r.playerId;
-          this.resultBoxParams = arg
-          this.resultBoxCommand = "showResult"
-          this.resultBoxVisible = true //显示游戏结果
-          //PlayInfo.addPlayTimes(1);
-          g_config.achieveToken = r.achieveToken;
-        } else if (r.rt == 11) {
-          alert("已被检测到有作弊行为，再次被检测将永久禁止参与本游戏！");
-        } else if (r.rt == 12) {
-          alert("由于作弊行为，该微信号已永久禁止参与本游戏！");
-        } else if (r.rt == 23) { //活动已经结束
-          HdGame.statusMsg(3);
-        } else if (r.rt == 44) {
-          HdGame.statusMsg(8);
-        } else {
-          callBack && (isShowPoup = callBack({
-            rt: r.rt,
-            msg: r.msg
-          }, r));
-          if (isShowPoup !== false) {
-            HdGame.logStd("gameOverErr", 'style=' + g_config.style + ' gameScore=' + _gameScore + ' faiOpenId=tryPlay_12435152 data=' + (data));
-            HdGame.resulePoup.show({
-              isSuc: false,
-              gameScore: '--',
-              minScore: 50,
-              bestScore: '--',
+          if (r.rt == 0) {
+            var arg = {
+              isSuc: r.isSuc,
+              gameScore: r.score,
+              minScore: 0, //到多少分可以抽奖
+              bestScore: r.bestScore,
               gameType: gameType,
-              rank: '--',
-              beat: '--',
-              isEqualDraw: false
-            });
+              rank: r.rank,
+              beat: r.beat,
+              isEqualDraw: false,
+              bestCostTime: r.bestCostTime,
+              headImg: this.gamePlayer.avatar
+            };
+
+            g_config.playerId = r.playerId;
+            this.resultBoxParams = arg
+            this.resultBoxCommand = "showResult"
+            this.resultBoxVisible = true //显示游戏结果
+            //PlayInfo.addPlayTimes(1);
+            g_config.achieveToken = r.achieveToken;
           }
-          return;
-        }
-        if (r.rt !== 0) {
-          callBack && callBack({
-            rt: r.rt,
-            msg: r.msg
-          }, r);
-        }
-      }).catch(err => {
-        this.hideLoadToast();
-        HdGame.otherAjaxComplete();
-        var rt = {
-          rt: -999,
-          msg: "ajax返回错误"
-        };
-        if (!window.navigator.onLine) {
-          rt.msg = "网络连接失败，请检查你的网络设置!";
-        }
-        if (callBack) {
-          if (callBack(rt, rt)) {
-            alert(rt.msg);
-          }
-        } else {
-          alert(rt.msg);
-        }
-        HdGame.tlog('gameOverErr', JSON.stringify(arguments));
+          this.hasFinish = true
       })
-
-      params = info = option = null;
-
+}
     },
     handleResetRuleCommand(){
       this.ruleBoxCommand = null
