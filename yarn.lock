@@ -6809,7 +6809,8 @@ q@^1.1.2:
 
 qrcode@^1.3.3:
   version "1.3.3"
-  resolved "http://registry.npm.taobao.org/qrcode/download/qrcode-1.3.3.tgz#5ef50c0c890cffa1897f452070f0f094936993de"
+  resolved "https://registry.npm.taobao.org/qrcode/download/qrcode-1.3.3.tgz#5ef50c0c890cffa1897f452070f0f094936993de"
+  integrity sha1-XvUMDIkM/6GJf0UgcPDwlJNpk94=
   dependencies:
     can-promise "0.0.1"
     dijkstrajs "^1.0.1"

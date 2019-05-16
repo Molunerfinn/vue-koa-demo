@@ -174,9 +174,9 @@ export default {
       if( wxConfig ){
         HdGame.initWxConfig( wxConfig )
 
-        let wxShareArg = { title: this.gameRound.name,
+        let wxShareArg = { title: this.gameRound.name, desc: '请点击查看详情...',
           link: gameUrlBase + '/authwx/game?gameurl='+gameUrlBase+this.playPath,
-          imgUrl: gameUrlBase + '/static/game/zhaobaba/image/share.jpg'
+          imgUrl: gameUrlBase + '/static/game/zhaobaba/skin/image/wx/share.jpg'
         }
         HdGame.setWxShare( wxShareArg )
       }
