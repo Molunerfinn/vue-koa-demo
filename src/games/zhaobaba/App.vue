@@ -78,8 +78,7 @@
   <LoadToast ref="load-toast" is-loading="loadToast.isLoading"> </LoadToast>
   <ResultBox ref="result-box" @homeBtnClicked="home" @rankBtnClicked="getRank" @Restart="handleGameRestart" v-show="resultBoxVisible" :params="resultBoxParams" :command="resultBoxCommand"> </ResultBox>
   <RuleBox :ruleIconUrl="skinAssets.ruleIconPath" :game-round="gameRound" :game-player="gamePlayer" :params="resultBoxParams" :command="ruleBoxCommand" @commandDone="handleResetCommand"> </RuleBox>
-  <MessageBox   :command="messageBoxCommand" @commandDone="handleResetCommand"> </MessageBox>
-
+  <MessageBox  :msg="msg" :command="messageBoxCommand" @commandDone="handleResetCommand"> </MessageBox>
 </div>
 </template>
 
@@ -194,6 +193,8 @@ export default {
     return {
       soundIconClass: "soundIconOff soundIcon",
       dataList:[],
+      msg:'',
+      canPlay:true,
       gamePlayerRank: [],
       gamePlayer: {},
       gameRound: {},
@@ -205,7 +206,8 @@ export default {
         homeVisible: true, // 初始页面是否可见，游戏时需要隐藏
         gameBoxVisible: false, // 游戏页面
         loadToastVisible: false,
-        sign_up: false
+        sign_up: false,
+        MessageBoxVisible:false
       },
       skinAssets:{
         logoImgPath: GameRes.skinAssets.logoImgPath,
@@ -267,7 +269,7 @@ export default {
         that.ruleBoxCommand = 'showIcon'
       }
     },
-    handleStartGame(event) {
+    async handleStartGame(event) {
       event.preventDefault()
       const parsed = queryString.parse(location.search);
       var number = parsed.number;
@@ -275,43 +277,31 @@ export default {
       var data = {
         number: number
       }
-
-      getRoundState(number,data).then((res)=>{
+      let that = this
+      this.ruleBoxCommand = 'hideIcon'
+      await getRoundState(number,data).then((res)=>{
         this.gameRound = res
         console.log("gameRound.state---:",this.gameRound.state);
         if(this.gameRound.state == "created"){
-          console.log("game has not open");
+          this.messageBoxCommand = 'show'
+          this.msg = 'game has not open'
+          that.canPlay = false
+        }else if(this.gameRound.state == "completed"){
+          this.messageBoxCommand = 'show'
+          this.msg = 'game has closed'
+          that.canPlay = false
+        }else if(this.gameRound.state == "started"){
+          that.canPlay = true
         }
+        console.log("this.canPlay",this.canPlay);
       })
-
-      let that = this
-      this.ruleBoxCommand = 'hideIcon'
 
       //点击开始按钮，开始游戏
       console.log(`handleStartGame=${this.gameState}`)
-
-      // HdGame.tlog("startBtnAjax：", "调用了");
       this.activateSound();
-      //HdGame.ajaxLoad.show();
-
-      // $.Deferred('resolve')
-      //   .then(checkAreaLimit)
-      //   .then(checkGameState)
-      //   .then(checkJoinNum)
-      //   .then(checkLuckDrawAndBlack)
-      //   .then(checkForcedAttention)
-      //   .then(checkAccessKeyOnce)
-      //   .then(beforeStartGame)
-      //   .then(handleResult)
-      //   .fail(handleFail);
       function showGame() {
-
-        //$('.homeBtnBox,.bottomSkill').hide();
-        //$('.footerBox').hide();
         that.ui.homeVisible = false
         that.ui.gameBoxVisible = true
-        //$('.home, #ruleImg').hide();
-        //$('.gameBox').show();
         let hg = that.hg
         if (typeof hg.sound.cache[0] !== 'undefined' && typeof hg.sound.cache[0].playing !== 'undefined' && !hg.sound.cache[0].playing) {
           hg.sound.readyPlay(0, 0, 'loop');
@@ -320,12 +310,6 @@ export default {
 
       // 无论是否显示游戏界面都需要调用的功能
       function complete(result) {
-        //this.hideLoadToast();
-        //HdGame.otherAjaxComplete();
-
-        // if (callback) {
-        //   callback.call(self, result, event, data, showGame);
-        // }
       }
       // 不满足显示界面的条件
       function handleFail() {
@@ -334,29 +318,14 @@ export default {
 
       function handleResult() {
         function logs() {
-          // HdGame.logDog(1000002, 22);
-          // HdGame.LogFaiOpenId(1000230, 0);
-          // HdGame.logObjDog(1000092, 1, 50);
         }
-
         function cookies() {
-          // var cookOpt = {
-          //   domain: 'hd.getstore.cn',
-          //   expires: 1,
-          //   path: '/'
-          // };
-          //$.cookie('gps_province', HdGame.encodeUrl(g_config.ipInfo.provice), cookOpt);
-          //$.cookie('gps_city', HdGame.encodeUrl(g_config.ipInfo.city), cookOpt);
         }
-
+        if(that.canPlay == true){
         showGame();
-
+        }
         console.log('showGameBox: ' + that.hg.showGameBox);
-
         logs();
-
-        //HdGame.addJoinGameBehavior();
-
         cookies();
 
         complete(true);

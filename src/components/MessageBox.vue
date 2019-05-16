@@ -4,7 +4,7 @@
 
     <div class="weui-dialog">
       <div class="weui-dialog__bd">
-        <span id="statusTip-msg"></span><br/><span id="sTime"></span></div>
+        <span id="statusTip-msg">{{msg}}</span><br/><span id="sTime"></span></div>
       <div class="weui-dialog__ft"><a href="javascript:;" @touchstart="handleOK" class="weui-dialog__btn weui-dialog__btn_primary">知道了</a></div>
     </div>
 
