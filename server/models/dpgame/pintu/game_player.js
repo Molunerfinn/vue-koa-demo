@@ -65,7 +65,6 @@ function addHooks(model) {
     player.score = 9999.99
     player.max_score = 9999.99
   })
-
 }
 
 function bindMethods(model) {

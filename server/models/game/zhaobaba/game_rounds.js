@@ -53,9 +53,17 @@ module.exports = (sequelize, DataTypes) => {
     },
   })
 
+  addHooks(model)
   bindMethods(model)
 
   return model
+}
+
+function addHooks(model) {
+  model.addHook('beforeCreate', 'set_defults', (game, options) => {
+    game.code = 'zhaobaba'
+
+  })
 }
 
 function bindMethods(model) {
