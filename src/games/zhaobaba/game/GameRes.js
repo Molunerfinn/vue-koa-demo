@@ -1,6 +1,6 @@
 const sharedBase = '/static/shared'
 const imageBase = '/static/game/zhaobaba/image'
-const skinResRoot = '/static/game/zhaobaba/skin/image'
+const skinResRoot = '/static/game/zhaobaba/skin2/image'
 
 const GameRes = {
     "loadingStyle": 1,
