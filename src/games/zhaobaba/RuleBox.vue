@@ -79,7 +79,7 @@
          <div class="poupMainInfo">
            <div id="noRank" class='' v-show="!hasRank">暂无排名</div>
            <div id="rankMain" class="getRankHeight" v-show="hasRank">
-             <div style="margin-top:0.7rem;margin-left: 0.25rem;">当前排名：<span id="rank"></span> （只显示前<span id="showRankNum">100</span>名）</div>
+             <div style="margin-top:0.7rem;margin-left: 0.25rem;">当前排名：<span id="rank"> {{currentPlayerRank}}</span> （只显示前<span id="showRankNum">100</span>名）</div>
              <div style="padding:0rem 0.5rem">
                <table class="rankTable" cellspacing="0" cellpadding="0">
                  <thead>
@@ -209,7 +209,7 @@ export default {
       },
       gamePlayerRank: [],
       menuLen: 2,
-      thisPlayer:{}
+      currentPlayer:{}
     }
   },
   created() {
@@ -233,6 +233,9 @@ export default {
   computed:{
     hasRank(){
       return this.gamePlayerRank.length > 0
+    },
+    currentPlayerRank(){
+      return this.currentPlayer.rank && this.currentPlayer.rank>=0 ? this.currentPlayer.rank+1 : '无'
     }
   },
   methods: {
@@ -297,7 +300,7 @@ export default {
         var rankInfo = data
         console.log('rankInfo====:',rankInfo);
         this.gamePlayerRank = rankInfo['allPlayer']
-        this.thisPlayer = rankInfo['thisPlayer']
+        this.currentPlayer = rankInfo['thisPlayer']
       })
       $('.poupMain').not("#rankBox").hide()
       $("#rankBox").show()
@@ -323,6 +326,7 @@ export default {
       if( val == 'showRank'){
         this.handleShowPopup( 1 )
       }
+      // 用于重置command值，以便下次调用时不会因为相同而不触发。
       this.$emit('commandDone')
 
     }
