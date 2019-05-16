@@ -298,7 +298,6 @@ export default {
       if( val == 'showResult'){
         this.showResult()
       }
-
     }
   }
 }

@@ -77,7 +77,9 @@
   <Game ref="game" :hg="hg" :command="gameState" :dataList="dataList" :gamePlayer="gamePlayer" @game-over="handleGameOver" v-show="ui.gameBoxVisible"> </Game>
   <LoadToast ref="load-toast" is-loading="loadToast.isLoading"> </LoadToast>
   <ResultBox ref="result-box" @homeBtnClicked="home" @rankBtnClicked="getRank" @Restart="handleGameRestart" v-show="resultBoxVisible" :params="resultBoxParams" :command="resultBoxCommand"> </ResultBox>
-  <RuleBox :ruleIconUrl="skinAssets.ruleIconPath" :game-round="gameRound" :game-player="gamePlayer" :params="resultBoxParams" :command="ruleBoxCommand" @commandDone="handleResetRuleCommand"> </RuleBox>
+  <RuleBox :ruleIconUrl="skinAssets.ruleIconPath" :game-round="gameRound" :game-player="gamePlayer" :params="resultBoxParams" :command="ruleBoxCommand" @commandDone="handleResetCommand"> </RuleBox>
+  <MessageBox   :command="messageBoxCommand" @commandDone="handleResetCommand"> </MessageBox>
+
 </div>
 </template>
 
@@ -93,8 +95,10 @@ import {
   getGameResult
 } from '@/api/games/zhaobaba'
 import LoadToast from '@/components/LoadToast.vue'
+import MessageBox from '@/components/MessageBox.vue'
 import ResultBox from './ResultBox.vue'
 import RuleBox from './RuleBox.vue'
+
 import {
   GameBackgroundMusicLoadEvent
 } from '@/lib/GameEvent'
@@ -122,7 +126,8 @@ export default {
     Game,
     LoadToast,
     ResultBox,
-    RuleBox
+    RuleBox,
+    MessageBox
   },
   created() {
     this.hg.grade = new HdGame.Grade(0)
@@ -215,7 +220,8 @@ export default {
       ruleBoxCommand: null,
       resultBoxVisible: false, //游戏结果页面
       resultBoxParams: {},
-      resultBoxCommand: null
+      resultBoxCommand: null,
+      messageBoxCommand: null
     }
   },
   methods: {
@@ -263,6 +269,8 @@ export default {
     },
     handleStartGame(event) {
       event.preventDefault()
+      this.messageBoxCommand = "show"
+
 
       let that = this
       this.ruleBoxCommand = 'hideIcon'
@@ -363,8 +371,9 @@ export default {
       this.resultBoxVisible = false
     },
     // rulebox 处理完命令以后，需要重置，以便下次使用同样命令时也可以触发
-    handleResetRuleCommand(){
+    handleResetCommand(){
       this.ruleBoxCommand = null
+      this.messageBoxCommand = null
     },
     //
     getRank(event){
