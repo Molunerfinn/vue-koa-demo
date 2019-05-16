@@ -35,18 +35,18 @@ export function setWxShare(wxShareArg, desc, url, callBack) {
   desc = decodeHtml(desc);
   // url = removeUrlArg(url, "code", "state");
   url = wxShareArg.link
-  console.log('share url =====================',url);
+  console.log('wxShareArg =====================',wxShareArg);
   var pyqUrl = url;
 
   wx.ready(function() {
-    var wxConfigShareImg = wxShareArg.shareImg;
+    var wxConfigShareImg = wxShareArg.imgUrl;
     if (!/^http:/.test(wxConfigShareImg) && /^\/\//.test(wxConfigShareImg)) {
       wxConfigShareImg = "http:" + wxConfigShareImg
     }
     try {
       wx.onMenuShareAppMessage({
-        title: decodeHtml(wxShareArg.name),
-        desc: desc,
+        title: decodeHtml(wxShareArg.title),
+        desc: decodeHtml(wxShareArg.desc),
         link: url,
         imgUrl: wxConfigShareImg,
         success: function() {

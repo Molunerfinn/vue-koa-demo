@@ -65,7 +65,7 @@ export default class GamesController {
         playerInfo = await gamePlayer.getInfo()
       }
       var allInfo = {
-        gameRound: gameRound,
+        gameRound: gameRound.getInfo(),
         gamePlayer: playerInfo,
         wxConfig: wxConfig
       }
@@ -99,11 +99,9 @@ export default class GamesController {
       // 每个游戏 GameRound
 
       console.log('url===================:', url);
-      let gameInfo = await gameRound.getInfo()
-
       console.log('wxConfig=======:', wxConfig);
       var allInfo = {
-        gameRound: gameRound,
+        gameRound: gameRound.getInfo(),
         gamePlayer: gamePlayer,
         wxConfig: wxConfig,
         gameResult: gameResult,
