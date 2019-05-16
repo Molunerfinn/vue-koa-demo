@@ -62,16 +62,18 @@ function bindMethods(model) {
     let gtcount = await model.count({
       where: {
         game_round_id: this.game_round_id,
-        score: {
+        max_score: {
           [Op.gt]: this.max_score
         }
       }
     })
+    console.log(" this.max_score:", this.max_score);
+    console.log("gtcount========:",gtcount);
     //成绩相同，但是先玩的
     let eqcount = await model.count({
       where: {
         game_round_id: this.game_round_id,
-        score: this.max_score,
+        max_score: this.max_score,
         created_at: {
           [Op.lt]: this.created_at
         },
@@ -98,7 +100,7 @@ function bindMethods(model) {
     let gtcount = await model.count({
       where: {
         game_round_id: this.game_round_id,
-        score: {
+        max_score: {
           [Op.lt]: this.max_score
         }
       }
@@ -107,7 +109,7 @@ function bindMethods(model) {
     let eqcount = await model.count({
       where: {
         game_round_id: this.game_round_id,
-        score: this.max_score,
+        max_score: this.max_score,
         created_at: {
           [Op.lt]: this.created_at
         },
