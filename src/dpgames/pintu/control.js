@@ -8,13 +8,9 @@ import Control from './Control.vue'
 import '@/assets/common/css/control-base.css'
 import '@/assets/dp-pintu/css/control.css'
 
-import axios from 'axios'
-
-Vue.prototype.$http = axios // 类似于vue-resource的调用方法
 
 //import EventBus  from '@/plugins/EventBus'
 //Vue.use(EventBus)
-
 /* eslint-disable no-new */
 new Vue({
   render: h => h(Control)

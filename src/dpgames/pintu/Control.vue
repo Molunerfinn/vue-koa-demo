@@ -2,6 +2,7 @@
   <div id="app" :class="skin">
     <div class="Panel Top">
       <div  >
+        <div id="qrcodeCanvas"></div>
         <div class="bg-nei-top">
         				<img src="~@/assets/dp-pintu/image/skin1/tu_03.png" class="bg-nei-top-erwei" style="display:none;">
                 <div class="bg-nei-top-right"><span></span><img src="~@/assets/dp-pintu/image/skin1/tu_05.png"></div>
@@ -20,6 +21,7 @@
         <div class="box-body">
           <div>    <img src="~@/assets/dp-pintu/image/skin1/yao_02.png">      </div>
           <button class="start btn yao-btn btn-primary" @click="openGameHandler" >准备开始</button>
+          <img src="" id="share-qrcode-img">
         </div>
       </div>
 
@@ -122,13 +124,15 @@ import { getGameInfoByNumber } from '@/api/dpgame/pintu'
 import 'bootstrap/dist/css/bootstrap.css'
 import '@/assets/dpgame/pintu/css/skin/runlin.css'
 import GameState from '@/lib/GameState'
+import QRCode from 'qrcode'
+import $ from 'jquery'
 
 import '@/assets/dp-pintu/css/bootstrap.min.css'
 import '@/assets/dp-pintu/css/basic.css'
 import '@/assets/dp-pintu/css/game-yiy.css'
 
 const skin = 'runlin'
-
+const gameUrlBase = process.env.GAME_URL_BASE
 export default {
   name: 'control',
   components: {
@@ -194,7 +198,7 @@ export default {
 				case 'open': return 'open';
 				case 'ready': return 'ready';
 				case 'starting': return 'starting';
-				case 'started': return 'started';
+				case 'started': return 'simport $ from "jquery";tarted';
 				case 'completed': return 'completed';
 				case 'disabled': return 'disabled';
 				default: return 'unkonwn'
@@ -210,7 +214,56 @@ export default {
 			return this.gamePlayerScores.slice(0,12)
 		},
 	},
+  mounted(){
+    this.creatQRCodeImg()
+  },
   methods: {
+    creatQRCodeImg: function() { //生成二维码
+      // var that = this;
+      // var html = document.getElementsByTagName('html')[0];
+      // var pageWidth = html.getBoundingClientRect().width;
+      // // var pageHeight = html.getBoundingClientRect().height;
+      // var c = document.createElement('canvas'), //document.getElementById('j-wedding-canvas');
+      //   ctx = c.getContext('2d');
+      // c.width = pageWidth * 0.72;
+      // c.height = pageWidth * 0.72;
+      // var my_gradient=ctx.createRadialGradient(c.width/2,c.height/2,0,c.width/2,c.height/2, c.width);
+      // my_gradient.addColorStop(0,"#2EA3DC");
+      // my_gradient.addColorStop(1,"#036EB4");
+      // ctx.fillStyle=my_gradient;
+      // ctx.fillRect(0,0,c.width,c.height);
+      // ctx.textAlign = "center";
+      // ctx.fillStyle= '#ffffff';
+      // ctx.font="0.35rem/0.4rem '微软雅黑'";
+      // ctx.fillText("长按识别二维码，帮"+that.truncateName(that.to_game_player.nickname, 3)+"补刀", c.width * 0.5, c.height * 0.1);
+      // ctx.fillText(" 帮TA补一刀呗", c.width * 0.5, c.width * 0.94);
+      // console.log("c.width=", c.width, c.height, that.wx_share.link);
+
+
+      const parsed = queryString.parse(location.search);
+      let number = parsed.number
+      var url = gameUrlBase + '/authwx/game?gameurl='+gameUrlBase+'/dppintu-play.html?number='+number
+      console.log('url---:',url);
+      QRCode.toDataURL(url,{type:'image/png'}, function(error, gameurl){
+        if (error) {
+          console.error(error);
+        }
+          console.log('toDataURL success!');
+          $('#share-qrcode-img').attr('src', gameurl);
+      })
+      //
+      // $("#qrcodeCanvas").qrcode({
+      //     render : "canvas",    //设置渲染方式，有table和canvas，使用canvas方式渲染性能相对来说比较好
+      //     text : url,    //扫描二维码后显示的内容,可以直接填一个网址，扫描二维码后自动跳向该链接
+      //     width : "200",               //二维码的宽度
+      //     height : "200",              //二维码的高度
+      //     background : "#ffffff",       //二维码的后景色
+      //     foreground : "#000000",        //二维码的前景色
+      //     src: '~@/assets/dp-pintu/image/skin1/tu_03.png'             //二维码中间的图片
+      // });
+      // console.log('++++++++++++++====================');
+
+    },
 
     //绑定socket事件
 		bindSocketEvents: function(){
