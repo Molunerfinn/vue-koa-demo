@@ -2114,6 +2114,13 @@ cron@^1.3:
   dependencies:
     moment-timezone "^0.5.x"
 
+cron@^1.7.1:
+  version "1.7.1"
+  resolved "https://registry.npm.taobao.org/cron/download/cron-1.7.1.tgz#e85ee9df794d1bc6579896ee382053c3ce33778f"
+  integrity sha1-6F7p33lNG8ZXmJbuOCBTw84zd48=
+  dependencies:
+    moment-timezone "^0.5.x"
+
 cross-env@^5.1.1:
   version "5.1.1"
   resolved "https://registry.npmjs.org/cross-env/-/cross-env-5.1.1.tgz#b6d8ab97f304c0f71dae7277b75fe424c08dfa74"

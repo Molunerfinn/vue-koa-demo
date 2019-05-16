@@ -2,6 +2,7 @@ const messageContent = require('../constant')
 const db = require('../../models')
 const { getGameRoundModelByCode } = require('../../helpers/model')
 
+const { addGameRoundJob } = require('../../helpers/game_round_state_job')
 // const WechatAPI = require('co-wechat-api');
 // var OAuth = require('co-wechat-oauth');
 // const config = require(`../../../config/wechat.${process.env.NODE_ENV}.json`);
@@ -59,7 +60,10 @@ export default class GameRoundController {
       let model = await Model.create(gameRoundParams)
 
       if (model) {
-
+        // 如果有开始和结束时间，默认需要自动根据时间改变游戏状态
+        if( model.start_at!=null && model.end_at!=null ){
+          addGameRoundJob(model)
+        }
         ctx.body = model
         ctx.status = 201
       }
@@ -133,5 +137,7 @@ export default class GameRoundController {
   //     })
   //   }
   // }
+
+
 
 }

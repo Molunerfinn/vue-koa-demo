@@ -22,6 +22,7 @@
     "co-wechat": "^2.3.0",
     "co-wechat-api": "^3.10.0",
     "co-wechat-oauth": "^2.0.1",
+    "cron": "^1.7.1",
     "cross-fetch": "^3.0.2",
     "dotenv-webpack": "^1.7.0",
     "element-ui": "^1.4.13",
