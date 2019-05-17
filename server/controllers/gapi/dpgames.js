@@ -8,7 +8,31 @@ const {
   getWxJsConfig
 } = require('../../helpers/weixin')
 
+// 处理大屏游戏的请求，包括大屏端 和 手机端的所有游戏过程请求
+// 方法名加Dp后缀表示方法被大屏端调用
 export default class GamesController {
+
+
+  static async getInfoDp(ctx) {
+      try {
+          let code = ctx.params.code
+          let number = ctx.params.number
+          console.log("showRoundByNumber= ", ctx.params)
+          let Model = getGameRoundModelByCode(code)
+          let round = await Model.findOne({
+              //attributes: ['id', 'name', 'state', 'start_at', 'end_at'],
+              where: {
+                  number
+              }
+          })
+          ctx.body = round
+      } catch (error) {
+          ctx.throw(messageContent.ResponeStatus.CommonError, `show round ${ctx.params.id} fail: ` + error, { expose: true })
+      }
+  }
+
+
+
   /**
    * 取得游戏相关信息，并返回客户端，初始化游戏
    * @param {*}

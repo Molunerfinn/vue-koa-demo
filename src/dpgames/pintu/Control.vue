@@ -120,7 +120,7 @@
 // 准备开始-> 玩家签到 -> 点击开始游戏 ->(开始前倒计时)->游戏进行中-> 游戏结束 ->显示排名
 import io from 'socket.io-client'
 import queryString from 'query-string'
-import { getGameInfoByNumber } from '@/api/dpgame/pintu'
+import { getGameInfoForDp } from '@/api/dpgame/pintu'
 import 'bootstrap/dist/css/bootstrap.css'
 import '@/assets/dpgame/pintu/css/skin/runlin.css'
 import GameState from '@/lib/GameState'
@@ -166,7 +166,7 @@ export default {
     var that = this
     const parsed = queryString.parse(location.search);
     if( parsed.number != null ){
-      getGameInfoByNumber( parsed.number ).then((res)=>{
+      getGameInfoForDp( parsed.number ).then((res)=>{
         that.socketNameSpace = "/channel-dppintu-"+ res.number
         that.gameRoundState = res.state
         that.socket = io( that.socketNameSpace , { transports: [ 'websocket' ] })

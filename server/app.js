@@ -80,8 +80,8 @@ router.use('/gapi/base', gameBaseByCode.routes())
 import dpgameBaseByCode from './routes/gapi/dpbase_by_code.js'
 router.use('/gapi/dpbase', dpgameBaseByCode.routes())
 
-import roundByCode from './routes/gapi/game_round_by_code.js'
-router.use('/gapi/game', roundByCode.routes())
+//import roundByCode from './routes/gapi/game_round_by_code.js'
+//router.use('/gapi/game', roundByCode.routes())
 
 import weixin from './routes/gapi/weixin.js'
 router.use('/gapi/weixin', weixin.routes())
