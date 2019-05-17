@@ -94,7 +94,7 @@
                    <td>{{i+1}}</td>
                    <td><div><img class="userImg" :src="player.avatar"   /> </div></td>
                    <td class="userName" > {{player.nickname}}</td>
-                   <td> {{player.max_score}} 个</td>
+                   <td> {{player.max_score}} 秒</td>
                  </tr>
 
                </table>
@@ -179,7 +179,7 @@ import $ from "jquery"
 import {
   getRanking
 } from '@/api/dpgame/pintu'
-import moment from 'moment'; 
+import moment from 'moment';
 
 import HdGame from '@/lib/hdgame'
 
@@ -305,6 +305,14 @@ export default {
         console.log('rankInfo====:',rankInfo);
         this.gamePlayerRank = rankInfo['allPlayer']
         this.currentPlayer = rankInfo['thisPlayer']
+        for(var i=0;i<this.gamePlayerRank.length;i++){
+          if (this.gamePlayerRank[i].score == 9999.99) {
+            this.gamePlayerRank[i].score = 0
+          }
+          if (this.gamePlayerRank[i].max_score == 9999.99) {
+            this.gamePlayerRank[i].max_score = 0
+          }
+        }
       })
       $('.poupMain').not("#rankBox").hide()
       $("#rankBox").show()

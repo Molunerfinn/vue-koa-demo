@@ -174,6 +174,7 @@ export default {
         this.ui.homeVisible = false
         this.ui.sign_up = true
       }else if ((this.gameState==GameState.open||this.gameState==GameState.created)&&(this.gamePlayer.token!==undefined||this.gameInfo['gameRound'].contact_required==0)) {
+        this.ruleBoxCommand = 'showIcon'
         this.ui.wait = true
         this.ui.homeVisible = true
       }else if(this.gameState==GameState.started){
