@@ -121,16 +121,12 @@
 import io from 'socket.io-client'
 import queryString from 'query-string'
 import { getGameInfoForDp } from '@/api/dpgame/pintu'
-import 'bootstrap/dist/css/bootstrap.css'
-import '@/assets/dpgame/pintu/skin-runlin/css/control.css'
 import GameState from '@/lib/GameState'
 import QRCode from 'qrcode'
 import $ from 'jquery'
 import constant from '@/game_constant.js'
 
-import '@/assets/dp-pintu/css/bootstrap.min.css'
-import '@/assets/dp-pintu/css/basic.css'
-import '@/assets/dp-pintu/css/game-yiy.css'
+import '@/assets/dpgame/pintu/skin-runlin/css/control.css'
 
 const skin = 'runlin'
 const gameUrlBase = process.env.GAME_URL_BASE

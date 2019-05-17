@@ -4,3 +4,7 @@
   background-position: center;
   background-size: cover;
 }
+
+.runlin .Panel.Top{
+  background-color: transparent;
+}
