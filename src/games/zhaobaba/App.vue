@@ -12,6 +12,7 @@
 
         <div class="awardUserInfoForm">
           <div class="weui-cells weui-cells_form">
+            <div style="text-align: center"><img id="headImg" v-bind:src="gamePlayer.avatar"></div>
             <div class="weui-cell contactInput-ausername contactInput">
               <div class="weui-cell__hd"><label class="weui-label">姓名</label></div>
               <div class="weui-cell__bd">
@@ -579,6 +580,12 @@
     height: 100%;
     width: 100%;
   }
+  #headImg{
+        border-radius: 100%;
+        width: 20%;
+        height: auto;
+  }
+
 
   .kouhong {
     font-size: 14px;
