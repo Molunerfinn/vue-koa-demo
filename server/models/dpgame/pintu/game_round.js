@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
     code: {
       type: DataTypes.STRING(24),
       allowNull: false,
-      defaultValue: 'dppintu'
+      defaultValue: ''
     },
     appid: {
       type: DataTypes.STRING(64),
@@ -52,9 +52,17 @@ module.exports = (sequelize, DataTypes) => {
     },
   })
 
+  addHooks( model)
   bindMethods(model)
 
   return model
+}
+
+function addHooks(model) {
+  model.addHook('beforeCreate', 'set_defults', (game, options) => {
+    game.code = 'dppintu'
+
+  })
 }
 
 function bindMethods(model) {
