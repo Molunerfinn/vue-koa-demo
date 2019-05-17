@@ -1,4 +1,6 @@
-const skinResRoot="/static/dp-pintu/skin"
+const imageBase = '/static/dpgame/pintu/image'
+
+const skinResRoot="/static/dpgame/pintu/skin"
 
 const GameRes = {
   "loadingStyle": 1,
@@ -469,26 +471,26 @@ const GameRes = {
   "gameImg": "/image/game/s_ptdzz.jpg",
   "openStrongAttention": false,
   "strongAttIMG": "",
-  "logoImg_path": "/static/dp-pintu/image/logo.jpg",
-  "startImg_path": "/static/dp-pintu/skin/image/startbtn.png",
-  "gameBgPath": "/static/dp-pintu/skin/image/gamebg.jpg",
-  "homeBgPath": "/static/dp-pintu/skin/image/gamebg.jpg",
-  "titleImg_path": "/static/dp-pintu/skin/image/title.png",
+  "logoImg_path": imageBase +"/logo.jpg",
+  "startImg_path": skinResRoot + "/wx/startbtn.png",
+  "gameBgPath": skinResRoot + "/wx/gamebg.jpg",
+  "homeBgPath": skinResRoot + "/wx/gamebg.jpg",
+  "titleImg_path": skinResRoot + "/wx/titleimg.png",
   "gameTimeNumDef": 0,
   "soundList": [{
-    "path": "/static/dp-pintu/image/ptdzz/bgmusic04H.mp3",
+    "path": skinResRoot + "/wx/music/bgmusic04H.mp3",
     "fileName": "背景音乐.mp3",
     "optFlag": 0
   }],
   "soundListDef": [{
-    "path": "*_resRoot*/image/ptdzz/bgmusic04H.mp3",
+    "path": skinResRoot + "/wx/music/bgmusic04H.mp3",
     "fileName": "背景音乐.mp3",
     "optFlag": 0
   }],
   skinAssets: {
-    gameStartImg : skinResRoot+'/image/startbtn2.png',
-    tipsImg : skinResRoot+'/image/tipsbtn.png',
-    gameImg : skinResRoot+'/image/gameimg.jpg',
+    gameStartImg : skinResRoot+'/wx/startbtn2.png',
+    tipsImg : skinResRoot+'/wx/tipsbtn.png',
+    gameImg : skinResRoot+'/wx/gameimg.jpg',
     logoImgPath: skinResRoot + "/wx/logo.png",
     ruleIconPath: skinResRoot + "/wx/ruleicon.png",
     startImgPath: skinResRoot + "/wx/startbtn.png",
