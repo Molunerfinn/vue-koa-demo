@@ -126,6 +126,7 @@ import '@/assets/dpgame/pintu/css/skin/runlin.css'
 import GameState from '@/lib/GameState'
 import QRCode from 'qrcode'
 import $ from 'jquery'
+import constant from '@/game_constant.js'
 
 import '@/assets/dp-pintu/css/bootstrap.min.css'
 import '@/assets/dp-pintu/css/basic.css'
@@ -140,7 +141,7 @@ export default {
   data() {
     return {
       //socket
-      MAX_TIME: 9999.99,
+      MAX_TIME: constant.GameConstant.maxTime,
       s: 30,
       debug: true,
       error: false,

@@ -182,6 +182,7 @@ import {
 import moment from 'moment';
 
 import HdGame from '@/lib/hdgame'
+import constant from '@/game_constant.js'
 
 export default {
   props: {
@@ -306,10 +307,10 @@ export default {
         this.gamePlayerRank = rankInfo['allPlayer']
         this.currentPlayer = rankInfo['thisPlayer']
         for(var i=0;i<this.gamePlayerRank.length;i++){
-          if (this.gamePlayerRank[i].score == 9999.99) {
+          if (this.gamePlayerRank[i].score == constant.GameConstant.maxTime) {
             this.gamePlayerRank[i].score = 0
           }
-          if (this.gamePlayerRank[i].max_score == 9999.99) {
+          if (this.gamePlayerRank[i].max_score == constant.GameConstant.maxTime) {
             this.gamePlayerRank[i].max_score = 0
           }
         }

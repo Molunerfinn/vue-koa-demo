@@ -88,6 +88,7 @@ import {
 } from '@/lib/GameEvent'
 import queryString from 'query-string'
 import io from 'socket.io-client'
+import constant from '@/game_constant.js'
 
 const gameUrlBase = process.env.GAME_URL_BASE
 //import {simplifyLufylegend } from '@/lib/simplify'
@@ -183,7 +184,7 @@ export default {
       }
       if(this.gameState==GameState.completed||(this.gameInfo['gameResult']!==null&&this.gameInfo['gameResult']!==undefined)){
         var r = this.gameInfo['ret']
-        if(this.gameInfo['gamePlayer'].score == 9999.99){
+        if(this.gameInfo['gamePlayer'].score == constant.GameConstant.maxTime){
           this.gameInfo['gamePlayer'].score = 0
         }
         var arg = {
@@ -481,10 +482,10 @@ export default {
           HdGame.tlog('gameOver', data);
           var r = data;
 
-          if(r.score==9999.99){
+          if(r.score==constant.GameConstant.maxTime){
             r.score=0
           }
-          if(r.bestScore==9999.99){
+          if(r.bestScore==constant.GameConstant.maxTime){
             r.bestScore=0
           }
           console.log('rrrrrrr',r);
