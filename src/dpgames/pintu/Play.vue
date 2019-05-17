@@ -208,7 +208,7 @@ export default {
         this.resultBoxCommand = "showResult"
         this.resultBoxVisible = true
       }
-
+      document.title = this.gameRound.name
     })
   },
   data() {
