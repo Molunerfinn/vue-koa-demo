@@ -64,9 +64,6 @@
 
           </div>
         </div>
-        <div class="hdskillInfo skillInfo theRunningAdClass"><a class="theSpecialTarget" href="http://mp.weixin.qq.com/s?__biz=MjM5MTk5MjI3OA==&#x26;mid=209854000&#x26;idx=1&#x26;sn=82241d924839270d3ea820ad2d56c01b#rd">我也要创建活动</a>
-          <span class="gotoFlag"><i></i></span>
-        </div>
         <div class="holdBox"></div>
       </div>
     </div>

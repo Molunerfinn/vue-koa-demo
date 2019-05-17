@@ -1,8 +1,12 @@
 const messageContent = require('../constant')
 const db = require('../../models')
-const { getGameRoundModelByCode } = require('../../helpers/model')
+const {
+  getGameRoundModelByCode
+} = require('../../helpers/model')
 
-const { addGameRoundJob } = require('../../helpers/game_round_state_job')
+const {
+  addGameRoundJob
+} = require('../../helpers/game_round_state_job')
 // const WechatAPI = require('co-wechat-api');
 // var OAuth = require('co-wechat-oauth');
 // const config = require(`../../../config/wechat.${process.env.NODE_ENV}.json`);
@@ -53,6 +57,21 @@ export default class GameRoundController {
   static async createRound(ctx) {
     let gameRoundParams = ctx.request.body.game_round
     try {
+      if (gameRoundParams.start_at == null || gameRoundParams.end_at == null) {
+        throw ('start_at and end_at can not be null')
+      }
+
+      if (gameRoundParams.duration == null) {
+        throw ('duration can not be null')
+      }
+
+      if (gameRoundParams.name == null) {
+        throw ('name can not be null')
+      }
+
+      if (gameRoundParams.code == null) {
+        throw ('code can not be null')
+      }
       // code 在 url 中 或者 在参数中 game_round
       let code = ctx.query.code || gameRoundParams.code
       let Model = getGameRoundModelByCode(gameRoundParams.code)
@@ -61,14 +80,14 @@ export default class GameRoundController {
 
       if (model) {
         // 如果有开始和结束时间，默认需要自动根据时间改变游戏状态
-        if( model.start_at!=null && model.end_at!=null ){
+        if (model.start_at != null && model.end_at != null) {
           addGameRoundJob(model)
         }
         ctx.body = model
         ctx.status = 201
       }
     } catch (error) {
-      console.log( " error ", error )
+      console.log(" error ", error)
       ctx.throw(messageContent.ResponeStatus.UnprocessableEntity, `create round fail: ` + error, {
         expose: true
       })
