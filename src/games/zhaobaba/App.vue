@@ -177,12 +177,6 @@
         this.gamePlayer = this.gameInfo['gamePlayer']
         this.dataList = this.gameRound.dataList
         this.playPath = this.gameRound.playPath
-        this.gameRound.start_at = this.gameRound.start_at + ''
-        this.gameRound.start_at = this.gameRound.start_at.substring(0, this.gameRound.start_at.indexOf('T'))
-        this.gameRound.end_at = this.gameRound.end_at + ''
-        this.gameRound.end_at = this.gameRound.end_at.substring(0, this.gameRound.end_at.indexOf('T'))
-        console.log('this.gameRound.start_at----:', this.gameRound.start_at)
-
         console.log('playPath', this.gameRound.playPath)
 
         if (this.gamePlayer.token == undefined) {
