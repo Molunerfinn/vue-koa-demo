@@ -179,6 +179,7 @@ import $ from "jquery"
 import {
   getRanking
 } from '@/api/games/zhaobaba'
+import moment from 'moment';
 
 import HdGame from '@/lib/hdgame'
 
@@ -235,13 +236,15 @@ export default {
       return this.gamePlayerRank.length > 0
     },
     currentPlayerRank(){
-      return this.currentPlayer.rank && this.currentPlayer.rank>=0 ? this.currentPlayer.rank+1 : '无'
+      return (this.currentPlayer.rank!=undefined&&this.currentPlayer.rank!=null) && this.currentPlayer.rank>=0 ? this.currentPlayer.rank+1 : '无'
     }
   },
   methods: {
 
     //
     handleShowPopup( flag ){
+      this.gameRound.start_at = moment(this.gameRound.start_at).format('YYYY年MM月DD日 HH时mm分');
+      this.gameRound.end_at = moment(this.gameRound.end_at).format('YYYY年MM月DD日 HH时mm分');
       var silkBag = $("#ruleImg");
       var popupX = silkBag.offset().left + silkBag.width() / 2 + "px ";
       var popupY = silkBag.offset().top + silkBag.height() / 2 + "px";
