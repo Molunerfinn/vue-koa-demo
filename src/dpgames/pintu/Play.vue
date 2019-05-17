@@ -42,9 +42,6 @@
   </div>
 
   <div class="home" v-show="ui.homeVisible">
-    <div class="unstarted" v-show="ui.unstarted">
-      unstarted
-    </div>
     <div v-show="ui.wait">
       <div id="homeBgBox">
         <img id="homeBg" :src="homeBgImg" />
@@ -173,16 +170,13 @@ export default {
 
       if(this.gameState==GameState.started&&this.gamePlayer.token==undefined){
         this.gameState=GameState.created
-      }else if(this.gameState==GameState.open&&this.gamePlayer.token==undefined&&this.gameInfo['gameRound'].contact_required==1){
+      }else if((this.gameState==GameState.open||this.gameState==GameState.created)&&this.gamePlayer.token==undefined&&this.gameInfo['gameRound'].contact_required==1){
         this.ui.homeVisible = false
-        this.ui.unstarted = false
         this.ui.sign_up = true
-      }else if (this.gameState==GameState.open&&(this.gamePlayer.token!==undefined||this.gameInfo['gameRound'].contact_required==0)) {
-        this.ui.unstarted = false
+      }else if ((this.gameState==GameState.open||this.gameState==GameState.created)&&(this.gamePlayer.token!==undefined||this.gameInfo['gameRound'].contact_required==0)) {
         this.ui.wait = true
         this.ui.homeVisible = true
       }else if(this.gameState==GameState.started){
-        this.ui.unstarted = false
         this.ui.homeVisible = false
         this.ui.gameBoxVisible = true
       }
@@ -229,7 +223,6 @@ export default {
       startBtnImg: require('@/assets/dp-pintu/image/skin1/wx/start.png'),
       ui: {
         sign_up:false,
-        unstarted:true,
         homeVisible: true, // 初始页面是否可见，游戏时需要隐藏
         gameBoxVisible: false, // 游戏页面
         ruleImgVisible: true, // 锦囊按钮
@@ -267,10 +260,8 @@ export default {
         console.log(that.gameInfo['gameRound'].contact_required==1);
         if(that.gameState==GameState.open&&that.gamePlayer.token==undefined&&that.gameInfo['gameRound'].contact_required==1){
           that.ui.homeVisible = false
-          that.ui.unstarted = false
           that.ui.sign_up = true
         }else if (that.gameState==GameState.open&&(that.gamePlayer.token!==undefined||that.gameInfo['gameRound'].contact_required==0)) {
-          that.ui.unstarted = false
           that.ui.wait = true
           that.ui.homeVisible = true
         }
@@ -287,7 +278,7 @@ export default {
           that.first_start = false
           that.ui.wait = false
           that.gameState = GameState.started
-          that.ui.unstarted = false
+          that.ui.rted = false
           that.ui.homeVisible = false
           that.ui.gameBoxVisible = true
           that.resultBoxVisible = false
@@ -314,7 +305,6 @@ export default {
 			that.socket.on('GameEndEvent', function(data){
 				that.gameState = GameState.completed
         that.gameOver(that.time)
-        that.ui.unstarted = true
         that.ui.homeVisible = false
         that.ui.gameBoxVisible = false
         that.resultBoxVisible = true
@@ -357,7 +347,6 @@ export default {
           this.ui.homeVisible = true
           return res
         })
-        this.ui.unstarted = false
         this.ui.wait = true
         this.ui.homeVisible = true
         let that = this
