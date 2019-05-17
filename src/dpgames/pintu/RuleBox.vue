@@ -59,11 +59,6 @@
              </div>
              <div id="selfAwardLine" class="hide" style="word-wrap: break-word;"></div>
            </div>
-
-           <div id="gameDateTime" class="poupLine" data-sortKey="c">
-             <div class="mainTitle">活动时间</div>
-             <p><span id="startDate">{{gameRound.start_at}}</span>&nbsp;-&nbsp;<span id="endDate">{{gameRound.end_at}}</span></p>
-           </div>
            <div class="hostLine poupLine" data-sortKey="d">
              <div class="mainTitle">主办单位</div>
              <p><a class="hostName" />{{gameRound.host}}</a>
@@ -94,7 +89,7 @@
                    <td>{{i+1}}</td>
                    <td><div><img class="userImg" :src="player.avatar"   /> </div></td>
                    <td class="userName" > {{player.nickname}}</td>
-                   <td> {{player.max_score}} 个</td>
+                   <td> {{player.max_score}} 秒</td>
                  </tr>
 
                </table>
@@ -179,9 +174,10 @@ import $ from "jquery"
 import {
   getRanking
 } from '@/api/dpgame/pintu'
-import moment from 'moment'; 
+import moment from 'moment';
 
 import HdGame from '@/lib/hdgame'
+import constant from '@/game_constant.js'
 
 export default {
   props: {
@@ -305,6 +301,14 @@ export default {
         console.log('rankInfo====:',rankInfo);
         this.gamePlayerRank = rankInfo['allPlayer']
         this.currentPlayer = rankInfo['thisPlayer']
+        for(var i=0;i<this.gamePlayerRank.length;i++){
+          if (this.gamePlayerRank[i].score == constant.GameConstant.maxTime) {
+            this.gamePlayerRank[i].score = 0
+          }
+          if (this.gamePlayerRank[i].max_score == constant.GameConstant.maxTime) {
+            this.gamePlayerRank[i].max_score = 0
+          }
+        }
       })
       $('.poupMain').not("#rankBox").hide()
       $("#rankBox").show()
