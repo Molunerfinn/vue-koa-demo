@@ -26,7 +26,9 @@ module.exports = {
       config.build.assetsPublicPath :
       config.dev.assetsPublicPath
   },
-  plugins: [new Dotenv()],
+  plugins: [  
+    new Dotenv()
+  ],
   resolve: {
     extensions: ['.js', '.vue', '.json'],
     alias: {
