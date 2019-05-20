@@ -19,7 +19,10 @@
       </div>
       <div class="fullfill  game-state state-created" v-show="computedGameState=='created'">
         <div class="box-title">  <img src=""> </div>
+        <div class="box-body-background"></div>
+
         <div class="box-body">
+          <div class="tishi">扫描二维码</br>参与活动</div>
           <div>    <img src="~@/assets/dp-pintu/image/skin2/bgtop.png">      </div>
           <div class="shareimg"><img id="shareimg"></div>
           <button class="start btn yao-btn btn-primary" @click="openGameHandler" >准备开始</button>
@@ -395,9 +398,9 @@ export default {
 
 #shareimg{
   position:absolute;
-  left:15vw;
+  left:10vw;
   width:auto;
-  height: 30%;
+  height: 45%;
 }
 
 .dp-pintu {
