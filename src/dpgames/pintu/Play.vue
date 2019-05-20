@@ -49,6 +49,9 @@
           <img id="titleImg" class="slaveImg abs" :src="titleImg" style="width:15.232rem;height:5.778666666666667rem;top:2.524rem;left:0.384rem;" />
         </div>
       </div>
+      <div v-show="ui.wait">
+        <img :src='imgUrl'>
+      </div>
     </div>
 
     <div id="playInfo" class="abs editTarget-playInfo hide" style="width:9rem;text-align:center;">
@@ -207,6 +210,7 @@ export default {
   },
   data() {
     return {
+      imgUrl:'',
       debug: true,
       hasFinish: false,
       gameInfo:{},
@@ -222,6 +226,7 @@ export default {
       titleImg: require('@/assets/dp-pintu/image/skin2/titleimg.png'),
       startBtnImg: require('@/assets/dp-pintu/image/skin2/startbtn.png'),
       ui: {
+        countImg:false,
         sign_up:false,
         homeVisible: true, // 初始页面是否可见，游戏时需要隐藏
         gameBoxVisible: false, // 游戏页面
@@ -267,13 +272,17 @@ export default {
         }
 			});
       that.socket.on('GameStartingEvent', function(data){
+        console.log('GameStartingEvent');
+        that.ui.countImg = true;
 				that.gameState = data.gameState
 				that.timeToStart = data.timeToStart
+        that.imgUrl = "/static/dp-pintu/skin2/"+that.timeToStart+".png"
+        console.log('imgUrl====:',that.imgUrl);
 			});
 			//绑定 游戏倒计时事件，游戏时间倒计时
 			that.socket.on('GameRunningEvent', function(data){
+        that.ui.countImg = false
         that.timeToEnd = data.timeToEnd
-
         if(that.first_start){
           that.first_start = false
           that.ui.wait = false
