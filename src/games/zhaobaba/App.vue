@@ -54,7 +54,7 @@
       </div>
       <div class="gameInfoBox">
         <div class="titleImg imgContainer absCenter">
-          <img id="titleImg" class="slaveImg abs" :src="skinAssets.titleImg" style="width:8.8rem;height:6.55rem;top:0.75rem;left:3.65rem;"
+          <img id="titleImg" class="slaveImg abs" :src="skinAssets.titleImg" style="width:auto;height:9rem;top:11vh;left:15vw;"
           />
         </div>
       </div>
@@ -77,7 +77,7 @@
              id="startBtnImg"
              class="slaveImg abs"
              :src="skinAssets.startBtnImg"
-             style="width:7.35rem;height:2.25rem;top:16.55rem;left:4.6rem;" />
+             style="width:7.35rem;height:2.25rem;top:90vh;left:25vw;" />
       </div>
 
       <div id="logoImgBox" class="logoImgBox imgContainer absCenter" style="">

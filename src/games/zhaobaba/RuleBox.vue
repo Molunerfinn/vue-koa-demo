@@ -2,7 +2,7 @@
   <!-- 锦囊 -->
  <div class="ruleBox" >
    <div class="ruleImg imgContainer absCenter" _mouseIn="0"  @touchstart="handleShowPopup" v-show="ui.iconVisible">
-     <div id="ruleImg" class="slaveImg abs notNeedFatherChage outSpecialDivAutoFit hd-img-fillDiv ruleImgAnimate" style='width: 3rem; height: 3rem; top: 0.15rem; left: 12.85rem;'></div>
+     <div id="ruleImg" class="slaveImg abs notNeedFatherChage outSpecialDivAutoFit hd-img-fillDiv ruleImgAnimate" style='width: 3.5rem; height: 3.5rem; top: 0.35rem; left: 75vw;'></div>
    </div>
 
    <div id="poupInfoBox">
