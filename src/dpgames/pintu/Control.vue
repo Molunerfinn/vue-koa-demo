@@ -279,6 +279,7 @@ export default {
 			that.socket.on('GameStartingEvent', function(data){
 				that.gameRoundState = data.gameRoundState
 				that.timeToStart = data.timeToStart
+        console.log('timeToStart--:',that.timeToStart);
         that.imgUrl = "/static/dp-pintu/skin2/"+that.timeToStart+".png"
 			});
 			//绑定 游戏倒计时事件，游戏时间倒计时

@@ -97,7 +97,7 @@ export default class DpPintuSocket {
       var countTimeId = setInterval(function() {
         // 玩家端，当在倒计时时间内完成，即时上报成绩，或当倒计时时间为1时，结束游戏，上报成绩
         // 2秒时间内: 服务器广播倒计时1-> 玩家收到倒计时1事件 -> 上报成绩 ->服务器收到最后成绩
-        if (countTime <= 1) {
+        if (countTime < 1) {
           clearInterval(countTimeId);
           // 触发客户端的开始游戏事件
           var runningTimeId = setInterval(function() {
@@ -148,12 +148,13 @@ export default class DpPintuSocket {
           })
           return
         }
-        countTime--;
+
         // 触发客户端的倒计时事件
         let payload = {
           gameRoundState: DpGameRoundStates.starting,
           timeToStart: countTime
         }
+        countTime--;
         namespace.emit('GameStartingEvent', payload);
 
         console.log(`......socket:broadcast->${namespace.name}:startingGame${countTime}`)

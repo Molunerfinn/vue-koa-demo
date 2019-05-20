@@ -491,6 +491,12 @@ body {
 	width:100%;
 	height:100%;
 }
+
+
+.countdownImg{
+	height: 40%;
+	width: auto;
+}
 .debug {
 	position:absolute;
 	background-color:#F56C6C;

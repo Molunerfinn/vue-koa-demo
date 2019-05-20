@@ -4994,11 +4994,21 @@ li, ul {
   left: 0;
   z-index: 2
 }
-
-.countdownImg{
-	height: 10%;
-	width: auto;
+.awardUserInfoForm{
+  position: relative;
+  top: 10vh;
 }
+.weui-btn-area{
+  position: relative;
+  top: 10vh;
+}
+.signUpTitleImg{
+  position: relative;
+  width: 100vw;
+  top: 10vh;
+  height: auto;
+}
+
 
 .sign_up{
 	height: 100%;

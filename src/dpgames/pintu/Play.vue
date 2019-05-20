@@ -3,14 +3,12 @@
   <div class="sign_up" v-show="ui.sign_up">
         <div class="weui-toptips weui-toptips_warn js_tooltips"></div>
         <div id="awardUserInfoBox" class="page  input js_show">
-            <div class="awardUserInfoTitle">
-                <h2>填写联系信息</h2>
-                <p class="tipsColor">为了方便兑奖，请先填写您的联系信息</p>
-            </div>
+            <div><img class="logoImg"  style="position:absolute;width:18vw; height:auto; top:2vh; left:8vw;"src="~@/assets/dp-pintu/image/skin2/logo.png"></div>
+            <div><img class="signUpTitleImg" :src="titleImg"></div>
 
             <div class="awardUserInfoForm">
+              <div style="text-align: center"><img id="headImg" v-bind:src="gamePlayer.avatar"></div>
                 <div class="weui-cells weui-cells_form">
-                  <div style="text-align: center"><img id="headImg" v-bind:src="gamePlayer.avatar"></div>
                     <div class="weui-cell contactInput-ausername contactInput">
                         <div class="weui-cell__hd"><label class="weui-label">姓名</label></div>
                         <div class="weui-cell__bd">
