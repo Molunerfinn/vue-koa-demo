@@ -1,6 +1,6 @@
 <template>
 
-  <div id="app">
+  <div id="app" class="runlin">
     <div class="sign_up" v-show="ui.sign_up">
 
       <div class="weui-toptips weui-toptips_warn js_tooltips"></div>
@@ -77,7 +77,7 @@
              id="startBtnImg"
              class="slaveImg abs"
              :src="skinAssets.startBtnImg"
-             style="width:7.35rem;height:2.25rem;top:90vh;left:25vw;" />
+             style="width:7.35rem;height:2.25rem;top:22.55rem;left:4.6rem;" />
       </div>
 
       <div id="logoImgBox" class="logoImgBox imgContainer absCenter" style="">
@@ -127,6 +127,8 @@
   import { GameBackgroundMusicLoadEvent } from '@/lib/GameEvent'
   import { EventBus } from '@/lib/EventBus'
   import queryString from 'query-string'
+
+  import '@/assets/game/zhaobaba/skin-runlin/runlin.css'
 
   //import {simplifyLufylegend } from '@/lib/simplify'
   //关于玩家的配置信息
