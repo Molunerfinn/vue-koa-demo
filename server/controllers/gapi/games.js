@@ -238,7 +238,6 @@ export default class GamesController {
         pageSize: 100,
         total: 100
       }
-      console.log('rankInfo====:', rankInfo);
       ctx.body = rankInfo
     } catch (error) {
       ctx.throw(messageContent.ResponeStatus.CommonError, `show round ${ctx.params.id} fail: ` + error, {
