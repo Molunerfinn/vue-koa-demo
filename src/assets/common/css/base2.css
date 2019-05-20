@@ -71,7 +71,8 @@ pre {
 }
 
 .body, .home {
-  overflow-x: hidden
+  /*overflow-x: hidden*/
+  overflow: hidden; /*设置homebgBox*/
 }
 
 .home {
