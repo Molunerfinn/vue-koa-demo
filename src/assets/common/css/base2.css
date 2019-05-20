@@ -2075,7 +2075,8 @@ pre {
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, .01);
-  -webkit-overflow-scrolling: touch
+  -webkit-overflow-scrolling: touch;
+  box-sizing: border-box; /*去除顶部padding*/
 }
 
 .resuleBox #resule-status-bird {
