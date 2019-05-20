@@ -5,9 +5,9 @@
         <div id="qrcodeCanvas"></div>
         <div class="bg-nei-top">
                 <img src="" id="share-qrcode-img">
-        				<img src="~@/assets/dp-pintu/image/skin1/tu_03.png" class="bg-nei-top-erwei" style="display:none;">
-                <div class="bg-nei-top-right"><span></span><img src="~@/assets/dp-pintu/image/skin1/tu_05.png"></div>
-        				<div class="bg-nei-top-zhong" ><img src="~@/assets/dp-pintu/image/skin1/wx/bgtop.gif"  v-show="computedGameState=='open'||computedGameState=='started'">
+        				<img src="~@/assets/dp-pintu/image/skin2/tu_03.png"  class="bg-nei-top-erwei" style="display:none;">
+                <div class="bg-nei-top-right"><span></span><img src="~@/assets/dp-pintu/image/skin2/tu_05.png"></div>
+        				<div class="bg-nei-top-zhong" ><img src=""  v-show="computedGameState=='open'||computedGameState=='started'">
                   <!-- <p  v-show="computedGameState=='started'"><span>游戏倒计时</span><strong>|</strong><span>剩余<b>{{timeToEnd}</b>秒</span></p> -->
                 </div>
         </div>
@@ -18,9 +18,10 @@
       <div class="bg-nei-bottom1" v-show="computedGameState=='open'||computedGameState=='started'">
       </div>
       <div class="fullfill  game-state state-created" v-show="computedGameState=='created'">
-        <div class="box-title">  <img src="~@/assets/dp-pintu/image/skin1/wx/bgtop.gif"> </div>
+        <div class="box-title">  <img src=""> </div>
         <div class="box-body">
-          <div>    <img src="~@/assets/dp-pintu/image/skin1/yao_02.png">      </div>
+          <div>    <img src="~@/assets/dp-pintu/image/skin2/bgtop.png">      </div>
+          <div class="shareimg"><img id="shareimg"></div>
           <button class="start btn yao-btn btn-primary" @click="openGameHandler" >准备开始</button>
         </div>
       </div>
@@ -45,7 +46,7 @@
           </div>
        </div>
       <div class="fullfill game-state state-starting " v-show="computedGameState=='starting'">
-        <div class="box-title">  <img src="~@/assets/dp-pintu/image/skin1/wx/bgtop.gif" class="logo"> </div>
+        <div class="box-title">  <img src="" class="logo"> </div>
         <div class="box-body">
           <p class="szbg">{{timeToStart}}</p>
         </div>
@@ -70,7 +71,7 @@
       </div>
 
       <div class="fullfill game-state state-completed" v-show="computedGameState=='completed'">
-        <div class="box-title">  <img src="~@/assets/dp-pintu/image/skin1/pm_03.png" class="logo"> </div>
+        <div class="box-title">  <img src="~@/assets/dp-pintu/image/skin2/pm_03.png" class="logo"> </div>
         <div class="player-rank clearfix">
           <div class="pm-top5">
           <table class="rank  ">
@@ -247,6 +248,7 @@ export default {
         }
           console.log('toDataURL success!');
           $('#share-qrcode-img').attr('src', gameurl);
+          $('#shareimg').attr('src', gameurl);
       })
       //
       // $("#qrcodeCanvas").qrcode({
@@ -256,7 +258,7 @@ export default {
       //     height : "200",              //二维码的高度
       //     background : "#ffffff",       //二维码的后景色
       //     foreground : "#000000",        //二维码的前景色
-      //     src: '~@/assets/dp-pintu/image/skin1/tu_03.png'             //二维码中间的图片
+      //     src: '~@/assets/dp-pintu/image/skin2/tu_03.png'             //二维码中间的图片
       // });
       // console.log('++++++++++++++====================');
 
@@ -389,6 +391,13 @@ export default {
   left:5vw;
   width:auto;
   height: 60%;
+}
+
+#shareimg{
+  position:absolute;
+  left:15vw;
+  width:auto;
+  height: 30%;
 }
 
 .dp-pintu {
