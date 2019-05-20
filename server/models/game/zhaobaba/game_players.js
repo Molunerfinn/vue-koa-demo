@@ -37,5 +37,5 @@ async function  getInfo(   ){
     let rank = await this.currentPositionDesc()
     let beat = await this.beat()
 
-  return { token: this.token, openid: this.openid, avatar: this.avatar, nickname: this.nickname, isSuc, score, bestScore, rank, beat }
+  return { id: this.id, token: this.token, openid: this.openid, avatar: this.avatar, nickname: this.nickname, isSuc, score, bestScore, rank, beat }
 }
