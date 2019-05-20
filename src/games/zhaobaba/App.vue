@@ -77,7 +77,7 @@
              id="startBtnImg"
              class="slaveImg abs"
              :src="skinAssets.startBtnImg"
-             style="width:7.35rem;height:2.25rem;top:24.55rem;left:4.6rem;" />
+             style="width:7.35rem;height:2.25rem;top:22.55rem;left:4.6rem;" />
       </div>
 
       <div id="logoImgBox" class="logoImgBox imgContainer absCenter" style="">
