@@ -71,6 +71,7 @@ function getInfo() {
   let playPath = this.getPlayPath()
 
   return {
+    id: this.id,
     number: this.number,
     state: this.state,
     name: this.name,
