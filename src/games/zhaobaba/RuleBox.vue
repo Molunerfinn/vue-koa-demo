@@ -62,7 +62,7 @@
 
            <div id="gameDateTime" class="poupLine" data-sortKey="c">
              <div class="mainTitle">活动时间</div>
-             <p><span id="startDate">{{gameRound.start_at}}</span>&nbsp;-&nbsp;<span id="endDate">{{gameRound.end_at}}</span></p>
+             <p><span id="startDate">{{displayStartAt}}</span>&nbsp;-&nbsp;<span id="endDate">{{displayEndAt}}</span></p>
            </div>
            <div class="hostLine poupLine" data-sortKey="d">
              <div class="mainTitle">主办单位</div>
@@ -237,14 +237,18 @@ export default {
     },
     currentPlayerRank(){
       return (this.currentPlayer.rank!=undefined&&this.currentPlayer.rank!=null) && this.currentPlayer.rank>=0 ? this.currentPlayer.rank+1 : '无'
+    },
+    displayStartAt(){
+      return moment(this.gameRound.start_at).format('YYYY年MM月DD日 HH时mm分')
+    },
+    displayEndAt(){
+      return moment(this.gameRound.end_at).format('YYYY年MM月DD日 HH时mm分')
     }
   },
   methods: {
 
     //
     handleShowPopup( flag ){
-      this.gameRound.start_at = moment(this.gameRound.start_at).format('YYYY年MM月DD日 HH时mm分');
-      this.gameRound.end_at = moment(this.gameRound.end_at).format('YYYY年MM月DD日 HH时mm分');
       var silkBag = $("#ruleImg");
       var popupX = silkBag.offset().left + silkBag.width() / 2 + "px ";
       var popupY = silkBag.offset().top + silkBag.height() / 2 + "px";
