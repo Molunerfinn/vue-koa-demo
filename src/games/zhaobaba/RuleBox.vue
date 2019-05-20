@@ -224,7 +224,7 @@ export default {
         "background-size": "100% 100%",
         "background-image":"url("+this.ruleIconUrl+")",
       })
-      this.ui.iconVisible = true
+      //this.ui.iconVisible = true // 如果是用户注册界面，不应显示icon
     })
 
     $(".poupTitleBox .poupTitleMune,.poupTitleBox .slideBarTip").css("width", 13.25 / this.menuLen + "rem");
