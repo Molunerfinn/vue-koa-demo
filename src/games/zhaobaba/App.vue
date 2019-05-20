@@ -72,12 +72,12 @@
         <div class="totalPlayHint">您还有 <span class="totalPlayCount specil"></span> 次参与机会</div>
         <div class="dayPlayHint4Total">今天有 <span class="count specil todayPlayCount"></span> 次</div>
       </div>
-      <div id="startBtn" class="startBtn imgContainer absCenter" style="top:0rem;">
+      <div id="startBtn" class="startBtn imgContainer absCenter" style="">
         <img @touchend="handleStartGame"
              id="startBtnImg"
              class="slaveImg abs"
              :src="skinAssets.startBtnImg"
-             style="width:7.35rem;height:2.25rem;top:22.55rem;left:4.6rem;" />
+             style="width:7.35rem;height:2.25rem;top:75vh;left:4.6rem;" />
       </div>
 
       <div id="logoImgBox" class="logoImgBox imgContainer absCenter" style="">
