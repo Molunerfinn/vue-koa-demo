@@ -21,19 +21,7 @@ module.exports = (sequelize, DataTypes) => {
 
     }, {
       createdAt: 'created_at', updatedAt:'updated_at',
-      tableName: 'game_rounds',
-      getterMethods: {
-        displayStartAt() {
-          let mo = moment(this.start_at)
-          //2018年12月27日 10:00
-          return mo.format("YYYY年MM月DD日 hh:mm");
-        },
-        displayEndAt() {
-          let mo = moment(this.end_at)
-          //2018年12月27日 10:00
-          return mo.format("YYYY年MM月DD日 hh:mm");
-        }
-      },
+      tableName: 'game_rounds'
 
     })
 }

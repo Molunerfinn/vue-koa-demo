@@ -37,19 +37,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     createdAt: 'created_at',
     updatedAt: 'updated_at',
-    tableName: 'game_rounds',
-    getterMethods: {
-      displayStartAt() {
-        let mo = moment(this.start_at)
-        //2018年12月27日 10:00
-        return mo.format("YYYY年MM月DD日 hh:mm");
-      },
-      displayEndAt() {
-        let mo = moment(this.end_at)
-        //2018年12月27日 10:00
-        return mo.format("YYYY年MM月DD日 hh:mm");
-      }
-    },
+    tableName: 'game_rounds'
   })
 
   addHooks( model)
@@ -92,6 +80,7 @@ function getInfo() {
     end_at: this.end_at,
     contact_required: this.contact_required,
     duration: this.duration,
+    host: this.host,
     playPath: playPath
   }
 

@@ -26,19 +26,6 @@ module.exports = (sequelize, DataTypes) => {
         number: { type: DataTypes.STRING(24), allowNull: false, defaultValue: '' }
 
     }, {
-      createdAt: 'created_at', updatedAt:'updated_at',
-      getterMethods: {
-        displayStartAt() {
-          let mo = moment(this.start_at)
-          //2018年12月27日 10:00
-          return mo.format("YYYY年MM月DD日 hh:mm");
-        },
-        displayEndAt() {
-          let mo = moment(this.end_at)
-          //2018年12月27日 10:00
-          return mo.format("YYYY年MM月DD日 hh:mm");
-        }
-      },
-
+      createdAt: 'created_at', updatedAt:'updated_at'
     })
 }

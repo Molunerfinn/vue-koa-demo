@@ -187,18 +187,6 @@ module.exports = (sequelize, DataTypes) => {
     tableName: 'ido_game_rounds',
     createdAt: 'created_at',
     updatedAt: 'updated_at',
-    hooks: {},
-    getterMethods: {
-      displayStartAt() {
-        let mo = moment(this.start_at)
-        //2'0'18年12月27日 1'0':'0''0'
-        return mo.format("YYYY年MM月DD日 hh:mm");
-      },
-      displayEndAt() {
-        let mo = moment(this.end_at)
-        //2'0'18年12月27日 1'0':'0''0'
-        return mo.format("YYYY年MM月DD日 hh:mm");
-      }
-    },
+    hooks: {}
   })
 }

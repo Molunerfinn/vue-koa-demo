@@ -36,7 +36,7 @@
        <div id="ruleBox" class="poupMain" _flag="2" style="-webkit-overflow-scrolling:touch;">
          <div class="poupMainInfo">
            <div id="explainBox" class="poupLine" data-sortKey="a">
-             <div class="mainTitle">活动说明</div>
+             <div class="mainTitle">游戏规则</div>
 
              <p id="explaiDrawInfoBox" class="" v-html="gameRound.desc">
              </p>
