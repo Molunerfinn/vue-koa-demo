@@ -220,9 +220,9 @@ export default {
         showGameBox: true
       },
       gameState: 'initial', // start, restart, over
-      homeBgImg: require('@/assets/dp-pintu/image/skin1/wx/gameBg.jpg'),
-      titleImg: require('@/assets/dp-pintu/image/skin1/wx/title.png'),
-      startBtnImg: require('@/assets/dp-pintu/image/skin1/wx/start.png'),
+      homeBgImg: require('@/assets/dp-pintu/image/skin2/gamebg.jpg'),
+      titleImg: require('@/assets/dp-pintu/image/skin2/titleimg.png'),
+      startBtnImg: require('@/assets/dp-pintu/image/skin2/startbtn.png'),
       ui: {
         sign_up:false,
         homeVisible: true, // 初始页面是否可见，游戏时需要隐藏

@@ -1,0 +1,155 @@
+* {
+    margin: 0;
+    outline: 0;
+    padding: 0;
+    font-size: 100%;
+    -webkit-tap-highlight-color: transparent;
+}
+html{
+  height: 100%;  
+}
+body{
+  	margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+    /*font-family: "微软雅黑";*/
+    font-size: .6rem;
+    line-height: 1.231;
+    -webkit-touch-callout: none;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-box-align: stretch;
+    position: relative;
+}
+
+.hide {
+	display: none;
+}
+
+.body {
+	position: relative;
+	margin: auto;
+	width: 100%;
+	height: 100%;
+	min-height: 100%;
+	background-size: 100% auto;
+	-webkit-background-size: 100% auto;
+}
+
+.home {
+	width: 100%;
+	height: 100%;
+	text-align: center;
+}
+
+.gameInfoBox {
+	position: absolute;
+	top: .5rem;
+	width: 100%;
+}
+
+.home .titleImg {
+	top: 0;
+}
+
+.home .joinNumLine {
+	margin-top: .3rem;
+	color: #dad1eb;
+	font-size: .7rem;
+}
+
+.gameBox {
+	width: 100%;
+	height: 100%;
+}
+
+#gameBgBox {
+	overflow: hidden;
+	width: 100%;
+	height: 100%;
+	min-height: 25.2rem;
+}
+
+#gameBgBox img {
+	width: 100%;
+	height: auto;
+}
+
+.gameBox .userInfoBox {
+	margin-left: .75rem;
+}
+
+.gameBox .userInfoBox .userImgBox {
+	display: inline-block;
+	width: 2.5rem;
+	height: 2.5rem;
+	border: .1rem solid rgba(255,255,255,0.3);
+	border-radius: 999px;
+}
+
+.gameBox .userImgBox .userImg {
+	display: inline-block;
+	width: 100%;
+	height: 100%;
+	border-radius: 999px;
+}
+
+.gameBox .timeBox {
+	position: absolute;
+	top: 0;
+	right: 0;
+	left: 0;
+	margin: auto;
+	margin-top: .5rem;
+	width: auto;
+	text-align: center;
+}
+
+.gameBox .timeBox .time {
+	font-weight: bold;
+}
+
+#gameImgBox {
+	position: absolute;
+	top: 4rem;
+	left: 2.4rem;
+	width: 11.2rem;
+	height: 15.78rem;
+	background: url('/static/dp-pintu/image/case.png') no-repeat;
+	background-size: 100%;
+}
+
+#gameImgWrap {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+
+#gameImgWrap .puzzle {
+	position: absolute;
+	background-repeat: no-repeat;
+}
+
+#gameImgBox #gameImg {
+	margin: .35rem;
+	width: 10.5rem;
+	height: 15.08rem;
+	background-size: 100% 100%!important;
+}
+
+#gameImgBox .checked {
+	opacity: .8;
+}
+
+#gameImgBox .target {
+	opacity: .5;
+}
+
+#gameStartBtns img {
+	width: 100%;
+	height: 100%;
+}

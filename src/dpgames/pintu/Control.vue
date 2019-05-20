@@ -51,7 +51,8 @@
       <div class="fullfill game-state state-starting " v-show="computedGameState=='starting'">
         <div class="box-title">  <img src="" class="logo"> </div>
         <div class="box-body">
-          <p class="szbg">{{timeToStart}}</p>
+          <img class="countdownImg" :src='imgUrl'>
+          <!-- <p class="szbg">{{timeToStart}}</p> -->
         </div>
       </div>
 
@@ -141,6 +142,7 @@ export default {
   data() {
     return {
       //socket
+      imgUrl:'',
       MAX_TIME: constant.GameConstant.maxTime,
       s: 30,
       debug: true,
@@ -277,6 +279,7 @@ export default {
 			that.socket.on('GameStartingEvent', function(data){
 				that.gameRoundState = data.gameRoundState
 				that.timeToStart = data.timeToStart
+        that.imgUrl = "/static/dp-pintu/skin2/"+that.timeToStart+".png"
 			});
 			//绑定 游戏倒计时事件，游戏时间倒计时
 			that.socket.on('GameRunningEvent', function(data){

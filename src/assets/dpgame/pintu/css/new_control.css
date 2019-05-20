@@ -447,8 +447,8 @@
 .yao-btn {
   position: absolute;
   padding: 0;
-  top:35vh;
-  left:45vw;
+  top:38vh;
+  left:43vw;
   /*padding: 0 40px;*/
   width: 170px;
   height: 40px;
@@ -498,8 +498,8 @@
   text-align: center;
   top:25vh;
   bottom:25vh;
-  left:10vw;
-  right:10vw;
+  left:20vw;
+  right:20vw;
   background: #000;
 
   filter:alpha(opacity=50); /*支持 IE 浏览器*/
@@ -512,7 +512,7 @@ opacity:0.50; /*支持 Chrome, Opera, Safari 等浏览器*/
   position: absolute;
   top:30vh;
   bottom:0vh;
-  left:9.7vw;
+  left:10.5vw;
   right:50vw;
   font-size:25px;
   color: #FFF;
@@ -524,8 +524,8 @@ opacity:0.50; /*支持 Chrome, Opera, Safari 等浏览器*/
   text-align: center;
   top:25vh;
   bottom:25vh;
-  left:10vw;
-  right:10vw;
+  left:15vw;
+  right:15vw;
 
   /*margin: 80px auto;*/
 }
@@ -541,7 +541,7 @@ opacity:0.50; /*支持 Chrome, Opera, Safari 等浏览器*/
 
 .state-created .box-body img {
   position: absolute;
-  width: 60%;
+  width: 50%;
   margin: 80px 0 20px;
   left:30vw;
 }

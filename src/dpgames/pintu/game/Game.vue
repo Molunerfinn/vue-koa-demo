@@ -70,7 +70,7 @@ export default {
   },
   data () {
     return {
-      gameBg: require('@/assets/dp-pintu/image/skin1/wx/gameBg.jpg'),
+      gameBg: require('@/assets/dp-pintu/image/skin2/gamebg.jpg'),
       ui:{
         gameBoxVisible: false,
         gameStartImgVisible: false,
@@ -81,9 +81,9 @@ export default {
       isgameOver: false,
       rem: 20,
       skinAssets: {
-        gameStartImg : '/static/dp-pintu/image/skin/startbtn2.png',
-        tipsImg : '/static/dp-pintu/image/skin/tipsbtn.png',
-        gameImg : '/static/dp-pintu/image/skin/gameimg.jpg',
+        gameStartImg : '/static/dp-pintu/skin2/startbtn2.png',
+        tipsImg : '/static/dp-pintu/skin2/tipsbtn.png',
+        gameImg : '/static/dp-pintu/skin2/gameimg.jpg',
       },
       puzzleWidth: 0,
       puzzleHeight: 0,
