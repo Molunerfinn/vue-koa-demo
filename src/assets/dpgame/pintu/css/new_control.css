@@ -549,7 +549,7 @@ opacity:0.50; /*支持 Chrome, Opera, Safari 等浏览器*/
 .box-title img.logo {
   width: 40%;
   position: absolute;
-  top: 20vh;
+  top: 12vh;
   left: 30vw;
 }
 
