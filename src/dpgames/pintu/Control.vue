@@ -4,8 +4,9 @@
       <div  >
         <div id="qrcodeCanvas"></div>
         <div class="bg-nei-top">
-                <img src="" id="share-qrcode-img">
-        				<img src="~@/assets/dp-pintu/image/skin2/tu_03.png"  class="bg-nei-top-erwei" style="display:none;">
+          <div class="bg-nei-top-erwei">
+                <img src="" id="share-qrcode-img" >
+              </div>
                 <div class="bg-nei-top-right"><span></span><img src="~@/assets/dp-pintu/image/skin2/tu_05.png"></div>
         				<div class="bg-nei-top-zhong" ><img src=""  v-show="computedGameState=='open'||computedGameState=='started'">
                   <!-- <p  v-show="computedGameState=='started'"><span>游戏倒计时</span><strong>|</strong><span>剩余<b>{{timeToEnd}</b>秒</span></p> -->
@@ -21,11 +22,20 @@
         <div class="box-title">  <img src=""> </div>
         <div class="box-body-background"></div>
 
-        <div class="box-body">
-          <div class="tishi">扫描二维码</br>参与活动</div>
-          <div>    <img src="~@/assets/dp-pintu/image/skin2/bgtop.png">      </div>
-          <div class="shareimg"><img id="shareimg"></div>
-          <button class="start btn yao-btn btn-primary" @click="openGameHandler" >准备开始</button>
+        <div class="box-body2">
+          <div style="width:35%;height:100%;position:relative; float:left;">
+            <div class="shareimg-wrap"><img id="shareimg"></div>
+            <div class="shareimg-txt">扫描二维码</br>参与活动</div>
+          </div>
+
+          <div style="width:65%; height:100%;position:relative; float:left;">
+            <div class="gameimg-wrap">
+             </div>
+            <div class="shareimg-txt">
+              <button class="btn btn-primary" @click="openGameHandler" >准备开始</button>
+            </div>
+          </div>
+
         </div>
       </div>
 
@@ -382,31 +392,81 @@ export default {
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
   height: 100%;
   width: 100%;
 }
-.base{
 
+.bg-nei-top-erwei{
+  padding: 15px;
 }
 #share-qrcode-img{
-  position:absolute;
-  left:5vw;
-  width:auto;
-  height: 60%;
+   width: 100%;
+}
+.shareimg-wrap{
+  position: absolute;
+  top:0;
+  bottom: 3em;
+  left:0;
+  right: 0;
+  font-size: 25px;
+  padding: 20px;
+}
+.shareimg-wrap img{
+  height: 100%;
+}
+.shareimg-txt{
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3em;
+  font-size: 25px;
+  color: #FFF;
+}
+.gameimg-wrap{
+  position: absolute;
+  top:0;
+  bottom: 3em;
+  left:0;
+  right: 0;
+  font-size: 25px;
+  background-image: url('~@/assets/dpgame/pintu/skin-runlin/image/bgtop.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+}
+.gameimg-wrap img{
+  width: 100%;
+}
+.state-created .box-body2 {
+   position: absolute;
+   text-align: center;
+   top: 24vh;
+   bottom: 24vh;
+   left: 15vw;
+   right: 15vw;
+   /* margin: 80px auto; */
 }
 
-#shareimg{
-  position:absolute;
-  left:10vw;
-  width:auto;
-  height: 45%;
-}
 
+.state-created .box-body-background {
+  position: absolute;
+  text-align: center;
+  top:24vh;
+  bottom:24vh;
+  left:15vw;
+  right:15vw;
+  background: #000;
+  filter:alpha(opacity=50); /*支持 IE 浏览器*/
+  opacity:0.50; /*支持 Chrome, Opera, Safari 等浏览器*/
+  /*margin: 80px auto;*/
+}
+.actions{
+  text-align: center;
+}
 .dp-pintu {
   font-size: 14px;
 }

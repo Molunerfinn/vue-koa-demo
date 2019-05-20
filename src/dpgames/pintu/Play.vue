@@ -70,6 +70,9 @@
 </template>
 
 <script>
+import '@/assets/dpgame/pintu/skin-runlin/css/play.css'
+
+
 import weui from 'weui.js'
 import Game from './game/Game.vue'
 import GameRes from './game/GameRes'
