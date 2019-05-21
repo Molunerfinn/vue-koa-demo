@@ -299,7 +299,7 @@ export default class GamesController {
 
       let rankInfo = {
         allPlayer: res,
-        thisPlayer: thisPlayer,
+        thisPlayer: thisPlayer.getInfo(),
         page: 1,
         pageSize: 100,
         total: 100

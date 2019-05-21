@@ -1,6 +1,5 @@
 <template>
-  <div class="sign_up"  >
-
+  <div class="sign_up" style="display:none" v-show="ui.statusBox">
     <div class="weui-toptips weui-toptips_warn js_tooltips"></div>
     <div id="awardUserInfoBox" class="page  input js_show">
       <div class="awardUserInfoTitle">
@@ -48,10 +47,26 @@
 </template>
 
 <script>
+import weui from 'weui.js'
+import queryString from 'query-string'
+import {
+  postMsg
+} from '@/api/dpgame/pintu.js'
 export default {
+  props: {
+    gamePlayer: { // 游戏player相关数据
+      type: Object,
+      default: {}
+    },
+    command:{
+      default: 'none' // 可选值: show, hide
+    }
+  },
   data () {
     return {
-      gamePlayer: {},
+      ui:{
+        statusBox: false
+      },
       account: '',
       password: ''
     }
@@ -89,17 +104,26 @@ export default {
           tel:tel
         }
         postMsg(number,data).then((res)=>{
-          this.gamePlayer = res
-          this.ui.sign_up = false
-          this.ui.homeVisible = true
-          return res
+          this.$emit('signUpOver',res)
+          this.statusBox = false
         })
-        this.ui.wait = true
-        this.ui.homeVisible = true
-        let that = this
-        that.ruleBoxCommand = 'showIcon'
+
       }
     },
+  },
+  watch: {
+    command: function (val, oldVal) {
+      //外部触发游戏开始
+      console.log('watch-command new: %s, old: %s', val, oldVal)
+      if( val == 'show'){
+        console.log('show');
+        this.ui.statusBox = true
+      }else{
+        console.log('hide');
+        this.ui.statusBox = false
+      }
+
+    }
   }
 }
 </script>
