@@ -514,8 +514,8 @@
     height: auto;
   }
 
-  .dp-pintu {
-    font-size: 14px;
+  .home {
+    overflow: hidden;
   }
   .gamestate .msg {
     position: absolute;
