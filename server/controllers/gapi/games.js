@@ -67,7 +67,9 @@ export default class GamesController {
     console.log('url===================:', url);
     let gameInfo = await gameRound.getInfo()
     let wxConfig = await getWxJsConfig(url)
-    console.log('wxConfig=======:', wxConfig);
+    const gameUrlBase = process.env.GAME_URL_BASE
+    let shareUrl = gameUrlBase + '/authwx/game?gameurl=' + gameUrlBase + gameRound.getPlayPath()
+    wxConfig.shareUrl = shareUrl
     var allInfo = {
       gameRound: gameInfo,
       gamePlayer: playerInfo,
