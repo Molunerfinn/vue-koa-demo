@@ -1,47 +1,8 @@
 <template>
 <div id="app">
-  <div class="sign_up" v-show="ui.sign_up">
-        <div class="weui-toptips weui-toptips_warn js_tooltips"></div>
-        <div id="awardUserInfoBox" class="page  input js_show">
-            <div><img class="logoImg"  style="position:absolute;width:18vw; height:auto; top:2vh; left:8vw;"src="~@/assets/dp-pintu/image/skin2/logo.png"></div>
-            <div><img class="signUpTitleImg" :src="titleImg"></div>
-
-            <div class="awardUserInfoForm">
-              <div style="text-align: center"><img id="headImg" v-bind:src="gamePlayer.avatar"></div>
-                <div class="weui-cells weui-cells_form">
-                    <div class="weui-cell contactInput-ausername contactInput">
-                        <div class="weui-cell__hd"><label class="weui-label">姓名</label></div>
-                        <div class="weui-cell__bd">
-                            <input style="margin:0px;border: none;" id="name" class="weui-input theInputDecide textInput" propname="姓名" propkey="ausername" type="text" placeholder="请输入姓名">
-                        </div>
-                        <div class="weui-cell__ft warnIcon hide">
-                            <i class="weui-icon-warn"></i>
-                        </div>
-                    </div>
-                    <div class="weui-cell contactInput-aphone contactInput">
-                        <div class="weui-cell__hd"><label class="weui-label">联系电话</label></div>
-                        <div class="weui-cell__bd">
-                            <input style="margin:0px;border: none;" id="tel" class="weui-input theInputDecide textInput" propname="联系电话" propkey="aphone" type="text" placeholder="请输入联系电话">
-                        </div>
-                        <div class="weui-cell__ft warnIcon phoneWarn hide">
-                            <i class="weui-icon-warn"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="weui-cells__tips">
-                注:若因未填写资料或资料填写错误导致无法兑奖，主办方不承担相关法律责任;
-            </div>
-            <div class="weui-btn-area">
-                <a class="weui-btn weui-btn_primary userSubmitBtn" @click="post_msg()" href="javascript:" id="showTooltips">提交</a>
-            </div>
-        </div>
-  </div>
 
   <div class="home" v-show="ui.homeVisible">
     <div v-show="ui.wait">
-      <div><img class="signUpTitleImg" :src="titleImg"></div>
       <div id="homeBgBox">
         <img id="homeBg" :src="homeBgImg" />
       </div>
@@ -67,14 +28,11 @@
   <LoadToast ref="load-toast" is-loading="loadToast.isLoading"> </LoadToast>
   <ResultBox ref="result-box" :home-callback="home" @rankBtnClicked="getRank" :again-callback="handleGameRestart" v-show="resultBoxVisible" :params="resultBoxParams" :command="resultBoxCommand"> </ResultBox>
   <RuleBox :ruleIconUrl="skinAssets.ruleIconPath" :game-round="gameRound" :game-player="gamePlayer" :params="resultBoxParams" :command="ruleBoxCommand" @commandDone="handleResetRuleCommand"> </RuleBox>
+  <SignUp :game-player="gamePlayer" :command="signUpCommand" @signUpOver="signUpOver"> </SignUp>
 </div>
 </template>
 
 <script>
-import '@/assets/dpgame/pintu/skin-runlin/css/play.css'
-
-
-import weui from 'weui.js'
 import Game from './game/Game.vue'
 import GameRes from './game/GameRes'
 import GameArg from './game/GameArg'
@@ -82,12 +40,12 @@ import HdGame from '@/lib/hdgame'
 import GameState from '@/lib/GameState'
 import {
   setAchievebycode,
-  getGameResult,
-  postMsg,
+  getGameResult
 } from '@/api/dpgame/pintu.js'
 import LoadToast from '@/components/LoadToast.vue'
 import ResultBox from './ResultBox.vue'
 import RuleBox from './RuleBox.vue'
+import SignUp from '@/components/SignUp.vue'
 import {
   GameBackgroundMusicLoadEvent
 } from '@/lib/GameEvent'
@@ -115,7 +73,8 @@ export default {
     Game,
     LoadToast,
     ResultBox,
-    RuleBox
+    RuleBox,
+    SignUp
   },
   created() {
     var that = this
@@ -178,7 +137,8 @@ export default {
         this.gameState=GameState.created
       }else if((this.gameState==GameState.open||this.gameState==GameState.created)&&this.gamePlayer.token==undefined&&this.gameInfo['gameRound'].contact_required==1){
         this.ui.homeVisible = false
-        this.ui.sign_up = true
+        this.ruleBoxCommand = 'hideIcon'
+        this.signUpCommand = 'show'
       }else if ((this.gameState==GameState.open||this.gameState==GameState.created)&&(this.gamePlayer.token!==undefined||this.gameInfo['gameRound'].contact_required==0)) {
         this.ruleBoxCommand = 'showIcon'
         this.ui.wait = true
@@ -253,6 +213,7 @@ export default {
       resultBoxParams: {},
       resultBoxCommand: null,
       ruleBoxCommand: null,
+      signUpCommand:null,
       timeToEnd: 30
     }
   },
@@ -269,7 +230,7 @@ export default {
         console.log(that.gameInfo['gameRound'].contact_required==1);
         if(that.gameState==GameState.open&&that.gamePlayer.token==undefined&&that.gameInfo['gameRound'].contact_required==1){
           that.ui.homeVisible = false
-          that.ui.sign_up = true
+          that.signUpCommand = 'show'
         }else if (that.gameState==GameState.open&&(that.gamePlayer.token!==undefined||that.gameInfo['gameRound'].contact_required==0)) {
           that.ui.wait = true
           that.ui.homeVisible = true
@@ -323,49 +284,7 @@ export default {
         that.resultBoxVisible = true
 			});
   },
-    post_msg: function () {
-      console.log('========post_msg========');
-      var msg_is_ok = true
-      var realname = document.getElementById('name').value
-      var tel = parseInt(document.getElementById('tel').value)
 
-      if (realname == '') {
-        weui.form.showErrorTips({
-          ele: document.getElementById("name"),
-          msg: '姓名不能为空'
-        });
-        msg_is_ok = false
-      }
-
-      var tel0 = /^1\d{10}$/
-      var ema = document.getElementById('tel').value
-      if (tel0.test(ema) == false) {
-          weui.form.showErrorTips({
-            ele: document.getElementById("tel"),
-            msg: '电话格式错误'
-          });
-          msg_is_ok = false
-      }
-      if(msg_is_ok){
-        const parsed = queryString.parse(location.search);
-        var number = parsed.number;
-        var data = {
-          gamePlayer: this.gamePlayer,
-          realname:realname,
-          tel:tel
-        }
-        postMsg(number,data).then((res)=>{
-          this.gamePlayer = res
-          this.ui.sign_up = false
-          this.ui.homeVisible = true
-          return res
-        })
-        this.ui.wait = true
-        this.ui.homeVisible = true
-        let that = this
-        that.ruleBoxCommand = 'showIcon'
-      }
-    },
     handleStartGame(event) {
       event.preventDefault()
 
@@ -531,6 +450,15 @@ export default {
     getRank(event){
       console.log("App - getRank ")
       this.ruleBoxCommand = 'showRank'
+    },
+    signUpOver(res){
+      console.log('==============signUpOver==============');
+      this.ui.homeVisible = true
+      this.ui.wait = true
+      this.gamePlayer = res
+      let that = this
+      that.ruleBoxCommand = 'showIcon'
+      that.signUpCommand = 'hide'
     },
     initBackgroundMusic() {
     },
