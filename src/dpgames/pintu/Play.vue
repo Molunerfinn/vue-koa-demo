@@ -52,6 +52,8 @@
              :command="ruleBoxCommand"
              @commandDone="handleResetRuleCommand"> </RuleBox>
     <SignUp :game-player="gamePlayer" :command="signUpCommand" @signUpOver="signUpOver"> </SignUp>
+
+    <div id="debugMsg" class="debug-msg" v-show="debug">   </div>
   </div>
 
 </template>
@@ -131,9 +133,14 @@
       that.socketNameSpace = '/channel-dppintu-' + number
       that.socket = io(that.socketNameSpace, { transports: ['websocket'] })
       that.socket.on('connect', () => {
+        HdGame.tlog( "debug", " websockt connected ")
         that.loading = false
         that.bindSocketEvents()
       })
+
+      that.socket.on('disconnect', () => {
+        HdGame.tlog( "debug", " websockt disconnect ")
+      });
 
       getGameResult(number, params).then(data => {
         this.gameInfo = data
@@ -209,6 +216,7 @@
     },
     data() {
       return {
+        logMsg: '',
         countdownImg: null,
         debug: true,
         hasFinish: false,
@@ -534,5 +542,14 @@
     margin-left: -10vw;
     margin-top: -10vw;
     color: #fff;
+  }
+  .debug-msg{
+    z-index: 99999;
+    background-color: red;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    color: #fff;
+    padding: 5px;
   }
 </style>
