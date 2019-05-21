@@ -41,6 +41,7 @@
 
   <div class="home" v-show="ui.homeVisible">
     <div v-show="ui.wait">
+      <div><img class="signUpTitleImg" :src="titleImg"></div>
       <div id="homeBgBox">
         <img id="homeBg" :src="homeBgImg" />
       </div>
