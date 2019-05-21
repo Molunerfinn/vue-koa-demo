@@ -299,7 +299,7 @@ export default class GamesController {
         },
         limit: 100,
         order: [
-          ['max_score', 'DESC']
+          ['max_score', 'ASC']
         ],
       })
 
@@ -310,9 +310,11 @@ export default class GamesController {
         }
       })
 
+      thisPlayer.rank = await thisPlayer.currentPositionAsc()
+
       let rankInfo = {
         allPlayer: res,
-        thisPlayer: thisPlayer.getInfo(),
+        thisPlayer: thisPlayer,
         page: 1,
         pageSize: 100,
         total: 100
