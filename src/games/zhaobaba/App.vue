@@ -188,6 +188,7 @@
           this.ui.unstarted = false
           this.ui.sign_up = true
         } else if (this.gamePlayer.token !== undefined) {
+          this.ruleBoxCommand = 'showIcon'
           this.ui.homeVisible = true
         }
 
