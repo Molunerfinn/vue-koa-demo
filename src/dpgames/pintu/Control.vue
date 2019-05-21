@@ -59,33 +59,22 @@
           </div>
        </div>
       <div class="fullfill game-state state-starting " v-show="computedGameState=='starting'">
-        <div class="box-title">  <img src="" class="logo"> </div>
+        <div class="box-title"> <img src="~@/assets/dpgame/pintu/image/game_logo.png" class="logo"> </div>
         <div class="box-body">
-          <img class="countdownImg" :src='imgUrl'>
+          <img class="countdown-img" :src='countDownImage'>
           <!-- <p class="szbg">{{timeToStart}}</p> -->
         </div>
       </div>
 
       <div class="fullfill game-state state-started" v-show="computedGameState=='started'">
-        <p style="font-size:30px;">剩余{{timeToEnd}}秒</p>
-           <ul class="players">
-            <li v-for="(player,i ) in computedTop12Players">
-              <span class="bg-nei-yd"><img class="avatar" v-bind:src="player.avatar"></span>
-              <div class="progress-wrap clear-fix">
-                <div class="progress">
-                <div class="progress-bar progress-bar-warning progress-bar-striped active" v-bind:style="{width: player.percent+'%'}">
-                  <div v-bind:class="['progress-value','car'+i]" >{{player.score}}</div>
-                </div>
-                </div>
-              </div>
-            <span class="mingzi">{{player.nickname}}</span>
-            </li>
-          </ul>
+        <div class="box-title">  <img src="~@/assets/dpgame/pintu/image/game_logo.png" class="logo"> </div>
+
+        <p  class="timetoend" style="font-size:30px;">剩余{{timeToEnd}}秒</p>
 
       </div>
 
       <div class="fullfill game-state state-completed" v-show="computedGameState=='completed'">
-        <div class="box-title">  <img src="~@/assets/dp-pintu/image/skin2/pm_03.png" class="logo"> </div>
+        <div class="box-title">  <img src="~@/assets/dpgame/pintu/image/game_logo.png" class="logo"> </div>
         <div class="player-rank clearfix">
           <div class="pm-top5">
           <table class="rank  ">
@@ -145,6 +134,13 @@ import '@/assets/dpgame/pintu/skin-runlin/css/control.css'
 
 const skin = 'runlin'
 const gameUrlBase = process.env.GAME_URL_BASE
+
+const countDownImages = [
+  require('@/assets/dpgame/pintu/image/c0.png'),
+  require('@/assets/dpgame/pintu/image/c1.png'),
+        require('@/assets/dpgame/pintu/image/c2.png'),
+        require('@/assets/dpgame/pintu/image/c3.png'),
+      ]
 export default {
   name: 'control',
   components: {
@@ -152,7 +148,7 @@ export default {
   data() {
     return {
       //socket
-      imgUrl:'',
+      countDownImage: null,
       MAX_TIME: constant.GameConstant.maxTime,
       s: 30,
       debug: true,
@@ -198,6 +194,7 @@ export default {
       this.error = true
       this.errorMsg = "游戏不存在！"
     }
+    that.countDownImage = countDownImages[that.timeToStart]
 
 
   },
@@ -211,7 +208,7 @@ export default {
 				case 'open': return 'open';
 				case 'ready': return 'ready';
 				case 'starting': return 'starting';
-				case 'started': return 'simport $ from "jquery";tarted';
+				case 'started': return 'started';
 				case 'completed': return 'completed';
 				case 'disabled': return 'disabled';
 				default: return 'unkonwn'
@@ -290,7 +287,7 @@ export default {
 				that.gameRoundState = data.gameRoundState
 				that.timeToStart = data.timeToStart
         console.log('timeToStart--:',that.timeToStart);
-        that.imgUrl = "/static/dp-pintu/skin2/"+that.timeToStart+".png"
+        that.countDownImage = countDownImages[that.timeToStart]
 			});
 			//绑定 游戏倒计时事件，游戏时间倒计时
 			that.socket.on('GameRunningEvent', function(data){
@@ -321,6 +318,7 @@ export default {
 				that.gameRoundState = data.gameRoundState
         that.gamePlayerScores = data.gamePlayerScores
         that.timeToStart = 3
+        that.countDownImage = countDownImages[that.timeToStart]
         for(var i=0; i< that.gamePlayerScores.length; i++){
           if(that.gamePlayerScores[i].score == that.MAX_TIME){
             that.gamePlayerScores[i].score = 0
@@ -469,5 +467,20 @@ export default {
 }
 .dp-pintu {
   font-size: 14px;
+}
+
+
+.countdown-img{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  width: 12vh;
+  height: 12vh;
+  margin-left: -6vh;
+}
+.timetoend{
+  text-align: center;
+  color: #fff;
 }
 </style>
