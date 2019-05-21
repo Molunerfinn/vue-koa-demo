@@ -17,8 +17,8 @@
           <p class="msg">请耐心等待游戏开始 </p>
         </div>
 
-        <div v-show="gameRoundState=='starting'">
-          <img :src='countdownImg'>
+        <div  class="gamestate" v-show="gameRoundState=='starting'">
+          <img class="countdownimg" :src='countdownImg'>
         </div>
       </div>
 
@@ -525,5 +525,14 @@
     color: #fff;
     text-align: center;
   }
-
+  .gamestate .countdownimg{
+    position: absolute;
+    top: 50vh;
+    left: 50vw;
+    width: 20vw;
+    height: 20vw;
+    margin-left: -10vw;
+    margin-top: -10vw;
+    color: #fff;
+  }
 </style>
