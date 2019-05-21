@@ -77,8 +77,8 @@ async function getInfo() {
   let isSuc = this.score < this.max_score
   let score = this.score
   let bestScore = this.max_score //bestScore
-  let rank = await this.currentPositionDesc()
-  let beat = await this.beat()
+  let rank = await this.currentPositionAsc()
+  let beat = await this.beatAsc()
 
   return {
     token: this.token,
