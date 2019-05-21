@@ -1,6 +1,6 @@
 import $ from "jquery"
 
-const m_debug = true
+const m_debug = false
 
 const Log = {
   tlog: function(logFlag, logStr) {

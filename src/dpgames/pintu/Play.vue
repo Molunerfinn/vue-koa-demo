@@ -224,7 +224,7 @@
       return {
         logMsg: '',
         countdownImg: null,
-        debug: true,
+        debug: false,
         hasFinish: false,
         gameInfo: {},
         wx_config: {},
