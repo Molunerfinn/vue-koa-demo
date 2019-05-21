@@ -8,3 +8,11 @@
 .runlin .Panel.Top{
   background-color: transparent;
 }
+
+
+.runlin .game-wrap{
+  background-image: url('../image/gameimg.jpg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}

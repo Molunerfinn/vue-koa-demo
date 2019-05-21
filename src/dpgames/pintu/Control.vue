@@ -68,8 +68,11 @@
 
       <div class="fullfill game-state state-started" v-show="computedGameState=='started'">
         <div class="box-title">  <img src="~@/assets/dpgame/pintu/image/game_logo.png" class="logo"> </div>
+        <div class="game-wrap">
 
-        <p  class="timetoend" style="font-size:30px;">剩余{{timeToEnd}}秒</p>
+          <p  class="timetoend" style="font-size:30px;">剩余{{timeToEnd}}秒</p>
+        </div>
+
 
       </div>
 
@@ -480,7 +483,18 @@ export default {
   margin-left: -6vh;
 }
 .timetoend{
+  position: absolute;
+  bottom: 0;
   text-align: center;
   color: #fff;
+  text-align: center;
+  width: 100%;
+}
+.game-wrap{
+  position: absolute;
+  top: 30vh;
+  bottom: 20vh;
+  left: 0;
+  right: 0;
 }
 </style>

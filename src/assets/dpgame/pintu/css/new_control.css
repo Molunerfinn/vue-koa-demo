@@ -553,21 +553,6 @@ opacity:0.50; /*支持 Chrome, Opera, Safari 等浏览器*/
   left: 30vw;
 }
 
-.state-started {
-  position: relative;
-}
-
-.game-state .players {
-  position: absolute;
-  left: 60px;
-  right: 60px;
-  top: 10px;
-  bottom: 10px;
-  overflow: auto;
-  margin: 0;
-  color: #fff;
-}
-
 .progress-wrap {
   padding: 12.5px 150px 10px 80px;
 }

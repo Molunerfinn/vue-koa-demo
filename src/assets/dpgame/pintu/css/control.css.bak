@@ -439,11 +439,6 @@
   display: inline-block;
 }
 
-.fullfill{
-  width: 100%;
-  height: 100%
-}
-
 .yao-btn {
   padding: 0;
   /*padding: 0 40px;*/
@@ -491,14 +486,8 @@
 }
 
 .state-created .box-body {
-  position: absolute;
   text-align: center;
-  top:25vh;
-  bottom:25vh;
-  left:15vw;
-  right:15vw;
-
-  /*margin: 80px auto;*/
+  margin: 80px auto;
 }
 
 .state-starting {

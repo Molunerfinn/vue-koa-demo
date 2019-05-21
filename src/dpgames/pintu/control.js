@@ -6,8 +6,8 @@ import Control from './Control.vue'
 // import 'element-ui/lib/theme-default/index.css'
 // import VueRouter from 'vue-router'
 import 'bootstrap/dist/css/bootstrap.css'
-import '@/assets/common/css/new_control-base.css'
-import '@/assets/dpgame/pintu/css/new_control.css'
+import '@/assets/common/css/control-base.css'
+import '@/assets/dpgame/pintu/css/control.css'
 
 
 //import EventBus  from '@/plugins/EventBus'
