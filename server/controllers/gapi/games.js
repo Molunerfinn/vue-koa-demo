@@ -231,9 +231,11 @@ export default class GamesController {
         }
       })
 
+      thisPlayer.rank = await thisPlayer.currentPositionDesc()
+
       let rankInfo = {
         allPlayer: res,
-        thisPlayer: thisPlayer.getInfo(),
+        thisPlayer: thisPlayer,
         page: 1,
         pageSize: 100,
         total: 100
