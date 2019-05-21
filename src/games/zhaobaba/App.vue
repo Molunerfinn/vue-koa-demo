@@ -179,8 +179,6 @@
         this.gameState = this.gameRound.state
         this.gamePlayer = this.gameInfo['gamePlayer']
         this.dataList = this.gameRound.dataList
-        this.playPath = this.gameRound.playPath
-        console.log('playPath', this.gameRound.playPath)
 
         if (this.gamePlayer.token == undefined) {
           this.ruleBoxCommand = 'hideIcon'
@@ -200,7 +198,7 @@
           let wxShareArg = {
             title: this.gameRound.name,
             desc: '请点击查看详情...',
-            link: gameUrlBase + '/authwx/game?gameurl=' + gameUrlBase + this.playPath,
+            link: wxConfig.shareUrl,
             imgUrl: gameUrlBase + '/static/game/zhaobaba/skin/image/wx/share.jpg'
           }
           HdGame.setWxShare(wxShareArg)
