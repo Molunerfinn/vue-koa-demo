@@ -1,6 +1,6 @@
 const imageBase = '/static/dpgame/pintu/image'
 
-const skinResRoot="/static/dpgame/pintu/skin"
+const skinResRoot="/static/dpgame/pintu/skin2"
 
 const GameRes = {
   "loadingStyle": 1,

@@ -217,7 +217,6 @@ export default {
 				"background-size": "100% 100%",
 				"background-image":"url("+this.ruleIconUrl+")",
 			})
-      this.ui.iconVisible = true
     })
 
   },
