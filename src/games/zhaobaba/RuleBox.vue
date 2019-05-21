@@ -236,7 +236,7 @@ export default {
       return this.gamePlayerRank.length > 0
     },
     currentPlayerRank(){
-      return (this.currentPlayer.rank!=undefined&&this.currentPlayer.rank!=null) && this.currentPlayer.rank>=0 ? this.currentPlayer.rank+1 : '无'
+      return (this.currentPlayer.rank!=undefined&&this.currentPlayer.rank!=null) && this.currentPlayer.rank>=0 ? this.currentPlayer.rank : '无'
     },
     displayStartAt(){
       return moment(this.gameRound.start_at).format('YYYY年MM月DD日 HH时mm分')
