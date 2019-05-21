@@ -137,10 +137,16 @@
         that.loading = false
         that.bindSocketEvents()
       })
+      that.socket.on('connect_error', () => {
+        HdGame.tlog( "debug", " websockt connect_error ")
+      })
 
+      that.socket.on('ping', () => {
+        HdGame.tlog( "debug", " websockt ping ")
+      })
       that.socket.on('disconnect', () => {
         HdGame.tlog( "debug", " websockt disconnect ")
-      });
+      })
 
       getGameResult(number, params).then(data => {
         this.gameInfo = data
@@ -261,7 +267,6 @@
         var that = this
         that.socket.on('GameOpeningEvent', function(data) {
           console.log('GameOpeningEvent')
-          console.log(data)
           that.gameRoundState = data.gameRoundState
           that.resultBoxVisible = false
           console.log('that.gameInfo====:', that.gameInfo)
