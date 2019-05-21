@@ -259,8 +259,8 @@ export default class GamesController {
       ret.score = gameResult.score
 
       ret.bestScore = gamePlayer.max_score //bestScore
-      let rank = await gamePlayer.currentPositionDesc()
-      let beat = await gamePlayer.beat()
+      let rank = await gamePlayer.currentPositionAsc()
+      let beat = await gamePlayer.beatAsc()
       ret.rank = rank
       ret.beat = beat
       ret.hasLot = false

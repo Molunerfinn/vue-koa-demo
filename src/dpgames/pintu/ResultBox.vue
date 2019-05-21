@@ -60,7 +60,7 @@
       <div class="attentionBox">
         <div class=" resule-foot-box">
           <div id="drawMenuBtnBox" class="menuBtnBox resule-foot-two">
-            <div  @touchend="handleSeeRank" id="resule_seeRank_show" class="resule-button resule-status-seeRank">排行榜</div>
+            <!-- <div  @touchend="handleSeeRank" id="resule_seeRank_show" class="resule-button resule-status-seeRank">排行榜</div> -->
 
           </div>
         </div>

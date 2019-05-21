@@ -45,12 +45,12 @@
                v-show="resultBoxVisible"
                :params="resultBoxParams"
                :command="resultBoxCommand"> </ResultBox>
-    <RuleBox :ruleIconUrl="skinAssets.ruleIconPath"
+    <!-- <RuleBox :ruleIconUrl="skinAssets.ruleIconPath"
              :game-round="gameRound"
              :game-player="gamePlayer"
              :params="resultBoxParams"
              :command="ruleBoxCommand"
-             @commandDone="handleResetRuleCommand"> </RuleBox>
+             @commandDone="handleResetRuleCommand"> </RuleBox> -->
     <SignUp :game-player="gamePlayer" :command="signUpCommand" @signUpOver="signUpOver"> </SignUp>
 
     <div id="debugMsg" class="debug-msg" v-show="debug">   </div>
