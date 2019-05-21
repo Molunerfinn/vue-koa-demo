@@ -57,21 +57,7 @@ export default class GameRoundController {
   static async createRound(ctx) {
     let gameRoundParams = ctx.request.body.game_round
     try {
-      if (gameRoundParams.start_at == null || gameRoundParams.end_at == null) {
-        throw ('start_at and end_at can not be null')
-      }
-
-      if (gameRoundParams.duration == null) {
-        throw ('duration can not be null')
-      }
-
-      if (gameRoundParams.name == null) {
-        throw ('name can not be null')
-      }
-
-      if (gameRoundParams.code == null) {
-        throw ('code can not be null')
-      }
+      
       // code 在 url 中 或者 在参数中 game_round
       let code = ctx.query.code || gameRoundParams.code
       let Model = getGameRoundModelByCode(gameRoundParams.code)

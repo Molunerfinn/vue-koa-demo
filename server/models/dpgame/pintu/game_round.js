@@ -3,7 +3,18 @@ var moment = require('moment')
 module.exports = (sequelize, DataTypes) => {
   const model = sequelize.define('DpPintuGameRound', {
     game_id: DataTypes.BIGINT(11),
-    name: DataTypes.STRING,
+    name: {
+      type:DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        IsNull: function(value) {
+          if (value == null) {
+            console.log('name can not be null');
+            throw new Error('name can not be null')
+          }
+        }
+      }
+    },
     state: {
       type: DataTypes.STRING(24),
       defaultValue: 'created'
@@ -15,12 +26,29 @@ module.exports = (sequelize, DataTypes) => {
     award_desc: DataTypes.TEXT,
     duration: {
       type: DataTypes.BIGINT(11),
-      defaultValue: '0'
+      defaultValue: '0',
+      allowNull: false,
+      validate: {
+        IsNull: function(value) {
+          if (value == null) {
+            console.log('duration can not be null');
+            throw new Error('duration can not be null')
+          }
+        }
+      }
     },
     code: {
       type: DataTypes.STRING(24),
       allowNull: false,
-      defaultValue: ''
+      defaultValue: '',
+      validate: {
+        IsNull: function(value) {
+          if (value == null) {
+            console.log('code can not be null');
+            throw new Error('code can not be null')
+          }
+        }
+      }
     },
     appid: {
       type: DataTypes.STRING(64),
