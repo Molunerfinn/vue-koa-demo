@@ -1,3 +1,7 @@
+import $ from "jquery"
+
+const m_debug = true
+
 const Log = {
   tlog: function(logFlag, logStr) {
     // if (/log/.test(g_config.testCMD)) {
@@ -9,12 +13,12 @@ const Log = {
     this._log(logFlag, logStr, true)
   },
   _log: function(logFlag, logStr, isErr) {
-    // if (!m_debug) {
-    //   return
-    // }
+    if (!m_debug) {
+       return
+    }
 
-    console.log(logFlag+':'+logStr)
-
+    let s = logFlag+':'+logStr
+    $('#debugMsg').html( s )
   }
 }
 
