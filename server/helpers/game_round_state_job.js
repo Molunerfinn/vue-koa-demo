@@ -62,6 +62,8 @@ function addGameRoundStartJob(gameround) {
 function addGameRoundEndJob(gameround) {
   if ((gameround.start_at instanceof Date) && (gameround.end_at instanceof Date)) {
     //游戏状态为 ‘新建’， 才可以开始
+    let Model = getGameRoundModelByCode( gameround.code )
+
     console.log(" gameround.start_at= ", gameround.start_at.toLocaleString())
     if ((gameround.end_at > new Date()) && (gameround.state != GameRoundStates.completed)) {
       let Model = getGameRoundModelByCode( gameround.code )
@@ -80,7 +82,7 @@ function addGameRoundEndJob(gameround) {
           let max = moment().add({
             minutes: 5
           }).toDate()
-          .Model.update({
+          Model.update({
             state: GameRoundStates.completed
           }, {
             where: {
