@@ -151,7 +151,7 @@
           let wxShareArg = {
             title: this.gameRound.name,
             desc: this.gameRound.desc,
-            link: gameUrlBase + '/authwx/game?gameurl=' + gameUrlBase + this.playPath,
+            link: wxConfig.shareUrl,
             imgUrl: gameUrlBase + '/static/game/zhaobaba/skin/image/wx/share.jpg'
           }
           console.log('wxShareArg=====:', wxShareArg)

@@ -25,7 +25,12 @@ export default class GamesController {
                   number
               }
           })
-          ctx.body = round
+          const gameUrlBase = process.env.GAME_URL_BASE
+          var shareUrl = gameUrlBase + '/authwx/game?gameurl='+gameUrlBase+'/dppintu-play.html?number='+number
+          ctx.body = {
+            round: round,
+            shareUrl: shareUrl
+          }
       } catch (error) {
           ctx.throw(messageContent.ResponeStatus.CommonError, `show round ${ctx.params.id} fail: ` + error, { expose: true })
       }
@@ -88,6 +93,10 @@ export default class GamesController {
         // 取得玩家相关信息
         playerInfo = await gamePlayer.getInfo()
       }
+
+      const gameUrlBase = process.env.GAME_URL_BASE
+      let shareUrl = gameUrlBase + '/authwx/game?gameurl=' + gameUrlBase + gameRound.getPlayPath()
+      wxConfig.shareUrl = shareUrl
       var allInfo = {
         gameRound: gameRound.getInfo(),
         gamePlayer: playerInfo,
@@ -121,6 +130,10 @@ export default class GamesController {
       ret.beat = beat
       ret.hasLot = false
       // 每个游戏 GameRound
+
+      const gameUrlBase = process.env.GAME_URL_BASE
+      let shareUrl = gameUrlBase + '/authwx/game?gameurl=' + gameUrlBase + gameRound.getPlayPath()
+      wxConfig.shareUrl = shareUrl
 
       console.log('url===================:', url);
       console.log('wxConfig=======:', wxConfig);

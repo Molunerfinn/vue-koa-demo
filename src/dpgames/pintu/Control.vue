@@ -136,7 +136,6 @@ import constant from '@/game_constant.js'
 import '@/assets/dpgame/pintu/skin-runlin/css/control.css'
 
 const skin = 'runlin'
-const gameUrlBase = process.env.GAME_URL_BASE
 
 const countDownImages = [
   require('@/assets/dpgame/pintu/image/c0.png'),
@@ -151,6 +150,7 @@ export default {
   data() {
     return {
       //socket
+      shareUrl:'',
       countDownImage: null,
       MAX_TIME: constant.GameConstant.maxTime,
       s: 30,
@@ -179,8 +179,10 @@ export default {
     const parsed = queryString.parse(location.search);
     if( parsed.number != null ){
       getGameInfoForDp( parsed.number ).then((res)=>{
-        that.socketNameSpace = "/channel-dppintu-"+ res.number
-        that.gameRoundState = res.state
+        console.log('res==:',res);
+        that.socketNameSpace = "/channel-dppintu-"+ res['round'].number
+        that.gameRoundState = res['round'].state
+        that.shareUrl = res['shareUrl']
         that.socket = io( that.socketNameSpace , { transports: [ 'websocket' ] })
         that.socket.on('connect', () => {
           that.loading = false;
@@ -191,7 +193,10 @@ export default {
           that.getFinalScores();
         }
         this.loading = false
+        this.creatQRCodeImg()
       })
+
+
     }else{
       this.loading = false
       this.error = true
@@ -228,7 +233,7 @@ export default {
 		},
 	},
   mounted(){
-    this.creatQRCodeImg()
+
   },
   methods: {
     creatQRCodeImg: function() { //生成二维码
@@ -251,13 +256,8 @@ export default {
       // ctx.fillText("长按识别二维码，帮"+that.truncateName(that.to_game_player.nickname, 3)+"补刀", c.width * 0.5, c.height * 0.1);
       // ctx.fillText(" 帮TA补一刀呗", c.width * 0.5, c.width * 0.94);
       // console.log("c.width=", c.width, c.height, that.wx_share.link);
-
-
-      const parsed = queryString.parse(location.search);
-      let number = parsed.number
-      var url = gameUrlBase + '/authwx/game?gameurl='+gameUrlBase+'/dppintu-play.html?number='+number
-      console.log('url---:',url);
-      QRCode.toDataURL(url,{type:'image/png'}, function(error, gameurl){
+      console.log('this.shareUrl===:',this.shareUrl);
+      QRCode.toDataURL(this.shareUrl,{type:'image/png'}, function(error, gameurl){
         if (error) {
           console.error(error);
         }
