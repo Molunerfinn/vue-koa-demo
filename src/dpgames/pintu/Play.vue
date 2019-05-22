@@ -13,8 +13,12 @@
             />
           </div>
         </div>
-        <div class="gamestate" v-show="gameRoundState=='open' || gameRoundState=='created' ">
-          <p class="msg">请耐心等待游戏开始 </p>
+        <div class="gamestate" v-show="gameRoundState=='open'">
+          <p class="msg">open请耐心等待游戏开始 </p>
+        </div>
+
+        <div class="gamestate" v-show="gameRoundState=='created' ">
+          <p class="msg">created请耐心等待游戏开始 </p>
         </div>
 
         <div  class="gamestate" v-show="gameRoundState=='starting'">
@@ -44,7 +48,8 @@
                :again-callback="handleGameRestart"
                v-show="resultBoxVisible"
                :params="resultBoxParams"
-               :command="resultBoxCommand"> </ResultBox>
+               :command="resultBoxCommand"
+               :isFinishGame="isFinishGame"> </ResultBox>
     <!-- <RuleBox :ruleIconUrl="skinAssets.ruleIconPath"
              :game-round="gameRound"
              :game-player="gamePlayer"
@@ -222,6 +227,7 @@
     },
     data() {
       return {
+        isFinishGame:null,
         logMsg: '',
         countdownImg: null,
         debug: false,
@@ -267,11 +273,9 @@
         var that = this
         that.socket.on('GameOpeningEvent', function(data) {
           console.log('GameOpeningEvent')
-          that.gameRoundState = data.gameRoundState
+          that.gameRoundState = data.gameState
           that.resultBoxVisible = false
-          console.log('that.gameInfo====:', that.gameInfo)
-          console.log(that.gameInfo['gameRound'])
-          console.log(that.gameInfo['gameRound'].contact_required == 1)
+          console.log('that.gameRoundState=====:',that.gameRoundState);
           if (
             that.gameRoundState == GameState.open &&
             that.gamePlayer.token == undefined &&
@@ -473,6 +477,8 @@
                 headImg: this.gamePlayer.avatar
               }
 
+              this.isFinishGame = r.isSuc
+              console.log('this.isFinishGame=====:',this.isFinishGame);
               g_config.playerId = r.playerId
               this.resultBoxParams = arg
               this.resultBoxCommand = 'showResult'
