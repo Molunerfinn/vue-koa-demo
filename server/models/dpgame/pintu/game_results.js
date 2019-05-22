@@ -11,6 +11,6 @@ module.exports = (sequelize, DataTypes) => {
 
     }, {
       createdAt: 'created_at', updatedAt:'updated_at',
-      tableName: 'game_results'
+      tableName: 'dppintu_game_results'
     })
 }

@@ -51,7 +51,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     createdAt: 'created_at',
     updatedAt: 'updated_at',
-    tableName: 'game_players'
+    tableName: 'dppintu_game_players'
   })
 
   addHooks(model)

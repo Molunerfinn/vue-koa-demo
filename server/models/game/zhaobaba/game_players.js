@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
         token: { type: DataTypes.STRING(64), allowNull: false, defaultValue: '' },
     }, {
       createdAt: 'created_at', updatedAt:'updated_at',
-      tableName: 'game_players'
+      tableName: 'zhaobaba_game_players'
     })
 
     bindMethods(model)
