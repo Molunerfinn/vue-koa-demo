@@ -14,11 +14,11 @@
           </div>
         </div>
         <div class="gamestate" v-show="gameRoundState=='open'">
-          <p class="msg">open请耐心等待游戏开始 </p>
+          <p class="msg">请关注大屏幕,等待游戏开始 </p>
         </div>
 
         <div class="gamestate" v-show="gameRoundState=='created' ">
-          <p class="msg">created请耐心等待游戏开始 </p>
+          <p class="msg">请耐心等待游戏开始 </p>
         </div>
 
         <div  class="gamestate" v-show="gameRoundState=='starting'">
