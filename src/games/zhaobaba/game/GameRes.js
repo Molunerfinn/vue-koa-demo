@@ -468,7 +468,7 @@ const GameRes = {
     "titleImg_path": skinResRoot + "/wx/titleimg.png",
     skinAssets: {
       logoImgPath: skinResRoot + "/wx/logo.png",
-      shareImgPath: skinResRoot + "/wx/share.png",
+      shareImgPath: skinResRoot + "/wx/share.jpg",
       ruleIconPath: skinResRoot + "/wx/ruleicon.png",
       startImgPath: skinResRoot + "/wx/startbtn.png",
       gameBgPath: skinResRoot + "/wx/gamebg.jpg",
