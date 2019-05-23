@@ -199,7 +199,7 @@
             title: this.gameRound.name,
             desc: '请点击查看详情...',
             link: wxConfig.shareUrl,
-            imgUrl: gameUrlBase + '/static/game/zhaobaba/skin/image/wx/share.jpg'
+            imgUrl: this.skinAssets.shareImgPath
           }
           HdGame.setWxShare(wxShareArg)
         }
@@ -229,6 +229,7 @@
         },
         skinAssets: {
           logoImgPath: GameRes.skinAssets.logoImgPath,
+          shareImgPath: GameRes.skinAssets.shareImgPath, // weixin share image
           ruleIconPath: GameRes.skinAssets.ruleIconPath,
           homeBgImg: GameRes.skinAssets.homeBgPath,
           titleImg: GameRes.skinAssets.titleImgPath,

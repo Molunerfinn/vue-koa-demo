@@ -25,8 +25,6 @@ export async function getWxJsConfig( url, gameRound ){
     return getWxJsConfigForRunlin( url, gameRound )
   }
 
-
-
   var wxConfig = null
   try {
 
@@ -55,22 +53,33 @@ export async function getWxJsConfig( url, gameRound ){
   } catch (err) {
     console.error("got error-", err);
   }
-  const gameUrlBase = process.env.GAME_URL_BASE
-  let shareUrl = gameUrlBase + '/authwx/game?gameurl=' + gameUrlBase + gameRound.getPlayPath()
-  wxConfig.shareUrl = shareUrl
+
+  wxConfig.shareUrl = getWxShareUrl( gameRound )
 
   return wxConfig
 }
 
 
+export function getWxShareUrl( gameRound ){
 
+  if( process.env.SUPPORT_RUNLIN == 'yes'){
+    return getWxShareUrlForRunlin( gameRound )
+  }
+
+
+  const gameUrlBase = process.env.GAME_URL_BASE
+
+  let shareUrl = getWxAuthApiUrl + '?' + 'gameurl='+gameUrlBase + gameRound.getPlayPath()
+
+  return shareUrl
+}
 
 /**
  * get weixin js sdk config
  * @param {*} url
  * @return {返回值类型} wxConfig or null
  */
-export async function getWxJsConfigForRunlin( url, gameRound ){
+async function getWxJsConfigForRunlin( url, gameRound ){
 
   const GAME_HOST = 'gm.vwweixin.faw-vw.com'
   //http://10.224.40.46:8060/wechatclient/taskcenter/getForGamesign.html
@@ -93,11 +102,19 @@ export async function getWxJsConfigForRunlin( url, gameRound ){
     let runlinredirecturl = `http://client.vw-dealer-wechat.faw-vw.com/wechatclient/game/${gameRound.id}/bargaincheck_in/gotoGame.html?`
     let runlinshareurl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${gameRound.appid}&redirect_uri=${encodeURIComponent(runlinredirecturl)}&response_type=code&scope=snsapi_userinfo&state=""&component_appid=wxd180d4eb5fb062fe#wechat_redirect`
 
-    wxConfig.shareUrl = runlinshareurl
+    wxConfig.shareUrl = getWxShareUrlForRunlin( runlinshareurl )
 
   } catch (err) {
     console.error("got error-", err);
   }
 
   return wxConfig
+}
+
+function getWxShareUrlForRunlin( gameRound ){
+
+  let runlinredirecturl = `http://client.vw-dealer-wechat.faw-vw.com/wechatclient/game/${gameRound.id}/bargaincheck_in/gotoGame.html?`
+  let runlinshareurl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${gameRound.appid}&redirect_uri=${encodeURIComponent(runlinredirecturl)}&response_type=code&scope=snsapi_userinfo&state=""&component_appid=wxd180d4eb5fb062fe#wechat_redirect`
+
+  return runlinshareurl
 }

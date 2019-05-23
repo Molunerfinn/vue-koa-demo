@@ -44,7 +44,7 @@ module.exports = {
         target: `http://localhost:${apiServerPort}`,
         changeOrigin: true
       },
-      '/socket.io':{
+      '/socket':{
         target: `http://localhost:${apiServerPort}`,
         ws: true
       }

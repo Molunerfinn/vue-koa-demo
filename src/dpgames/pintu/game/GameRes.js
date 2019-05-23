@@ -488,11 +488,12 @@ const GameRes = {
     "optFlag": 0
   }],
   skinAssets: {
-    gameStartImg : '/static/dp-pintu/skin2/startbtn2.png',
-    tipsImg : '/static/dp-pintu/skin2/tipsbtn.png',
-    gameImg : '/static/dp-pintu/skin2/gameimg.jpg',
+    gameStartImg : skinResRoot +'/wx/startbtn2.png',
+    tipsImg : skinResRoot +'/wx/tipsbtn.png',
+    gameImg : skinResRoot + '/wx/gameimg.jpg',
     logoImgPath: skinResRoot + "/wx/logo.png",
-    ruleIconPath: '/static/dp-pintu/skin2/ruleicon.png',
+    shareImgPath: skinResRoot + "/wx/share.png",
+    ruleIconPath: skinResRoot +'/wx/ruleicon.png',
     startImgPath: skinResRoot + "/wx/startbtn.png",
     gameBgPath: skinResRoot + "/wx/gamebg.jpg",
     homeBgPath: skinResRoot + "/wx/homebg.jpg",

@@ -135,8 +135,9 @@
         parsed: parsed
       }
 
+      let socketPath = process.env.SOCKETIO_PATH
       that.socketNameSpace = '/channel-dppintu-' + number
-      that.socket = io(that.socketNameSpace, { transports: ['websocket'] })
+      that.socket = io(that.socketNameSpace, { transports: ['websocket'], path: socketPath })
       that.socket.on('connect', () => {
         HdGame.tlog( "debug", " websockt connected ")
         that.loading = false
@@ -168,9 +169,9 @@
 
           let wxShareArg = {
             title: this.gameRound.name,
-            desc: this.gameRound.desc,
+            desc: '请点击查看详情...',
             link: wxConfig.shareUrl,
-            imgUrl: gameUrlBase + '/static/game/zhaobaba/skin/image/wx/share.jpg'
+            imgUrl: this.skinAssets.shareImgPath
           }
           console.log('wxShareArg=====:', wxShareArg)
           HdGame.setWxShare(wxShareArg)
@@ -251,6 +252,7 @@
         },
         skinAssets: {
           logoImgPath: GameRes.skinAssets.logoImgPath,
+          shareImgPath: GameRes.skinAssets.shareImgPath,
           ruleIconPath: GameRes.skinAssets.ruleIconPath,
           homeBgImg: GameRes.skinAssets.homeBgPath,
           titleImg: GameRes.skinAssets.titleImgPath,

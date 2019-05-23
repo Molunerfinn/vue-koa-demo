@@ -5,7 +5,8 @@ const {
   getGameResultModelByCode
 } = require('../../helpers/model')
 const {
-  getWxJsConfig
+  getWxJsConfig,
+  getWxShareUrl
 } = require('../../helpers/weixin')
 
 // 处理大屏游戏的请求，包括大屏端 和 手机端的所有游戏过程请求
@@ -25,8 +26,7 @@ export default class GamesController {
                   number
               }
           })
-          const gameUrlBase = process.env.GAME_URL_BASE
-          var shareUrl = gameUrlBase + '/authwx/game?gameurl='+gameUrlBase+'/dppintu-play.html?number='+number
+          var shareUrl = getWxShareUrl( round )
           console.log('shareUrl====:',shareUrl);
           ctx.body = {
             round: round,
@@ -74,7 +74,7 @@ export default class GamesController {
       }
     })
     let url = ctx.header.referer
-    let wxConfig = await getWxJsConfig(url)
+    let wxConfig = await getWxJsConfig(url, gameRound)
     console.log('wxConfig',wxConfig);
     // 如果 gamePlayer 为 null， 检查是否需要创建
     if (gamePlayer == null) {
@@ -96,9 +96,7 @@ export default class GamesController {
         playerInfo = await gamePlayer.getInfo()
       }
 
-      const gameUrlBase = process.env.GAME_URL_BASE
-      let shareUrl = gameUrlBase + '/authwx/game?gameurl=' + gameUrlBase + gameRound.getPlayPath()
-      wxConfig.shareUrl = shareUrl
+
       var allInfo = {
         gameRound: gameRound.getInfo(),
         gamePlayer: playerInfo,
