@@ -68,7 +68,7 @@
 
       <div class="fullfill game-state state-started" v-show="computedGameState=='started'">
         <div class="box-title">  <img src="~@/assets/dpgame/pintu/image/game_logo.png" class="logo"> </div>
-        <div class="game-wrap">
+        <div class="game-wrap ">
 
           <p  class="timetoend" style="font-size:30px;">剩余{{timeToEnd}}秒</p>
         </div>
@@ -103,11 +103,11 @@
 
     </div>
 
-    <div class="Panel Bottom"  style="">
+    <div class="Panel Bottom"  style="" v-show="debug">
       <div class="actions">
         <button class="start btn btn-danger btn-lg" @click="resetGameHandler">重置游戏</button>
       </div>
-      <div class="debug"  v-show="debug" > {{computedGameState}}</div>
+      <div class="debug"   > {{computedGameState}}</div>
 
     </div>
 
@@ -154,7 +154,7 @@ export default {
       countDownImage: null,
       MAX_TIME: constant.GameConstant.maxTime,
       s: 30,
-      debug: true,
+      debug: false,
       error: false,
       errorMsg: null,
       loading: true,
@@ -494,8 +494,14 @@ export default {
 .game-wrap{
   position: absolute;
   top: 30vh;
-  bottom: 20vh;
+  bottom: 18vh;
   left: 0;
   right: 0;
+  border-radius: 10px;
+  margin: 10px;
+  z-index: 100;
+
 }
+
+
 </style>
