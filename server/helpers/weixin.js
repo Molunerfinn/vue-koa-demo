@@ -18,7 +18,15 @@ export function getWxJsConfigApiUrl() {
  * @param {*} url
  * @return {返回值类型} wxConfig or null
  */
-export async function getWxJsConfig( url ){
+export async function getWxJsConfig( url, gameRound ){
+
+  console.log('getWxJsConfig', process.env.SUPPORT_RUNLIN)
+  if( process.env.SUPPORT_RUNLIN == 'yes'){
+    return getWxJsConfigForRunlin( url, gameRound )
+  }
+
+
+
   var wxConfig = null
   try {
 
@@ -26,8 +34,6 @@ export async function getWxJsConfig( url ){
       url: url
     }
     let apiurl = getWxJsConfigApiUrl()
-
-    console.log('apiurl========:',apiurl);
 
     let res = await fetch(apiurl, {
       timeout: 2000,
@@ -46,6 +52,49 @@ export async function getWxJsConfig( url ){
         signature: data['signature']
       }
     }
+  } catch (err) {
+    console.error("got error-", err);
+  }
+  const gameUrlBase = process.env.GAME_URL_BASE
+  let shareUrl = gameUrlBase + '/authwx/game?gameurl=' + gameUrlBase + gameRound.getPlayPath()
+  wxConfig.shareUrl = shareUrl
+
+  return wxConfig
+}
+
+
+
+
+/**
+ * get weixin js sdk config
+ * @param {*} url
+ * @return {返回值类型} wxConfig or null
+ */
+export async function getWxJsConfigForRunlin( url, gameRound ){
+
+  const GAME_HOST = 'gm.vwweixin.faw-vw.com'
+  //http://10.224.40.46:8060/wechatclient/taskcenter/getForGamesign.html
+  const RUNLIN_GET_WX_PARAM_URL="http://client.vw-dealer-wechat.faw-vw.com/wechatclient/taskcenter/getForGamesign.html"
+  //const RUNLIN_GET_WX_PARAM_URL="http://10.224.40.46:8060/wechatclient/taskcenter/getForGamesign.html"
+  const RUNLIN_SHARE_URL = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=%{appid}&redirect_uri=http%3A%2F%2Fclient.vw-dealer-wechat.faw-vw.com%2Fwechatclient%2Fgame%2F%{game_round_id}%2Fcupcheck_in%2FgotoGame.html&response_type=code&scope=snsapi_userinfo&state=&component_appid=wxd180d4eb5fb062fe#wechat_redirect'
+
+  let wxConfig = {}
+  try {
+    let params = `?authorizerAppid=${gameRound.appid}`
+
+    let res = await fetch(RUNLIN_GET_WX_PARAM_URL+params, { timeout:2000, method:'post' })
+    if( res ){
+      let data = await res.json()
+
+      console.debug( "data=",data )
+      wxConfig = {  appId: data['appid'], timestamp: data['timestamp'], nonceStr:data['nonceStr'],signature:data['signature']}
+    }
+
+    let runlinredirecturl = `http://client.vw-dealer-wechat.faw-vw.com/wechatclient/game/${gameRound.id}/bargaincheck_in/gotoGame.html?`
+    let runlinshareurl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${gameRound.appid}&redirect_uri=${encodeURIComponent(runlinredirecturl)}&response_type=code&scope=snsapi_userinfo&state=""&component_appid=wxd180d4eb5fb062fe#wechat_redirect`
+
+    wxConfig.shareUrl = runlinshareurl
+
   } catch (err) {
     console.error("got error-", err);
   }
