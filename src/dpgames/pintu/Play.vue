@@ -80,7 +80,6 @@
   import io from 'socket.io-client'
   import constant from '@/game_constant.js'
 
-  const gameUrlBase = process.env.GAME_URL_BASE
   //import {simplifyLufylegend } from '@/lib/simplify'
   //关于玩家的配置信息
   const g_config = {
