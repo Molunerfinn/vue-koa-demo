@@ -69,7 +69,7 @@ export function getWxShareUrl( gameRound ){
 
   const gameUrlBase = process.env.GAME_URL_BASE
 
-  let shareUrl = getWxAuthApiUrl + '?' + 'gameurl='+gameUrlBase + gameRound.getPlayPath()
+  let shareUrl = getWxAuthApiUrl() + '?' + 'gameurl='+gameUrlBase + gameRound.getPlayPath()
 
   return shareUrl
 }
