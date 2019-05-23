@@ -140,7 +140,6 @@
       city: null
     }
   }
-  const gameUrlBase = process.env.GAME_URL_BASE
   const gameType = 1 // 0抽奖， 1刷记录
 
   export default {
