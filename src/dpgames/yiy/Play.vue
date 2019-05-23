@@ -1,5 +1,6 @@
 <template>
   <div class="main-container indexbg" id="mainContainer">
+    {{computedGameState}}
     <audio id="bgMusic">
       <source src="/game-yiy-assets/app/css/shake.mp3" type="audio/mpeg">
     </audio>
@@ -37,7 +38,7 @@
 		<div class="runningTime-shade" v-show="computedGameState=='starting'">
 			<p>游戏开始倒计时</p>
 			<p>
-				<span v-text="timeToStart" class="runningTime"></span>
+				<!-- <span v-text="timeToStart" class="runningTime"></span> -->
 				<span>秒</span>
 			</p>
 			<p>马上进入“摇一摇”</p>
@@ -48,7 +49,7 @@
         游戏成绩
       </div>
       <div class="touxiang-wrap">
-        <img v-bind:src="gamePlayer.avatar">
+        <!-- <img v-bind:src="gamePlayer.avatar"> -->
       </div>
       <div class="paiming-wrap">
         <p class="paiming">
@@ -59,6 +60,7 @@
     </div>
 		<!-- 加载遮罩层 -->
 		<div class="loading" v-show="loading">
+      {{computedGameState}}
 			<p>加载中...</p>
 		</div>
     <div class="debug" style="display:none;"> {{computedGameState}}  </div>
@@ -68,7 +70,7 @@
 <script>
 
   // import Game from './game/Game.vue'
-  import GameRes from './game/GameRes'
+  // import GameRes from './game/GameRes'
   import GameArg from './game/GameArg'
   import HdGame from '@/lib/hdgame'
   import GameState from '@/lib/GameState'
@@ -88,14 +90,14 @@
   const gameUrlBase = process.env.GAME_URL_BASE
   // //import {simplifyLufylegend } from '@/lib/simplify'
   // //关于玩家的配置信息
-  const g_config = {
-    scoreType: false,
-    initTime: 0,
-    ipInfo: {
-      provice: null,
-      city: null
-    }
-  }
+  // const g_config = {
+  //   scoreType: false,
+  //   initTime: 0,
+  //   ipInfo: {
+  //     provice: null,
+  //     city: null
+  //   }
+  // }
   // const countDownImages = [
   //   require('@/assets/dpgame/pintu/image/c0.png'),
   //   require('@/assets/dpgame/pintu/image/c1.png'),
@@ -110,57 +112,61 @@
 
   export default {
     name: 'app',
-    data: {
-      socket: null,
-  		gamePlayer: {},
-  		gamePlayerId: 0,
-  		gameRoundState: null,
-  		loading: false, // 加载层显示状态
-  		wx_openid: '', // 微信openid
-  		wx_nickname: '', // 微信昵称
-  		sendCountTimeId: null,// 发送游戏分数定时器
-  		score: 0, // 记录所得分数
-  		rank: 0, // 记录当前名次
-  		timeToEnd: 30, // 游戏剩余时间，初始为30s
-  		timeToStart: 0, // 游戏开始前倒计时
-  		gameRoundStateTips:{
-  			created: '您好，游戏还没开始，请耐心等待',
-  			open: '您好，请耐心等待大屏幕倒计时开始',
-  			started: '游戏过程中请注意不要退出页面！',
-  			completed: '游戏结束，谢谢参与',
-  		},
-  		status: {
-  				canShake: false,
-  				shakeData: null,
-  				count: 0,
-  				couldJoin: !1,
-  				SHAKE_THRESHOLD: 0.8e4,
-  				lastUpdate: 0,
-  				x: 0,
-  				y: 0,
-  				z: 0,
-  				lastX: 0,
-  				lastY: 0,
-  				lastZ: 0
-  		},
+
+    data() {
+      return{
+        socket:null,
+        gamePlayer: {},
+        gamePlayerId: 0,
+        gameRoundState: null,
+        loading: false, // 加载层显示状态
+        wx_openid: '', // 微信openid
+        wx_nickname: '', // 微信昵称
+        sendCountTimeId: null,// 发送游戏分数定时器
+        score: 0, // 记录所得分数
+        rank: 0, // 记录当前名次
+        timeToEnd: 30, // 游戏剩余时间，初始为30s
+        // timeToStart: 0, // 游戏开始前倒计时
+        gameRoundStateTips:{
+          created: '您好，游戏还没开始，请耐心等待',
+          open: '您好，请耐心等待大屏幕倒计时开始',
+          started: '游戏过程中请注意不要退出页面！',
+          completed: '游戏结束，谢谢参与',
+        },
+        status: {
+          canShake: false,
+          shakeData: null,
+          count: 0,
+          couldJoin: !1,
+          SHAKE_THRESHOLD: 0.8e4,
+          lastUpdate: 0,
+          x: 0,
+          y: 0,
+          z: 0,
+          lastX: 0,
+          lastY: 0,
+          lastZ: 0
+        },
+      }
   	},
   	computed: {
   		formatTime: function(){
   			return this.timeToEnd < 10 ? '0' + this.timeToEnd :this.timeToEnd;
   		},
   		computedToptips(){
+        console.log("=====",this.gameRoundStateTips);
   			return this.gameRoundStateTips[this.computedGameState]
   		},
   		computedGameState(){
   			switch (this.gameRoundState) {
-  				case 0: return 'created';
-  				case 1: return 'open';
-  				case 2: return 'ready';
-  				case 3: return 'starting';
-  				case 4: return 'started';
-  				case 5: return 'completed';
-  				case 6: return 'disabled';
-  				default: return 'void'
+  				case 'created': return 'created';
+  				case 'open': return 'open';
+  				case 'ready': return 'ready';
+  				case 'starting': return 'starting';
+  				case 'started': return 'started';
+  				case 'completed': return 'completed';
+  				case 'disabled': return 'disabled';
+  				default: return 'created'
   			}
   		}
   	},
@@ -173,17 +179,17 @@
         parsed: parsed
       }
 
-      this.hg.grade = new HdGame.Grade(0)
-
-      this.hg.time = new HdGame.Time(g_config.initTime, { updateFlag: true, isDesc: false })
+      // this.hg.grade = new HdGame.Grade(0)
+      //
+      // this.hg.time = new HdGame.Time(g_config.initTime, { updateFlag: true, isDesc: false })
 
       GameArg.eventBus.$on(GameBackgroundMusicLoadEvent.name, event => {
         this.initBackgroundMusic()
       })
       //simplifyLufylegend( this.hg, window.g_rem )
-      HdGame.initJsHead(this.hg, GameRes)
+      // HdGame.initJsHead(this.hg, GameRes)
 
-      this.hg.assets.add(GameRes.skinAssets)
+      // this.hg.assets.add(GameRes.skinAssets)
 
       if (this.debug) {
         window.hg = this.hg
@@ -195,15 +201,12 @@
   			alert('您的设备不支持摇一摇功能！');
   			return;
   		}
-  		that.socket = io( null, {
-  			transports: [ 'websocket' ],
-  			query: {
-  			game_player_id: window.DGAME.game_player.id
-      }});
-  		that.socket.on('connect', () => {
-  			console.log(that.socket.connected); // true
-  		});
-  		var socket = that.socket;
+      that.socket = io(that.socketNameSpace, { transports: ['websocket'] })
+      that.socket.on('connect', () => {
+        HdGame.tlog( "debug", " websockt connected ")
+        that.loading = false
+        that.bindSocketEvents()
+      })
       getGameResult(number, params).then(data => {
         this.gameInfo = data
         console.log('gameInfo=======:', this.gameInfo)
@@ -234,7 +237,7 @@
           this.gamePlayer.token == undefined &&
           this.gameInfo['gameRound'].contact_required == 1
         ) {
-          this.ui.homeVisible = false
+          // this.ui.homeVisible = false
           this.ruleBoxCommand = 'hideIcon'
           this.signUpCommand = 'show'
         } else if (
@@ -243,9 +246,9 @@
         ) {
           this.ruleBoxCommand = 'showIcon'
           this.ui.wait = true
-          this.ui.homeVisible = true
+          // this.ui.homeVisible = true
         } else if (this.gameRoundState == GameState.started) {
-          this.ui.homeVisible = false
+          // this.ui.homeVisible = false
           this.ui.gameBoxVisible = true
         }
         if (
@@ -266,7 +269,8 @@
             beat: r.beat,
             isEqualDraw: false,
             bestCostTime: r.bestCostTime,
-            headImg: this.gamePlayer.avatar
+            // headImg: this.gamePlayer.avatar
+            headImg:null
           }
 
           this.resultBoxParams = arg
@@ -279,87 +283,70 @@
   		// that.gamePlayerId =  DGAME.game_player.id
   		// that.rank = DGAME.game_player.rank
   		// 获取用户信息
-  		that.getUserInfo(function(){
-
-  			//GameStartingEvent:游戏开始前的倒计时事件
-  			//GameRunningEvent: 游戏运行结束倒计时事件
-  			//GameEndEvent:"GameEndEvent"
-  			// 游戏开始前的倒计时事件
-  			socket.on('GameStartingEvent', function(data){
-  				console.log('io:GameStartingEvent')
-  				that.timeToStart = data.timeToStart
-  				that.gameRoundState = data.gameRoundState
-  				// 倒计时0，即游戏开始
-  				if( that.timeToStart == 1 ){
-  					that.startGame()
-  				}
-  			});
-  			// 游戏运行结束倒计时事件,
-  			socket.on('GameRunningEvent', function(data){
-  				console.log('io:GameRunningEvent')
-  				that.timeToEnd = data.timeToEnd
-  				that.gameRoundState = data.gameRoundState
-  				if( that.timeToEnd == 1 ){
-  					console.log("timeToEnd= ", that.timeToEnd)
-  					// 结束游戏并上传最后成绩到服务器
-  					that.endGame()
-  				}
-  			});
-  			// 监听游戏结束事件
-  			socket.on('GameEndEvent', function(data){
-  				console.log('io:GameEndEvent', data)
-  				that.gameRoundState = data.gameRoundState
-  				var gamePlayerScores = data.gamePlayerScores.sort()
-  				for(var i=0; i< gamePlayerScores.length; i++){
-  					var player = gamePlayerScores[i];
-  					if( player.id == that.gamePlayerId){
-  						that.score = player.score;
-  						that.rank = player.rank;
-  						break;
-  					}
-  				}
-  				//socket.disconnect();
-  				console.log('游戏时间到！');
-  			});
-  			// 正在游戏，但是不小心退出了
-  			if( that.gameRoundState == 4){
-  				that.startGame()
-  			}
-  		});
+  		// that.getUserInfo(function(){
+      //
+  		// 	//GameStartingEvent:游戏开始前的倒计时事件
+  		// 	//GameRunningEvent: 游戏运行结束倒计时事件
+  		// 	//GameEndEvent:"GameEndEvent"
+  		// 	// 游戏开始前的倒计时事件
+  		// 	that.socket.on('GameStartingEvent', function(data){
+  		// 		console.log('io:GameStartingEvent')
+  		// 		that.timeToStart = data.timeToStart
+  		// 		that.gameRoundState = data.gameRoundState
+  		// 		// 倒计时0，即游戏开始
+  		// 		if( that.timeToStart == 1 ){
+  		// 			that.startGame()
+  		// 		}
+  		// 	});
+  		// 	// 游戏运行结束倒计时事件,
+  		// 	that.socket.on('GameRunningEvent', function(data){
+  		// 		console.log('io:GameRunningEvent')
+  		// 		that.timeToEnd = data.timeToEnd
+  		// 		that.gameRoundState = data.gameRoundState
+  		// 		if( that.timeToEnd == 1 ){
+  		// 			console.log("timeToEnd= ", that.timeToEnd)
+  		// 			// 结束游戏并上传最后成绩到服务器
+  		// 			that.endGame()
+  		// 		}
+  		// 	});
+  		// 	// 监听游戏结束事件
+  		// 	that.socket.on('GameEndEvent', function(data){
+  		// 		console.log('io:GameEndEvent', data)
+  		// 		that.gameRoundState = data.gameRoundState
+  		// 		var gamePlayerScores = data.gamePlayerScores.sort()
+  		// 		for(var i=0; i< gamePlayerScores.length; i++){
+  		// 			var player = gamePlayerScores[i];
+  		// 			if( player.id == that.gamePlayerId){
+  		// 				that.score = player.score;
+  		// 				that.rank = player.rank;
+  		// 				break;
+  		// 			}
+  		// 		}
+  		// 		//socket.disconnect();
+  		// 		console.log('游戏时间到！');
+  		// 	});
+  		// 	// 正在游戏，但是不小心退出了
+  		// 	if( that.gameRoundState == 4){
+  		// 		that.startGame()
+  		// 	}
+  		// });
   	},
   	methods: {
+      bindSocketEvents: function(){
+        var that = this
+        that.socket.on('GameStartingEvent', function(data) {
+          console.log('GameStartingEvent')
+          that.gameRoundState = data.gameRoundState
+          that.timeToStart = data.timeToStart
+          // that.countdownImg = countDownImages[that.timeToStart]
+          console.log('countdownImg====:', that.countdownImg)
+        })
+      },
   		handlePlayMusic: function() {
   			try{
   				document.querySelector("#bgMusic").play();
-  				window.wx.config({
-  						debug: false,
-  						appId: window.DGAME.wx_config.appId||'',
-  						timestamp:  window.DGAME.wx_config.timestamp||'',
-  						nonceStr: window.DGAME.wx_config.nonceStr||'',
-  						signature: window.DGAME.wx_config.signature||'',
-  						jsApiList: []
-  				});
-  				window.wx.ready(function() {
-  						document.querySelector("#bgMusic").play()
-  				});
   			}catch(err){
   				alert(err)
-  			}
-  		},
-  		// 获取用户信息
-  		getUserInfo: function(callback){
-  			var that = this;
-  			// 显示加载层
-  			this.loading = true;
-        if( window.DGAME.game_player ){
-            // var userInfo = window.DGAME.game_player
-            that.loading = false;
-            that.wx_nickname = window.DGAME.game_player.nickname;
-            that.wx_openid = window.DGAME.game_player.openid;
-            that.gameRoundState = window.DGAME.game_round.state;
-            callback();
-  			}else{
-          alert('获取用户信息失败：');
   			}
   		},
   		// 处理摇一摇事件

@@ -74,7 +74,7 @@ export default class GamesController {
       }
     })
     let url = ctx.header.referer
-    let wxConfig = await getWxJsConfig(url)
+    let wxConfig = await getWxJsConfig(url,gameRound)
     console.log('wxConfig',wxConfig);
     // 如果 gamePlayer 为 null， 检查是否需要创建
     if (gamePlayer == null) {

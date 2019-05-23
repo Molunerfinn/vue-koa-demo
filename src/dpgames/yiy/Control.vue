@@ -131,20 +131,22 @@ import '@/assets/dpgame/pintu/skin-runlin/css/control.css'
 //       ]
 export default {
   name: 'control',
-  data: {
-		loading: true,
-		gameRoundId: 0,
-		gameRoundState: null,
-		canstart: true, // 游戏是否允许开始，防抖
-		QRCodeState: false, // 二维码页面是否显示
-		countState: false, // 分数排名页面是否显示
-		timeToEnd: 30, // 游戏倒计时
-		timeToStart: 3, // 扫描二维码倒计时
-		countBg: ['#e81320', '#e813b8', '#8613e8', '#1395e8'],
-		socket: null,
-		playerCheckTimerId: null,
-		gamePlayers:[],
-		gamePlayerScores:[] // {id, score} top 20
+  data() {
+    return{
+      loading: true,
+      gameRoundId: 0,
+      gameRoundState: null,
+      canstart: true, // 游戏是否允许开始，防抖
+      QRCodeState: false, // 二维码页面是否显示
+      countState: false, // 分数排名页面是否显示
+      timeToEnd: 30, // 游戏倒计时
+      timeToStart: 3, // 扫描二维码倒计时
+      countBg: ['#e81320', '#e813b8', '#8613e8', '#1395e8'],
+      socket: null,
+      playerCheckTimerId: null,
+      gamePlayers:[],
+      gamePlayerScores:[] // {id, score} top 20
+    }
 	},
 	created(){
     var that = this
@@ -165,7 +167,7 @@ export default {
           that.getFinalScores();
         }
         this.loading = false
-        this.creatQRCodeImg()
+        // this.creatQRCodeImg()
       })
     }else{
       this.loading = false
