@@ -27,6 +27,7 @@ export default class GamesController {
           })
           const gameUrlBase = process.env.GAME_URL_BASE
           var shareUrl = gameUrlBase + '/authwx/game?gameurl='+gameUrlBase+'/dppintu-play.html?number='+number
+          console.log('shareUrl====:',shareUrl);
           ctx.body = {
             round: round,
             shareUrl: shareUrl
@@ -74,6 +75,7 @@ export default class GamesController {
     })
     let url = ctx.header.referer
     let wxConfig = await getWxJsConfig(url)
+    console.log('wxConfig',wxConfig);
     // 如果 gamePlayer 为 null， 检查是否需要创建
     if (gamePlayer == null) {
       gamePlayer = {
@@ -117,12 +119,13 @@ export default class GamesController {
       }
 
       ret.playerId = gamePlayer.id //required to set g_config.playerId
-      ret.isSuc = gamePlayer.score >= gamePlayer.max_score
+      ret.isSuc = gamePlayer.score <= gamePlayer.max_score
       ret.achieveToken = gamePlayer.token
       ret.score = gamePlayer.score
       ret.bestScore = (gamePlayer.max_score) //bestScore
       if (gamePlayer.score == 9999.99) {
         ret.score = 0
+        ret.isSuc = false
       }
       let rank = await gamePlayer.currentPositionAsc()
       let beat = await gamePlayer.beatAsc()
