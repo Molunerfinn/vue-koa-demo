@@ -64,6 +64,9 @@ router.use('/authwx', authwx.routes())
 import gameRound from './routes/api/game_round.js'
 router.use('/api/game_rounds', gameRound.routes())
 
+import dpgameRound from './routes/api/dpgame_round.js'
+router.use('/api/dpgame_rounds', dpgameRound.routes())
+
 import gameRoundByCode from './routes/api/game_round_by_code.js'
 // 支持路径 /api/game/:code/
 router.use('/api/game', gameRoundByCode.routes())
