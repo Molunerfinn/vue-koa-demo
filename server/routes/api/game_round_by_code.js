@@ -4,4 +4,6 @@ const router = new Router()
 router.prefix('/:code')
 router.post('createRound','/', api.createRound)
 
+//router.put('updateRound','/:id', api.updateRound)
+
 export default router
