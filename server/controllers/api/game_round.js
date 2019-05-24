@@ -57,7 +57,7 @@ export default class GameRoundController {
   static async createRound(ctx) {
     let gameRoundParams = ctx.request.body.game_round
     try {
-      
+
       // code 在 url 中 或者 在参数中 game_round
       let code = ctx.query.code || gameRoundParams.code
       let Model = getGameRoundModelByCode(gameRoundParams.code)
@@ -83,22 +83,27 @@ export default class GameRoundController {
   //  * update round information, such as name, description
   //  * @param {*} ctx
   //  */
-  // async updateRound(ctx) {
-  //   var gameroundid = parseInt(ctx.params.id)
-  //   var game_round = ctx.request.body.game_round
-  //   try {
-  //     // tmp <Array.<affectedCount, affectedRows>>
-  //     var tmp = await dbOperation.MySqlOperation.UpdateRound(gameroundid, game_round)
-  //     console.log("dbOperation.MySqlOperation.UpdateRound1=", tmp)
-  //     if (tmp.length === 1) {
-  //       ctx.status = 200
-  //     }
-  //   } catch (error) {
-  //     ctx.throw(messageContent.ResponeStatus.CommonError, `update round ${gameroundid} fail: ` + error, {
-  //       expose: true
-  //     })
-  //   }
-  // }
+  static async updateRound(ctx) {
+    var gameroundid = parseInt(ctx.params.id)
+    var game_round = ctx.request.body.game_round
+    let code = ctx.query.code || game_round.code
+    let Model = getGameRoundModelByCode(code)
+    console.log(game_round,gameroundid);
+    try {
+      let res = await Model.update(game_round, {
+        where: {
+          id: gameroundid
+        }
+      })
+
+      ctx.body = res
+
+    } catch (error) {
+      ctx.throw( error, {
+        expose: true
+      })
+    }
+  }
   /**
    * show game round
    * @param {*} req

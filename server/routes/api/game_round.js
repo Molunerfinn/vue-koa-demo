@@ -4,4 +4,6 @@ const router = koaRouter()
 
 router.post('/', api.createRound)
 
+router.post('/update/:id' ,api.updateRound)
+
 export default router
