@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div></div>
+    <script>
+        var biaozhun = 800;
+        var last_update = 0;
+        var x,y,z, last_x = 0, last_y = 0; last_z = 0;
+        var div = document.getElementsByTagName('div')[0];
+        function deviceMotionHandler(eventData){
+           //获取重力加速x,x,y的集合
+            var acceleration = eventData.accelerationIncludingGravity;
+            var curTime = new Date().getTime();
+            //新的时间和上次时间的差值超过300
+            if((curTime - last_update) > 300){
+                //新的时间和上次时间的差值
+                var diffTime = curTime - last_update;
+                //老的时间等于新的时间
+                last_update = curTime;
+                 //拿到最新的x,y,z的数据
+                x = acceleration.x;
+                y = acceleration.y;
+                z = acceleration.z;
+                //三个方向的新数据- 老三个方向的数据得到的绝对值除以 俩次数据的时间差 
+                var data = Math.abs(x + y + z - last_x - last_y - last_z) / diffTime;
+               
+                var speed = Math.abs(x + y + z - last_x - last_y - last_z) / diffTime * 10000;
+                //数值超过了标准,代表你摇了
+                if(speed > biaozhun ){
+                    alert(data)
+                 
+                }
+                last_x = x;
+                last_y = y;
+                last_z = z;
+            }
+        }
+        if(window.DeviceMotionEvent){
+            document.body.innerText = '可以摇'
+            window.addEventListener('devicemotion',deviceMotionHandler,false);
+        }else {
+            document.body.innerHTML = 'Not supported on your device'
+        }
+    </script>
+</body>
+</html>

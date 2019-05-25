@@ -61,15 +61,17 @@ import authwx from './routes/authwx.js'
 router.use('/authwx', authwx.routes())
 
 // 游戏管理api
-import gameRound from './routes/api/game_round.js'
-router.use('/api/game_rounds', gameRound.routes())
+// 兼容 以前使用的API  /game_rounds/:id
+import gameRounds from './routes/api/game_rounds.js'
+router.use('/api/game_rounds', gameRounds.routes())
 
-import dpgameRound from './routes/api/dpgame_round.js'
-router.use('/api/dpgame_rounds', dpgameRound.routes())
+// 支持路径 /api/dpgames/:code/
+import dpgameRoundByCode from './routes/api/dpgames.js'
+router.use('/api/dpgames', dpgameRoundByCode.routes())
 
-import gameRoundByCode from './routes/api/game_round_by_code.js'
-// 支持路径 /api/game/:code/
-router.use('/api/game', gameRoundByCode.routes())
+import gameRoundByCode from './routes/api/games.js'
+// 支持路径 /api/games/:code/
+router.use('/api/games', gameRoundByCode.routes())
 
 // 微信api
 import wechat from './routes/api/wechat.js'

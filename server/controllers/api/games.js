@@ -84,7 +84,7 @@ export default class GameRoundController {
   //  * @param {*} ctx
   //  */
   static async updateRound(ctx) {
-    var gameroundid = parseInt(ctx.params.id)
+    var gameroundid = parseInt(ctx.query.id)
     var game_round = ctx.request.body.game_round
     let code = ctx.query.code || game_round.code
     let Model = getGameRoundModelByCode(code)
@@ -109,7 +109,7 @@ export default class GameRoundController {
    * @param {*} req
    * @param {*} res
    */
-  async showRound(ctx) {
+  static async showRound(ctx) {
     try {
       var gameroundid = parseInt(ctx.params.id)
       let Model = getGameRoundModelByCode(gameRoundParams.code)
