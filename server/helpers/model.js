@@ -37,3 +37,11 @@ export function getModelByCode(code, basename) {
     }
     return modelByCode
 }
+
+// 查找一局游戏
+export async function getRoundInstance( code, id ){
+  
+  let model = getGameRoundModelByCode( code )
+  let instance = await model.findByPk( id )
+  return instance
+}

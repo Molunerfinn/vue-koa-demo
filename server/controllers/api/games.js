@@ -1,7 +1,8 @@
 const messageContent = require('../constant')
 const db = require('../../models')
 const {
-  getGameRoundModelByCode
+  getGameRoundModelByCode,
+  getRoundInstance
 } = require('../../helpers/model')
 
 const {
@@ -59,7 +60,7 @@ export default class GameRoundController {
     try {
 
       // code 在 url 中 或者 在参数中 game_round
-      let code = ctx.query.code || gameRoundParams.code
+      let code = ctx.params.code || gameRoundParams.code
       let Model = getGameRoundModelByCode(gameRoundParams.code)
 
       let model = await Model.create(gameRoundParams)
@@ -79,24 +80,22 @@ export default class GameRoundController {
       })
     }
   }
-  // /**
-  //  * update round information, such as name, description
-  //  * @param {*} ctx
-  //  */
+  /**
+   * update round information, such as name, description
+   * /:code/:id  在路径中,  ctx.params 获取
+   * @param {*} ctx
+   */
   static async updateRound(ctx) {
-    var gameroundid = parseInt(ctx.query.id)
-    var game_round = ctx.request.body.game_round
-    let code = ctx.query.code || game_round.code
-    let Model = getGameRoundModelByCode(code)
-    console.log(game_round,gameroundid);
-    try {
-      let res = await Model.update(game_round, {
-        where: {
-          id: gameroundid
-        }
-      })
+    var gameroundid = parseInt(ctx.params.id)
 
-      ctx.body = res
+    console.log( "ctx.query, ctx.params", ctx.query, ctx.params)
+    var gameRoundPamam = ctx.request.body.game_round
+    let code = ctx.params.code
+
+    try {
+      let round = await getRoundInstance( code, gameroundid )
+      await round.update(gameRoundPamam)
+      ctx.body = round
 
     } catch (error) {
       ctx.throw( error, {
@@ -112,14 +111,8 @@ export default class GameRoundController {
   static async showRound(ctx) {
     try {
       var gameroundid = parseInt(ctx.params.id)
-      let Model = getGameRoundModelByCode(gameRoundParams.code)
-
-      var round = await Model.findOne({
-        //attributes: ['id', 'name', 'state', 'start_at', 'end_at'],
-        where: {
-          id: gameroundid
-        }
-      })
+      let code = ctx.params.code
+      let round = await getRoundInstance( code, gameroundid )
       ctx.body = round
       ctx.status = 200
     } catch (error) {
