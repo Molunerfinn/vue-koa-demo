@@ -25,7 +25,7 @@ export async function getWxJsConfig( url, gameRound ){
     return getWxJsConfigForRunlin( url, gameRound )
   }
 
-  var wxConfig = null
+  var wxConfig = {}
   try {
 
     let body = {
@@ -62,6 +62,8 @@ export async function getWxJsConfig( url, gameRound ){
 
 export function getWxShareUrl( gameRound ){
 
+  return `http://client.vw-dealer-wechat.faw-vw.com/wechatclient/game/${gameRound.number}/searchaliencheck_in/gotoGame.html`
+
   if( process.env.SUPPORT_RUNLIN == 'yes'){
     return getWxShareUrlForRunlin( gameRound )
   }
@@ -96,7 +98,6 @@ console.log( " RUNLIN_GET_WX_PARAM_URL+params ", RUNLIN_GET_WX_PARAM_URL+params)
     if( res ){
       let data = await res.json()
 
-      console.debug( "data=",data )
       wxConfig = {  appId: data['appid'], timestamp: data['timestamp'], nonceStr:data['nonceStr'],signature:data['signature']}
     }
 
@@ -104,6 +105,7 @@ console.log( " RUNLIN_GET_WX_PARAM_URL+params ", RUNLIN_GET_WX_PARAM_URL+params)
     let runlinshareurl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${gameRound.appid}&redirect_uri=${encodeURIComponent(runlinredirecturl)}&response_type=code&scope=snsapi_userinfo&state=""&component_appid=wxd180d4eb5fb062fe#wechat_redirect`
 
     wxConfig.shareUrl = getWxShareUrlForRunlin( gameRound )
+    console.debug( "wxConfig=", wxConfig )
 
   } catch (err) {
     console.error("got error-", err);
@@ -120,7 +122,8 @@ function getWxShareUrlForRunlin( gameRound ){
   //`/{gameRound.number}/searchaliencheck_in/gotoGame.html`
   const RUNLIN_SHARE_URL_ZHAOBABA = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${gameRound.appid}&redirect_uri=http%3A%2F%2Fclient.vw-dealer-wechat.faw-vw.com%2Fwechatclient%2Fgame%2F${gameRound.number}%2Fsearchaliencheck_in%2FgotoGame.html&response_type=code&scope=snsapi_userinfo&state=&component_appid=wxd180d4eb5fb062fe#wechat_redirect`
   if( gameRound.code == 'zhaobaba'){
-    runlinshareurl = RUNLIN_SHARE_URL_ZHAOBABA
+    runlinshareurl = `http://client.vw-dealer-wechat.faw-vw.com/wechatclient/game/${gameRound.number}/searchaliencheck_in/gotoGame.html`
+    //runlinshareurl = RUNLIN_SHARE_URL_ZHAOBABA
   }
 
   return runlinshareurl
