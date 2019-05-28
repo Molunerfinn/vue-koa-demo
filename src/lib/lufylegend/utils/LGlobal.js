@@ -166,6 +166,13 @@ let LGlobal = (function() {
         if (h) {
             LGlobal.canvasObj.height = h;
         }
+
+        let ay = 1;
+        try {
+            ay = LGlobal._context.backingStorePixelRatio || LGlobal._context.webkitBackingStorePixelRatio || LGlobal._context.mozBackingStorePixelRatio || LGlobal._context.msBackingStorePixelRatio || LGlobal._context.oBackingStorePixelRatio || 1
+        } catch(ax) { console.log( ax)}
+        LGlobal.ratio = (window.devicePixelRatio || 1) / ay;
+
         LGlobal.width = LGlobal.canvasObj.width;
         LGlobal.height = LGlobal.canvasObj.height;
         LGlobal.canvasStyleWidth = LGlobal.width;
@@ -176,6 +183,9 @@ let LGlobal = (function() {
             }
             return LGlobal.canvasObj.getContext('2d');
         })();
+
+        LGlobal.canvasObj.width *= LGlobal.ratio;
+        LGlobal.canvasObj.height *= LGlobal.ratio;
         LGlobal.offsetX = window.mouseX = 0;
         LGlobal.offsetY = window.mouseY = 0;
     };

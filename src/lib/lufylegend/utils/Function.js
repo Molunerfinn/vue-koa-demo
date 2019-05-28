@@ -79,6 +79,7 @@ export function removeChild(o) {
     ll.LGlobal.stage.removeChild(o);
 }
 export function init(s, c, w, h, f, t) {
+  setCanvasePixelRatio();
     ll.LGlobal.delta = 0
     ll.LGlobal.speed = s;
     let _f = function() {
@@ -148,3 +149,149 @@ export function getExtension(path) {
     }
     return null;
 }
+
+
+function setCanvasePixelRatio(ll, o) {
+  const k = "__LF__pixel__ratio__";
+       var l = ll || CanvasRenderingContext2D.prototype;
+       if (!l[k]) {
+           l[k] = (function(p) {
+               var r = 1;
+               try {
+                   r = p.backingStorePixelRatio || p.webkitBackingStorePixelRatio || p.mozBackingStorePixelRatio || p.msBackingStorePixelRatio || p.oBackingStorePixelRatio || 1
+               } catch(q) { console.log( q ) }
+               return (window.devicePixelRatio || 1) / r
+           })(l);
+           var n = function(s, q) {
+               for (var r in s) {
+                   if (s.hasOwnProperty(r)) {
+                       q(s[r], r)
+                   }
+               }
+           },
+           m = {
+               fillRect: "all",
+               clearRect: "all",
+               strokeRect: "all",
+               moveTo: "all",
+               lineTo: "all",
+               arc: [0, 1, 2],
+               arcTo: "all",
+               bezierCurveTo: "all",
+               isPointinPath: "all",
+               isPointinStroke: "all",
+               quadraticCurveTo: "all",
+               rect: "all",
+               translate: "all",
+               createRadialGradient: "all",
+               createLinearGradient: "all",
+               transform: [4, 5],
+               setTransform: [4, 5],
+           };
+           n(m,
+           function(q, p) {
+               l[p] = (function(r) {
+                   return function() {
+                       var u, s, t = Array.prototype.slice.call(arguments),
+                       v = this[k];
+                       if (q === "all") {
+                           t = t.map(function(w) {
+                               return w * v
+                           })
+                       } else {
+                           if (Array.isArray(q)) {
+                               for (u = 0, s = q.length; u < s; u++) {
+                                   t[q[u]] *= v
+                               }
+                           }
+                       }
+                       return r.apply(this, t)
+                   }
+               })(l[p])
+           });
+           l.stroke = (function(p) {
+               return function() {
+                   var q = this[k];
+                   this.lineWidth *= q;
+                   p.apply(this, arguments);
+                   this.lineWidth /= q
+               }
+           })(l.stroke);
+           l.fillText = (function(p) {
+               return function() {
+                   var q = Array.prototype.slice.call(arguments);
+                   var r = this[k];
+                   q[1] *= r;
+                   q[2] *= r;
+                   if (q[3]) {
+                       q[3] *= r
+                   }
+                   this.font = this.font.replace(/([.\d]+)(px|em|rem|pt)/g,
+                   function(t, s, v) {
+                       return (s * r) + v
+                   });
+                   p.apply(this, q);
+                   this.font = this.font.replace(/([.\d]+)(px|em|rem|pt)/g,
+                   function(t, s, v) {
+                       return (s / r) + v
+                   })
+               }
+           })(l.fillText);
+           l.strokeText = (function(p) {
+               return function() {
+                   var q = Array.prototype.slice.call(arguments);
+                   var r = this[k];
+                   q[1] *= r;
+                   q[2] *= r;
+                   this.font = this.font.replace(/([.\d]+)(px|em|rem|pt)/g,
+                   function(t, s, v) {
+                       return (s * r) + v
+                   });
+                   p.apply(this, q);
+                   this.font = this.font.replace(/([.\d]+)(px|em|rem|pt)/g,
+                   function(t, s, v) {
+                       return (s / r) + v
+                   })
+               }
+           })(l.strokeText);
+           l.drawImage = (function(p) {
+               return function() {
+                   var q = Array.prototype.slice.call(arguments);
+                   var r = this[k];
+                   if (q.length === 3) {
+                       q[1] *= r;
+                       q[2] *= r
+                   } else {
+                       if (q.length === 5) {
+                           q[1] *= r;
+                           q[2] *= r;
+                           q[3] *= r;
+                           q[4] *= r
+                       } else {
+                           if (q.length === 9) {
+                               q[5] *= r;
+                               q[6] *= r;
+                               q[7] *= r;
+                               q[8] *= r
+                           }
+                       }
+                   }
+                   p.apply(this, q)
+               }
+           })(l.drawImage);
+           l.putImageData = (function(p) {
+               return function() {
+                   var q = Array.prototype.slice.call(arguments);
+                   var r = this[k];
+                   for (let i = 1, len = q.length; i < len; i++) {
+                       q[i] *= r
+                   }
+                   p.apply(this, q)
+               }
+           })(l.putImageData)
+       }
+       if (o) {
+           l[k] = o
+       }
+       return l[k]
+   }
