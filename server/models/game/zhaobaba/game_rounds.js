@@ -83,7 +83,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: true
     },
-    number: DataTypes.STRING // get game_round by number
+    number: {
+      type: DataTypes.STRING(45), // get game_round by number
+      unique: true // add unique index
+    }
 
   }, {
     createdAt: 'created_at',

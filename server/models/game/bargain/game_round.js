@@ -18,6 +18,10 @@ module.exports = (sequelize, DataTypes) => {
         initial_score: { type: DataTypes.BIGINT(11), defaultValue: '0' }, // 砍价开始额度
         final_score: { type: DataTypes.BIGINT(11), defaultValue: '0' },   // 砍价最终额度
         unit_score: { type: DataTypes.BIGINT(11), defaultValue: '0' },   // 每次砍价最高额度
+        number: {
+          type: DataTypes.STRING(45), // get game_round by number
+          unique: true // add unique index
+        }
 
     }, {
       createdAt: 'created_at', updatedAt:'updated_at',

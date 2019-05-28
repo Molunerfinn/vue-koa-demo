@@ -43,6 +43,8 @@ export function setWxShare(wxShareArg, desc, url, callBack) {
     if (!/^http:/.test(wxConfigShareImg) && /^\/\//.test(wxConfigShareImg)) {
       wxConfigShareImg = "http:" + wxConfigShareImg
     }
+    console.log('wxShareArg url=====================',url);
+
     try {
       wx.onMenuShareAppMessage({
         title: decodeHtml(wxShareArg.title),
@@ -59,7 +61,7 @@ export function setWxShare(wxShareArg, desc, url, callBack) {
         }
       });
       wx.onMenuShareTimeline({
-        title: desc,
+        title: decodeHtml(wxShareArg.desc),
         link: pyqUrl,
         imgUrl: wxConfigShareImg,
         success: function(res) {
@@ -96,7 +98,7 @@ export function setWxShare(wxShareArg, desc, url, callBack) {
       alert(e.message)
     }
   });
-  wxConfigArg.desc = desc;
+  //wxConfigArg.desc = desc;
   wxConfigArg.url = url;
   wxConfigArg.callBack = callBack;
   wxConfigArg.pyqUrl = pyqUrl;
