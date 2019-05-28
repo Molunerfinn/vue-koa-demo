@@ -215,6 +215,7 @@ export default {
         gameCostTime: 0,
         bestCostTime: 0
       };
+      console.log('params=====:',this.params);
       var arg = Object.assign(resuleDef, this.params);
       //this.resuleArg = arg; ! arg.notreal && (HdGame.currentRank = arg.rank); ! arg.notreal && (HdGame.currentScore = arg.bestScore);
       //HdGame.wxConfig.setWxShareByStatus();
@@ -233,6 +234,7 @@ export default {
         this.ui.statusBody = true
         this.ui.statusOther = false
       }
+      console.log('arg in result=====:',arg);
       if (arg.isSuc) {
         //游戏成功
         HdGame.isplaySucess = true;
@@ -299,6 +301,7 @@ export default {
 
         this.showResult()
       }
+      this.$emit('commandDone')
 
     }
   }

@@ -102,7 +102,8 @@
                @Restart="handleGameRestart"
                v-show="resultBoxVisible"
                :params="resultBoxParams"
-               :command="resultBoxCommand"> </ResultBox>
+               :command="resultBoxCommand"
+               @commandDone="handleResetCommand"> </ResultBox>
     <RuleBox :ruleIconUrl="skinAssets.ruleIconPath"
              :game-round="gameRound"
              :game-player="gamePlayer"
@@ -377,6 +378,7 @@
       handleResetCommand() {
         this.ruleBoxCommand = null
         this.messageBoxCommand = null
+        this.resultBoxCommand = null
       },
       //
       getRank(event) {
@@ -480,6 +482,7 @@
                 bestCostTime: r.bestCostTime,
                 headImg: this.gamePlayer.avatar
               }
+              console.log('arg=========:',arg);
 
               g_config.playerId = r.playerId
               this.resultBoxParams = arg
