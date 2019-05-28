@@ -17,6 +17,7 @@ export default class GamesController {
   static async getInfoDp(ctx) {
       try {
           let code = ctx.params.code
+          console.log('code==:',code);
           let number = ctx.params.number
           console.log("showRoundByNumber= ", ctx.params)
           let Model = getGameRoundModelByCode(code)

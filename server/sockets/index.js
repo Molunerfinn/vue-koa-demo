@@ -2,7 +2,7 @@
 import IO from 'socket.io'
 const redisAdapter  = require('socket.io-redis');
 import DpPintuSocket from'./dpgame/pintu'
-
+import DpYiySocket from'./dpgame/yiy'
 export function sockets( server ){
   let path = process.env.SOCKETIO_PATH || '/socket.io'
   const adapter =  redisAdapter({ host: '127.0.0.1', port: 6379 })
@@ -10,5 +10,6 @@ export function sockets( server ){
   console.log( "socket server bind path", path )
   // 拼图socket
   DpPintuSocket.bind(io)
+  DpYiySocket.bind(io)
   return io
 }
