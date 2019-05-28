@@ -67,8 +67,8 @@
              <p><span id="startDate">{{displayStartAt}}</span>&nbsp;-&nbsp;<span id="endDate">{{displayEndAt}}</span></p>
            </div>
            <div class="hostLine poupLine" data-sortKey="d">
-             <div class="mainTitle">主办单位</div>
-             <p><a class="hostName" />{{gameRound.host}}</a>
+             <div class="mainTitle">奖品描述</div>
+             <p><a class="hostName" />{{gameRound.award_desc}}</a>
              </p>
            </div>
 
