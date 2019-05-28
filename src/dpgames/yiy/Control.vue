@@ -156,11 +156,12 @@ export default {
     if( parsed.number != null ){
       getGameInfoForDp( parsed.number ).then((res)=>{
         console.log('res=====:',res);
+        let socketPath = process.env.SOCKETIO_PATH
         that.gameRoundId = res['round'].id
-        that.socketNameSpace = "/channel-dppintu-"+ res['round'].number
+        that.socketNameSpace = "/channel-dpyiy-"+ res['round'].number
         that.gameRoundState = res['round'].state
         that.shareUrl = res['shareUrl']
-        that.socket = io( that.socketNameSpace , { transports: [ 'websocket' ] })
+        that.socket = io( that.socketNameSpace , { transports: [ 'websocket' ], path: socketPath })
         that.socket.on('connect', () => {
           that.loading = false;
           that.bindSocketEvents()
