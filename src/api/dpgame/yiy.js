@@ -7,12 +7,12 @@ import fetch from '@/config/fetch'
 
 var basePath = '/gapi/dpgames/dpyiy/'
 
-export const getGameInfoForDp = (number, data) => fetch( basePath  +number + '/getInfoDp', data )
+export const getGameInfoForDp = (number, data) => fetch(basePath + number + '/getInfoDp', data)
 
-export const getGameResult = ( number,data) => fetch(basePath  + number + '/getInfo', data,'POST')
+export const getGameResult = (number, data) => fetch(basePath + number + '/getInfo', data, 'POST')
 
-export const postMsg = (number,data) => fetch(basePath  + number + '/addPlayer', data,'POST')
+export const postMsg = (number, data) => fetch(basePath + number + '/addPlayer', data, 'POST')
 
-export const setAchievebycode = ( number, data) => fetch(basePath  + number + '/setAchieve', data,'POST')
+export const setAchievebycode = (number, data) => fetch(basePath + number + '/setAchieve', data, 'POST')
 
-export const getRanking = ( number, data) => fetch(basePath  + number + '/getRanking', data, 'POST')
+export const getRanking = (number, data) => fetch(basePath + number + '/getRanking', data, 'POST')

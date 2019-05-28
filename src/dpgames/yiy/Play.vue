@@ -1,28 +1,27 @@
 <template>
   <div class="main-container indexbg" id="mainContainer">
-    {{computedGameState}}
     <audio id="bgMusic">
-      <source src="/game-yiy-assets/app/css/shake.mp3" type="audio/mpeg">
+      <source src="~@/assets/dpgame/yiy/shake.mp3" type="audio/mpeg">
     </audio>
     <div class="msg weui-toptips weui-toptips_visible" v-show="computedToptips"> {{computedToptips}} </div>
 		<!-- 分数容器 -->
 
-    <div v-show="computedGameState=='open'||computedGameState=='created'">
+    <div v-show="gameRoundState=='open'||gameRoundState=='created'">
       <div class="indexb-half-top">
-      			<img src="/game-yiy-assets/app/images/skin1/wx/tu_05.png" class="tu1">
-      			<img src="/game-yiy-assets/app/images/skin1/wx/bgtop.gif" class="tu2">
+      			<img src="~@/assets/dpgame/yiy/images/skin1/wx/tu_05.png" class="tu1">
+      			<img src="~@/assets/dpgame/yiy/images/skin1/wx/bgtop.gif" class="tu2">
       </div>
       		<div class="indexb-bottom">
-      			<img src="/game-yiy-assets/app/images/skin1/wx/yao_01.png">
+      			<img src="~@/assets/dpgame/yiy/images/skin1/wx/yao_01.png">
       		</div>
     </div>
-		<div class="gameInfo-container" v-show="computedGameState=='started'">
+		<div class="gameInfo-container" v-show="gameRoundState=='started'">
       <ul class="shake-ani">
       </ul>
 
       <div class="indexb-half-top">
   			<div class="timeContainer">
-  				<img src="/game-yiy-assets/app/images/shakeMP_timeIcon.png" class="time-icon">
+  				<img src="~@/assets/dpgame/yiy/images/shakeMP_timeIcon.png" class="time-icon">
   				00:<span v-text="formatTime"></span>
   			</div>
   			<div class="countsContainer" style="display:none;">
@@ -31,11 +30,11 @@
   			</div>
       </div>
       <div class="indexb-bottom">
-        <img src="/game-yiy-assets/app/images/skin1/wx/yao_01.png" class="tt">
+        <img src="~@/assets/dpgame/yiy/images/skin1/wx/yao_01.png" class="tt">
       </div>
 		</div>
 		<!-- 开始游戏倒计时遮罩层 -->
-		<div class="runningTime-shade" v-show="computedGameState=='starting'">
+		<div class="runningTime-shade" v-show="gameRoundState=='starting'">
 			<p>游戏开始倒计时</p>
 			<p>
 				<!-- <span v-text="timeToStart" class="runningTime"></span> -->
@@ -44,7 +43,7 @@
 			<p>马上进入“摇一摇”</p>
 		</div>
 
-    <div class="state-completed" v-show="computedGameState=='completed'">
+    <div class="state-completed" v-show="gameRoundState=='completed'">
       <div class="head" style="height:150px;">
         游戏成绩
       </div>
@@ -60,17 +59,17 @@
     </div>
 		<!-- 加载遮罩层 -->
 		<div class="loading" v-show="loading">
-      {{computedGameState}}
+      {{gameRoundState}}
 			<p>加载中...</p>
 		</div>
-    <div class="debug" style="display:none;"> {{computedGameState}}  </div>
+    <div class="debug" style="display:none;"> {{gameRoundState}}  </div>
 	</div>
 </template>
 
 <script>
 
   // import Game from './game/Game.vue'
-  // import GameRes from './game/GameRes'
+  import GameRes from './game/GameRes'
   import GameArg from './game/GameArg'
   import HdGame from '@/lib/hdgame'
   import GameState from '@/lib/GameState'
@@ -78,10 +77,6 @@
     // setAchievebycode,
     getGameResult
   } from '@/api/dpgame/pintu.js'
-  // import LoadToast from '@/components/LoadToast.vue'
-  // import ResultBox from './ResultBox.vue'
-  // import RuleBox from './RuleBox.vue'
-  // import SignUp from '@/components/SignUp.vue'
   import { GameBackgroundMusicLoadEvent } from '@/lib/GameEvent'
   import queryString from 'query-string'
   import io from 'socket.io-client'
@@ -90,14 +85,14 @@
   const gameUrlBase = process.env.GAME_URL_BASE
   // //import {simplifyLufylegend } from '@/lib/simplify'
   // //关于玩家的配置信息
-  // const g_config = {
-  //   scoreType: false,
-  //   initTime: 0,
-  //   ipInfo: {
-  //     provice: null,
-  //     city: null
-  //   }
-  // }
+  const g_config = {
+    scoreType: false,
+    initTime: 0,
+    ipInfo: {
+      provice: null,
+      city: null
+    }
+  }
   // const countDownImages = [
   //   require('@/assets/dpgame/pintu/image/c0.png'),
   //   require('@/assets/dpgame/pintu/image/c1.png'),
@@ -115,6 +110,9 @@
 
     data() {
       return{
+        hg: {
+          showGameBox: true
+        },
         socket:null,
         gamePlayer: {},
         gamePlayerId: 0,
@@ -155,45 +153,45 @@
   		},
   		computedToptips(){
         console.log("=====",this.gameRoundStateTips);
-  			return this.gameRoundStateTips[this.computedGameState]
+  			return this.gameRoundStateTips[this.gameRoundState]
   		},
-  		computedGameState(){
-  			switch (this.gameRoundState) {
-  				case 'created': return 'created';
-  				case 'open': return 'open';
-  				case 'ready': return 'ready';
-  				case 'starting': return 'starting';
-  				case 'started': return 'started';
-  				case 'completed': return 'completed';
-  				case 'disabled': return 'disabled';
-  				default: return 'created'
-  			}
-  		}
+      // gameRoundState(){
+      //     console.log('this.gameRoundState=====:',this.gameRoundState);
+  		// 	switch (this.gameRoundState) {
+  		// 		case 'created': return 'created';
+  		// 		case 'open': return 'open';
+  		// 		case 'ready': return 'ready';
+  		// 		case 'starting': return 'starting';
+  		// 		case 'started': return 'started';
+  		// 		case 'completed': return 'completed';
+  		// 		case 'disabled': return 'disabled';
+  		// 		default: return 'unkonwn'
+  		// 	}
+  		// }
   	},
   	created: function(){
   		var that = this;
-      const parsed = queryString.parse(location.search)
-      var number = parsed.number
+      this.hg.grade = new HdGame.Grade(0)
 
-      var params = {
-        parsed: parsed
-      }
-
-      // this.hg.grade = new HdGame.Grade(0)
-      //
-      // this.hg.time = new HdGame.Time(g_config.initTime, { updateFlag: true, isDesc: false })
+      this.hg.time = new HdGame.Time(g_config.initTime, { updateFlag: true, isDesc: false })
 
       GameArg.eventBus.$on(GameBackgroundMusicLoadEvent.name, event => {
         this.initBackgroundMusic()
       })
       //simplifyLufylegend( this.hg, window.g_rem )
-      // HdGame.initJsHead(this.hg, GameRes)
+      HdGame.initJsHead(this.hg, GameRes)
 
-      // this.hg.assets.add(GameRes.skinAssets)
+      this.hg.assets.add(GameRes.skinAssets)
 
       if (this.debug) {
         window.hg = this.hg
         window.gameArg = GameArg
+      }
+      const parsed = queryString.parse(location.search)
+      var number = parsed.number
+
+      var params = {
+        parsed: parsed
       }
   		// 监听设备的加速度事件
   		// 检测设备是否支持加速度传感器
@@ -213,6 +211,7 @@
         this.gameRound = this.gameInfo['gameRound']
         this.timeToEnd = this.gameRound.duretion
         this.gameRoundState = this.gameRound.state
+        console.log('this.gameRoundState++++++:',this.gameRoundState);
         this.gamePlayer = this.gameInfo['gamePlayer']
         this.playPath = this.gameRound.playPath
 

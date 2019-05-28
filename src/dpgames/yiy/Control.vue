@@ -1,12 +1,12 @@
 <template>
-  <div id="app">
+  <div id="app" :class="skin">
     <div class="Panel">
       <div  >
         <div class="bg-nei-top">
-                <img src="/game-yiy-assets/app/images/skin1/tu_03.png" class="bg-nei-top-erwei" style="display:none;">
-                <div class="bg-nei-top-right"><span></span><img src="/game-yiy-assets/app/images/skin1/tu_05.png"></div>
-                <div class="bg-nei-top-zhong" ><img src="/game-yiy-assets/app/images/skin1/bgtop.gif"  v-show="computedGameState=='open'||computedGameState=='started'">
-                  <p  v-show="computedGameState=='started'"><span>游戏倒计时</span><strong>|</strong><span>剩余<b>${timeToEnd}</b>秒</span></p>
+                <img src="~@/assets/dpgame/yiy/images/skin1/tu_03.png" class="bg-nei-top-erwei" style="display:none;">
+                <div class="bg-nei-top-right"><span></span><img src="~@/assets/dpgame/yiy/images/skin1/tu_05.png"></div>
+                <div class="bg-nei-top-zhong" ><img src="~@/assets/dpgame/yiy/images/skin1/bgtop.gif"  v-show="computedGameState=='open'||computedGameState=='started'">
+                  <p  v-show="computedGameState=='started'"><span>游戏倒计时</span><strong>|</strong><span>剩余<b>{{timeToEnd}}</b>秒</span></p>
                 </div>
         </div>
       </div>
@@ -16,9 +16,9 @@
       <div class="bg-nei-bottom1" v-show="computedGameState=='open'||computedGameState=='started'">
       </div>
       <div class="fullfill  game-state state-created" v-show="computedGameState=='created'">
-        <div class="box-title">  <img src="/game-yiy-assets/app/images/skin1/bgtop.gif"> </div>
+        <div class="box-title">  <img src="~@/assets/dpgame/yiy/images/skin1/bgtop.gif"> </div>
         <div class="box-body">
-          <div>    <img src="/game-yiy-assets/app/images/skin1/yao_02.png">      </div>
+          <div>    <img src="~@/assets/dpgame/yiy/images/skin1/yao_02.png">      </div>
           <button class="start btn yao-btn" @click="openGameHandler" >准备开始</button>
         </div>
       </div>
@@ -31,11 +31,11 @@
       </div>
       <div class="fullfill state-open qiandao" v-show="computedGameState=='open'">
 
-          <div class="bg-zhunbei">已有<b>${gamePlayers.length}</b>人准备<span>请耐心等待游戏开始</span></div>
+          <div class="bg-zhunbei">已有<b>{{gamePlayers.length}}</b>人准备<span>请耐心等待游戏开始</span></div>
           <ul class="canyu">
             <li class="qiaodaosf" v-for="player in gamePlayers">
               <img class="qiaodaotx" v-bind:src="player.avatar">
-              <p class="qiaodaoxm">${player.nickname}</p>
+              <p class="qiaodaoxm">{{player.nickname}}</p>
             </li>
           </ul>
           <div class="actions">
@@ -43,9 +43,9 @@
           </div>
        </div>
       <div class="fullfill  game-state  state-starting " v-show="computedGameState=='starting'">
-        <div class="box-title">  <img src="/game-yiy-assets/app/images/skin1/bgtop.gif" class="logo"> </div>
+        <div class="box-title">  <img src="~@/assets/dpgame/yiy/images/skin1/bgtop.gif" class="logo"> </div>
         <div class="box-body">
-          <p class="szbg">${timeToStart}</p>
+          <p class="szbg">{{timeToStart}}</p>
         </div>
       </div>
 
@@ -56,34 +56,34 @@
               <div class="progress-wrap clear-fix">
                 <div class="progress">
                 <div class="progress-bar progress-bar-warning progress-bar-striped active" v-bind:style="{width: player.percent+'%'}">
-                  <div v-bind:class="['progress-value','car'+i]" >${player.score}</div>
+                  <div v-bind:class="['progress-value','car'+i]" >{{player.score}}</div>
                 </div>
                 </div>
               </div>
-            <span class="mingzi">${player.nickname}</span>
+            <span class="mingzi">{{player.nickname}}</span>
             </li>
           </ul>
 
       </div>
 
       <div class="fullfill game-state  state-completed" v-show="computedGameState=='completed'">
-        <div class="box-title">  <img src="/game-yiy-assets/app/images/skin1/pm_03.png" class="logo"> </div>
+        <div class="box-title">  <img src="~@/assets/dpgame/yiy/images/skin1/pm_03.png" class="logo"> </div>
         <div class="player-rank clearfix">
           <div class="pm-top5">
           <table class="rank  ">
             <tr> <th class="paiming"> 排名</th><th class="xingming">姓名</th><th class="chengji">当前成绩</th></tr>
-            <tr  v-for="(player, i) in computedTop5Players"><td class="paiming"><span v-bind:class="'pm'+i"> ${i+1}</span></td>
-              <td class="xingming"><img v-bind:src="player.avatar"><span  >${player.nickname}</span></td>
-              <td class="chengji"> ${player.score}</td>
+            <tr  v-for="(player, i) in computedTop5Players"><td class="paiming"><span v-bind:class="'pm'+i"> {{i+1}}</span></td>
+              <td class="xingming"><img v-bind:src="player.avatar"><span  >{{player.nickname}}</span></td>
+              <td class="chengji"> {{player.score}}</td>
             </tr>
           </table>
           </div>
           <div class="pm-top10">
             <table class="rank  ">
               <tr> <th class="paiming"> 排名</th><th class="xingming">姓名</th><th class="chengji">当前成绩</th></tr>
-              <tr  v-for="(player, i) in computedTop10Players"><td class="paiming"><span v-bind:class="'pm'+i"> ${i+6}</span></td>
-                <td class="xingming"><img v-bind:src="player.avatar"><span  >${player.nickname}</span></td>
-                <td class="chengji"> ${player.score}</td>
+              <tr  v-for="(player, i) in computedTop10Players"><td class="paiming"><span v-bind:class="'pm'+i"> {{i+6}}</span></td>
+                <td class="xingming"><img v-bind:src="player.avatar"><span  >{{player.nickname}}</span></td>
+                <td class="chengji"> {{player.score}}</td>
               </tr>
             </table>
           </div>
@@ -93,11 +93,11 @@
 
     </div>
 
-    <div class="Panel Bottom"  style=" height:0px;">
+    <div class="Panel Bottom"  style="">
       <div class="actions">
         <button class="start btn btn-danger btn-lg" @click="resetGameHandler">重置游戏</button>
       </div>
-      <div class="debug"  > ${computedGameState}</div>
+      <div class="debug"  v-show="debug" > {{computedGameState}}</div>
 
     </div>
 
@@ -121,7 +121,7 @@ import GameState from '@/lib/GameState'
 
 import '@/assets/dpgame/pintu/skin-runlin/css/control.css'
 
-// const skin = 'runlin'
+const skin = 'runlin'
 
 // const countDownImages = [
 //   require('@/assets/dpgame/pintu/image/c0.png'),
@@ -133,6 +133,8 @@ export default {
   name: 'control',
   data() {
     return{
+      skin: ['base', skin],
+      debug: true,
       loading: true,
       gameRoundId: 0,
       gameRoundState: null,
@@ -153,6 +155,7 @@ export default {
     const parsed = queryString.parse(location.search);
     if( parsed.number != null ){
       getGameInfoForDp( parsed.number ).then((res)=>{
+        console.log('res=====:',res);
         that.gameRoundId = res['round'].id
         that.socketNameSpace = "/channel-dppintu-"+ res['round'].number
         that.gameRoundState = res['round'].state
@@ -181,13 +184,13 @@ export default {
 		},
 		computedGameState(){
 			switch (this.gameRoundState) {
-				case 0: return 'created';
-				case 1: return 'open';
-				case 2: return 'ready';
-				case 3: return 'starting';
-				case 4: return 'started';
-				case 5: return 'completed';
-				case 6: return 'disabled';
+				case 'created': return 'created';
+				case 'open': return 'open';
+				case 'ready': return 'ready';
+				case 'starting': return 'starting';
+				case 'started': return 'started';
+				case 'completed': return 'completed';
+				case 'disabled': return 'disabled';
 				default: return 'unkonwn'
 			}
 		},
@@ -285,7 +288,7 @@ export default {
 				this.playerCheckTimerId = setInterval(function(){
 						// 取得游戏用户
 						that.socket.emit('GetGamePlayersEvent', {}, function(data){
-							console.log( `GetGamePlayersEvent ${++i} `, data)
+							console.log( `GetGamePlayersEvent  `,++i, data)
 							that.gamePlayers = data.gamePlayers
 						});
 				}, 1500);

@@ -310,6 +310,8 @@
           function go() {
             var time = 1000 / 60;
             time *= _hasFinish ? 3 : Math.max(3, percent / 10);
+            // console.log('percent',percent,'_hasFinish',_hasFinish);
+            // console.log("gogogogogogogogogogogo");
             if (percent === 99 && _hasFinish) {
               _setPercentage(100);
               _hasStrting = false;
@@ -317,6 +319,7 @@
                 endCallback();
                 endCallback = null
               }
+              console.log('======display======');
               var preloadPage = document.getElementById('preloadPage');
               setTimeout(function() {
                 preloadPage.style.display = 'none'
