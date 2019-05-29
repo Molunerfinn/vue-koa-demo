@@ -59,7 +59,7 @@
 		<div class="runningTime-shade" v-show="gameRoundState=='starting'">
 			<p>游戏开始倒计时</p>
 			<p>
-				<!-- <span v-text="timeToStart" class="runningTime"></span> -->
+				<span v-text="timeToStart" class="runningTime"></span>
 				<span>秒</span>
 			</p>
 			<p>马上进入“摇一摇”</p>
@@ -70,7 +70,7 @@
         游戏成绩
       </div>
       <div class="touxiang-wrap">
-        <!-- <img v-bind:src="gamePlayer.avatar"> -->
+        <img v-bind:src="gamePlayer.avatar">
       </div>
       <div class="paiming-wrap">
         <p class="paiming">
@@ -99,7 +99,7 @@
   import GameState from '@/lib/GameState'
   import SignUp from '@/components/SignUp.vue'
   import {
-    // setAchievebycode,
+    setAchievebycode,
     getGameResult
   } from '@/api/dpgame/yiy.js'
   import { GameBackgroundMusicLoadEvent } from '@/lib/GameEvent'
@@ -124,7 +124,7 @@
   //   require('@/assets/dpgame/pintu/image/c2.png'),
   //   require('@/assets/dpgame/pintu/image/c3.png')
   // ]
-  const gameType = 1 // 0抽奖， 1刷记录
+  // const gameType = 1 // 0抽奖， 1刷记录
 
   function s(){
   	return window.jQuery;
@@ -153,7 +153,7 @@
         score: 0, // 记录所得分数
         rank: 0, // 记录当前名次
         timeToEnd: 30, // 游戏剩余时间，初始为30s
-        // timeToStart: 0, // 游戏开始前倒计时
+        timeToStart: 0, // 游戏开始前倒计时
         gameRoundStateTips:{
           created: '您好，游戏还没开始，请耐心等待',
           open: '您好，请耐心等待大屏幕倒计时开始',
@@ -244,12 +244,13 @@
   			alert('您的设备不支持摇一摇功能！');
   			return;
   		}
-      that.socket = io(that.socketNameSpace, { transports: ['websocket'] })
+      let socketPath = process.env.SOCKETIO_PATH
+      that.socketNameSpace = '/channel-dpyiy-' + number
+      that.socket = io( that.socketNameSpace , { transports: [ 'websocket' ], path: socketPath })
       that.socket.on('connect', () => {
-        HdGame.tlog( "debug", " websockt connected ")
-        that.loading = false
+        that.loading = false;
         that.bindSocketEvents()
-      })
+      });
       getGameResult(number, params).then(data => {
         this.gameInfo = data
         console.log('gameInfo=======:', this.gameInfo)
@@ -303,77 +304,27 @@
           if (this.gameInfo['gamePlayer'].score == constant.GameConstant.maxTime) {
             this.gameInfo['gamePlayer'].score = 0
           }
-          var arg = {
-            isSuc: r.isSuc,
-            gameScore: this.gameInfo['gamePlayer'].score,
-            minScore: 0, //到多少分可以抽奖
-            bestScore: r.score,
-            gameType: gameType,
-            rank: r.rank,
-            beat: r.beat,
-            isEqualDraw: false,
-            bestCostTime: r.bestCostTime,
-            // headImg: this.gamePlayer.avatar
-            headImg:null
-          }
-
-          this.resultBoxParams = arg
-          this.resultBoxCommand = 'showResult'
-          this.resultBoxVisible = true
+          // var arg = {
+          //   isSuc: r.isSuc,
+          //   gameScore: this.gameInfo['gamePlayer'].score,
+          //   minScore: 0, //到多少分可以抽奖
+          //   bestScore: r.score,
+          //   gameType: gameType,
+          //   rank: r.rank,
+          //   beat: r.beat,
+          //   isEqualDraw: false,
+          //   bestCostTime: r.bestCostTime,
+          //   // headImg: this.gamePlayer.avatar
+          //   headImg:null
+          // }
+          this.rank = r.rank
+          //
+          // this.resultBoxParams = arg
+          // this.resultBoxCommand = 'showResult'
+          // this.resultBoxVisible = true
         }
         document.title = this.gameRound.name
       })
-  		// that.gamePlayer = DGAME.game_player
-  		// that.gamePlayerId =  DGAME.game_player.id
-  		// that.rank = DGAME.game_player.rank
-  		// 获取用户信息
-  		// that.getUserInfo(function(){
-      //
-  		// 	//GameStartingEvent:游戏开始前的倒计时事件
-  		// 	//GameRunningEvent: 游戏运行结束倒计时事件
-  		// 	//GameEndEvent:"GameEndEvent"
-  		// 	// 游戏开始前的倒计时事件
-  		// 	that.socket.on('GameStartingEvent', function(data){
-  		// 		console.log('io:GameStartingEvent')
-  		// 		that.timeToStart = data.timeToStart
-  		// 		that.gameRoundState = data.gameRoundState
-  		// 		// 倒计时0，即游戏开始
-  		// 		if( that.timeToStart == 1 ){
-  		// 			that.startGame()
-  		// 		}
-  		// 	});
-  		// 	// 游戏运行结束倒计时事件,
-  		// 	that.socket.on('GameRunningEvent', function(data){
-  		// 		console.log('io:GameRunningEvent')
-  		// 		that.timeToEnd = data.timeToEnd
-  		// 		that.gameRoundState = data.gameRoundState
-  		// 		if( that.timeToEnd == 1 ){
-  		// 			console.log("timeToEnd= ", that.timeToEnd)
-  		// 			// 结束游戏并上传最后成绩到服务器
-  		// 			that.endGame()
-  		// 		}
-  		// 	});
-  		// 	// 监听游戏结束事件
-  		// 	that.socket.on('GameEndEvent', function(data){
-  		// 		console.log('io:GameEndEvent', data)
-  		// 		that.gameRoundState = data.gameRoundState
-  		// 		var gamePlayerScores = data.gamePlayerScores.sort()
-  		// 		for(var i=0; i< gamePlayerScores.length; i++){
-  		// 			var player = gamePlayerScores[i];
-  		// 			if( player.id == that.gamePlayerId){
-  		// 				that.score = player.score;
-  		// 				that.rank = player.rank;
-  		// 				break;
-  		// 			}
-  		// 		}
-  		// 		//socket.disconnect();
-  		// 		console.log('游戏时间到！');
-  		// 	});
-  		// 	// 正在游戏，但是不小心退出了
-  		// 	if( that.gameRoundState == 4){
-  		// 		that.startGame()
-  		// 	}
-  		// });
   	},
   	methods: {
       bindSocketEvents: function(){
@@ -398,13 +349,71 @@
             that.ui.homeVisible = true
           }
         })
-        that.socket.on('GameStartingEvent', function(data) {
-          console.log('GameStartingEvent')
-          that.gameRoundState = data.gameRoundState
-          that.timeToStart = data.timeToStart
-          // that.countdownImg = countDownImages[that.timeToStart]
-          // console.log('countdownImg====:', that.countdownImg)
-        })
+
+        that.socket.on('GameStartingEvent', function(data){
+  				console.log('io:GameStartingEvent')
+  				that.timeToStart = data.timeToStart
+  				that.gameRoundState = data.gameRoundState
+  				// 倒计时0，即游戏开始
+  				if( that.timeToStart == 1 ){
+  					that.startGame()
+  				}
+  			});
+  			// 游戏运行结束倒计时事件,
+  			that.socket.on('GameRunningEvent', function(data){
+  				console.log('io:GameRunningEvent')
+  				that.timeToEnd = data.timeToEnd
+  				that.gameRoundState = data.gameRoundState
+  				if( that.timeToEnd == 1 ){
+  					console.log("timeToEnd= ", that.timeToEnd)
+  					// 结束游戏并上传最后成绩到服务器
+  					that.endGame()
+  				}
+  			});
+  			// 监听游戏结束事件
+  			that.socket.on('GameEndEvent', function(data){
+  				console.log('io:GameEndEvent', data)
+          that.gameRoundState = GameState.completed
+          const parsed = queryString.parse(location.search)
+          var number = parsed.number
+          var params = {
+            score: 0,
+            parsed: parsed
+          }
+          setAchievebycode(number, params).then(data => {
+            HdGame.tlog('gameOver', data)
+            var r = data
+
+            console.log('rrrrrrr', r)
+            if (r.rt == 0) {
+              // var arg = {
+              //   isSuc: r.isSuc,
+              //   gameScore: r.score,
+              //   minScore: 0, //到多少分可以抽奖
+              //   bestScore: r.bestScore,
+              //   gameType: gameType,
+              //   rank: r.rank,
+              //   beat: r.beat,
+              //   isEqualDraw: false,
+              //   bestCostTime: r.bestCostTime,
+              //   headImg: this.gamePlayer.avatar
+              // }
+              this.rank = r.rank
+
+              this.isFinishGame = r.isSuc
+              console.log('this.isFinishGame=====:',this.isFinishGame);
+              g_config.playerId = r.playerId
+              // this.resultBoxParams = arg
+              // this.resultBoxCommand = 'showResult'
+              // this.resultBoxVisible = true //显示游戏结果
+              //PlayInfo.addPlayTimes(1);
+              g_config.achieveToken = r.achieveToken
+            }
+            this.hasFinish = true
+          })
+  				//socket.disconnect();
+  				console.log('游戏时间到！');
+  			});
       },
   		handlePlayMusic: function() {
   			try{

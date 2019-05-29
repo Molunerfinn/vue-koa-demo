@@ -23,7 +23,12 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: '0'
     },
     score: {
-      type: DataTypes.BIGINT(11),
+      type: DataTypes.FLOAT(10, 2),
+      allowNull: false,
+      defaultValue: '0'
+    },
+    max_score: {
+      type: DataTypes.FLOAT(10, 2),
       allowNull: false,
       defaultValue: '0'
     },
