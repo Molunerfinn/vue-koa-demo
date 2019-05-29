@@ -53,6 +53,7 @@ export default class GamesController {
     let parsed = ctx.request.body.parsed || {}
     let openid = parsed.openid
 
+    console.log('code======:',code);
     console.log('openid=======:', openid);
 
     let GameRound = getGameRoundModelByCode(code)

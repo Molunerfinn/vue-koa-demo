@@ -51,10 +51,14 @@ import weui from 'weui.js'
 import queryString from 'query-string'
 import {
   postMsg
-} from '@/api/dpgame/pintu.js'
+} from '@/api/base.js'
 export default {
   props: {
     gamePlayer: { // 游戏player相关数据
+      type: Object,
+      default: {}
+    },
+    gameRound: { // 游戏player相关数据
       type: Object,
       default: {}
     },
@@ -98,12 +102,14 @@ export default {
       if(msg_is_ok){
         const parsed = queryString.parse(location.search);
         var number = parsed.number;
+        var code = this.gameRound.code;
+        console.log('code===:',code);
         var data = {
           gamePlayer: this.gamePlayer,
           realname:realname,
           tel:tel
         }
-        postMsg(number,data).then((res)=>{
+        postMsg(code,number,data).then((res)=>{
           this.$emit('signUpOver',res)
           this.statusBox = false
         })

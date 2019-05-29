@@ -27,30 +27,33 @@ class GameBaseByCode {
   }
   static async postMsg(ctx) {
     let code = ctx.params.code
+    console.log('code=====:',code);
     let number = ctx.params.number
     let openid = ctx.request.body.openid
     let GameRound = getGameRoundModelByCode(code)
-    let GamePlayer = getGamePlayerModelByCode(code)
-    let realname = ctx.request.body.realname
-    let cellphone = ctx.request.body.tel
     let gameRound = await GameRound.findOne({
       where: {
         number
       }
     })
 
-    let gamePlayer = await GamePlayer.findOne({
-      where: {
-        game_round_id: gameRound.id,
-        openid: openid,
-      }
-    })
-    console.log('gamePlayer', gamePlayer);
-    let res = await gamePlayer.update({
-      realname: realname,
-      cellphone: cellphone
-    })
-    ctx.body = res
+    let new_player = ctx.request.body.gamePlayer
+    let realname = ctx.request.body.realname
+    let cellphone = ctx.request.body.tel
+
+    new_player.realname = realname
+    new_player.cellphone = cellphone
+    new_player.game_round_id = gameRound.id
+
+    let GamePlayer = getGamePlayerModelByCode(code)
+
+    console.log('new_player--:', new_player);
+    var options = {
+      fields: ['openid', 'nickname', 'avatar', 'game_round_id', 'realname', 'cellphone', 'score', 'max_score', 'token']
+    }
+    let gamePlayer = await GamePlayer.create(new_player, options)
+
+    ctx.body = gamePlayer
   }
 
   static async getGameResult(ctx) {

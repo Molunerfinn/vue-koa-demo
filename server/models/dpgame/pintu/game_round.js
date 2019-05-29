@@ -112,6 +112,7 @@ function getInfo() {
     contact_required: this.contact_required,
     duration: this.duration,
     host: this.host,
+    code:this.code,
     playPath: playPath
   }
 

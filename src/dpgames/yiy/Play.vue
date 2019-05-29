@@ -1,12 +1,34 @@
 <template>
   <div class="main-container indexbg" id="mainContainer">
+    <div v-show="ui.wait">
+      <div id="homeBgBox">
+        <img id="homeBg" :src="skinAssets.homeBgImg" />
+      </div>
+      <div class="gameInfoBox">
+        <div class="titleImg imgContainer absCenter">
+          <img id="titleImg" class="slaveImg abs" :src="skinAssets.titleImg" style="width:15.232rem;height:5.778666666666667rem;top:2.524rem;left:0.384rem;"
+          />
+        </div>
+      </div>
+      <div class="gamestate" v-show="gameRoundState=='open'">
+        <p class="msg">请关注大屏幕,等待游戏开始 </p>
+      </div>
+
+      <div class="gamestate" v-show="gameRoundState=='created' ">
+        <p class="msg">请耐心等待游戏开始 </p>
+      </div>
+
+      <!-- <div  class="gamestate" v-show="gameRoundState=='starting'">
+        <img class="countdownimg" :src='countdownImg'>
+      </div> -->
+    </div>
     <audio id="bgMusic">
       <source src="~@/assets/dpgame/yiy/shake.mp3" type="audio/mpeg">
     </audio>
     <div class="msg weui-toptips weui-toptips_visible" v-show="computedToptips"> {{computedToptips}} </div>
 		<!-- 分数容器 -->
 
-    <div v-show="gameRoundState=='open'||gameRoundState=='created'">
+    <div v-show="ui.wait">
       <div class="indexb-half-top">
       			<img src="~@/assets/dpgame/yiy/images/skin1/wx/tu_05.png" class="tu1">
       			<img src="~@/assets/dpgame/yiy/images/skin1/wx/bgtop.gif" class="tu2">
@@ -63,7 +85,9 @@
 			<p>加载中...</p>
 		</div>
     <div class="debug" style="display:none;"> {{gameRoundState}}  </div>
+    <SignUp :game-player="gamePlayer" :gameRound="gameRound" :command="signUpCommand" @signUpOver="signUpOver"> </SignUp>
 	</div>
+
 </template>
 
 <script>
@@ -73,10 +97,11 @@
   import GameArg from './game/GameArg'
   import HdGame from '@/lib/hdgame'
   import GameState from '@/lib/GameState'
+  import SignUp from '@/components/SignUp.vue'
   import {
     // setAchievebycode,
     getGameResult
-  } from '@/api/dpgame/pintu.js'
+  } from '@/api/dpgame/yiy.js'
   import { GameBackgroundMusicLoadEvent } from '@/lib/GameEvent'
   import queryString from 'query-string'
   import io from 'socket.io-client'
@@ -107,13 +132,17 @@
 
   export default {
     name: 'app',
-
+    components: {
+      SignUp
+    },
     data() {
       return{
+        signUpCommand: null,
         hg: {
           showGameBox: true
         },
         socket:null,
+        gameRound:{},
         gamePlayer: {},
         gamePlayerId: 0,
         gameRoundState: null,
@@ -145,6 +174,22 @@
           lastY: 0,
           lastZ: 0
         },
+        ui: {
+          sign_up: false,
+          homeVisible: true, // 初始页面是否可见，游戏时需要隐藏
+          gameBoxVisible: false, // 游戏页面
+          ruleImgVisible: true, // 锦囊按钮
+          loadToastVisible: false,
+          wait: false
+        },
+        skinAssets: {
+          logoImgPath: GameRes.skinAssets.logoImgPath,
+          shareImgPath: GameRes.skinAssets.shareImgPath,
+          ruleIconPath: GameRes.skinAssets.ruleIconPath,
+          homeBgImg: GameRes.skinAssets.homeBgPath,
+          titleImg: GameRes.skinAssets.titleImgPath,
+          startBtnImg: GameRes.skinAssets.startImgPath
+        }
       }
   	},
   	computed: {
@@ -333,12 +378,32 @@
   	methods: {
       bindSocketEvents: function(){
         var that = this
+        that.socket.on('GameOpeningEvent', function(data) {
+          console.log('GameOpeningEvent')
+          that.gameRoundState = data.gameState
+          that.resultBoxVisible = false
+          console.log('that.gameRoundState=====:',that.gameRoundState);
+          if (
+            that.gameRoundState == GameState.open &&
+            that.gamePlayer.token == undefined &&
+            that.gameInfo['gameRound'].contact_required == 1
+          ) {
+            that.ui.homeVisible = false
+            that.signUpCommand = 'show'
+          } else if (
+            that.gameRoundState == GameState.open &&
+            (that.gamePlayer.token !== undefined || that.gameInfo['gameRound'].contact_required == 0)
+          ) {
+            that.ui.wait = true
+            that.ui.homeVisible = true
+          }
+        })
         that.socket.on('GameStartingEvent', function(data) {
           console.log('GameStartingEvent')
           that.gameRoundState = data.gameRoundState
           that.timeToStart = data.timeToStart
           // that.countdownImg = countDownImages[that.timeToStart]
-          console.log('countdownImg====:', that.countdownImg)
+          // console.log('countdownImg====:', that.countdownImg)
         })
       },
   		handlePlayMusic: function() {
@@ -407,8 +472,15 @@
   			};
   			that.socket.emit('ShakeEvent', query);
   		},
-
-
+      signUpOver(res) {
+        console.log('==============signUpOver==============')
+        this.ui.homeVisible = true
+        this.ui.wait = true
+        this.gamePlayer = res
+        let that = this
+        that.ruleBoxCommand = 'showIcon'
+        that.signUpCommand = 'hide'
+      },
   		handleShaking: function() {
   				var e = this;
   				s()(".shark-img").addClass("shake-animate"),

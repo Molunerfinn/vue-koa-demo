@@ -4,7 +4,7 @@ const {
 var moment = require('moment')
 
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define('DpYiyGameRound', {
+  const model = sequelize.define('DpYiyGameRound', {
     game_id: DataTypes.BIGINT(11),
     name: DataTypes.STRING,
     creator_id: DataTypes.BIGINT(11),
@@ -81,4 +81,53 @@ module.exports = (sequelize, DataTypes) => {
     },
 
   })
+  addHooks(model)
+  bindMethods(model)
+
+  return model
+}
+
+function addHooks(model) {
+  model.addHook('beforeCreate', 'set_defults', (game, options) => {
+    game.code = 'dpyiy'
+
+  })
+}
+
+function bindMethods(model) {
+  model.prototype.getInfo = getInfo
+  model.prototype.getRandomList = getRandomList
+
+}
+
+function getInfo() {
+
+  let dataList = this.getRandomList()
+  let playPath = this.getPlayPath()
+
+  return {
+    id: this.id,
+    number: this.number,
+    state: this.state,
+    name: this.name,
+    desc: this.desc,
+    award_desc: this.award_desc,
+    start_at: this.start_at,
+    end_at: this.end_at,
+    contact_required: this.contact_required,
+    duration: this.duration,
+    host: this.host,
+    code:this.code,
+    playPath: playPath
+  }
+
+}
+
+function getRandomList() {
+
+  var dataList = [];
+  for (var i = 0; i < 50; i++) {
+    dataList.push(Math.round(Math.random() * 3)); //可均衡获取0到1的随机整数。
+  }
+  return dataList
 }

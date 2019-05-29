@@ -1,0 +1,529 @@
+@charset "utf-8";
+
+:-webkit-full-screen {
+  background-color: black;
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background-size: 100%
+}
+
+html {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  overflow: hidden;
+  font-family: Microsoft YaHei, Helvitica, Verdana, Tohoma, Arial, san-serif;
+}
+
+.frame-dialog {
+  display: none;
+  position: fixed;
+  top: 15%;
+  height: 76%;
+  left: 0;
+  width: 96%;
+  left: 50%;
+  margin-left: -48%;
+}
+
+.frame-dialog iframe {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: #fff
+}
+
+.frame-dialog .closebutton {
+  cursor: pointer;
+  position: absolute;
+  display: block;
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  text-indent: -9999px;
+  top: 10px;
+  right: 10px;
+}
+
+.frame-dialog .closebutton:before {
+  position: absolute;
+  content: '.';
+  display: block;
+  width: 30px;
+  height: 1px;
+  background: #eb1919;
+  -webkit-transform: rotate(-45deg);
+  top: 20px;
+  left: 5px;
+}
+
+.frame-dialog .closebutton:after {
+  position: absolute;
+  content: '.';
+  display: block;
+  width: 30px;
+  height: 1px;
+  background: #eb1919;
+  -webkit-transform: rotate(45deg);
+  top: 20px;
+  left: 5px;
+}
+
+.phbphb {
+  height: 100%;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.phbphb .phbk {
+  background-color: #fff;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  background-color: #ffd017;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+}
+
+.phbphb .phbtop {
+  position: absolute;
+  top: -72px;
+  left: 50%;
+  margin-left: -160px
+}
+
+.phbbiaok {
+  overflow: auto;
+  position: absolute;
+  top: 66px;
+  left: 35px;
+  right: 35px;
+  bottom: 50px;
+  background-color: #fff;
+}
+
+.loader {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #3e3e3e
+}
+
+.loader .icon {
+  display: block;
+  position: absolute;
+  width: 128px;
+  height: 128px;
+  background: url("../images/system-loading-big.gif") center center no-repeat;
+  z-index: 9999;
+  top: 50%;
+  margin-top: -64px;
+  left: 50%;
+  margin-left: -64px
+}
+
+.loginform {
+  position: absolute;
+  width: 300px;
+  height: 140px;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  background-color: rgba(0, 0, 0, 0);
+  left: 50%;
+  margin-left: -150px;
+  top: 50%;
+  margin-top: -75px;
+  padding: 20px;
+  font-size: 24px;
+  color: #fff;
+  text-align: center;
+  text-shadow: 1px 2px 3px rgba(0, 0, 0, 0.39);
+  display: none;
+}
+
+.loginform .password {
+  color: #fff;
+  position: relative;
+  width: 100%;
+  height: 32px;
+  margin: 20px auto;
+  line-height: 32px;
+  font-size: 20px;
+  text-indent: 15px;
+  border-radius: 15px;
+  padding: 5px 0;
+  border: 2px solid rgba(0, 0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.51);
+  box-shadow: 0px 5px 8px rgba(0, 0, 0, 0.46) inset, 1px 2px 2px rgba(255, 255, 255, 0.61);
+}
+
+.loginform .submitline {
+  text-align: center;
+  height: 40px
+}
+
+.loginform .button-login {
+  cursor: pointer;
+  width: 100%;
+  height: 40px;
+  border-radius: 12px;
+  -moz-border-radius: 6px;
+  font-size: 26px;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.37);
+  color: #fff;
+  padding: 5px 0;
+  border: 0;
+  background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(255, 255, 255, 0.85)), color-stop(100%, rgba(218, 218, 218, 0)));
+  box-shadow: 0 3px 3px rgba(0, 0, 0, 0.36);
+}
+
+.loginform .button-login:hover {
+  background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(255, 255, 255, 0.85)), color-stop(100%, rgba(218, 218, 218, 0.3)));
+}
+
+.loginform .button-login:active {
+  background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(255, 255, 255, 0.2)), color-stop(100%, rgba(218, 218, 218, 0.85)));
+}
+
+.Panel {
+  transition: all 800ms ease-out;
+  -webkit-transition: all 800ms ease-out;
+  -moz-transition: all 800ms ease-out;
+  position: absolute;
+  width: 100%;
+}
+
+.Panel.Top {
+  display: table;
+  height: 100px;
+  top: 0;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.Panel.Bottom {
+  height: 71px;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.bottommenu {
+  width: 96%;
+  height: 71px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.top_menu {
+  width: 96%;
+  height: 100px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.middle_line {
+  display: table-cell;
+  vertical-align: middle;
+  padding: 0 5%
+}
+
+.activity_logo {
+  display: block;
+  position: absolute;
+  width: 280px;
+  height: 75px;
+  top: 50%;
+  margin-top: -38px;
+  left: 0
+}
+
+.mp_account_codeimage {
+  cursor: pointer;
+  display: block;
+  position: absolute;
+  width: 90px;
+  height: 90px;
+  top: 50%;
+  margin-top: -45px;
+  right: 15px;
+}
+
+.bigmpcodebar, .show_qrcode {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 99999;
+  background-color: rgba(0, 0, 0, 0.9);
+}
+
+.bigmpcodebar img, .show_qrcode img {
+  width: 430px;
+  height: 430px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-top: -215px;
+  margin-left: -215px;
+  border-radius: 15px;
+  box-shadow: 0 10px 10px #000;
+}
+
+.bigmpcodebar .closebutton, .show_qrcode .closebutton {
+  cursor: pointer;
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  /*background: url(../images/icon/screen_icons.png) -285px 0 no-repeat*/
+}
+
+.bigmpcodebar .label, .show_qrcode .label {
+  color: #fff;
+  line-height: 100px;
+  text-align: center;
+  font-size: 40px
+}
+
+.bigmpcodebar .label .activity_key, .show_qrcode .label .activity_key {
+  color: #f6ff27;
+  padding: 0 4px;
+  font-weight: bold
+}
+
+.top_title {
+  position: absolute;
+  height: 42px;
+  width: 100%;
+  overflow: hidden;
+  top: 50%;
+  margin-top: -21px;
+  font-size: 20px;
+  padding-left: 300px;
+  color: #fff
+}
+
+.top_title div {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  line-height: 42px
+}
+
+.support_logo {
+  display: block;
+  width: 165px;
+  height: 50px;
+  float: left;
+  margin-top: 10px;
+}
+
+.helperpanel {
+  text-align: left;
+  font-size: 18px;
+  line-height: 24px;
+  color: #fff;
+  display: block;
+  float: left;
+  margin-left: 20px;
+  margin-top: 10px;
+}
+
+.helperpanel .ssgz {
+  width: 100%;
+  display: block;
+}
+
+.helperpanel .mp_account, .helperpanel .activity_key {
+  color: #f6ff27;
+  padding: 0 4px;
+  font-weight: bold
+}
+
+.pulse {
+  -webkit-animation: pulse-keyframes 20s 2s infinite ease both;
+  -moz-animation: pulse-keyframes 20s 2s infinite ease both
+}
+
+@-webkit-keyframes pulse-keyframes {
+  0 {
+    -webkit-transform: scale(1)
+  }
+
+  5% {
+    -webkit-transform: scale(1.3)
+  }
+
+  10% {
+    -webkit-transform: scale(1)
+  }
+
+  100% {
+    -webkit-transform: scale(1)
+  }
+}
+
+@-moz-keyframes pulse-keyframes {
+  0 {
+    -moz-transform: scale(1)
+  }
+
+  5% {
+    -moz-transform: scale(1.3)
+  }
+
+  10% {
+    -moz-transform: scale(1)
+  }
+
+  100% {
+    -moz-transform: scale(1)
+  }
+}
+
+.navbar .navbaritem.photo .icon {
+  background-position: -172px 0;
+}
+
+.hidden {
+  display: none;
+}
+
+.Panel.Bottom .actions {
+  float: right;
+  padding-right: 40px;
+}
+
+.Panel.Bottom a {
+  color: white;
+  padding: 4px 12px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  background-color: #f44336;
+  border: 2px solid #f44336;
+  line-height: 1.8em;
+  font-size: 16px;
+  border-radius: 2px;
+  -webkit-transition-duration: 0.4s;
+  /* Safari */
+  transition-duration: 0.4s;
+}
+
+.Panel.Bottom a:hover {
+  border: 2px solid #f44336;
+  background-color: white;
+  /* Green */
+  color: #f44336;
+}
+
+.header {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 140px;
+}
+
+.header .logo {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  padding: 0 0 0 40px;
+  width: 140px;
+}
+
+.header .qrcode {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  padding: 0 40px 0 0;
+  width: 100px;
+}
+
+.header .heading-wrapper {
+  position: absolute;
+  bottom: 0;
+  text-align: center;
+  font-size: 2em;
+  line-height: 2em;
+  color: #ffffff;
+  width: 100%;
+}
+
+.header .heading {
+  position: relative;
+  display: inline-block;
+  padding: 0 160px;
+  background: transparent url('/game-yiy-assets/app/images/wall/title_bg.png') center top no-repeat;
+  background-size: cover;
+}
+
+.header .heading .icon {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.header .heading .icon img {
+  height: 1.6em;
+  vertical-align: middle;
+}
+
+.header .heading .players {
+  position: absolute;
+  top: 0;
+  right: 5px;
+  font-size: 14px;
+}
+
+.header .heading .num {
+  font-size: 20px;
+  color: gold;
+}
+
+/* copy form */
+body {
+  font-family: 'Microsoft Yahei', Arial, Helvetica, sans-serif;
+}
+
+.Panel.checkin {
+  position: absolute;
+  left: 0;
+  top: 140px;
+  width: 100%;
+  bottom: 71px;
+  overflow: hidden;
+}
+
+.fullfill {
+  width: 100%;
+  height: 100%;
+}
+
+#mainContainer {
+  width: 100%;
+  height: 100%;
+}
+
+.debug {
+  position: absolute;
+  /*background-color: #F56C6C;*/
+  color: transparent;
+  padding: 10px;
+}

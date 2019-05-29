@@ -56,7 +56,7 @@
              :params="resultBoxParams"
              :command="ruleBoxCommand"
              @commandDone="handleResetRuleCommand"> </RuleBox> -->
-    <SignUp :game-player="gamePlayer" :command="signUpCommand" @signUpOver="signUpOver"> </SignUp>
+    <SignUp :game-player="gamePlayer" :gameRound="gameRound":command="signUpCommand" @signUpOver="signUpOver"> </SignUp>
 
     <div id="debugMsg" class="debug-msg" v-show="debug">   </div>
   </div>
