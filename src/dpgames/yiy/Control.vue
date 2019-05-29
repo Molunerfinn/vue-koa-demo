@@ -241,6 +241,7 @@ export default {
 				console.log( 'GameRunningEvent', data )
 			});
 			that.socket.on('GameEndEvent', function(data){
+        console.log('data====:',data);
 				that.gameRoundState = data.gameRoundState
 				that.gamePlayerScores = data.gamePlayerScores
 				console.log( 'GameEndEvent', data)
@@ -319,6 +320,7 @@ export default {
 		resetGameHandler: function(){
 			var that = this
 			console.log("	emit ResetGameEvent" )
+      that.timeToStart = 3
 			that.socket.emit('ResetGameEvent', {}, function(data){
 					that.gameRoundState = data.gameRoundState;
 					console.log("	that.gameRoundState =",	that.gameRoundState );

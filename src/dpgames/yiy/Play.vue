@@ -99,7 +99,7 @@
   import GameState from '@/lib/GameState'
   import SignUp from '@/components/SignUp.vue'
   import {
-    setAchievebycode,
+    // setAchievebycode,
     getGameResult
   } from '@/api/dpgame/yiy.js'
   import { GameBackgroundMusicLoadEvent } from '@/lib/GameEvent'
@@ -356,6 +356,7 @@
   				that.gameRoundState = data.gameRoundState
   				// 倒计时0，即游戏开始
   				if( that.timeToStart == 1 ){
+            that.score = 0
   					that.startGame()
   				}
   			});
@@ -374,43 +375,7 @@
   			that.socket.on('GameEndEvent', function(data){
   				console.log('io:GameEndEvent', data)
           that.gameRoundState = GameState.completed
-          const parsed = queryString.parse(location.search)
-          var number = parsed.number
-          var params = {
-            score: 0,
-            parsed: parsed
-          }
-          setAchievebycode(number, params).then(data => {
-            HdGame.tlog('gameOver', data)
-            var r = data
-
-            console.log('rrrrrrr', r)
-            if (r.rt == 0) {
-              // var arg = {
-              //   isSuc: r.isSuc,
-              //   gameScore: r.score,
-              //   minScore: 0, //到多少分可以抽奖
-              //   bestScore: r.bestScore,
-              //   gameType: gameType,
-              //   rank: r.rank,
-              //   beat: r.beat,
-              //   isEqualDraw: false,
-              //   bestCostTime: r.bestCostTime,
-              //   headImg: this.gamePlayer.avatar
-              // }
-              this.rank = r.rank
-
-              this.isFinishGame = r.isSuc
-              console.log('this.isFinishGame=====:',this.isFinishGame);
-              g_config.playerId = r.playerId
-              // this.resultBoxParams = arg
-              // this.resultBoxCommand = 'showResult'
-              // this.resultBoxVisible = true //显示游戏结果
-              //PlayInfo.addPlayTimes(1);
-              g_config.achieveToken = r.achieveToken
-            }
-            this.hasFinish = true
-          })
+          // this.rank =
   				//socket.disconnect();
   				console.log('游戏时间到！');
   			});
@@ -476,7 +441,7 @@
   			window.removeEventListener("devicemotion", that.handleMotion, true);
   			// 将最后一次的分数发送给服务端
   			var query = {
-  				game_player_id: that.gamePlayerId,
+  				game_player_id: that.gamePlayer.id,
   				score: that.score
   			};
   			that.socket.emit('ShakeEvent', query);

@@ -31,10 +31,42 @@ export default class DpYiySocket {
 
       newNamespace.emit('hello');
       DpYiySocket.bindPlay(socket, number);
+      DpYiySocket.bindPlayWx(socket, number);
 
     });
 
   }
+
+  static async bindPlayWx(socket, number) {
+    // 监听客户端“摇一摇”事件
+    // 参数 game_player_id, count
+    // io.on('ShakeEvent', function(ctx, data){
+    //   console.log('data-------:',data);
+    //   let game_player_id = data.game_player_id
+    //   let score = data.score
+    //   let game_round_id = YiySocket.getGameRoundId( ctx )
+    //   let runner =  new YiyRunner(game_round_id)
+    //
+    //   runner.updatePlayerScore(game_player_id, score ).then((result)=>{
+    //     console.log(' updatePlayerScore return ',result )
+    //   })
+    //   console.log(`ShakeEvent:game_player_id= ${game_player_id} score =${score}`)
+    //   //ctx.acknowledge({ })
+    // });
+
+    socket.on('ShakeEvent', async (data, callback) => {
+      console.log('ShakeEvent');
+      console.log('data-------:',data);
+      const namespace = socket.nsp; // newNamespace.name === '/dynamic-101'
+      let runner = new YiyRunner(number)
+      let game_player_id = data.game_player_id
+      let score = data.score
+      runner.updatePlayerScore(game_player_id, score ).then((result)=>{
+        console.log(' updatePlayerScore return ',result )
+      })
+
+    });
+	}
 
 
   // 绑定大屏游戏页面触发的事件
@@ -107,18 +139,21 @@ export default class DpYiySocket {
               let payload = {
                 gameRoundState: DpGameRoundStates.completed
               }
-              runner.getAllPlayers().then((players) => {
-                players.sort((a, b) => {
-                  return a.score - b.score
-                })
-                payload.gamePlayerScores = players
-                namespace.emit('GameEndEvent', payload);
-                runner.endRound()
+              runner.endRound().then(()=>{
+                runner.getAllPlayers().then((players) => {
+                  players.sort((a, b) => {
+                    return a.score - b.score
+                  })
+                  payload.gamePlayerScores = players
 
-              }).catch(function(err) {
-                console.log("GameEndEvent", err)
+                  namespace.emit('GameEndEvent', payload);
+
+
+                }).catch(function(err) {
+                  console.log("GameEndEvent", err)
+                })
+                return;
               })
-              return;
             }
             let lastRunningTime = runningTime -1
 

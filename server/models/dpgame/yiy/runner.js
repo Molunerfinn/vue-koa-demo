@@ -2,6 +2,7 @@
 // 操作 数据库实现游戏的运行逻辑
 // 这里不创建任何数据库记录，只是读取和跟新状态
 const {
+  Sequelize,
   DpYiyGameRound,
   DpYiyGamePlayer
 } = require('../../index')
@@ -9,11 +10,15 @@ const {
   DpGameRoundStates
 } = require('../../constant')
 
+const redisClient = require('../../redisClient')
+const redisdb = new redisClient()
+
 // 游戏流程控制
 // 游戏流程
 // PC端（控制端）
 // 准备开始-> 玩家签到 -> 点击开始游戏 ->(开始前倒计时)->游戏进行中-> 游戏结束 ->显示排名
 class YiyRunner {
+
   constructor(number) {
     this.number = number
   }
@@ -24,9 +29,9 @@ class YiyRunner {
    */
   async openRound() {
     console.log('openRound');
-    console.log('DpGameRoundStates--:',DpGameRoundStates);
+    console.log('DpGameRoundStates--:', DpGameRoundStates);
     let round = await this.getGameRound()
-    console.log('round=====:',round);
+    console.log('round=====:', round);
     await round.update({
       state: DpGameRoundStates.open
     })
@@ -44,6 +49,72 @@ class YiyRunner {
       state: DpGameRoundStates.started
     })
     return round
+  }
+  async GetRoundAllPlayers() {
+    let round = await this.getGameRound()
+    let gameroundid = round.id
+    let gamePlayers = await DpYiyGamePlayer.findAll({
+      where: {
+        game_round_id: gameroundid
+      }
+    })
+    return gamePlayers
+  }
+
+  async AddPlayersToMemoryDb() {
+    let round = await this.getGameRound()
+    let gameroundid = round.id
+    let game_round = await DpYiyGameRound.findByPk(gameroundid)
+
+    const players = await this.GetRoundAllPlayers()
+    let key = this.getRedisKey(gameroundid)
+
+    redisdb.remove(key, () => {
+      console.log("removed redis " + key)
+    })
+    players.forEach((player) => {
+      redisdb.hSet(key, player.id, {
+        player_id: player.id,
+        score: 0
+      })
+    })
+  }
+
+  async updatePlayerScore(playerid, score) {
+    let round = await this.getGameRound()
+    let gameroundid = round.id
+    let key = this.getRedisKey(gameroundid)
+    redisdb.hSet(key, playerid, {
+      score
+    })
+
+  }
+
+  async getRedisKey(gameroundid) {
+    let round = await this.getGameRound()
+    return `${round.name}:${gameroundid}`
+  }
+
+  async getRedisPlayerScores(gameroundid) {
+    let key = this.getRedisKey(gameroundid)
+    var p = new Promise((resolve) => {
+      redisdb.hGetAll(key, (error, players) => {
+        if (error || !players) resolve([])
+        else {
+          var ar = new Array()
+          console.log("getRedisPlayerScores = ", players)
+          for (var playerid in players) {
+            var player = JSON.parse(players[playerid])
+            ar.push({
+              player_id: playerid,
+              score: player.score
+            })
+          }
+          resolve(ar)
+        }
+      })
+    })
+    return p
   }
   /**
    * 取得玩家信息，在数据库取得，以便显示玩家列表
@@ -65,11 +136,22 @@ class YiyRunner {
    * @param {} gameroundid
    */
   async getPlayerScores() {
-    let gameroundid = this.gameroundid
-    let players = await this.getAllPlayers()
-
+    let round = await this.getGameRound()
+    let gameroundid = round.id
+    let playerScores = await this.getRedisPlayerScores(gameroundid)
+    console.log("GetPlayerScores", playerScores)
+    let players = new Array()
+    if (players) {
+      playerScores.forEach((x) => {
+        let player = {
+          player_id: x.player_id,
+          score: x.score
+        }
+        players.push(player)
+      })
+    }
     players.sort((a, b) => {
-      return a.score - b.score
+      return b.score - a.score
     })
     return players
   }
@@ -78,12 +160,38 @@ class YiyRunner {
    * @param {*}
    */
   async endRound() {
-
+    let state = 'completed'
     let round = await this.getGameRound()
-    await round.update({
-      state: DpGameRoundStates.completed
+    let gameroundid = round.id
+
+    var players = await this.getRedisPlayerScores(gameroundid)
+    var updates = []
+    players.sort((a, b) => {
+      return (b.score - a.score)
     })
-    return round
+    for (var i = 0; i < players.length; i++) {
+      let player = players[i]
+      let res = DpYiyGamePlayer.update({
+        rank: i + 1,
+        'score': player.score
+      }, {
+        where: {
+          id: player.player_id
+        }
+      })
+      updates.push(res)
+    }
+    await Promise.all(updates)
+    await DpYiyGameRound.update({
+      state: state,
+      end_at: Sequelize.fn('NOW')
+    }, {
+      where: {
+        id: gameroundid
+      }
+    })
+    let game_round = await DpYiyGameRound.findByPk(gameroundid)
+    return game_round
   }
 
   /**
@@ -96,26 +204,6 @@ class YiyRunner {
       state: DpGameRoundStates.created
     })
     return round
-  }
-  /**
-   * 控制台点击开始游戏时，添加玩家到缓存
-   * return player information include the id of the player
-   */
-  async AddPlayersToMemoryDb() {
-    //let gameroundid = this.gameroundid
-    //const players = await this.getAllPlayers()
-    //await dbOperation.MemoryDbOperation.AddBatchPlayersToRound( gameroundid, players )
-  }
-
-
-  /**
-   * update player score
-   * return award
-   * @param {*} awardid
-   */
-  async updatePlayerScore(playerid, score) {
-    //let gameroundid = this.gameroundid
-    //await dbOperation.MemoryDbOperation.UpdatePlayerScore(gameroundid, playerid, score)
   }
 
   async getGameRound() {
