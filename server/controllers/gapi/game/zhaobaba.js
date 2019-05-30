@@ -54,7 +54,6 @@ class zhaobaba {
     try {
       let url = ctx.header.referer
       console.log("url=======", url,  getWxJsConfigApiUrl())
-      // let shareurl = `${GAME_URL_BASE}/game-${game_round.code}/${game_round.id}/checkin-wx?to_game_player_id=${to_game_player.id}`
 
       let body = {
         url: url
