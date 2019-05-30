@@ -374,8 +374,14 @@
   			// 监听游戏结束事件
   			that.socket.on('GameEndEvent', function(data){
   				console.log('io:GameEndEvent', data)
+          console.log('data====:',data);
           that.gameRoundState = GameState.completed
-          // this.rank =
+          for(var i=0;i<data.gamePlayerScores.length;i++){
+            if(data.gamePlayerScores[i].openid==that.gamePlayer.openid){
+              that.rank = data.gamePlayerScores[i].rank
+            }
+          }
+
   				//socket.disconnect();
   				console.log('游戏时间到！');
   			});

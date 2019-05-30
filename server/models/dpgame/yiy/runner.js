@@ -172,7 +172,7 @@ class YiyRunner {
     for (var i = 0; i < players.length; i++) {
       let player = players[i]
       let res = DpYiyGamePlayer.update({
-        rank: i + 1,
+        rank: i,
         'score': player.score
       }, {
         where: {

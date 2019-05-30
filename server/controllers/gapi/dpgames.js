@@ -122,7 +122,8 @@ export default class GamesController {
         success: true
       }
 
-      ret = gamePlayer.getInfo()
+      ret = await gamePlayer.getInfo()
+      console.log('gamePlayer.getInfo()',ret);
       // 每个游戏 GameRound
       var allInfo = {
         gameRound: gameRound.getInfo(),
