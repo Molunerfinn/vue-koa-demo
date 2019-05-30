@@ -68,7 +68,7 @@
            </div>
            <div class="hostLine poupLine" data-sortKey="d">
              <div class="mainTitle">奖品描述</div>
-             <p><a class="hostName" />{{gameRound.award_desc}}</a>
+             <p><a class="hostName" v-html="gameRound.award_desc"/></a>
              </p>
            </div>
 
