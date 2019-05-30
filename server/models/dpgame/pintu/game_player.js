@@ -74,7 +74,7 @@ function bindMethods(model) {
 // 返回到游戏端的信息, 用于显示游戏成绩信息
 async function getInfo() {
 
-  let isSuc = this.score < this.max_score
+  let isSuc = ((this.score == this.max_score) & this.score != 9999.99)
   let score = this.score
   let bestScore = this.max_score //bestScore
   let rank = await this.currentPositionAsc()

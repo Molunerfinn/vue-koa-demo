@@ -103,7 +103,7 @@ export default {
         const parsed = queryString.parse(location.search);
         var number = parsed.number;
         var code = this.gameRound.code;
-        console.log('code===:',code);
+        console.log('this.gameRound',this.gameRound);
         var data = {
           gamePlayer: this.gamePlayer,
           realname:realname,

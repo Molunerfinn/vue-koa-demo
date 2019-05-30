@@ -13,6 +13,6 @@ export const getGameResult = (number, data) => fetch(basePath + number + '/getIn
 
 export const postMsg = (number, data) => fetch(basePath + number + '/addPlayer', data, 'POST')
 
-export const setAchievebycode = (number, data) => fetch(basePath + number + '/setAchieve', data, 'POST')
+export const setAchieveForSpeed = (number, data) => fetch(basePath + number + '/setAchieveForSpeed', data, 'POST')
 
 export const getRanking = (number, data) => fetch(basePath + number + '/getRanking', data, 'POST')

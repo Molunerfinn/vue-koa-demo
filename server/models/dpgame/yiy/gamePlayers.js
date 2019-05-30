@@ -73,6 +73,7 @@ module.exports = (sequelize, DataTypes) => {
         game_round_id: this.game_round_id
       }
     })
+
     return parseInt((count - position) / (count - 1) * 100)
   }
 
@@ -86,6 +87,7 @@ module.exports = (sequelize, DataTypes) => {
 
     return parseInt((await this.current_position()) / count * 100)
   }
+      
   Model.prototype.current_position = async function() {
     //游戏排名得分数相同情况下，以得分挑战用时最短者优先排名；如游戏得分及挑战时间相同，以先达到者优先排名；
     let model = Model
@@ -112,6 +114,27 @@ module.exports = (sequelize, DataTypes) => {
       }
     })
     return (gtcount + eqcount + 1)
+  }
+
+Model.prototype.getInfo =  async function () {
+
+    let isSuc = this.score == this.max_score
+    let score = this.score
+    let bestScore = this.max_score //bestScore
+    let rank = await this.current_position()
+    let beat = await this.beat()
+
+    return {
+      token: this.token,
+      openid: this.openid,
+      avatar: this.avatar,
+      nickname: this.nickname,
+      isSuc,
+      score,
+      bestScore,
+      rank,
+      beat
+    }
   }
 
   return Model

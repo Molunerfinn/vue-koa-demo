@@ -135,7 +135,8 @@ function getInfo() {
     end_at: this.end_at,
     host: this.host,
     dataList,
-    playPath
+    playPath,
+    code: this.code
   }
 
 }

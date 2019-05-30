@@ -40,7 +40,7 @@ import Game from './game/Game.vue'
 import GameRes from './game/GameRes'
 import HdGame from '@/lib/hdgame'
 import {
-  setAchieve
+  setAchieveForSpeed
 } from '@/api/base'
 import LoadToast from '@/components/LoadToast.vue'
 import ResultBox from '@/components/ResultBox.vue'
@@ -310,7 +310,7 @@ export default {
 
       Object.assign(params, option);
 
-      setAchieve(params).then(data => {
+      setAchieveForSpeed(params).then(data => {
         this.hideLoadToast();
         HdGame.tlog('gameOver', data);
         var r = data;
