@@ -73,13 +73,11 @@
         <div class="dayPlayHint4Total">今天有 <span class="count specil todayPlayCount"></span> 次</div>
       </div>
       <div id="startBtn" class="startBtn imgContainer absCenter" style="">
-        <a href="javascript:void(0)" @touchend="handleStartGame">
-        <img
+        <img  @touchend="handleStartGame"
              id="startBtnImg"
              class="slaveImg abs"
              :src="skinAssets.startBtnImg"
              style="width:7.35rem;height:2.25rem;top:75vh;left:4.6rem;" />
-        </a>
       </div>
 
       <div id="logoImgBox" class="logoImgBox imgContainer absCenter" style="">
