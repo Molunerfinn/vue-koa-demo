@@ -165,7 +165,7 @@
     },
     data() {
       return {
-        skinName: gameSkinName,
+        skinName: 'skin-' + gameSkinName,
         soundIconClass: 'soundIconOff soundIcon',
         dataList: [],
         msg: '',
