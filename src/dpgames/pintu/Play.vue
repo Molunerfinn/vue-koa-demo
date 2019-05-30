@@ -70,7 +70,7 @@
   import GameArg from './game/GameArg'
   import HdGame from '@/lib/hdgame'
   import GameState from '@/lib/GameState'
-  import { setAchievebycode, getGameResult } from '@/api/dpgame/pintu.js'
+  import { setAchieveForSpeed, getGameResult } from '@/api/dpgame/pintu.js'
   import LoadToast from '@/components/LoadToast.vue'
   import ResultBox from './ResultBox.vue'
   import RuleBox from './RuleBox.vue'
@@ -452,7 +452,7 @@
 
         Object.assign(params, option)
         if (this.hasFinish == false) {
-          setAchievebycode(number, params).then(data => {
+          setAchieveForSpeed(number, params).then(data => {
             this.hideLoadToast()
             HdGame.tlog('gameOver', data)
             var r = data

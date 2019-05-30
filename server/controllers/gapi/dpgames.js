@@ -118,20 +118,7 @@ export default class GamesController {
         success: true
       }
 
-      ret.playerId = gamePlayer.id //required to set g_config.playerId
-      ret.isSuc = gamePlayer.score <= gamePlayer.max_score
-      ret.achieveToken = gamePlayer.token
-      ret.score = gamePlayer.score
-      ret.bestScore = (gamePlayer.max_score) //bestScore
-      if (gamePlayer.score == 9999.99) {
-        ret.score = 0
-        ret.isSuc = false
-      }
-      let rank = await gamePlayer.currentPositionAsc()
-      let beat = await gamePlayer.beatAsc()
-      ret.rank = rank
-      ret.beat = beat
-      ret.hasLot = false
+      ret = gamePlayer.getInfo()
       // 每个游戏 GameRound
 
       const gameUrlBase = process.env.GAME_URL_BASE
@@ -189,7 +176,95 @@ export default class GamesController {
     }
   }
 
-  static async setAchieve(ctx) {
+  static async setAchieveForSpeed(ctx) {
+    try {
+      console.log('===========setAchieve============');
+      let ret = {
+        rt: 0,
+        isSuc: true,
+        success: true
+      }
+      let code = ctx.params.code
+      let GameRound = getGameRoundModelByCode(code)
+      let GamePlayer = getGamePlayerModelByCode(code)
+      let GameResult = getGameResultModelByCode(code)
+
+      let number = ctx.params.number
+      let game_round_id = ctx.params.id
+      let parsed = ctx.request.body.parsed
+      let openid = parsed.openid
+
+      let gameRound = await GameRound.findOne({
+        where: {
+          number
+        }
+      })
+
+      let gamePlayer = await GamePlayer.findOne({
+        where: {
+          game_round_id: gameRound.id,
+          openid: openid,
+        }
+      })
+
+      let start_at = gameRound.start_at
+      let now = new Date();
+      console.log('now--:', now);
+      let gamePlayerId = gamePlayer.id
+      let score = now - start_at
+      let s = Math.floor(score / 1000) - 3
+      let ss = Math.floor(score % 1000)
+      score = parseFloat(s + '.' + ss)
+      console.log('score++++++++:', score);
+      if (score > gameRound.duration) {
+        score = 9999.99
+      }
+
+      let gameResultParams = {
+        game_player_id: gamePlayerId,
+        score: score,
+        game_round_id: gameRound.id,
+        start_at: gameRound.start_at
+      }
+      let lastMaxScore = gamePlayer.max_score
+
+      let gameResult = GameResult.build(gameResultParams)
+      let result = await gameResult.save()
+
+      await gamePlayer.update({
+        score: gameResult.score
+      })
+
+      if (gameResult.score < lastMaxScore) {
+        await gamePlayer.update({
+          max_score: gameResult.score
+        })
+      } else {
+        ret.isSuc = false
+        ret.success = false
+      }
+
+      ret.playerId = gamePlayer.id //required to set g_config.playerId
+      ret.achieveToken = gamePlayer.token
+      ret.score = gameResult.score
+
+      ret.bestScore = gamePlayer.max_score //bestScore
+      let rank = await gamePlayer.currentPositionAsc()
+      let beat = await gamePlayer.beatAsc()
+      ret.rank = rank
+      ret.beat = beat
+      ret.hasLot = false
+
+      ctx.body = JSON.stringify(ret)
+
+    } catch (error) {
+      ctx.throw(messageContent.ResponeStatus.CommonError, `show round ${ctx.params.id} fail: ` + error, {
+        expose: true
+      })
+    }
+  }
+
+  static async setAchieveForScore(ctx) {
     try {
       console.log('===========setAchieve============');
       let ret = {

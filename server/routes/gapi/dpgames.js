@@ -4,7 +4,7 @@ const router = koaRouter()
 router.prefix('/:code/:number')
 
 router.get('/getInfoDp', game.getInfoDp)
-router.post('/setAchieve', game.setAchieve)
+router.post('/setAchieveForSpeed', game.setAchieveForSpeed)
 router.post('/getInfo', game.getInfo)
 router.post('/addPlayer', game.addPlayer)
 router.post('/getRanking', game.getRanking)
