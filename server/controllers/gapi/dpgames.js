@@ -13,7 +13,11 @@ const {
 // 方法名加Dp后缀表示方法被大屏端调用
 export default class GamesController {
 
-
+  /**
+   * 控制端取得游戏相关信息，初始化游戏
+   * @param {*}
+   * @return {*}
+   */
   static async getInfoDp(ctx) {
       try {
           let code = ctx.params.code
@@ -41,7 +45,7 @@ export default class GamesController {
 
 
   /**
-   * 取得游戏相关信息，并返回客户端，初始化游戏
+   * 游戏端取得游戏相关信息，并返回客户端，初始化游戏
    * @param {*}
    * @return {*}
    */
@@ -133,13 +137,6 @@ export default class GamesController {
       ret.beat = beat
       ret.hasLot = false
       // 每个游戏 GameRound
-
-      const gameUrlBase = process.env.GAME_URL_BASE
-      let shareUrl = gameUrlBase + '/authwx/game?gameurl=' + gameUrlBase + gameRound.getPlayPath()
-      wxConfig.shareUrl = shareUrl
-
-      console.log('url===================:', url);
-      console.log('wxConfig=======:', wxConfig);
       var allInfo = {
         gameRound: gameRound.getInfo(),
         gamePlayer: gamePlayer,

@@ -124,7 +124,6 @@ class pintu {
     try {
       let url = ctx.header.referer
       console.log("url=======", url)
-      // let shareurl = `${GAME_URL_BASE}/game-${game_round.code}/${game_round.id}/checkin-wx?to_game_player_id=${to_game_player.id}`
 
       let body = {
         url: url
@@ -150,13 +149,7 @@ class pintu {
           signature: data['signature']
         }
 
-        // const link = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx617b20b7ded64c67&redirect_uri=http%3A%2F%2Ftestwx.getstore.cn%2Fwapi%2Fv1%2Fwechatauth%2Fgameshareurl-done%3Fgameurl%3Dhttp%3A%2F%2Ftestwx.getstore.cn%2Fgame-bargain%2F${game_round.id}%2Fcheckin-wx%3Fto_game_player_id%3D${to_game_player.id}&response_type=code&scope=snsapi_userinfo&state=state#wechat_redirect`
-        // const link = `${GAME_URL_BASE}/game-bargain/${game_round_id}/checkin-wx?to_game_player_id=${to_game_player.id}`
-        // add default shareurl, or js error.
-        // wx_share = {
-        //   link: data['link'] || shareurl,
-        //   // img_url: `${GAME_URL_BASE}/game-kouhong-assets/app/images/share.jpg`
-        // }
+      
       }
     } catch (err) {
       console.error("got error-", err);
