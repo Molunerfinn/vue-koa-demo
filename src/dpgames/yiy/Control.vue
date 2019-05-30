@@ -3,6 +3,9 @@
     <div class="Panel">
       <div  >
         <div class="bg-nei-top">
+          <div class="bg-nei-top-erwei">
+                <img src="" id="share-qrcode-img" >
+              </div>
                 <img src="~@/assets/dpgame/yiy/images/skin1/tu_03.png" class="bg-nei-top-erwei" style="display:none;">
                 <div class="bg-nei-top-right"><span></span><img src="~@/assets/dpgame/yiy/images/skin1/tu_05.png"></div>
                 <div class="bg-nei-top-zhong" ><img src="~@/assets/dpgame/yiy/images/skin1/bgtop.gif"  v-show="computedGameState=='open'||computedGameState=='started'">
@@ -115,6 +118,8 @@ import io from 'socket.io-client'
 import queryString from 'query-string'
 import { getGameInfoForDp } from '@/api/dpgame/yiy'
 import GameState from '@/lib/GameState'
+import QRCode from 'qrcode'
+import $ from 'jquery'
 // import QRCode from 'qrcode'
 // import $ from 'jquery'
 // import constant from '@/game_constant.js'
@@ -133,6 +138,7 @@ export default {
   name: 'control',
   data() {
     return{
+      shareUrl:'',
       skin: ['base', skin],
       debug: true,
       loading: true,
@@ -171,7 +177,7 @@ export default {
           that.getFinalScores();
         }
         this.loading = false
-        // this.creatQRCodeImg()
+        this.creatQRCodeImg()
       })
     }else{
       this.loading = false
@@ -206,6 +212,17 @@ export default {
 		},
 	},
 	methods: {
+    creatQRCodeImg: function() { //生成二维码
+      console.log('this.shareUrl===:',this.shareUrl);
+      QRCode.toDataURL(this.shareUrl,{type:'image/png'}, function(error, gameurl){
+        if (error) {
+          console.error(error);
+        }
+          console.log('toDataURL success!');
+          $('#share-qrcode-img').attr('src', gameurl);
+          $('#shareimg').attr('src', gameurl);
+      })
+    },
 		//绑定socket事件
 		bindSocketEvents: function(){
 			var that = this
