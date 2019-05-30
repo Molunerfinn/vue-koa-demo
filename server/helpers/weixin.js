@@ -61,13 +61,9 @@ export async function getWxJsConfig( url, gameRound ){
 
 
 export function getWxShareUrl( gameRound ){
-
-  return `http://client.vw-dealer-wechat.faw-vw.com/wechatclient/game/${gameRound.number}/searchaliencheck_in/gotoGame.html`
-
   if( process.env.SUPPORT_RUNLIN == 'yes'){
     return getWxShareUrlForRunlin( gameRound )
   }
-
 
   const gameUrlBase = process.env.GAME_URL_BASE
 
