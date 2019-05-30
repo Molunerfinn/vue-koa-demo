@@ -7,18 +7,11 @@
  *
  */
 let baseUrl = ''
-let routerMode = 'history'
-let baseImgPath = ''
 let baseImageUrl = ''
-if (process.env.NODE_ENV == 'development') {
-  //baseUrl = `http://${host}:${port}`
-} else {
-  //baseUrl = `http://${host}:${port}`
-}
-
-export {
+let gameSkinName = process.env.GAME_SKIN_NAME || 'default'
+console.log( 'gameSkinName', gameSkinName )
+export  {
     baseUrl,
-    routerMode,
-    baseImgPath,
     baseImageUrl,
+    gameSkinName
 }

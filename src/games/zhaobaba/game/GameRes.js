@@ -1,6 +1,8 @@
+import { gameSkinName } from '@/config/env'
+
 const sharedBase = '/static/shared'
 const imageBase = '/static/game/zhaobaba/image'
-const skinResRoot = '/static/game/zhaobaba/skin2/image'
+const skinResRoot = '/static/game/zhaobaba/skin_'+ gameSkinName + '/image'
 
 const GameRes = {
     "loadingStyle": 1,

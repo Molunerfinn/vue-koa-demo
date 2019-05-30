@@ -1,6 +1,6 @@
 <template>
 
-  <div id="app" class="runlin">
+  <div id="app" :class="skinName">
     <div class="sign_up" v-show="ui.sign_up">
 
       <div class="weui-toptips weui-toptips_warn js_tooltips"></div>
@@ -114,6 +114,7 @@
 </template>
 
 <script>
+  import { gameSkinName } from '@/config/env'
 
   import Game from './game/Game.vue'
   import GameRes from './game/GameRes'
@@ -129,7 +130,7 @@
   import { EventBus } from '@/lib/EventBus'
   import queryString from 'query-string'
 
-  import '@/assets/game/zhaobaba/skin-runlin/runlin.css'
+  import  '@/assets/game/zhaobaba/skin.css'
 
   //import {simplifyLufylegend } from '@/lib/simplify'
   //关于玩家的配置信息
@@ -209,6 +210,7 @@
     },
     data() {
       return {
+        skinName: gameSkinName,
         soundIconClass: 'soundIconOff soundIcon',
         dataList: [],
         msg: '',
