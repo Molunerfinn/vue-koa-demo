@@ -28,12 +28,12 @@ const HdGame = {
   getLocalStorage, removeLocalStorage, setLocalStorage, getCookie, setCookie,
   initWxConfig, setWxShare
 }
-const _resRoot = '/static/kouhong'
+const _resRoot = '/static/shared'
 const g_config = {
   initTime: 10,
   HWRatio: 1.608,
   drawType: 0,
-  headImg: '/static/kouhong/image/manImg.jpg'
+  headImg: _resRoot+ '/image/manImg.jpg'
 }
 const g_rem = window.g_rem;
 
