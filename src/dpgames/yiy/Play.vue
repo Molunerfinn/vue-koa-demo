@@ -1,15 +1,6 @@
 <template>
   <div class="main-container indexbg" id="mainContainer">
     <div v-show="ui.wait">
-      <div id="homeBgBox">
-        <img id="homeBg" :src="skinAssets.homeBgImg" />
-      </div>
-      <div class="gameInfoBox">
-        <div class="titleImg imgContainer absCenter">
-          <img id="titleImg" class="slaveImg abs" :src="skinAssets.titleImg" style="width:15.232rem;height:5.778666666666667rem;top:2.524rem;left:0.384rem;"
-          />
-        </div>
-      </div>
       <div class="gamestate" v-show="gameRoundState=='open'">
         <p class="msg">请关注大屏幕,等待游戏开始 </p>
       </div>
@@ -304,24 +295,7 @@
           if (this.gameInfo['gamePlayer'].score == constant.GameConstant.maxTime) {
             this.gameInfo['gamePlayer'].score = 0
           }
-          // var arg = {
-          //   isSuc: r.isSuc,
-          //   gameScore: this.gameInfo['gamePlayer'].score,
-          //   minScore: 0, //到多少分可以抽奖
-          //   bestScore: r.score,
-          //   gameType: gameType,
-          //   rank: r.rank,
-          //   beat: r.beat,
-          //   isEqualDraw: false,
-          //   bestCostTime: r.bestCostTime,
-          //   // headImg: this.gamePlayer.avatar
-          //   headImg:null
-          // }
           this.rank = r.rank
-          //
-          // this.resultBoxParams = arg
-          // this.resultBoxCommand = 'showResult'
-          // this.resultBoxVisible = true
         }
         document.title = this.gameRound.name
       })
@@ -358,6 +332,7 @@
   				if( that.timeToStart == 1 ){
             that.score = 0
   					that.startGame()
+            that.ui.wait = false
   				}
   			});
   			// 游戏运行结束倒计时事件,
@@ -383,6 +358,7 @@
           }
 
   				//socket.disconnect();
+
   				console.log('游戏时间到！');
   			});
       },
@@ -513,7 +489,7 @@
   }
   .gamestate .msg {
     position: absolute;
-    top: 60vh;
+    top: 90vh;
     left: 0;
     right: 0;
     color: #fff;
