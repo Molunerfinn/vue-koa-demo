@@ -409,7 +409,7 @@
   			var that = this;
   			that.sendCountTimeId = setInterval(function(){
   				var query = {
-  					game_player_id: that.gamePlayerId,
+  					game_player_id: that.gamePlayer.id,
   					score: that.score
   				};
   				console.log(`ShakeEvent:score={that.score}`)

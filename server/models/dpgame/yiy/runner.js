@@ -86,6 +86,7 @@ class YiyRunner {
     let round = await this.getGameRound()
     let gameroundid = round.id
     let key = this.getRedisKey(gameroundid)
+    console.log('playerid===:',playerid,'score=====:',score);
     redisdb.hSet(key, playerid, {
       score
     })
