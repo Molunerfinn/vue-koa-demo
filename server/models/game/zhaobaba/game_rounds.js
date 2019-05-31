@@ -136,7 +136,8 @@ function getInfo() {
     host: this.host,
     dataList,
     playPath,
-    code: this.code
+    code: this.code,
+    duration: this.duration
   }
 
 }
