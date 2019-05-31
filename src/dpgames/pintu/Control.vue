@@ -276,7 +276,7 @@ export default {
       //     height : "200",              //二维码的高度
       //     background : "#ffffff",       //二维码的后景色
       //     foreground : "#000000",        //二维码的前景色
-      //     src: '~@/assets/dp-pintu/image/skin2/tu_03.png'             //二维码中间的图片
+      //     src: '~@/assets/dpgame/pintu/image/skin2/tu_03.png'             //二维码中间的图片
       // });
       // console.log('++++++++++++++====================');
 

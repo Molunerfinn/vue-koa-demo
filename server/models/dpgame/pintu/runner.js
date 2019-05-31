@@ -3,10 +3,12 @@
 // 这里不创建任何数据库记录，只是读取和跟新状态
 const {
   DpPintuGameRound,
-  DpPintuGamePlayer
+  DpPintuGamePlayer,
+  DpPintuGameResult
 } = require('../../index')
 const {
-  DpGameRoundStates
+  DpGameRoundStates,
+  GameConstant
 } = require('../../constant')
 
 // 游戏流程控制
@@ -94,6 +96,10 @@ class PintuRunner {
     await round.update({
       state: DpGameRoundStates.created
     })
+    // 删除成绩
+    DpPintuGameResult.destroy( { where: {game_round_id: round.id}} )
+    // 清空player.score max_score
+    DpPintuGamePlayer.update( { score: GameConstant.maxTime, max_score: GameConstant.maxTime}, { where: {game_round_id: round.id}} )
     return round
   }
   /**
