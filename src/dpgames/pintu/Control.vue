@@ -1,5 +1,5 @@
 <template>
-  <div id="app" :class="skin">
+  <div id="app" :class="skinName">
     <div class="Panel Top">
       <div  >
         <div id="qrcodeCanvas"></div>
@@ -7,7 +7,10 @@
           <div class="bg-nei-top-erwei">
                 <img src="" id="share-qrcode-img" >
               </div>
-                <div class="bg-nei-top-right"><span></span><img src="~@/assets/dp-pintu/image/skin2/tu_05.png"></div>
+                <div class="bg-nei-top-right">
+                  <div class="logowrap">
+                  </div>
+                </div>
         				<div class="bg-nei-top-zhong" ><img src=""  v-show="computedGameState=='open'||computedGameState=='started'">
                   <!-- <p  v-show="computedGameState=='started'"><span>游戏倒计时</span><strong>|</strong><span>剩余<b>{{timeToEnd}</b>秒</span></p> -->
                 </div>
@@ -125,6 +128,7 @@
 // 游戏流程
 // PC端（控制端）
 // 准备开始-> 玩家签到 -> 点击开始游戏 ->(开始前倒计时)->游戏进行中-> 游戏结束 ->显示排名
+import { gameSkinName } from '@/config/env'
 import io from 'socket.io-client'
 import queryString from 'query-string'
 import { getGameInfoForDp } from '@/api/dpgame/pintu'
@@ -133,9 +137,7 @@ import QRCode from 'qrcode'
 import $ from 'jquery'
 import constant from '@/game_constant.js'
 
-import '@/assets/dpgame/pintu/skin-runlin/css/control.css'
-
-const skin = 'runlin'
+import '@/assets/dpgame/pintu/css/skin_control.css'
 
 const countDownImages = [
   require('@/assets/dpgame/pintu/image/c0.png'),
@@ -149,6 +151,7 @@ export default {
   },
   data() {
     return {
+      skinName: 'skin-' + gameSkinName,
       //socket
       shareUrl:'',
       countDownImage: null,
@@ -158,7 +161,6 @@ export default {
       error: false,
       errorMsg: null,
       loading: true,
-      skin: ['base', skin],
       socketNamespace: null, // socketio namespace
       gameRoundNumber: null,
       gameRoundState: null,
@@ -469,7 +471,7 @@ export default {
 .actions{
   text-align: center;
 }
-.dp-pintu {
+.dppintu {
   font-size: 14px;
 }
 

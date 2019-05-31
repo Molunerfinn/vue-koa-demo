@@ -84,7 +84,7 @@
   import { EventBus } from '@/lib/EventBus'
   import queryString from 'query-string'
 
-  import  '@/assets/game/zhaobaba/skin.css'
+  import  '@/assets/game/zhaobaba/css/skin.css'
 
   //import {simplifyLufylegend } from '@/lib/simplify'
   //关于玩家的配置信息

@@ -428,7 +428,7 @@ export default {
 .actions{
   text-align: center;
 }
-.dp-pintu {
+.dppintu {
   font-size: 14px;
 }
 

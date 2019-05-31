@@ -119,7 +119,7 @@ import io from 'socket.io-client'
 import queryString from 'query-string'
 import { getGameInfoForDp } from '@/api/dpgame/pintu'
 import 'bootstrap/dist/css/bootstrap.css'
-import '@/assets/dpgame/pintu/css/skin/runlin.css'
+import '@/assets/dpgame/pintu/css/skin_control.css'
 
 const skin = 'runlin'
 
@@ -324,7 +324,7 @@ export default {
 
 }
 
-.dp-pintu {
+.pintu {
   font-size: 14px;
 }
 </style>

@@ -1,7 +1,7 @@
-<template>
+gameBgImg<template>
   <div class="gameBox gameBgBox" >
     <div id="gameBgBox">
-      <img id="gameBg" :src="gameBg" style="width:100%;height:auto;" />
+      <img id="gameBg" :src="gameBgImg" style="width:100%;height:auto;" />
     </div>
 
     <div id="gameTopBar" class="gameTopBar" style="color:;background-color:">
@@ -18,8 +18,8 @@
     </div>
     <div class="imgContainer absCenter" style="top:0;">
       <div id="gameStartBtns" class="slaveImg abs" @click="handleStartGame" style="width:7rem;height:2rem;top:21rem;left:4.5rem;" >
-        <img id="gameStartImg" :src="skinAssets.gameStartImg" v-show="ui.gameStartImgVisible"/>
-        <img id="tipsImg" style="display:none;" :src="skinAssets.tipsImg" v-show="ui.tipsImgVisible"/>
+        <img id="gameStartImg" :src="gameStartImg" v-show="ui.gameStartImgVisible"/>
+        <img id="tipsImg" style="display:none;" :src="tipsImg" v-show="ui.tipsImgVisible"/>
       </div>
     </div>
     <div class="timeUpImg hide"></div>
@@ -70,7 +70,9 @@ export default {
   },
   data () {
     return {
-      gameBg: require('@/assets/dp-pintu/image/skin2/gamebg.jpg'),
+      gameBgImg: null,
+      gameStartImg: null,
+      tipsImg: null,
       ui:{
         gameBoxVisible: false,
         gameStartImgVisible: false,
@@ -81,9 +83,9 @@ export default {
       isgameOver: false,
       rem: 20,
       skinAssets: {
-        gameStartImg : '/static/dp-pintu/skin2/startbtn2.png',
-        tipsImg : '/static/dp-pintu/skin2/tipsbtn.png',
-        gameImg : '/static/dp-pintu/skin2/gameimg.jpg',
+        gameStartImg: GameRes.skinAssets.gameStartImg,
+        tipsImg: GameRes.skinAssets.tipsImg,
+        gameImg: GameRes.skinAssets.gameImg,
       },
       puzzleWidth: 0,
       puzzleHeight: 0,
@@ -134,6 +136,8 @@ export default {
         })
     })
 
+
+
     HdGame.imgReady(this.skinAssets.gameImg, (img)=>{
         let selector = "#gameImg";
         let ele = $(selector)
@@ -154,6 +158,15 @@ export default {
           this.$refs['puzzle'].initGame()
         })
     })
+
+    this.hg.assets.onReady(() => {
+      console.log(" hg.assets.onReady 1")
+      // 当游戏图片资源加载成功后，设置图片资源路径
+      this.gameBgImg = this.skinAssets.gameBgPath
+      this.gameStartImg = this.skinAssets.gameStartImg
+      this.tipsImg = this.skinAssets.tipsImg
+    });
+
     this.hg.assets.onload( ()=>{
       console.log( "hg.assets.onload")
       let bgHeight = HdGame.getBgHeight();

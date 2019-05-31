@@ -1,6 +1,6 @@
 <template>
 
-  <div id="app">
+  <div id="app" :class="skinName">
 
     <div class="home" v-show="ui.homeVisible">
       <div v-show="ui.wait">
@@ -64,7 +64,7 @@
 </template>
 
 <script>
-
+  import { gameSkinName } from '@/config/env'
   import Game from './game/Game.vue'
   import GameRes from './game/GameRes'
   import GameArg from './game/GameArg'
@@ -227,6 +227,7 @@
     },
     data() {
       return {
+        skinName: 'skin-' + gameSkinName,
         isFinishGame:null,
         logMsg: '',
         countdownImg: null,

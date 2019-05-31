@@ -428,7 +428,7 @@ export default {
   width: 100%;
 }
 
-.dp-pintu {
+.pintu {
   font-size: 14px;
 }
 </style>

@@ -1,3 +1,13 @@
+#app{
+  background-image: url(../image/control/bg.png);
+
+}
+.logowrap{
+  width: 140px;
+  height: 140px;
+  background: url(../image/control/logo.png);
+  background-size: cover;
+}
 .qiandao {
   position: relative;
   overflow: auto;
@@ -328,7 +338,7 @@
 
 .bg-nei-bottom1 {
   margin: 0 50px;
-  /*background: url(~@/assets/dp-pintu/image/skin1/bg2.jpg);*/
+  /*background: url(../image/control/bg2.jpg);*/
   background-size: 100%;
   background-repeat: no-repeat;
   box-shadow: #000 0px 8px 8px;
@@ -358,7 +368,7 @@
   border-radius: 50px;
   float: left;
   display: inline-block;
-  background: url(~@/assets/dp-pintu/image/skin1/txbg.png);
+  background: url(../image/control/txbg.png);
   background-repeat: no-repeat;
   background-size: 50px;
   text-align: center;
@@ -389,7 +399,7 @@
 .bg-zhunbei {
   width: 86%;
   height: 70px;
-  background: url(~@/assets/dp-pintu/image/skin1/bg2.png);
+  background: url(../image/control/bg2.png);
   background-repeat: no-repeat;
   background-size: 100% 70px;
   margin: auto;
@@ -420,7 +430,7 @@
   height: 80px;
   border-radius: 50px;
   display: inline-block;
-  background: url(~@/assets/dp-pintu/image/skin1/txbg.png);
+  background: url(../image/control/txbg.png);
   background-repeat: no-repeat;
   background-size: 80px;
   text-align: center;
@@ -449,7 +459,7 @@
   /*padding: 0 40px;*/
   width: 170px;
   height: 40px;
-  background: url(~@/assets/dp-pintu/image/skin1/anniu.png);
+  background: url(../image/control/anniu.png);
   background-repeat: no-repeat;
   background-size: 170px 40px;
   display: block;
@@ -560,22 +570,22 @@
   bottom: -6px;
   left: 90%;
   top: 0px;
-  background: url(~@/assets/dp-pintu/image/skin1/car.png);
+  background: url(../image/control/car.png);
   width: 50px;
   background-repeat: no-repeat;
   background-size: 50px;
 }
 
 .progress .car0.progress-value:after {
-  background-image: url(~@/assets/dp-pintu/image/skin1/car0.png);
+  background-image: url(../image/control/car0.png);
 }
 
 .progress .car1.progress-value:after {
-  background-image: url(~@/assets/dp-pintu/image/skin1/car1.png);
+  background-image: url(../image/control/car1.png);
 }
 
 .progress .car2.progress-value:after {
-  background-image: url(~@/assets/dp-pintu/image/skin1/car2.png);
+  background-image: url(../image/control/car2.png);
 }
 
 .progress-bar.active {
@@ -583,7 +593,7 @@
 }
 
 .szbg {
-  background: url(~@/assets/dp-pintu/image/skin1/szbg.png);
+  background: url(../image/control/szbg.png);
   background-size: 240px;
   width: 240px;
   height: 240px;
@@ -604,7 +614,7 @@
 }
 
 .player-rank .head {
-  background: url(~@/assets/dp-pintu/image/skin1/sj_10.png);
+  background: url(../image/control/sj_10.png);
   background-size: cover;
   border-radius: 8px;
   color: #fff;
@@ -613,7 +623,7 @@
 .pm-top5 {
   width: 50%;
   float: left;
-  background: url(~@/assets/dp-pintu/image/skin1/pmbg.png);
+  background: url(../image/control/pmbg.png);
   opacity: 0.9;
   padding: 20px;
 }
@@ -621,7 +631,7 @@
 .pm-top10 {
   width: 50%;
   float: left;
-  background: url(~@/assets/dp-pintu/image/skin1/pmbg.png);
+  background: url(../image/control/pmbg.png);
   opacity: 0.9;
   padding: 20px;
 }
@@ -659,7 +669,7 @@ table.rank td {
   height: 50px;
   border-radius: 50px;
   display: inline-block;
-  background: url(~@/assets/dp-pintu/image/skin1/txbg.png);
+  background: url(../image/control/txbg.png);
   background-repeat: no-repeat;
   background-size: 50px;
   text-align: center;
@@ -683,21 +693,21 @@ table.rank td {
 }
 
 .pm-top5 .rank .pm0 {
-  background: url(~@/assets/dp-pintu/image/skin1/pm_11.png);
+  background: url(../image/control/pm_11.png);
   background-repeat: no-repeat;
   background-size: 50px;
   background-position: center;
 }
 
 .pm-top5 .rank .pm1 {
-  background: url(~@/assets/dp-pintu/image/skin1/pm_15.png);
+  background: url(../image/control/pm_15.png);
   background-repeat: no-repeat;
   background-size: 50px;
   background-position: center;
 }
 
 .pm-top5 .rank .pm2 {
-  background: url(~@/assets/dp-pintu/image/skin1/pm_19.png);
+  background: url(../image/control/pm_19.png);
   background-repeat: no-repeat;
   background-size: 50px;
 }
