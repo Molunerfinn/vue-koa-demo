@@ -28,6 +28,6 @@ module.exports = {
     disabled: 'disabled'
   },
   GameConstant: {
-    maxTime: 9999.99 // 大屏游戏可以玩的最长时间，所有成绩需要小于这个时间
+    maxTime: 99999.99 // 大屏游戏可以玩的最长时间，所有成绩需要小于这个时间
   }
 }

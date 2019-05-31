@@ -1,3 +1,4 @@
+import { GameConstant } from '../../constant'
 module.exports = (sequelize, DataTypes) => {
   const Op = sequelize.Op
 
@@ -62,8 +63,8 @@ module.exports = (sequelize, DataTypes) => {
 
 function addHooks(model) {
   model.addHook('beforeCreate', 'set_defult_score', (player, options) => {
-    player.score = 9999.99
-    player.max_score = 9999.99
+    player.score = GameConstant.maxTime
+    player.max_score = GameConstant.maxTime
   })
 }
 

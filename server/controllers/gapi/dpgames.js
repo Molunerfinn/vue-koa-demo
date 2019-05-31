@@ -9,6 +9,7 @@ const {
   getWxShareUrl
 } = require('../../helpers/weixin')
 
+const{ GameConstant } = require('../../models/constant')
 // 处理大屏游戏的请求，包括大屏端 和 手机端的所有游戏过程请求
 // 方法名加Dp后缀表示方法被大屏端调用
 export default class GamesController {
@@ -215,7 +216,7 @@ export default class GamesController {
       score = parseFloat(s + '.' + ss)
       console.log('score++++++++:', score);
       if (score > gameRound.duration) {
-        score = 9999.99
+        score = GameConstant.maxTime
       }
 
       let gameResultParams = {
@@ -303,7 +304,7 @@ export default class GamesController {
       score = parseFloat(s + '.' + ss)
       console.log('score++++++++:', score);
       if (score > gameRound.duration) {
-        score = 9999.99
+        score = GameConstant.maxTime
       }
 
       let gameResultParams = {

@@ -94,6 +94,8 @@ class PintuRunner {
     await round.update({
       state: DpGameRoundStates.created
     })
+    // 删除成绩
+    // 清空player.score max_score
     return round
   }
   /**
