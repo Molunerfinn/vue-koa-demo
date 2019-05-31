@@ -124,7 +124,7 @@ import $ from 'jquery'
 // import $ from 'jquery'
 // import constant from '@/game_constant.js'
 
-import '@/assets/dpgame/pintu/skin-runlin/css/control.css'
+import '@/assets/dpgame/pintu/css/skin_control.css'
 
 const skin = 'runlin'
 

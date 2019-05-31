@@ -48,6 +48,7 @@ class YiyRunner {
       start_at: new Date(),
       state: DpGameRoundStates.started
     })
+    this.AddPlayersToMemoryDb()
     return round
   }
   async GetRoundAllPlayers() {
@@ -67,6 +68,7 @@ class YiyRunner {
     let game_round = await DpYiyGameRound.findByPk(gameroundid)
 
     const players = await this.GetRoundAllPlayers()
+    console.log('players=========:',players);
     let key = this.getRedisKey(gameroundid)
 
     redisdb.remove(key, () => {
