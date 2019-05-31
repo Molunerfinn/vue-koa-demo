@@ -136,6 +136,8 @@
         this.gamePlayer = this.gameInfo['gamePlayer']
         this.dataList = this.gameRound.dataList
 
+        this.hg.time = new HdGame.Time(this.gameRound.duration)
+
         if (this.gamePlayer.token == undefined) {
           this.ruleBoxCommand = 'hideIcon'
           this.ui.homeVisible = false
