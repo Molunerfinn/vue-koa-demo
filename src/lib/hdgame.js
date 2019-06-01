@@ -1548,6 +1548,9 @@ import { shuffle } from './hdgame/array'
 
 HdGame.shuffle = shuffle
 
+import Guide from './hdgame/guide'
+
+HdGame.Guide = Guide
 
 //
 HdGame.isSupportWebp = false

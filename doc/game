@@ -1,4 +1,6 @@
 game_round.code 使用说明
+# zxg 捉小鬼
+
 
 1. 使用的路径中
 /api/game/{code}/createRound
@@ -13,4 +15,4 @@ game_round.code 使用说明
 3. GameRound及相关model(GamePlayer, GameResult)的命名
 {Code}{model}, 如 pintu,  PintuGameRound
                   dppingtu,  DpPintuGameRound
-当创建游戏时，使用 code = PintuGameRound.name.replace('GameRound', '').lowercase 
+当创建游戏时，使用 code = PintuGameRound.name.replace('GameRound', '').lowercase
