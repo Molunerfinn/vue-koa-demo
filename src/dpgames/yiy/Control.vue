@@ -190,6 +190,7 @@ export default {
 			return this.timeToEnd < 10 ? '0' + this.timeToEnd : this.timeToEnd;
 		},
 		computedGameState(){
+      console.log('this.gameRoundState==:',this.gameRoundState);
 			switch (this.gameRoundState) {
 				case 'created': return 'created';
 				case 'open': return 'open';
@@ -238,10 +239,10 @@ export default {
 			});
 			//绑定 游戏倒计时事件，游戏时间倒计时
 			that.socket.on('GameRunningEvent', function(data){
-				that.gameRoundState = 4
+				that.gameRoundState = 'started'
 				that.timeToEnd = data.timeToEnd
 				var newGamePlayerScores = data.gamePlayerScores
-				//console.log("newGamePlayerScores=",newGamePlayerScores)
+				// console.log("newGamePlayerScores=",newGamePlayerScores)
 				for( var i=0; i< newGamePlayerScores.length; i++ ){
 					var playerScore = newGamePlayerScores[i]
 					for( var j=0; j< that.gamePlayers.length; j++ ){
@@ -313,25 +314,6 @@ export default {
 				}, 1500);
 			}
 		},
-
-		// 游戏页面倒计时
-		// timeRunning: function(){
-		// 	var that = setInterval(function(){
-		// 		if(that.timeToEnd <= 0){
-		// 			// clearInterval(timeId);
-		// 			// 触发游戏结束事件
-		// 			socket.emit('gameOver');
-		// 			var finalTimeId = setTimeout(function(){
-		// 				socket.removeListener('shakeUserInfo', that.changeCount);
-		// 				// 断开与服务器的连接
-		// 				//socket.disconnect();
-		// 				alert('游戏时间到！');
-		// 			}, 2000);
-		// 			return;
-		// 		}
-		// 		that.timeToEnd--;
-		// 	}, 1000);
-		// },
 
 		// 重置游戏
 		resetGameHandler: function(){
