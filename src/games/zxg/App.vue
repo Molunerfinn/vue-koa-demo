@@ -110,7 +110,7 @@
     created() {
       this.hg.grade = new HdGame.Grade(0)
 
-      this.hg.time = new HdGame.Time(g_config.initTime)
+      this.hg.time = new HdGame.Time(g_config.initTime, {updateFlag: true})
 
       EventBus.$on(GameBackgroundMusicLoadEvent.name, event => {
         this.initBackgroundMusic()
@@ -135,7 +135,7 @@
         this.gamePlayer = this.gameInfo['gamePlayer']
         this.dataList = this.gameRound.dataList
 
-        this.hg.time = new HdGame.Time(this.gameRound.duration)
+        this.hg.time = new HdGame.Time(this.gameRound.duration, {updateFlag: true})
 
         if (this.gamePlayer.token == undefined) {
           this.ruleBoxCommand = 'hideIcon'

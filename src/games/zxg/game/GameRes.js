@@ -10,7 +10,48 @@ const GameRes = {
     "isOpenAdvertise": false,
     "editPropList": [
     ],
-    "editPropListDef": [
+    "editPropListDef": [{
+        "name": "xg1",
+        "pos": {
+            "left": "1rem",
+            "top": "12rem",
+            "disable": "disable"
+        },
+        "size": {
+            "width": "2.75rem",
+            "height": "4.5rem"
+        },
+        "path": [[ skinResRoot + "/wx/xg1.png", "游戏角色01", "5000k"], [skinResRoot + "/wx/xg1c.png", "游戏角色02", "5000k"]],
+        "edit": "all"
+    },
+    {
+        "name": "xg2",
+        "pos": {
+            "left": "12.25rem",
+            "top": "12rem",
+            "disable": "disable"
+        },
+        "size": {
+            "width": "2.75rem",
+            "height": "4.5rem"
+        },
+        "path": [[skinResRoot + "/wx/xg2.png", "游戏角色03", "5000k"], [ skinResRoot + "/wx/xg2c.png", "游戏角色04", "5000k"]],
+        "edit": "all"
+    },
+    {
+        "name": "xg3",
+        "pos": {
+            "left": "3rem",
+            "top": "2rem",
+            "disable": "disable"
+        },
+        "size": {
+            "width": "8.5rem",
+            "height": "13.5rem"
+        },
+        "path": [[skinResRoot + "/wx/xg3.png", "游戏角色05", "5000k"], [skinResRoot + "/wx/xg3c.png", "游戏角色06", "5000k"]],
+        "edit": "all"
+    }
     ],
     "editPropListIsMod": false,
     "advertisingNum": 1,
@@ -30,6 +71,7 @@ const GameRes = {
       gameBgPath: skinResRoot + "/wx/gamebg.jpg",
       homeBgPath: skinResRoot + "/wx/homebg.jpg",
       titleImgPath: skinResRoot + "/wx/titleimg.png",
+      score: skinResRoot + "/wx/score.png",
       xg1: skinResRoot + "/wx/xg1.png",
       xg2: skinResRoot + "/wx/xg2.png",
       xg3: skinResRoot + "/wx/xg3.png",

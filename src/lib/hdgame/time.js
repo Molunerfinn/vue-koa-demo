@@ -26,12 +26,12 @@ function Time( initTime, options={} ){
     updateFlag: false // 缺省情况下使用，lufy.show事件更新时间。
   }
   Object.assign( this.options, options )
-    //if (this.initTime === 99999) {
-    //  return
-    //} ! this.target && (this.target = $(".time"));
-    this.val = this.initTime;
-    this.pastTime = 0;
-    initializeCallback(this, ["end", "timer", "acce", "setTime"]);
+  //if (this.initTime === 99999) {
+  //  return
+  //} ! this.target && (this.target = $(".time"));
+  this.val = this.initTime;
+  this.pastTime = 0;
+  initializeCallback(this, ["end", "timer", "acce", "setTime"]);
 
 }
 
@@ -70,6 +70,7 @@ const Methods = {
     } else {
       this.status = "runing"
     }
+    console.log( " time start ", this)
     return this
   },
   isRunning() {

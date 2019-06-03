@@ -8,15 +8,15 @@
     <div class="userInfoBox">
       <div class="userImgBox" style="border-color:"><img :src="gamePlayer.avatar" class="userImg" /></div>
 
-      <div id="grade" class="grade">0</div>
+      <div id="grade" class="grade">{{grade}}</div>
 
     </div>
     <div class="timeBox">
-      时间<br><span class="time">0</span>
+      时间<br><span class="time">{{time}}</span>
     </div>
   </div>
-  <div id="gameLayerBox" class="editTarget-wrap">
-    <canvas  @touchstart="handleTouchStart" id="canvas" width="640" height="974" style="width: 320px; height: 487px;">你的浏览器不支持canvas，请换个牛逼点的浏览器，谢谢</canvas>
+  <div id="gameLayerBox" style="top: 4rem;">
+    <canvas  @touchstart.prevent="handleTouchStart" id="canvas" width="640" height="974" style="width: 320px; height: 487px;">你的浏览器不支持canvas，请换个牛逼点的浏览器，谢谢</canvas>
   </div>
   <div class="timeUpImg hide"></div>
   <div :class="[{ soundIconOff: soundoff }, 'soundIcon']" style="z-index:700" @touchstart="handlePlaySound"></div>
@@ -31,25 +31,20 @@ var _gameOver = false
 var _ruleInfo = {}
 var touchLock = false
 
-var requestAnimFrame = $.requestAnimFrame
 import GameRes from './GameRes'
 import HdGame from '@/lib/hdgame'
+import HdUtil from '@/lib/hdutil'
 import {
   GameArg
 } from './GameArg'
 
-
+const requestAnimFrame = HdUtil.requestAnimFrame
 //LGlobal.setDebug(true);
 //LGlobal.displayState = LGlobal.FULL_SCREEN
 //LGlobal.width = 640;
 //LGlobal.height = LGlobal.width * window.innerHeight / window.innerWidth;
 
 //LInit(50, 'legend', LGlobal.width, LGlobal.height, main);
-
-// eventBus
-import {
-  GameScoreChangedEvent
-} from '@/lib/GameEvent'
 
 function ImageObject(){
     this.x = 0;
@@ -84,7 +79,6 @@ export default {
     }
   },
   data() {
-
     return {
       canvas: null,
       steps: 0, // 玩家玩了几下，前几次是指导
@@ -107,36 +101,33 @@ export default {
       ui: {
         gameBoxVisible: false
       },
+      skinAssets: {
+        score: GameRes.skinAssets.score
+      },
       soundoff: true,
-      rem: 20
+      rem: 20,
+      time: 30, // 时间
+      grade: 0 // 分数
     }
   },
-
   created() {
     this.rem = window.g_rem
   },
   mounted() {
-
     console.log("mounted props=", this.hg, this.command)
-    this.handleInitGameData()
 
     this.hg.assets.onReady(() => {
-
       console.log(" hg.assets.onReady 1")
       this.gameBg = GameRes.skinAssets.gameBgPath
-
     });
 
+    this.hg.grade.on('setGrade',( val)=>{
+      this.grade = val
+    });
 
-    GameArg.eventBus.$on(GameScoreChangedEvent.name, (event) => {
-      this.hg.grade.inc(10);
-      console.log("GameScoreChangedEvent0")
-      this.hg.sound.play(1);
-      console.log("GameScoreChangedEvent1")
-    })
-
-    this.hg.time.on('setTime', (e) => {
-      console.log("setTime", e)
+    this.hg.time.on('setTime', (val) => {
+      this.time = val
+      console.log("setTime", val)
     })
     this.hg.time.on('end', this.endGame)
 
@@ -162,14 +153,16 @@ export default {
       if (GameArg.firstTouch) {
         this.initCanvas();
         GameArg.firstTouch = false;
-      } else {
-        this.startGame();
       }
+
+      if(!HdGame.isplaySucess){
+          this.steps = 0;
+      }
+      this.startGame();
     },
 
     handleRestartGame() {
 
-      this.handleInitGameData();
       this.startGame();
       this.hg.fire('again');
 
@@ -199,6 +192,7 @@ export default {
     },
 
     handleTouchStart( e ){
+      console.log("handleTouchStart", e)
         if(_gameOver){
             return;
         }
@@ -211,8 +205,8 @@ export default {
         let ratio = this.ratio
         let rem = this.rem
         this.touchLock = true
-        e.preventDefault()
-        e = e.originalEvent;
+        //e.preventDefault()
+        //e = e.originalEvent;
 
         let touchX = e.clientX || e.changedTouches[0].clientX;
         let touchY = (e.clientY || e.changedTouches[0].clientY) - 80;
@@ -241,13 +235,13 @@ export default {
                 }
                 if(!xg.flag || xg.type == 3){
                     var score = new ImageObject();
-                    score.image = hg.assets["//hdg.faisys.com/image/zxg/score.png"];
+                    score.image = hg.assets[this.skinAssets.score];
                     score.w = 80;
                     score.h = 50;
                     score.x = xg.x + xg.w;
                     score.y = xg.y ;
                     scoreList.push(score);
-                    hg.grade(10);
+                    this.hg.grade.inc(10);
                 }
                 xg.flag = true;
                 break;
@@ -265,7 +259,7 @@ export default {
       let canvas = this.canvas
       let ctx = this.ctx
 
-      hg.time.init();
+      hg.time.init( );
       hg.grade.set(0);
       this.combol = 0;
       _gameOver = false;
@@ -292,24 +286,19 @@ export default {
     },
 
     initCanvas() {
+
       this.canvas = document.getElementById("canvas");
-      this.ctx = canvas.getContext("2d");
+      this.ctx = this.canvas.getContext("2d");
       let xgList = this.xgList
       let hg = this.hg
-      let ratio = this.ratio
       let canvas = this.canvas
       let ctx = this.ctx
 
-      hg.on('startGame',()=>{
-           if(!HdGame.isplaySucess){
-               this.steps = 0;
-           }
-           this.startGame();
-      });
       hg.time.setAcceList(4);
       hg.time.on('acce',(index)=>{
            this.createTime = 0.5 - 0.1*index;
        }).on('end',()=>{
+         console.log( "time end", this )
            _gameOver = true;
            if(xgList.length == 1 && xgList[0] && xgList[0].type == 3){
                _ruleInfo.list += (_ruleInfo.list?',':'') + (-2) + ',' + xgList[0].index;
@@ -328,24 +317,29 @@ export default {
                        ctx.msBackingStorePixelRatio ||
                        ctx.oBackingStorePixelRatio ||
                        ctx.backingStorePixelRatio || 1;
-       window.ratio = (window.devicePixelRatio || 1) / backingStore;
-       canvas.width = this.clientWidth*ratio;
-       canvas.height = gamePlayPanel_h*ratio;
+       this.ratio = (window.devicePixelRatio || 1) / backingStore;
+       canvas.width = this.clientWidth* this.ratio;
+       canvas.height = gamePlayPanel_h* this.ratio;
        canvas.style.width = this.clientWidth+"px";
        canvas.style.height = gamePlayPanel_h+"px";
+
+       console.log( "ratio, canvas.width, canvas.height", this.ratio, canvas.width, canvas.height)
     },
     startGame(){
       //{"rt":0,"success":true,"data":{"info":"{\"startTime\":1559359379841,\"rule\":{\"initTime\":30,\"dataList\":[3.20655,6.29997,2.88785,4.68953,9.82222,7.09757,3.42037,2.81907,3.27395,2.29262,5.79725,0.39535,6.7182,11.48829,4.16987,11.17928,4.98052,10.85984,5.9056,9.35568,9.12774,0.71236,10.35213,0.32109,5.73556,11.15096,2.21556,5.81826,10.59326,8.13918,4.90578,6.62575,1.99239,7.81675,1.42726,8.25435,2.1532,10.71461,11.39469,10.26775,4.10042,9.94452,11.33064,9.93211,9.51025,8.55092,0.45676,2.40868,5.8614,0.49582,11.27092,0.13462,10.58641,8.70191,8.9603,3.89012,6.7834,3.20553,1.38426,8.32523,4.76515,4.2696,0.32149,9.41587,10.23929,0.2766,10.11333,2.93802,10.38336,8.36413,4.64845,6.5888,6.64847,9.07916,1.72469,8.34611,6.99828,9.8132,1.9906,3.54254,1.16342,7.93818,7.71264,1.43544,7.81713,7.89258,10.33385,1.78313,6.10493,1.96852,3.13662,3.08697,0.33952,10.22427,1.59499,3.23109,4.30244,5.29145,11.75167,0.74482],\"xg1\":4.15,\"xg2\":4.5}}","sign":"124cfaac708d1c295e2b3e28e90e678f"},"}
 
-        HdGame.getGameRule((r)=>{
-            this.xgDataList = r.data.dataList;
+      //HdGame.getGameRule((r)=>{
+      // 0 ~ 14 之间随机数， 屏幕宽度为 16rem, rem把屏幕分为15个格
+      // 100 个随机数，示例：游戏时间为30秒，每个小鬼显示 0.6秒，至少需要 50 个点
+      let dataList =[3.20655,6.29997,2.88785,4.68953,9.82222,7.09757,3.42037,2.81907,3.27395,2.29262,5.79725,0.39535,6.7182,11.48829,4.16987,11.17928,4.98052,10.85984,5.9056,9.35568,9.12774,0.71236,10.35213,0.32109,5.73556,11.15096,2.21556,5.81826,10.59326,8.13918,4.90578,6.62575,1.99239,7.81675,1.42726,8.25435,2.1532,10.71461,11.39469,10.26775,4.10042,9.94452,11.33064,9.93211,9.51025,8.55092,0.45676,2.40868,5.8614,0.49582,11.27092,0.13462,10.58641,8.70191,8.9603,3.89012,6.7834,3.20553,1.38426,8.32523,4.76515,4.2696,0.32149,9.41587,10.23929,0.2766,10.11333,2.93802,10.38336,8.36413,4.64845,6.5888,6.64847,9.07916,1.72469,8.34611,6.99828,9.8132,1.9906,3.54254,1.16342,7.93818,7.71264,1.43544,7.81713,7.89258,10.33385,1.78313,6.10493,1.96852,3.13662,3.08697,0.33952,10.22427,1.59499,3.23109,4.30244,5.29145,11.75167,0.74482]
+            this.xgDataList = dataList;
             this.xgDataList.uid = 0;
             _ruleInfo.list = '';
 
-            window.scrollTo(0,0);
-            this.gameInit();
+            window.scrollTo(0,0)
+            this.initGame()
             this.hg.time.start();
-        },{"xg1":"4.15","xg2":"4.5","sign":"86a5cb409a60228c861a6600f9c00b49"});
+      //},{"xg1":"4.15","xg2":"4.5","sign":"86a5cb409a60228c861a6600f9c00b49"});
     },
     zxgToFixed(num,bit){
         num = parseFloat(num.toFixed(bit||2));
@@ -423,7 +417,6 @@ export default {
             }
 
         }
-        //console.log(flag,xg.image);
         return xg;
     },
 

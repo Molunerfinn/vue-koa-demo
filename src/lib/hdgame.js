@@ -389,7 +389,7 @@ HdGame.initEdit = function(Edit) {
   let cache = {};
 
   function getImgInfo(name, isRem) {
-    console.log("getImgInfo=", name)
+
     let key = "getImgInfo-" + name;
     if (isRem) {
       key = "getImgInfo-rem-" + name
