@@ -8,10 +8,10 @@ const { buildCommon } = require( './common' )
 var db = {}
 
 const sequelize = new Sequelize(
-  config.db.database,
-  config.db.user,
-  config.db.password,
-  config.db.options
+  config.database,
+  config.user,
+  config.password,
+  config.options
 )
 
 //遍历 schema/game 目录

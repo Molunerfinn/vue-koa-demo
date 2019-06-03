@@ -8,3 +8,4 @@ coverage/
 .env*
 .coveralls.yml
 yarn-error.log
+log/

@@ -1,7 +1,7 @@
 console.log( 'process.env.DB_USER', process.env.DB_USER)
 module.exports = {
     db: {
-        database: process.env.DB_NAME || '`wechatmore',
+        database: process.env.DB_NAME || 'wechatmore',
         user: process.env.DB_USER || 'root',
         password: process.env.DB_PASSWORD || 'root',
         options: {
