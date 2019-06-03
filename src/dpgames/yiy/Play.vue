@@ -353,7 +353,7 @@
           that.gameRoundState = GameState.completed
           for(var i=0;i<data.gamePlayerScores.length;i++){
             if(data.gamePlayerScores[i].openid==that.gamePlayer.openid){
-              that.rank = data.gamePlayerScores[i].rank
+              that.rank = data.gamePlayerScores[i].rank+1
             }
           }
 

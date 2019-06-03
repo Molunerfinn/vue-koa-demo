@@ -142,7 +142,7 @@ export default class DpYiySocket {
               runner.endRound().then(()=>{
                 runner.getAllPlayers().then((players) => {
                   players.sort((a, b) => {
-                    return a.score - b.score
+                    return b.score - a.score
                   })
                   payload.gamePlayerScores = players
 
@@ -163,7 +163,7 @@ export default class DpYiySocket {
               cachedPlayers.forEach((player) => {
                 player.id = player.player_id,
                   player.score = player.score, //parseInt(Math.random()*1000) //
-                  player.percent = player.score * 100 / 1500;
+                  player.percent = player.score * 100 / 2000;
               })
               var topPlayers = cachedPlayers.slice(0, 20)
               namespace.emit('GameRunningEvent', {
