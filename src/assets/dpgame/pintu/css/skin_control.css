@@ -6,7 +6,10 @@
 }
 
 .skin-runlin .logowrap{
+  width: 140px;
+  height: 140px;
   background: url('/static/dpgame/pintu/skin_runlin/logo.png');
+  background-size: cover;
 }
 
 

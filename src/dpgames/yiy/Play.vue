@@ -13,9 +13,9 @@
         <img class="countdownimg" :src='countdownImg'>
       </div> -->
     </div>
-    <audio id="bgMusic">
+    <!-- <audio id="bgMusic">
       <source src="~@/assets/dpgame/yiy/shake.mp3" type="audio/mpeg">
-    </audio>
+    </audio> -->
     <div class="msg weui-toptips weui-toptips_visible" v-show="computedToptips"> {{computedToptips}} </div>
 		<!-- 分数容器 -->
 
@@ -109,13 +109,6 @@
       city: null
     }
   }
-  // const countDownImages = [
-  //   require('@/assets/dpgame/pintu/image/c0.png'),
-  //   require('@/assets/dpgame/pintu/image/c1.png'),
-  //   require('@/assets/dpgame/pintu/image/c2.png'),
-  //   require('@/assets/dpgame/pintu/image/c3.png')
-  // ]
-  // const gameType = 1 // 0抽奖， 1刷记录
 
   function s(){
   	return window.jQuery;
@@ -299,8 +292,39 @@
         }
         document.title = this.gameRound.name
       })
+      this.activateSound()
+      this.hg.sound.pauseAll()
+      let hg = that.hg
+      if (
+        typeof hg.sound.cache[0] !== 'undefined' &&
+        typeof hg.sound.cache[0].playing !== 'undefined' &&
+        !hg.sound.cache[0].playing
+      ) {
+        hg.sound.readyPlay(0, 0, 'loop')
+      }
   	},
   	methods: {
+      activateSound() {
+        //兼容ios下 WebAudio类型的对象无法自动播放，必须在点击事件中播放过一次，才允许播放
+        try {
+          if (HdGame.isIPhone() && this.hg.sound.list && this.hg.sound.list.length > 0 && !this.hg.sound._activate) {
+            this.hg.sound.list.forEach(function(val, i) {
+              var data = this.hg.sound.cache[i]
+              if (i > 0 && data && data.soundType == 'LWebAudio') {
+                data.play()
+                data.stop()
+              }
+            })
+            this.hg.sound._activate = true
+          }
+          if (HdGame.isIPhone()) {
+            this.hg.sound.cache['yiy'].play()
+            this.hg.sound.cache['yiy'].stop()
+          }
+        } catch (e) {
+          //HdGame.logStd("activateSoundErr", e);
+        }
+      },
       bindSocketEvents: function(){
         var that = this
         that.socket.on('GameOpeningEvent', function(data) {

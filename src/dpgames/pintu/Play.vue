@@ -204,12 +204,13 @@
           var r = this.gameInfo['ret']
           if (this.gameInfo['gamePlayer'].score == constant.GameConstant.maxTime) {
             this.gameInfo['gamePlayer'].score = 0
+            this.gameInfo['gamePlayer'].max_score = 0
           }
           var arg = {
             isSuc: r.isSuc,
             gameScore: this.gameInfo['gamePlayer'].score,
             minScore: 0, //到多少分可以抽奖
-            bestScore: r.score,
+            bestScore: this.gameInfo['gamePlayer'].max_score,
             gameType: gameType,
             rank: r.rank,
             beat: r.beat,
@@ -318,7 +319,7 @@
               isSuc: r.isSuc,
               gameScore: that.gameInfo['gamePlayer'].score,
               minScore: 0, //到多少分可以抽奖
-              bestScore: r.score,
+              bestScore: that.gameInfo['gamePlayer'].max_score,
               gameType: gameType,
               rank: r.rank,
               beat: r.beat,
