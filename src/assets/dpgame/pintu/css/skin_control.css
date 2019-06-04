@@ -19,3 +19,25 @@
   background-position: center;
   background-size: contain;
 }
+
+#app.skin-default{
+  background-image: url('/static/dpgame/pintu/skin_default/bg.jpg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+.skin-default .logowrap{
+  width: 140px;
+  height: 140px;
+  background: url('/static/dpgame/pintu/skin_default/logo.png');
+  background-size: cover;
+}
+
+
+.skin-default .game-wrap{
+  background-image: url('/static/dpgame/pintu/skin_default/gameimg.jpg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
