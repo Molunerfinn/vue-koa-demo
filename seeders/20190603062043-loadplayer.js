@@ -22,11 +22,11 @@ module.exports = {
 
     let playerAttrs = [{openid: 'oF9hV0SyZ6tI_k2WHtpRXqfedRH4', nickname: 'nickname', avatar: avatar }]
     for( let i=0; i<10000; i++ ){
-      playerAttrs.push( { openid: `openid-${i}`, nickname:`nickname-${i}`, avatar } )
+      playerAttrs.push( { openid: `openid-${i}`, nickname:`nickname-${i}`, game_round_id: 7, avatar } )
     }
     logger.info( "20190603062043-loadplayer"  )
 
-    return queryInterface.bulkInsert( "game_players", playerAttrs, {} )
+    return queryInterface.bulkInsert( "dppintu_game_players", playerAttrs, {} )
 
   },
 

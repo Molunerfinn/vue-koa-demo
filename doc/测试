@@ -1,0 +1,17 @@
+1.  关于websocket性能测试
+https://blog.csdn.net/minmintju/article/details/74941445
+
+2. websocket 测试工具 ws-benchmark
+https://www.npmjs.com/package/ws-benchmark
+
+https://www.npmjs.com/package/websocket-bench
+
+
+3. 测试框架
+Mocha
+http://www.ruanyifeng.com/blog/2015/12/a-mocha-tutorial-of-examples.html
+
+jasmine
+
+Karma
+https://www.npmjs.com/package/karma
