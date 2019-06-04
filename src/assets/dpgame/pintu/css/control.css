@@ -526,10 +526,11 @@
 }
 
 .box-title img.logo {
-  width: 30%;
-  position: absolute;
-  top: 80px;
-  left: 33%;
+  width: 450px;
+position: absolute;
+top: 80px;
+left: 50%;
+margin-left: -225px;
 }
 
 .progress-wrap {
