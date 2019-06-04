@@ -214,6 +214,7 @@ export default class GamesController {
       let s = Math.floor(score / 1000) - 3
       let ss = Math.floor(score % 1000)
       score = parseFloat(s + '.' + ss)
+      console.log('score3333333333:', score);
       score = score.toFixed(2)
       console.log('score++++++++:', score);
       if (score > gameRound.duration) {
