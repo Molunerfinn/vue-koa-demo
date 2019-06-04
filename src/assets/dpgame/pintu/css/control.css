@@ -1,5 +1,8 @@
 #app{
   background-image: url(/static/dpgame/pintu/skin_runlin/bg.jpg);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
 
 }
 .logowrap{
