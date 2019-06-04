@@ -208,9 +208,9 @@
           }
           var arg = {
             isSuc: r.isSuc,
-            gameScore: this.gameInfo['gamePlayer'].score,
+            gameScore: this.gameInfo['gamePlayer'].score.toFixed(2),
             minScore: 0, //到多少分可以抽奖
-            bestScore: this.gameInfo['gamePlayer'].max_score,
+            bestScore: this.gameInfo['gamePlayer'].max_score.toFixed(2),
             gameType: gameType,
             rank: r.rank,
             beat: r.beat,
@@ -317,9 +317,9 @@
             var r = that.gameInfo['ret']
             var arg = {
               isSuc: r.isSuc,
-              gameScore: that.gameInfo['gamePlayer'].score,
+              gameScore: that.gameInfo['gamePlayer'].score.toFixed(2),
               minScore: 0, //到多少分可以抽奖
-              bestScore: that.gameInfo['gamePlayer'].max_score,
+              bestScore: that.gameInfo['gamePlayer'].max_score.toFixed(2),
               gameType: gameType,
               rank: r.rank,
               beat: r.beat,
@@ -469,7 +469,7 @@
             if (r.rt == 0) {
               var arg = {
                 isSuc: r.isSuc,
-                gameScore: r.score,
+                gameScore: r.score.toFixed(2),
                 minScore: 0, //到多少分可以抽奖
                 bestScore: r.bestScore,
                 gameType: gameType,
