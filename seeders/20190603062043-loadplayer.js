@@ -25,9 +25,10 @@ module.exports = {
       playerAttrs.push( { openid: `openid-${i}`, nickname:`nickname-${i}`, game_round_id: 7, avatar } )
     }
     logger.info( "20190603062043-loadplayer",  queryInterface )
-
-    return queryInterface.bulkInsert( "dppintu_game_players", playerAttrs, {} )
-
+    //return queryInterface.bulkInsert( "dppintu_game_players", playerAttrs, {} )
+    let trancates = ['dppintu_game_players'].map((t)=>{ return `truncate ${t}` })
+    let sql = trancates.join(',')
+    return queryInterface.sequelize.query(sql)
   },
 
   down: (queryInterface, Sequelize) => {
