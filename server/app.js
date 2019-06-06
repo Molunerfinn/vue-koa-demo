@@ -92,6 +92,9 @@ import weixin from './routes/gapi/weixin.js'
 router.use('/gapi/weixin', weixin.routes())
 
 
+import test from './routes/test.js'
+router.use('/api/test', test.routes())
+
 //import gameBargain from './routes/gapi/game/bargain.js'
 //router.use('/gapi/bargain', gameBargain.routes())
 

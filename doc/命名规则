@@ -9,3 +9,6 @@ https://www.cnblogs.com/chris-oil/p/4067415.html?utm_source=tuicool&utm_medium=r
 
 示例：
 名称 DpPintuGameRound  和 code：dppintu  是同样的前缀，
+
+
+# scr/components 路径下的vue 调用API路径为 gapi/base/ 表示所有游戏调用的公共路径
