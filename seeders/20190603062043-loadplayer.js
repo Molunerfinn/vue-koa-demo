@@ -5,7 +5,7 @@
 
 let logger = require('../server/helpers/logger')
 
-// node_modules/.bin/sequelize db:seed  --seed 20190603062043-loadplayer --config "server/config/seeddb.js"
+// npx sequelize db:seed  --seed 20190603062043-loadplayer --config "server/config/seeddb.js"
 module.exports = {
   up: (queryInterface, Sequelize) => {
     /*
@@ -24,7 +24,7 @@ module.exports = {
     for( let i=0; i<5000; i++ ){
       playerAttrs.push( { openid: `openid-${i}`, nickname:`nickname-${i}`, game_round_id: 7, avatar } )
     }
-    logger.info( "20190603062043-loadplayer"  )
+    logger.info( "20190603062043-loadplayer",  queryInterface )
 
     return queryInterface.bulkInsert( "dppintu_game_players", playerAttrs, {} )
 
