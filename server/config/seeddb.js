@@ -13,6 +13,9 @@ module.exports = {
       username: 'root',
       password: 'root',
       dialect: 'mysql',
-      logging: true
+      logging: true,
+      dialectOptions: {
+        multipleStatements: true
+      }
     }
 };
