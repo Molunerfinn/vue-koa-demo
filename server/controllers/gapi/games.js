@@ -8,6 +8,8 @@ const {
   getWxJsConfig
 } = require('../../helpers/weixin')
 
+const logger = require('../../helpers/logger')
+
 export default class GamesController {
   /**
    * 取得游戏相关信息，并返回客户端，初始化游戏
@@ -15,68 +17,71 @@ export default class GamesController {
    * @return {*}
    */
   static async getInfo(ctx) {
-    //try {
-    console.log('=================getinfo================');
-    let code = ctx.params.code
-    let number = ctx.params.number
-    let parsed = ctx.request.body.parsed || {}
-    let openid = parsed.openid
+    try {
+      console.log('=================getinfo================');
+      let code = ctx.params.code
+      let number = ctx.params.number
+      let parsed = ctx.request.body.parsed || {}
+      console.log('parsed---:', parsed);
+      let openid = parsed.openid
 
-    console.log('openid=======:', openid);
+      console.log('openid=======:', openid);
 
-    let GameRound = getGameRoundModelByCode(code)
-    let GamePlayer = getGamePlayerModelByCode(code)
-    let GameResult = getGameResultModelByCode(code)
+      let GameRound = getGameRoundModelByCode(code)
+      let GamePlayer = getGamePlayerModelByCode(code)
+      let GameResult = getGameResultModelByCode(code)
 
-    console.log(GameRound + '====' + GamePlayer + '======' + GameResult);
+      // 取得游戏信息
+      let gameRound = await GameRound.findOne({
+        where: {
+          number
+        }
+      })
+      console.log('gameRound--:', gameRound);
+      // 取得玩家信息
+      let gamePlayer = await GamePlayer.findOne({
+        where: {
+          game_round_id: gameRound.id,
+          openid: openid,
+        }
+      })
+      // 如果 gamePlayer 为 null， 检查是否需要创建
+      if (gamePlayer == null) {
+        gamePlayer = {
+          openid: parsed.openid,
+          nickname: parsed.nickname,
+          avatar: parsed.headimgurl,
+          game_round_id: gameRound.id,
+          score: 0,
+          max_score: 0
+        }
+        if (gameRound.contact_required == 0) {
+          let res = await GamePlayer.create(gamePlayer)
+        }
+      }
+      let playerInfo = gamePlayer
+      if (gamePlayer.id) {
+        // 取得玩家相关信息
+        playerInfo = await gamePlayer.getInfo()
+      }
+      // 每个游戏 GameRound
+      let url = ctx.header.referer
+      console.log('url===================:', url);
+      let gameInfo = await gameRound.getInfo()
+      let wxConfig = await getWxJsConfig(url, gameRound)
+      var allInfo = {
+        gameRound: gameInfo,
+        gamePlayer: playerInfo,
+        wxConfig: wxConfig
+      }
+      ctx.body = allInfo
 
-    // 取得游戏信息
-    let gameRound = await GameRound.findOne({
-      where: {
-        number
-      }
-    })
-    // 取得玩家信息
-    let gamePlayer = await GamePlayer.findOne({
-      where: {
-        game_round_id: gameRound.id,
-        openid: openid,
-      }
-    })
-    // 如果 gamePlayer 为 null， 检查是否需要创建
-    if (gamePlayer == null) {
-      gamePlayer = {
-        openid: parsed.openid,
-        nickname: parsed.nickname,
-        avatar: parsed.headimgurl,
-        game_round_id: gameRound.id,
-        score: 0,
-        max_score: 0
-      }
-      if (gameRound.contact_required == 0) {
-        let res = await GamePlayer.create(gamePlayer)
-      }
+    } catch (error) {
+      logger.error("getGameInfo error:", error)
+      ctx.throw(messageContent.ResponeStatus.CommonError, `show round ${ctx.params.id} fail: ` + error, {
+        expose: true
+      })
     }
-    let playerInfo = gamePlayer
-    if (gamePlayer.id) {
-      // 取得玩家相关信息
-      playerInfo = await gamePlayer.getInfo()
-    }
-    // 每个游戏 GameRound
-    let url = ctx.header.referer
-    console.log('url===================:', url);
-    let gameInfo = await gameRound.getInfo()
-    let wxConfig = await getWxJsConfig(url, gameRound)
-    var allInfo = {
-      gameRound: gameInfo,
-      gamePlayer: playerInfo,
-      wxConfig: wxConfig
-    }
-    ctx.body = allInfo
-
-    //} catch (error) {
-    //    ctx.throw(messageContent.ResponeStatus.CommonError, `show round ${ctx.params.id} fail: ` + error, { expose: true })
-    //}
   }
 
   static async addPlayer(ctx) {
@@ -111,6 +116,7 @@ export default class GamesController {
       ctx.body = gamePlayer
 
     } catch (error) {
+      logger.error("addPlayer error:", error)
       ctx.throw(messageContent.ResponeStatus.CommonError, `show round ${ctx.params.id} fail: ` + error, {
         expose: true
       })
@@ -119,7 +125,7 @@ export default class GamesController {
 
   static async setAchieve(ctx) {
     try {
-      console.log('===========setAchieve============');
+      console.log('+++++++++++++setAchieve============');
       let ret = {
         rt: 0,
         isSuc: true,
@@ -130,11 +136,16 @@ export default class GamesController {
       let GamePlayer = getGamePlayerModelByCode(code)
       let GameResult = getGameResultModelByCode(code)
 
+
+
       let number = ctx.params.number
       let game_round_id = ctx.params.id
       let parsed = ctx.request.body.parsed
+      console.log(code, number, parsed);
       let score = ctx.request.body.score
       let openid = parsed.openid
+
+
 
       let gameRound = await GameRound.findOne({
         where: {
@@ -188,6 +199,7 @@ export default class GamesController {
       ctx.body = JSON.stringify(ret)
 
     } catch (error) {
+      logger.error("setAchieve error:", error)
       ctx.throw(messageContent.ResponeStatus.CommonError, `show round ${ctx.params.id} fail: ` + error, {
         expose: true
       })
@@ -241,6 +253,7 @@ export default class GamesController {
       }
       ctx.body = rankInfo
     } catch (error) {
+      logger.error("getRanking error:", error)
       ctx.throw(messageContent.ResponeStatus.CommonError, `show round ${ctx.params.id} fail: ` + error, {
         expose: true
       })
