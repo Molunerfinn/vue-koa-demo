@@ -1,0 +1,5 @@
+1. 使用 player.token 加密 分数。
+2. 添加 player.ip
+3. 添加 game_result.ip
+4. 添加 cookies 记录游戏玩家设置信息，如声音
+*5. 关于输入联系方式的时机
