@@ -299,11 +299,12 @@
 .bg-nei-top-zhong {
   margin: auto;
   width: 500px;
+  height: 100%;
   text-align: center;
 }
 
 .bg-nei-top-zhong img {
-  width: 250px;
+  height: 100%;
 }
 
 .bg-nei-top-zhong p {

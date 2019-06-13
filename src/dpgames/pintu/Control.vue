@@ -11,7 +11,8 @@
                   <div class="logowrap">
                   </div>
                 </div>
-        				<div class="bg-nei-top-zhong" ><img src=""  v-show="computedGameState=='open'||computedGameState=='started'">
+        				<div class="bg-nei-top-zhong" >
+                  <img src="~@/assets/dpgame/pintu/image/game_logo.png" class="logo"  v-show="computedGameState=='open'||computedGameState=='started'">
                   <!-- <p  v-show="computedGameState=='started'"><span>游戏倒计时</span><strong>|</strong><span>剩余<b>{{timeToEnd}</b>秒</span></p> -->
                 </div>
         </div>
@@ -70,9 +71,7 @@
       </div>
 
       <div class="fullfill game-state state-started" v-show="computedGameState=='started'">
-        <div class="box-title">  <img src="~@/assets/dpgame/pintu/image/game_logo.png" class="logo"> </div>
         <div class="game-wrap ">
-
           <p  class="timetoend" style="font-size:30px;">剩余{{timeToEnd}}秒</p>
         </div>
 
@@ -468,6 +467,9 @@ export default {
   opacity:0.50; /*支持 Chrome, Opera, Safari 等浏览器*/
   /*margin: 80px auto;*/
 }
+.state-started{
+  position: relative;
+}
 .actions{
   text-align: center;
 }
@@ -495,8 +497,8 @@ export default {
 }
 .game-wrap{
   position: absolute;
-  top: 30vh;
-  bottom: 18vh;
+  top: 2.5vh;
+  bottom: 5vh;
   left: 0;
   right: 0;
   border-radius: 10px;
