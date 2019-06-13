@@ -121,6 +121,10 @@ function getWxShareUrlForRunlin( gameRound ){
     runlinshareurl = `http://client.vw-dealer-wechat.faw-vw.com/wechatclient/game/${gameRound.number}/searchaliencheck_in/gotoGame.html`
     //runlinshareurl = RUNLIN_SHARE_URL_ZHAOBABA
   }
+  if( gameRound.code == 'dppintu'){
+    runlinshareurl = `http://client.vw-dealer-wechat.faw-vw.com/wechatclient/game/${gameRound.number}/picturepuzzlecheck_in/gotoGame.html`
+    //runlinshareurl = RUNLIN_SHARE_URL_ZHAOBABA
+  }
 
   return runlinshareurl
 }
