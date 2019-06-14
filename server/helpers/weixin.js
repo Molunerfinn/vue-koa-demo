@@ -116,10 +116,13 @@ function getWxShareUrlForRunlin( gameRound ){
   let runlinshareurl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${gameRound.appid}&redirect_uri=${encodeURIComponent(runlinredirecturl)}&response_type=code&scope=snsapi_userinfo&state=""&component_appid=wxd180d4eb5fb062fe#wechat_redirect`
 
   //`/{gameRound.number}/searchaliencheck_in/gotoGame.html`
-  const RUNLIN_SHARE_URL_ZHAOBABA = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${gameRound.appid}&redirect_uri=http%3A%2F%2Fclient.vw-dealer-wechat.faw-vw.com%2Fwechatclient%2Fgame%2F${gameRound.number}%2Fsearchaliencheck_in%2FgotoGame.html&response_type=code&scope=snsapi_userinfo&state=&component_appid=wxd180d4eb5fb062fe#wechat_redirect`
   if( gameRound.code == 'zhaobaba'){
-    runlinshareurl = `http://client.vw-dealer-wechat.faw-vw.com/wechatclient/game/${gameRound.number}/searchaliencheck_in/gotoGame.html`
-    //runlinshareurl = RUNLIN_SHARE_URL_ZHAOBABA
+    runlinredirecturl = `http://client.vw-dealer-wechat.faw-vw.com/wechatclient/game/${gameRound.number}/searchaliencheck_in/gotoGame.html`
+    runlinshareurl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${gameRound.appid}&redirect_uri=${encodeURIComponent(runlinredirecturl)}&response_type=code&scope=snsapi_userinfo&state=""&component_appid=wxd180d4eb5fb062fe#wechat_redirect`
+  }
+  if( gameRound.code == 'dppintu'){
+    runlinredirecturl = `http://client.vw-dealer-wechat.faw-vw.com/wechatclient/game/${gameRound.number}/picturepuzzlecheck_in/gotoGame.html`
+    runlinshareurl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${gameRound.appid}&redirect_uri=${encodeURIComponent(runlinredirecturl)}&response_type=code&scope=snsapi_userinfo&state=""&component_appid=wxd180d4eb5fb062fe#wechat_redirect`
   }
 
   return runlinshareurl
