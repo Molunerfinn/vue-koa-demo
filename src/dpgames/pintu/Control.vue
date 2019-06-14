@@ -359,8 +359,13 @@ export default {
 		getFinalScores: function(){
 			var that = this;
 			that.socket.emit('GetGamePlayersEvent', {}, function(data){
-        that.gameRoundState = data.gameRoundState;
+        // that.gameRoundState = data.gameRoundState;
 				that.gamePlayers = data.gamePlayers
+        for(var i=0;i< that.gamePlayers.length;i++){
+          if(that.gamePlayers[i].score == constant.GameConstant.maxTime){
+            that.gamePlayers[i].score = 0;
+          }
+        }
 				that.gamePlayerScores = that.gamePlayers.sort(function(a,b){ return a.score-b.score; })
 			});
 		},
