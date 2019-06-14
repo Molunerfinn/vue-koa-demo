@@ -93,10 +93,6 @@ export default {
       rowArray: [],
       gameBg: null,
       imgData: null,
-      game_player: {
-        type: Object,
-        default: { avatar: '/static/shared/image/avatar.jpg' }
-      },
       ui: {
         gameBoxVisible: false
       },

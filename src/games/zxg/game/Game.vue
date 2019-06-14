@@ -94,10 +94,7 @@ export default {
       curTouchTime: 0,
       touchTime: 0,
       gameBg: null,
-      imgData: null,
-      game_player: {
-        avatar: '/static/shared/image/avatar.jpg'
-      },
+      imgData: null,      
       ui: {
         gameBoxVisible: false
       },
