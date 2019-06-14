@@ -323,10 +323,26 @@
           })
       },
       handleGameOver(event) {
+        console.log('handleGameOver');
         this.gameState = 'over'
         this.gameOver(this.hg.grade.val)
       },
       handleGameRestart() {
+        const parsed = queryString.parse(location.search)
+        var number = parsed.number
+
+        var params = {
+          parsed: parsed
+        }
+        getGameResult(number, params).then(data => {
+          this.gameInfo = data
+          console.log('getGameResult------:', data)
+          this.gameRound = this.gameInfo['gameRound']
+          this.gamePlayer = this.gameInfo['gamePlayer']
+          this.dataList = this.gameRound.dataList
+
+          this.hg.time = new HdGame.Time(this.gameRound.duration, {updateFlag: true})
+        })
         this.gameState = 'restart'
         this.resultBoxVisible = false
       },

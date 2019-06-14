@@ -40,8 +40,8 @@ import Game from './game/Game.vue'
 import GameRes from './game/GameRes'
 import HdGame from '@/lib/hdgame'
 import {
-  setAchieve
-} from '@/api/base'
+  setAchievebycode
+} from '@/api/games/kouhong'
 import LoadToast from '@/components/LoadToast.vue'
 import ResultBox from '@/components/ResultBox.vue'
 import {
@@ -310,7 +310,7 @@ export default {
 
       Object.assign(params, option);
 
-      setAchieve(params).then(data => {
+      setAchievebycode('00965c97fd1cd325c7b608a76708bcf3',params).then(data => {
         this.hideLoadToast();
         HdGame.tlog('gameOver', data);
         var r = data;

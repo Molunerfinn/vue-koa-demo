@@ -1,7 +1,7 @@
 var moment = require('moment')
 
 module.exports = (sequelize, DataTypes) => {
-  const model = sequelize.define('ZxgGameRound', {
+  const model = sequelize.define('KouHongGameRound', {
     game_id: DataTypes.BIGINT(11),
     name: {
       type:DataTypes.STRING,
