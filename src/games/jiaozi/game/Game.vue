@@ -429,14 +429,14 @@ export default {
                           robot.speedY = 0.1;
                           break;
                       case xd1:
-                          this.getDust(shape.x,robot.y + robot.height/2);
+                          that.getDust(shape.x,robot.y + robot.height/2);
                           robot.speedX = -GameArg.speed;
                           robot.scaleX = -1;
                           robot.x = shape.x + (robot.scaleX + 1)*robot.width/2;
                           robot.speedY = -0.2;
                           break;
                       case xd2:
-                          this.getDust(shape.x + shape.width,robot.y + robot.height/2);
+                          that.getDust(shape.x + shape.width,robot.y + robot.height/2);
                           robot.speedX = GameArg.speed;
                           robot.scaleX = 1;
                           robot.x = shape.x + shape.width + ( 1 - robot.scaleX)*robot.width/2;
