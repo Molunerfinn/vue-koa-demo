@@ -496,12 +496,12 @@ HdGame.initEdit = function(Edit) {
   // function getTextShadow(color) {
   //   return color + " -1px -1px 0px, " + color + " 0px -1px 0px, " + color + " 1px -1px 0px, " + color + " 1px 0px 0px, " + color + " 1px 1px 0px, " + color + " 0px 1px 0px, " + color + " -1px 1px 0px, " + color + " -1px 0px 0px"
   // }
-  // function getRgba(rgb, a) {
-  //   if (typeof a === "undefined" || a == -1) {
-  //     return rgb
-  //   }
-  //   return "rgba" + rgb.substring(rgb.indexOf("("), rgb.indexOf(")")) + "," + (a ? a: 0) + ")"
-  // }
+  function getRgba(rgb, a) {
+     if (typeof a === "undefined" || a == -1) {
+       return rgb
+     }
+     return "rgba" + rgb.substring(rgb.indexOf("("), rgb.indexOf(")")) + "," + (a ? a: 0) + ")"
+  }
   // function getEditInfo(from, list, info, index) {
   //   let arg = {};
   //   arg.from = from;
@@ -1231,7 +1231,7 @@ HdGame.initEdit = function(Edit) {
   //  Edit.setEdit = setEdit;
   Edit.getImgInfo = getImgInfo;
   //  Edit.getInfoByName = getInfoByName;
-  //  Edit.getRgba = getRgba;
+  Edit.getRgba = getRgba;
   Edit.initEdit = initEdit;
   //  Edit.initByElem = initByElem;
   Edit.cache = cache;

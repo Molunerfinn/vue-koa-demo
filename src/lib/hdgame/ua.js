@@ -17,6 +17,12 @@ var UA = {
   isIPhone: function() {
     return /iPhone/i.test(UA.val)
   },
+  isIPhone6(){
+     return this.isIPhone()&&(window.screen.availWidth === 375 || window.screen.availWidth === 414)
+  },
+  isIPhone4(){
+     return this.isIPhone()&&(window.screen.availHeight === 460)
+  },
   isAndroid: function() {
     return /Android/i.test(UA.val) || /Linux/i.test(UA.val)
   },
