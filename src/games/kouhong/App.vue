@@ -190,7 +190,7 @@ export default {
       that.ruleBoxCommand = 'showIcon'
       that.signUpCommand = 'hide'
     },
-    handleStartGame(event) {
+    async handleStartGame(event) {
       event.preventDefault()
 
       let that = this
