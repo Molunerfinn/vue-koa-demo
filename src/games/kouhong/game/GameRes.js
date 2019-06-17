@@ -1,3 +1,6 @@
+import { gameSkinName } from '@/config/env'
+const skinResRoot = '/static/game/zhaobaba/skin_'+ gameSkinName + '/image'
+
 const GameRes = {
   "loadingStyle": 1,
   "maxIncrement": 10,
@@ -506,6 +509,19 @@ const GameRes = {
     "fileName": "错误音效.mp3",
     "optFlag": 2
   }],
+  skinAssets: {
+    logoImgPath: skinResRoot + "/wx/logo.png",
+    shareImgPath: skinResRoot + "/wx/share.jpg",
+    ruleIconPath: skinResRoot + "/wx/ruleicon.png",
+    startImgPath: skinResRoot + "/wx/startbtn.png",
+    gameBgPath: skinResRoot + "/wx/gamebg.jpg",
+    homeBgPath: skinResRoot + "/wx/homebg.jpg",
+    titleImgPath: skinResRoot + "/wx/titleimg.png",
+    baba0: skinResRoot + "/wx/baba0.png",
+    baba1: skinResRoot + "/wx/baba1.png",
+    baba2: skinResRoot + "/wx/baba2.png",
+    baba3: skinResRoot + "/wx/baba3.png",
+  },
   "openAccessKey": false
 }
 export default GameRes

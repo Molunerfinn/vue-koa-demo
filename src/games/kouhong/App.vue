@@ -9,15 +9,6 @@
         <img id="titleImg" class="slaveImg abs" :src="titleImg" style="width:15.232rem;height:5.778666666666667rem;top:2.524rem;left:0.384rem;" />
       </div>
     </div>
-
-
-    <div id='joinNumLine' class='joinNumLine absCenter'
-      style='top:23.424rem;left:3.3706666666666667rem;color:rgb(255,255,255);font-size:0.5546666666666666rem; text-shadow:rgb(255,62,7) -1px -1px 0px, rgb(255,62,7) 0px -1px 0px, rgb(255,62,7) 1px -1px 0px, rgb(255,62,7) 1px 0px 0px, rgb(255,62,7) 1px 1px 0px, rgb(255,62,7) 0px 1px 0px, rgb(255,62,7) -1px 1px 0px, rgb(255,62,7) -1px 0px 0px;'>
-      已有 <span id='joinNum' class="specil"
-        style="color:rgb(255,255,255);font-size:0.5546666666666666rem;text-shadow:rgb(255,62,7) -1px -1px 0px, rgb(255,62,7) 0px -1px 0px, rgb(255,62,7) 1px -1px 0px, rgb(255,62,7) 1px 0px 0px, rgb(255,62,7) 1px 1px 0px, rgb(255,62,7) 0px 1px 0px, rgb(255,62,7) -1px 1px 0px, rgb(255,62,7) -1px 0px 0px;">4346</span>
-      人参加活动</div>
-
-
     <div id="playInfo" class="abs editTarget-playInfo hide" style="width:9rem;text-align:center;">
       <div class="dayPlayHint">您今天还有 <span id="count" class="specil todayPlayCount"></span> 次参与机会</div>
       <div class="totalPlayHint">您还有 <span class="totalPlayCount specil"></span> 次参与机会</div>
@@ -29,9 +20,23 @@
 
   </div>
 
-  <Game ref="game" :hg="hg" :command="gameState" @game-over="handleGameOver" v-show="ui.gameBoxVisible"> </Game>
+  <Game ref="game" :hg="hg" :command="gameState" :gamePlayer="gamePlayer" @game-over="handleGameOver" v-show="ui.gameBoxVisible"> </Game>
   <LoadToast ref="load-toast" is-loading="loadToast.isLoading"> </LoadToast>
-  <ResultBox ref="result-box" :home-callback="home" :again-callback="handleGameRestart" v-show="resultBoxVisible" :params="resultBoxParams" :command="resultBoxCommand"> </ResultBox>
+  <ResultBox ref="result-box"
+             @homeBtnClicked="home"
+             @rankBtnClicked="getRank"
+             @Restart="handleGameRestart"
+             v-show="resultBoxVisible"
+             :params="resultBoxParams"
+             :command="resultBoxCommand"
+             @commandDone="handleResetCommand"> </ResultBox>
+  <RuleBox :ruleIconUrl="skinAssets.ruleIconPath"
+           :game-round="gameRound"
+           :game-player="gamePlayer"
+           :params="resultBoxParams"
+           :command="ruleBoxCommand"
+           @commandDone="handleResetCommand"> </RuleBox>
+  <SignUp :game-player="gamePlayer" :gameRound="gameRound":command="signUpCommand" @signUpOver="signUpOver"> </SignUp>
 </div>
 </template>
 
@@ -40,16 +45,20 @@ import Game from './game/Game.vue'
 import GameRes from './game/GameRes'
 import HdGame from '@/lib/hdgame'
 import {
-  setAchievebycode
+  setAchievebycode,
+  getGameResult
 } from '@/api/games/kouhong'
 import LoadToast from '@/components/LoadToast.vue'
-import ResultBox from '@/components/ResultBox.vue'
+import ResultBox from './ResultBox.vue'
+import RuleBox from './RuleBox.vue'
+  import SignUp from '@/components/SignUp.vue'
 import {
   GameBackgroundMusicLoadEvent
 } from '@/lib/GameEvent'
 import {
   EventBus
 } from '@/lib/EventBus'
+  import queryString from 'query-string'
 
 //import {simplifyLufylegend } from '@/lib/simplify'
 //关于玩家的配置信息
@@ -69,7 +78,9 @@ export default {
   components: {
     Game,
     LoadToast,
-    ResultBox
+    ResultBox,
+    SignUp,
+    RuleBox
   },
   created() {
     this.hg.grade = new HdGame.Grade(0)
@@ -83,6 +94,50 @@ export default {
     HdGame.initJsHead(this.hg, GameRes)
 
     window.hg = this.hg
+
+    const parsed = queryString.parse(location.search)
+    var number = parsed.number
+
+    var params = {
+      parsed: parsed
+    }
+
+    getGameResult(number, params).then(data => {
+      this.gameInfo = data
+      console.log('getGameResult------:', data)
+      this.gameRound = this.gameInfo['gameRound']
+      this.gameState = this.gameRound.state
+      this.gamePlayer = this.gameInfo['gamePlayer']
+      this.dataList = this.gameRound.dataList
+
+      //this.hg.time = new HdGame.Time(this.gameRound.duration)
+
+      if (this.gamePlayer.token == undefined) {
+        this.ruleBoxCommand = 'hideIcon'
+        this.ui.homeVisible = false
+        this.ui.unstarted = false
+        this.signUpCommand = 'show'
+      } else if (this.gamePlayer.token !== undefined) {
+        this.ruleBoxCommand = 'showIcon'
+        this.ui.homeVisible = true
+      }
+
+      let wxConfig = this.gameInfo['wxConfig']
+      console.log('App wxConfig=======:', wxConfig)
+      if (wxConfig) {
+        HdGame.initWxConfig(wxConfig)
+
+        let wxShareArg = {
+          title: this.gameRound.name,
+          desc: '请点击查看详情...',
+          link: wxConfig.shareUrl,
+          imgUrl: process.env.GAME_HOST + this.skinAssets.shareImgPath
+        }
+        HdGame.setWxShare(wxShareArg)
+      }
+
+      document.title = this.gameRound.name
+    })
 
     console.log("created gameState=", this.gameState, this.hg.grade)
   },
@@ -103,16 +158,38 @@ export default {
         ruleImgVisible: true, // 锦囊按钮
         loadToastVisible: false
       },
+      skinAssets: {
+        logoImgPath: GameRes.skinAssets.logoImgPath,
+        shareImgPath: GameRes.skinAssets.shareImgPath, // weixin share image
+        ruleIconPath: GameRes.skinAssets.ruleIconPath,
+        homeBgImg: GameRes.skinAssets.homeBgPath,
+        titleImg: GameRes.skinAssets.titleImgPath,
+        startBtnImg: GameRes.skinAssets.startImgPath
+      },
       loadToast: {
         isLoading: false,
         text: null
       },
       resultBoxVisible: false, //游戏结果页面
       resultBoxParams: {},
-      resultBoxCommand: null
+      resultBoxCommand: null,
+      signUpCommand: null,
+      ruleBoxCommand:null,
+      gamePlayerRank: [],
+      gamePlayer: {},
+      gameRound: {},
     }
   },
   methods: {
+    signUpOver(res) {
+      console.log('==============signUpOver==============')
+      this.ui.homeVisible = true
+      this.ui.wait = true
+      this.gamePlayer = res
+      let that = this
+      that.ruleBoxCommand = 'showIcon'
+      that.signUpCommand = 'hide'
+    },
     handleStartGame(event) {
       event.preventDefault()
 
@@ -259,6 +336,15 @@ export default {
         //HdGame.logStd("activateSoundErr", e);
       }
     },
+    handleResetCommand() {
+      this.ruleBoxCommand = null
+      this.messageBoxCommand = null
+      this.resultBoxCommand = null
+    },
+    getRank(event) {
+      console.log('App - getRank ')
+      this.ruleBoxCommand = 'showRank'
+    },
     // 游戏结束，设置游戏成绩
     gameOver(_gameScore, callBack, option, showAjaxBar) {
 
@@ -296,21 +382,21 @@ export default {
       //g_config.awardPhone && (info.aphone = g_config.awardPhone);
       //g_config.awardAddress && (info.aadress = g_config.awardAddress);
       //info.ip = '60.20.175.68';
+      const parsed = queryString.parse(location.search)
+
       var params = {
-        gameId: 50,
-        style: 22,
-        achieve: HdGame.encodeBase64('"' + _gameScoreStr + '"') + "0jdk7Deh8T2z5W3k0j44dTZmdTOkZGM",
-        openId: this.game_player.openid,
-        //name: g_config.userName,
-        //city_gps: typeof g_config.ipInfo.city != 'undefined' ? g_config.ipInfo.city : '',
-        //province_gps: typeof g_config.ipInfo.provice != 'undefined' ? g_config.ipInfo.provice : ''
-      };
+        openId: this.gamePlayer.openid,
+        score: _gameScoreStr,
+        parsed: parsed
+      }
 
       params.info = JSON.stringify(info);
 
       Object.assign(params, option);
 
-      setAchievebycode('00965c97fd1cd325c7b608a76708bcf3',params).then(data => {
+      var number = parsed.number
+
+      setAchievebycode(number,params).then(data => {
         this.hideLoadToast();
         HdGame.tlog('gameOver', data);
         var r = data;
@@ -318,29 +404,23 @@ export default {
         if (r.rt == 0) {
           var arg = {
             isSuc: r.isSuc,
-            gameScore: _gameScoreStr,
+            gameScore: r.score,
             minScore: 0, //到多少分可以抽奖
-            bestScore: r.score,
+            bestScore: r.bestScore,
             gameType: gameType,
             rank: r.rank,
             beat: r.beat,
-            //count: drawTimesLimit - count < 0 ? 0 : (drawTimesLimit - count),
-            //isLimitDrawTotal: isLimitDraw,
-            //totalCount: drawTotalLimit - totalCount < 0 ? 0 : (drawTotalLimit - totalCount),
             isEqualDraw: false,
-            //gameCostTime: consumption,
-            bestCostTime: r.bestCostTime
-          };
+            bestCostTime: r.bestCostTime,
+            headImg: this.gamePlayer.avatar
+          }
+          console.log('arg=========:',arg);
 
-          g_config.playerId = r.playerId;
-
-          //callBack && (isShowPoup = callBack(callBackArg, r));
-          //$('#timeUpImg,.timeUpImg').removeClass('tada');
+          g_config.playerId = r.playerId
           this.resultBoxParams = arg
-          this.resultBoxCommand = "showResult"
-          this.resultBoxVisible = true //显示游戏结果
-          //PlayInfo.addPlayTimes(1);
-          g_config.achieveToken = r.achieveToken;
+          this.resultBoxCommand = 'showResult'
+          this.resultBoxVisible = true
+          g_config.achieveToken = r.achieveToken
         } else if (r.rt == 11) {
           alert("已被检测到有作弊行为，再次被检测将永久禁止参与本游戏！");
         } else if (r.rt == 12) {

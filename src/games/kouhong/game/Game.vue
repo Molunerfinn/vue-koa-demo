@@ -6,7 +6,7 @@
 
     <div id="gameTopBar" class="gameTopBar" style="color:;background-color:">
       <div class="userInfoBox">
-        <div class="userImgBox" style="border-color:"><img :src="game_player.avatar" class="userImg" /></div>
+        <div class="userImgBox" style="border-color:"><img :src="gamePlayer.avatar" class="userImg" /></div>
 
         <div id="grade" class="grade">0</div>
 
@@ -64,6 +64,10 @@ export default {
     command: {
       type: [String, Number],
       default: 0
+    },
+    gamePlayer:{
+      type: Object,
+      default: { avatar: '/static/shared/image/avatar.jpg' }
     }
   },
   data () {
@@ -72,7 +76,6 @@ export default {
       clubImg: null,
       imgData: null,
       sugarYsize: 0,
-      game_player:{},
       ui:{
         gameBoxVisible: false
       },
