@@ -6,7 +6,7 @@ import Control from './Control.vue'
 // import 'element-ui/lib/theme-default/index.css'
 // import VueRouter from 'vue-router'
 import 'bootstrap/dist/css/bootstrap.css'
-import '@/assets/common/css/control-base.css'
+import '@/assets/common/css/control_base.css'
 import '@/assets/dpgame/yiy/css/control.css'
 
 
