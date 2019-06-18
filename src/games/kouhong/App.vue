@@ -39,7 +39,7 @@
            :params="resultBoxParams"
            :command="ruleBoxCommand"
            @commandDone="handleResetCommand"> </RuleBox>
-  <SignUp :game-player="gamePlayer" :gameRound="gameRound":command="signUpCommand" @signUpOver="signUpOver"> </SignUp>
+  <SignUp :game-player="gamePlayer" :gameRound="gameRound" :command="signUpCommand" @signUpOver="signUpOver"> </SignUp>
 </div>
 </template>
 

@@ -1,6 +1,6 @@
 import { gameSkinName } from '@/config/env'
-const imageBase = '/static/dpgame/yiy/image'
-const skinResRoot = '/static/dpgame/yiy/skin_'+ gameSkinName + '/image'
+const imageBase = '/static/dpgame/pintu/image'
+const skinResRoot = '/static/dpgame/pintu/skin_'+ gameSkinName + '/image'
 
 const GameRes = {
   "loadingStyle": 1,
