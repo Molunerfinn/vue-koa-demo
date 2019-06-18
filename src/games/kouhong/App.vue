@@ -5,6 +5,9 @@
       <img id="homeBg" :src="skinAssets.homeBgImg" />
     </div>
     <div class="gameInfoBox">
+      <div id="logoImgBox" class="logoImgBox imgContainer absCenter hide" style="">
+        <img id="logoImg" class="slaveImg abs" :src="skinAssets.logoImgPath" style="width:2rem;height:2rem;top:3.5rem;left:0.75rem;" />
+      </div>
       <div class="titleImg imgContainer absCenter">
         <img id="titleImg" class="slaveImg abs" :src="skinAssets.titleImg" style="width:15.232rem;height:5.778666666666667rem;top:2.524rem;left:0.384rem;" />
       </div>

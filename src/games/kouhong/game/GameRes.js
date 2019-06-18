@@ -74,6 +74,7 @@ const GameRes = {
     homeBgPath: skinResRoot + "/wx/homebg.jpg",
     titleImgPath: skinResRoot + "/wx/titleimg.png",
     tishiImgPath: skinResRoot + "/wx/tishi.png",
+    qrImgPath: sharedBase + '/image/caewm.jpg'
   },
   "openAccessKey": false
 }

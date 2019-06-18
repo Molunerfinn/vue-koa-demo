@@ -14,7 +14,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <!-- apple devices fullscreen -->
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <title>{{ game_round.name}}</title>
+  <title>爱就行动</title>
 
   <meta id="_TOKEN" value="cffd9fe83efe7382ef9190959aa23a06" type="hidden" />
   <style type="text/css">
@@ -61,24 +61,7 @@
    #explainBox * { color: #fff; }
    #explainBox .mainTitle { color: #000; }
   </style>
-  <script type='text/javascript'>
-  DGAME={
-    //game_round_base_url: "{{ game_round_base_url }}",
-    //game_round_id: {{ game_round.id}},
-    //game_player_id: {{ game_player.id }},
-    //game_player_openid: "{{ game_player.openid}}",
-    //game_player: {{{toJSON game_player}}},
-    //game_round: {{{toJSON game_round}}},
-    //wx_config: {{{toJSON wx_config}}},
-    //wx_share: {{{toJSON wx_share}}},
-    routes: {}
-  };
-  DGAME.routes.setAchieveUrl=DGAME.game_round_base_url+'/hdgame_h.jsp?cmd=setAchieve'
-  DGAME.routes.rankUrl = DGAME.game_round_base_url+'/hdgame_h.jsp?cmd=getRankList&aid=10168245&gameId=50&style=22&openId='+DGAME.game_player_openid;
-  DGAME.routes.awardUrl= DGAME.game_round_base_url+'/hdgame_h.jsp?cmd=getGiftList&aid=10168245&style=22';
-  DGAME.routes.getRegAwardUrl = DGAME.game_round_base_url+'/hdgame_h.jsp?cmd=getRegAwardList&aid=10168245&gameId=50&style=22&openId='+DGAME.game_player_openid;
-  DGAME.routes.logAjaxErrUrl = DGAME.game_round_base_url+'/logAjaxErr_h.jsp?cmd=hdajaxErr'
-  </script>
+
 
   <script type='text/javascript'>
     var fromCanal = '-1';
@@ -796,11 +779,6 @@
     </div>
   </div>
 
-  <div id="logoImgBox" class="logoImgBox imgContainer absCenter hide" style="">
-    <img id="logoImg" class="slaveImg abs" src="/game-kouhong-assets/lib/image/logo.jpg" style="width:2rem;height:2rem;top:3.5rem;left:0.75rem;" />
-  </div>
-
-
   <div class="slogan editTarget-slogan hide pointer-events layer">软山互动-营销推广必备神器</div>
 
   <div id="lots-wait-Box" style="display:none">
@@ -853,7 +831,7 @@
   </div>
 
   <div id="skillSupMask" class="homePoupMask">
-    <img src="/game-kouhong-assets/lib/image/hdQRcode/20170821/caewmB_1.png?v=201711211453" style="position:absolute;top:2rem;z-index:10;margin:auto;left:0;right:0;width:11.65rem" />
+    <img src="/static/shared/image/caewm.png" style="position:absolute;top:2rem;z-index:10;margin:auto;left:0;right:0;width:11.65rem" />
   </div>
 
   </div>
