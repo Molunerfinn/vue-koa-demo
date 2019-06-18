@@ -2,11 +2,11 @@
 <div id="app">
   <div class="home" v-show="ui.homeVisible">
     <div id="homeBgBox">
-      <img id="homeBg" :src="homeBgImg" />
+      <img id="homeBg" :src="skinAssets.homeBgImg" />
     </div>
     <div class="gameInfoBox">
       <div class="titleImg imgContainer absCenter">
-        <img id="titleImg" class="slaveImg abs" :src="titleImg" style="width:15.232rem;height:5.778666666666667rem;top:2.524rem;left:0.384rem;" />
+        <img id="titleImg" class="slaveImg abs" :src="skinAssets.titleImg" style="width:15.232rem;height:5.778666666666667rem;top:2.524rem;left:0.384rem;" />
       </div>
     </div>
     <div id="playInfo" class="abs editTarget-playInfo hide" style="width:9rem;text-align:center;">
@@ -15,7 +15,7 @@
       <div class="dayPlayHint4Total">今天有 <span class="count specil todayPlayCount"></span> 次</div>
     </div>
     <div id="startBtn" class="startBtn imgContainer absCenter" style="top:0rem;">
-      <img @touchend="handleStartGame" id="startBtnImg" class="slaveImg abs" :src="startBtnImg" style="width: 6.66rem; height: 2.449333333333334rem;    top: 19.706666666666667rem;  left: 4.67rem;" />
+      <img @touchend="handleStartGame" id="startBtnImg" class="slaveImg abs" :src="skinAssets.startBtnImg" style="width: 6.66rem; height: 2.449333333333334rem;    top: 19.706666666666667rem;  left: 4.67rem;" />
     </div>
 
   </div>
@@ -149,9 +149,6 @@ export default {
         showGameBox: true
       },
       gameState: 'initial', // start, restart, over
-      homeBgImg: require('@/assets/kouhong/image/skin1/wx/ACgIABACGAAg5_-r4AUojOO-xgcwgAU4wAw.jpg'),
-      titleImg: require('@/assets/kouhong/image/skin1/wx/ACgIABAEGAAg_e-r4AUoi5fylAQwugQ4tAE.png'),
-      startBtnImg: require('@/assets/kouhong/image/skin1/wx/ACgIABAEGAAgjPDr4AUo8MCYpgMw9AM4yAE.png'),
       ui: {
         homeVisible: true, // 初始页面是否可见，游戏时需要隐藏
         gameBoxVisible: false, // 游戏页面

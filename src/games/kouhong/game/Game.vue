@@ -1,7 +1,7 @@
 <template>
   <div class="gameBox gameBgBox" >
     <div id="gameBgBox">
-      <img id="gameBg" :src="gameBg" style="width:100%;height:auto;" />
+      <img id="gameBg" :src="skinAssets.gameBgImg" style="width:100%;height:auto;" />
     </div>
 
     <div id="gameTopBar" class="gameTopBar" style="color:;background-color:">
@@ -38,10 +38,10 @@ import LTweenLite from '@/lib/lufylegend/transitions/LTweenLite'
 import {setGameTopBar, showTopBar } from '@/lib/simplify'
 
 var _gameOver = false;
-const _resRoot = '/static/kouhong'
 
 import HdGame from '@/lib/hdgame'
 import { GameArg } from './GameArg'
+import GameRes from './GameRes'
 import Lolly from './Lolly'
 import SugarY from './SugarY'
 
@@ -72,12 +72,16 @@ export default {
   },
   data () {
     return {
-      gameBg: require('@/assets/kouhong/image/skin1/wx/ACgIABACGAAg3fDr4AUojqC25gYwgAU4wAw.jpg'),
       clubImg: null,
       imgData: null,
       sugarYsize: 0,
       ui:{
         gameBoxVisible: false
+      },
+      skinAssets: {
+        shareImgPath: GameRes.skinAssets.shareImgPath, // weixin share image
+        gameBgImg: GameRes.skinAssets.gameBgPath,
+        tishiImgPath: GameRes.skinAssets.tishiImgPath
       },
       rem: 20
     }
@@ -281,7 +285,7 @@ export default {
     },
     // 显示游戏开始前提示动画
     showTishi() {
-      let tishiImg = this.hg.assets[_resRoot+"/image/bbtzw/tishi.png"]
+      let tishiImg = this.hg.assets[this.skinAssets.tishiImgPath]
       let jtBitmap = new LBitmap(new LBitmapData(tishiImg, 20, 12, 90, 300), 6.875 * this.rem, LGlobal.height - 7.5 * this.rem, 2.25 * this.rem, 7.5 * this.rem)
       let handBitmap = new LBitmap(new LBitmapData(tishiImg, 220, 30, 84, 95), 7.7 * this.rem, LGlobal.height, 2.1 * this.rem, 2.375 * this.rem)
       GameArg.mask = new LSprite(true);
@@ -378,9 +382,6 @@ export default {
     GetRandom(a, b) {
       return a + Math.random() * (b - a);
     },
-
-
-
 
   },
   watch: {
