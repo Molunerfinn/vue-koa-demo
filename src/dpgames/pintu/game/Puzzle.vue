@@ -33,7 +33,7 @@ export default {
     },
     y: {
       type: Number,  // 猜图纵向
-      default: 4
+      default: 3
     },
     width: {
       type: Number,  // 猜图总宽度
@@ -174,7 +174,7 @@ console.log( "getPieceStyle", "piece=", piece, "xy=",originPosition)
       this.touchendFn();
     },
     handleTouchCancel(event){
-    
+
       let target = event.target
       if (_gameOver || this.currentTarget !== target) {
         return;
