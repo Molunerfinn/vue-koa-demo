@@ -101,12 +101,17 @@
         <button class="start btn btn-danger btn-lg" @click="resetGameHandler">重置游戏</button>
       </div>
       <div class="debug"  v-show="debug" > {{computedGameState}}</div>
-
     </div>
 
     <div class="loader"  v-show="loading">
       <div class="icon"></div>
     </div>
+
+    <div id="show_hide_nav">
+      <img src="~@/assets/common/image/wall/opened.png" class="opened_image">
+      <img src="~@/assets/common/image/wall/closed.png" class="closed_image hide">
+    </div>
+
   </div>
 </template>
 
@@ -116,7 +121,7 @@
 // 准备开始-> 玩家签到 -> 点击开始游戏 ->(开始前倒计时)->游戏进行中-> 游戏结束 ->显示排名
 import io from 'socket.io-client'
 import queryString from 'query-string'
-import { getGameInfoForDp } from '@/api/dpgame/yiy'
+import { getGameInfoForDp } from '@/api/dpgame/qiandao'
 import GameState from '@/lib/GameState'
 import QRCode from 'qrcode'
 import $ from 'jquery'
