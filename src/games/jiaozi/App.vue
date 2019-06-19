@@ -90,7 +90,7 @@
   //关于玩家的配置信息
   const g_config = {
     scoreType: false,
-    initTime: 10,
+    initTime: 30,
     ipInfo: {
       provice: null,
       city: null
