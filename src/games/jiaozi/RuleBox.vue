@@ -180,7 +180,7 @@
 import $ from "jquery"
 import {
   getRanking
-} from '@/api/games/zhaobaba'
+} from '@/api/games/jiaozi'
 import moment from 'moment';
 
 import HdGame from '@/lib/hdgame'
