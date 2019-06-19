@@ -1,9 +1,9 @@
 <template>
   <!-- 锦囊 -->
  <div class="ruleBox" >
-   <a  href="javascript:void(0)" @touchstart="handleShowPopup" v-show="ui.iconVisible">
+   <a  href="javascript:void(0)"  v-show="ui.iconVisible">
    <div class="ruleImg imgContainer absCenter" _mouseIn="0" >
-     <div id="ruleImg" class="slaveImg abs notNeedFatherChage outSpecialDivAutoFit hd-img-fillDiv ruleImgAnimate" style='width: 3.5rem; height: 3.5rem; top: 0.35rem; left: 75vw;'></div>
+     <div id="ruleImg"  @touchend="handleShowPopup" class="slaveImg abs notNeedFatherChage outSpecialDivAutoFit hd-img-fillDiv ruleImgAnimate" style='width: 3.5rem; height: 3.5rem; top: 0.35rem; left: 75vw;'></div>
    </div>
     </a>
 
@@ -250,7 +250,8 @@ export default {
   methods: {
 
     //
-    handleShowPopup( flag ){
+    async handleShowPopup( event ){
+      event.preventDefault()
       var silkBag = $("#ruleImg");
       var popupX = silkBag.offset().left + silkBag.width() / 2 + "px ";
       var popupY = silkBag.offset().top + silkBag.height() / 2 + "px";
@@ -260,7 +261,7 @@ export default {
       });
 
       this.setSlideBar(true)
-      this.showTab( flag  )
+      this.showTab( event  )
     },
     handleHidePopup(){
       var poupInfoBox = $("#poupInfoBox");
