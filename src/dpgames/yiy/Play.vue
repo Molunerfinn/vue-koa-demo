@@ -411,9 +411,9 @@
   					this.status.z = t.z;
   					var o = Math.abs(this.status.x + this.status.y + this.status.z - this.status.lastX - this.status.lastY - this.status.lastZ) / i * 1e4;
             //this.o_list.push(o)
-            this.$refs['logger'].log( o )
             //o > this.status.SHAKE_THRESHOLD && (this.status.count++, this.status.canShake && (this.status.canShake = !1, this.handleShaking())),
   					if( o > this.status.SHAKE_THRESHOLD ){
+              this.$refs['logger'].log( o )
               this.score++;
               if( this.status.canShake){
                 this.status.canShake = false, this.handleShaking();

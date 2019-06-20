@@ -1,8 +1,8 @@
 <template>
-  <div id="loggerContainer" class="">
+  <div id="loggerContainer" class="loggerContainer">
     <button @click="openLogger"> open </button>
     <button @click="closeLogger"> close </button>
-    <div class="messages" v-show="isOpen">
+    <div class="messagesWrap" v-show="isOpen">
       <ul>
         <li v-for="o in messages">{{o}}</li>
       </ul>
@@ -41,14 +41,15 @@ export default {
 
 <style lang="css" scoped>
 .loggerContainer{
-  background-color: gray;
-  color: black;
+
   position: fixed;
   top: 10px;
   bottom: 10px;
   width: 90%;
+  overflow: auto;
 }
 .messagesWrap{
-  overflow: auto;
+  background-color: gray;
+  color: white;
 }
 </style>
