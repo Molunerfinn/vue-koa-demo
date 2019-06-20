@@ -222,12 +222,19 @@ class QiandaoRunner {
    * @param {position} 玩家签到的顺序，也是数据库的自然顺序
    */
   async getPlayer( position) {
+    console.log( "getPlayer", position)
+    let attributes= ['id',"openid","game_round_id","nickname","score","max_score","avatar"]
     let player = await DpQiandaoGamePlayer.findOne({
+      attributes,
       offset: position,
-      include:[{assocation: 'GameRound', where: {
+      include:[{
+        attributes: ['number','state'],
+        association: 'GameRound',
+        where: {
           number: this.number
         }}]
     })
+    return player
   }
 }
 

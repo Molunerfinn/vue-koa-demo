@@ -46,10 +46,10 @@
       </div>
 
       <ul id="b_players" class="canyu">
-        <li :id="'dh'+index+1" class="" v-for="(player,index) in gamePlayers">
+        <li :id="'dh'+index" class="" v-for="(player,index) in gamePlayers">
           <img class="qiaodaotx" v-bind:src="player.avatar">
           <p class="qiaodaoxm">{{player.nickname}}</p>
-          <p class="qiaodaopm">{{index}}</p>
+          <p class="qiaodaopm">{{index+1}}</p>
         </li>
       </ul>
       <div class="actions">
@@ -398,20 +398,18 @@ export default {
       let qiandaoInterval = setInterval(function () {
 
         if ( n< playerCount ) {
-          // run each 0.5s
-          $("#dh" + (n+1)).addClass('qiaodaosf');
-
-          var div = document.getElementById('b_players');
-
-          document.getElementById('b_players_container').scrollTop = div.scrollHeight;
+          that.showPlayer( n )
         }else {
           if( that.computedGameState == 'open')
           {
             console.log( "showSignedPlayers", n)
             if (n%3==0)// run each 1.5s
             {
-              that.socket.emit('GetNextPlayerEvent', {position: this.computedPlayerCount}, function (data) {
+              that.socket.emit('GetNextPlayerEvent', {position: that.computedPlayerCount}, function (data) {
                 console.log('GetNextPlayerEvent', data)
+                if( data.player){
+                  that.addNewPlayer( data.player)
+                }
               });
             }
           }else {
@@ -422,24 +420,27 @@ export default {
 
       }, 500);
     },
+    //把签到的第N个玩家在列表中显示出来, i start from 0
+    showPlayer( i ){
+      // run each 0.5s
+      $("#dh" + i).addClass('qiaodaosf');
+      var div = document.getElementById('b_players');
+      document.getElementById('b_players_container').scrollTop = div.scrollHeight;
+    },
     // 显示新签到的人员
-    addNewPlayer( game_player ){
-      var user = game_player;
-      if ( user ) {
-
-        //let i = this.computedPlayerCount + 1;
-
-        $("#qdtx").attr("src", user.avatar);
-        $("#qdname").html(user.nickname);
+    addNewPlayer( player ){
+      let that = this
+      if ( player ) {
+        that.newPlayer = player
         $(".tuchu").addClass('view');
-
         setTimeout(function() {
-          this.gamePlayers.push( game_player )
-          var div = document.getElementById('b_players');
-          document.getElementById('b_players_container').scrollTop = div.scrollHeight;
+          that.gamePlayers.push( player )
+          that.$nextTick(() => {
+            that.showPlayer( that.computedPlayerCount - 1)
+            $(".tuchu").removeClass('view');
+          })
         },
         5000);
-
       }
     }
 
