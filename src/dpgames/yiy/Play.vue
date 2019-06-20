@@ -36,10 +36,12 @@
   			<div class="timeContainer">
   				<img src="~@/assets/dpgame/yiy/images/shakeMP_timeIcon.png" class="time-icon">
   				00:<span v-text="formatTime"></span>
+          <span class="pull-left">当前得分</span>
+  				<span class="pull-right" v-text="score"></span>
+          <li v-for="o in o_list">{{o}}</li>
   			</div>
   			<div class="countsContainer" style="display:none;">
-  				<span class="pull-left">当前得分</span>
-  				<span class="pull-right" v-text="score"></span>
+
   			</div>
       </div>
       <div class="indexb-bottom">
@@ -121,6 +123,7 @@
     },
     data() {
       return{
+        o_list:[],
         signUpCommand: null,
         hg: {
           showGameBox: true
@@ -405,7 +408,8 @@
   					this.status.y = t.y,
   					this.status.z = t.z;
   					var o = Math.abs(this.status.x + this.status.y + this.status.z - this.status.lastX - this.status.lastY - this.status.lastZ) / i * 1e4;
-  					//o > this.status.SHAKE_THRESHOLD && (this.status.count++, this.status.canShake && (this.status.canShake = !1, this.handleShaking())),
+            this.o_list.push(o)
+            //o > this.status.SHAKE_THRESHOLD && (this.status.count++, this.status.canShake && (this.status.canShake = !1, this.handleShaking())),
   					if( o > this.status.SHAKE_THRESHOLD ){
               this.score++;
               if( this.status.canShake){
