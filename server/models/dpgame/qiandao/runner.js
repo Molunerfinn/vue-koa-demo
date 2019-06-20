@@ -216,6 +216,19 @@ class QiandaoRunner {
       }
     })
   }
+
+  /**
+   * 取得签到的玩家
+   * @param {position} 玩家签到的顺序，也是数据库的自然顺序
+   */
+  async getPlayer( position) {
+    let player = await DpQiandaoGamePlayer.findOne({
+      offset: position,
+      include:[{assocation: 'GameRound', where: {
+          number: this.number
+        }}]
+    })
+  }
 }
 
 export default QiandaoRunner

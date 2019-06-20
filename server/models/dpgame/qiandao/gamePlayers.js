@@ -4,7 +4,7 @@ const crypto = require('crypto'); //加载crypto库
 module.exports = (sequelize, DataTypes) => {
   const Op = sequelize.Op
 
-  const Model = sequelize.define('DpQiandaoPlayer', {
+  const Model = sequelize.define('DpQiandaoGamePlayer', {
     openid: {
       type: DataTypes.STRING,
       allowNull: false,

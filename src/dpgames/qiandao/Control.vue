@@ -1,118 +1,140 @@
 <template>
-  <div id="app" :class="skin">
-    <div class="Panel">
-      <div  >
-        <div class="bg-nei-top">
-          <div class="bg-nei-top-erwei">
-                <img src="" id="share-qrcode-img" >
-              </div>
-                <img src="~@/assets/dpgame/yiy/images/skin1/tu_03.png" class="bg-nei-top-erwei" style="display:none;">
-                <div class="bg-nei-top-right"><span></span><img src="~@/assets/dpgame/yiy/images/skin1/tu_05.png"></div>
-                <div class="bg-nei-top-zhong" ><img src="~@/assets/dpgame/yiy/images/skin1/bgtop.gif"  v-show="computedGameState=='open'||computedGameState=='started'">
-                  <p  v-show="computedGameState=='started'"><span>游戏倒计时</span><strong>|</strong><span>剩余<b>{{timeToEnd}}</b>秒</span></p>
-                </div>
-        </div>
+<div id="app" :class="skin">
+  <transition name="top">
+    <div class="Panel Top" v-show="ui.nav">
+      <div class="top_menu">
+          <div class="bg-nei-top-erwei" style="display:none;">
+            <img src="" id="share-qrcode-img">
+          </div>
+          <img class="activity_logo" src="~@/assets/dpgame/qiandao/image/logo.png">
+          <img src="~@/assets/dpgame/qiandao/image/qrcode.png" class="mp_account_codeimage">
+          <div class="bg-nei-top-zhong">
+            <p v-show="computedGameState=='started'"><span>游戏倒计时</span><strong>|</strong><span>剩余<b>{{timeToEnd}}</b>秒</span></p>
+          </div>
+      </div>
+    </div>
+  </transition>
+
+  <div class="Panel checkin" style="display: block; opacity: 1;">
+    <div class="bg-nei-bottom1" v-show="computedGameState=='open'||computedGameState=='started'">
+    </div>
+    <div class="fullfill  game-state state-created" v-show="computedGameState=='created'">
+      <div class="box-title"> <img src="~@/assets/dpgame/yiy/images/skin1/bgtop.gif"> </div>
+      <div class="box-body">
+        <div> <img src="~@/assets/dpgame/yiy/images/skin1/yao_02.png"> </div>
+        <button class="start btn yao-btn" @click="openGameHandler">准备开始</button>
       </div>
     </div>
 
-    <div class="Panel checkin" style="display: block; opacity: 1; top: 0; padding-top: 185px;bottom:30px">
-      <div class="bg-nei-bottom1" v-show="computedGameState=='open'||computedGameState=='started'">
+    <div v-show="computedGameState=='ready'">
+      <div id="mask">
+        <div id="mask_bg"> </div>
+        <p id="time_count"> </p>
       </div>
-      <div class="fullfill  game-state state-created" v-show="computedGameState=='created'">
-        <div class="box-title">  <img src="~@/assets/dpgame/yiy/images/skin1/bgtop.gif"> </div>
-        <div class="box-body">
-          <div>    <img src="~@/assets/dpgame/yiy/images/skin1/yao_02.png">      </div>
-          <button class="start btn yao-btn" @click="openGameHandler" >准备开始</button>
+    </div>
+    <div id="b_players_container" class="fullfill state-open qiandao" v-show="computedGameState=='open'">
+
+      <div class="tuchu ">
+        <div class="tuchug">
+          <img src="~@/assets/common/image/wall/bbb.png"></div>
+        <div class="tuchuk">
+          <img class="tx" id="qdtx" :src="newPlayer.avatar">
+          <p class="pm">第<span class="red" id="qdnums">0</span>位签到</p>
+          <p class="xm" id="qdname">官方签到女神</p>
         </div>
+
       </div>
 
-      <div v-show="computedGameState=='ready'">
-        <div id="mask">
-          <div id="mask_bg"> </div>
-          <p id="time_count"> </p>
-        </div>
+      <ul id="b_players" class="canyu">
+        <li :id="'dh'+index+1" class="" v-for="(player,index) in gamePlayers">
+          <img class="qiaodaotx" v-bind:src="player.avatar">
+          <p class="qiaodaoxm">{{player.nickname}}</p>
+          <p class="qiaodaopm">{{index}}</p>
+        </li>
+      </ul>
+      <div class="actions">
+        <button class="btn yao-btn" @click="startGameHandler">开始摇一摇</button>
       </div>
-      <div class="fullfill state-open qiandao" v-show="computedGameState=='open'">
-
-          <div class="bg-zhunbei">已有<b>{{gamePlayers.length}}</b>人准备<span>请耐心等待游戏开始</span></div>
-          <ul class="canyu">
-            <li class="qiaodaosf" v-for="player in gamePlayers">
-              <img class="qiaodaotx" v-bind:src="player.avatar">
-              <p class="qiaodaoxm">{{player.nickname}}</p>
-            </li>
-          </ul>
-          <div class="actions">
-            <button  class="btn yao-btn" @click="startGameHandler">开始摇一摇</button>
-          </div>
-       </div>
-      <div class="fullfill  game-state  state-starting " v-show="computedGameState=='starting'">
-        <div class="box-title">  <img src="~@/assets/dpgame/yiy/images/skin1/bgtop.gif" class="logo"> </div>
-        <div class="box-body">
-          <p class="szbg">{{timeToStart}}</p>
-        </div>
+    </div>
+    <div class="fullfill  game-state  state-starting " v-show="computedGameState=='starting'">
+      <div class="box-title"> <img src="~@/assets/dpgame/yiy/images/skin1/bgtop.gif" class="logo"> </div>
+      <div class="box-body">
+        <p class="szbg">{{timeToStart}}</p>
       </div>
+    </div>
 
-      <div class="fullfill game-state state-started" v-show="computedGameState=='started'">
-           <ul class="players">
-            <li v-for="(player,i ) in computedTop12Players">
-              <span class="bg-nei-yd"><img class="avatar" v-bind:src="player.avatar"></span>
-              <div class="progress-wrap clear-fix">
-                <div class="progress">
-                <div class="progress-bar progress-bar-warning progress-bar-striped active" v-bind:style="{width: player.percent+'%'}">
-                  <div v-bind:class="['progress-value','car'+i]" >{{player.score}}</div>
-                </div>
-                </div>
+    <div class="fullfill game-state state-started" v-show="computedGameState=='started'">
+      <ul class="players">
+        <li v-for="(player,i ) in computedTop12Players">
+          <span class="bg-nei-yd"><img class="avatar" v-bind:src="player.avatar"></span>
+          <div class="progress-wrap clear-fix">
+            <div class="progress">
+              <div class="progress-bar progress-bar-warning progress-bar-striped active" v-bind:style="{width: player.percent+'%'}">
+                <div v-bind:class="['progress-value','car'+i]">{{player.score}}</div>
               </div>
-            <span class="mingzi">{{player.nickname}}</span>
-            </li>
-          </ul>
+            </div>
+          </div>
+          <span class="mingzi">{{player.nickname}}</span>
+        </li>
+      </ul>
 
-      </div>
+    </div>
 
-      <div class="fullfill game-state  state-completed" v-show="computedGameState=='completed'">
-        <div class="box-title">  <img src="~@/assets/dpgame/yiy/images/skin1/pm_03.png" class="logo"> </div>
-        <div class="player-rank clearfix">
-          <div class="pm-top5">
+    <div class="fullfill game-state  state-completed" v-show="computedGameState=='completed'">
+      <div class="box-title"> <img src="~@/assets/dpgame/yiy/images/skin1/pm_03.png" class="logo"> </div>
+      <div class="player-rank clearfix">
+        <div class="pm-top5">
           <table class="rank  ">
-            <tr> <th class="paiming"> 排名</th><th class="xingming">姓名</th><th class="chengji">当前成绩</th></tr>
-            <tr  v-for="(player, i) in computedTop5Players"><td class="paiming"><span v-bind:class="'pm'+i"> {{i+1}}</span></td>
-              <td class="xingming"><img v-bind:src="player.avatar"><span  >{{player.nickname}}</span></td>
+            <tr>
+              <th class="paiming"> 排名</th>
+              <th class="xingming">姓名</th>
+              <th class="chengji">当前成绩</th>
+            </tr>
+            <tr v-for="(player, i) in computedTop5Players">
+              <td class="paiming"><span v-bind:class="'pm'+i"> {{i+1}}</span></td>
+              <td class="xingming"><img v-bind:src="player.avatar"><span>{{player.nickname}}</span></td>
               <td class="chengji"> {{player.score}}</td>
             </tr>
           </table>
-          </div>
-          <div class="pm-top10">
-            <table class="rank  ">
-              <tr> <th class="paiming"> 排名</th><th class="xingming">姓名</th><th class="chengji">当前成绩</th></tr>
-              <tr  v-for="(player, i) in computedTop10Players"><td class="paiming"><span v-bind:class="'pm'+i"> {{i+6}}</span></td>
-                <td class="xingming"><img v-bind:src="player.avatar"><span  >{{player.nickname}}</span></td>
-                <td class="chengji"> {{player.score}}</td>
-              </tr>
-            </table>
-          </div>
-
         </div>
+        <div class="pm-top10">
+          <table class="rank  ">
+            <tr>
+              <th class="paiming"> 排名</th>
+              <th class="xingming">姓名</th>
+              <th class="chengji">当前成绩</th>
+            </tr>
+            <tr v-for="(player, i) in computedTop10Players">
+              <td class="paiming"><span v-bind:class="'pm'+i"> {{i+6}}</span></td>
+              <td class="xingming"><img v-bind:src="player.avatar"><span>{{player.nickname}}</span></td>
+              <td class="chengji"> {{player.score}}</td>
+            </tr>
+          </table>
+        </div>
+
       </div>
-
-    </div>
-
-    <div class="Panel Bottom" >
-      <div class="actions">
-        <button class="start btn btn-danger btn-lg" @click="resetGameHandler">重置游戏</button>
-      </div>
-      <div class="debug"  v-show="debug" > {{computedGameState}}</div>
-    </div>
-
-    <div class="loader"  v-show="loading">
-      <div class="icon"></div>
-    </div>
-
-    <div id="show_hide_nav">
-      <img src="~@/assets/common/image/wall/opened.png" class="opened_image">
-      <img src="~@/assets/common/image/wall/closed.png" class="closed_image hide">
     </div>
 
   </div>
+
+  <transition name="bottom">
+    <div class="Panel Bottom" v-show="ui.nav">
+      <div class="actions">
+        <button class="start btn btn-danger btn-lg" @click="resetGameHandler">重置游戏</button>
+      </div>
+      <div class="debug" v-show="debug"> {{computedGameState}}</div>
+    </div>
+  </transition>
+  <div class="loader" v-show="loading">
+    <div class="icon"></div>
+  </div>
+
+  <div id="show_hide_nav">
+    <img src="~@/assets/common/image/wall/opened.png" class="opened_image" v-show="ui.nav" @click="handleToggleNav">
+    <img src="~@/assets/common/image/wall/closed.png" class="closed_image" v-show="!ui.nav" @click="handleToggleNav">
+  </div>
+
+</div>
 </template>
 
 <script>
@@ -121,7 +143,9 @@
 // 准备开始-> 玩家签到 -> 点击开始游戏 ->(开始前倒计时)->游戏进行中-> 游戏结束 ->显示排名
 import io from 'socket.io-client'
 import queryString from 'query-string'
-import { getGameInfoForDp } from '@/api/dpgame/qiandao'
+import {
+  getGameInfoForDp
+} from '@/api/dpgame/qiandao'
 import GameState from '@/lib/GameState'
 import QRCode from 'qrcode'
 import $ from 'jquery'
@@ -129,7 +153,7 @@ import $ from 'jquery'
 // import $ from 'jquery'
 // import constant from '@/game_constant.js'
 
-import '@/assets/dpgame/pintu/css/skin_control.css'
+//import '@/assets/dpgame/pintu/css/skin_control.css'
 
 const skin = 'default'
 
@@ -142,8 +166,11 @@ const skin = 'default'
 export default {
   name: 'control',
   data() {
-    return{
-      shareUrl:'',
+    return {
+      ui: {
+        nav: true // 底部导航是否显示
+      },
+      shareUrl: '',
       skin: ['base', skin],
       debug: true,
       loading: true,
@@ -157,188 +184,270 @@ export default {
       countBg: ['#e81320', '#e813b8', '#8613e8', '#1395e8'],
       socket: null,
       playerCheckTimerId: null,
-      gamePlayers:[],
-      gamePlayerScores:[] // {id, score} top 20
+      gamePlayers: [],
+      newPlayer: {}, //新签到的player
+      gamePlayerScores: [] // {id, score} top 20
     }
-	},
-	created(){
+  },
+  created() {
     var that = this
     const parsed = queryString.parse(location.search);
-    if( parsed.number != null ){
-      getGameInfoForDp( parsed.number ).then((res)=>{
-        console.log('res=====:',res);
+    if (parsed.number != null) {
+      getGameInfoForDp(parsed.number).then((res) => {
+        console.log('res=====:', res);
         let socketPath = process.env.SOCKETIO_PATH
         that.gameRoundId = res['round'].id
-        that.socketNameSpace = "/channel-dpqiandao-"+ res['round'].number
+        that.socketNameSpace = "/channel-dpqiandao-" + res['round'].number
         that.gameRoundState = res['round'].state
         that.shareUrl = res['shareUrl']
-        that.socket = io( that.socketNameSpace , { transports: [ 'websocket' ], path: socketPath })
+        that.gamePlayers = res['players']
+        that.socket = io(that.socketNameSpace, {
+          transports: ['websocket'],
+          path: socketPath
+        })
         that.socket.on('connect', () => {
           that.loading = false;
           that.bindSocketEvents()
         });
         // 游戏已经结束，获取游戏排名
-        if( that.gameRoundState == GameState.completed){
+        if (that.gameRoundState == GameState.completed) {
           that.getFinalScores();
         }
         this.loading = false
         this.creatQRCodeImg()
       })
-    }else{
+    } else {
       this.loading = false
       this.error = true
       this.errorMsg = "游戏不存在！"
     }
-	},
-	computed: {
-		leftFormatTime: function(){
-			return this.timeToEnd < 10 ? '0' + this.timeToEnd : this.timeToEnd;
-		},
-		computedGameState(){
-      console.log('this.gameRoundState==:',this.gameRoundState);
-			switch (this.gameRoundState) {
-				case 'created': return 'created';
-				case 'open': return 'open';
-				case 'ready': return 'ready';
-				case 'starting': return 'starting';
-				case 'started': return 'started';
-				case 'completed': return 'completed';
-				case 'disabled': return 'disabled';
-				default: return 'unkonwn'
-			}
-		},
-		computedTop5Players(){
-			return this.gamePlayerScores.slice(0,5)
-		},
-		computedTop10Players(){
-			return this.gamePlayerScores.slice(5,10)
-		},
-		computedTop12Players(){
-			return this.gamePlayerScores.slice(0,10)
-		},
-	},
-	methods: {
-    creatQRCodeImg: function() { //生成二维码
-      console.log('this.shareUrl===:',this.shareUrl);
-      QRCode.toDataURL(this.shareUrl,{type:'image/png'}, function(error, gameurl){
+  },
+  computed: {
+    leftFormatTime: function () {
+      return this.timeToEnd < 10 ? '0' + this.timeToEnd : this.timeToEnd;
+    },
+    computedGameState() {
+      console.log('this.gameRoundState==:', this.gameRoundState);
+      switch (this.gameRoundState) {
+      case 'created':
+        return 'created';
+      case 'open':
+        return 'open';
+      case 'ready':
+        return 'ready';
+      case 'starting':
+        return 'starting';
+      case 'started':
+        return 'started';
+      case 'completed':
+        return 'completed';
+      case 'disabled':
+        return 'disabled';
+      default:
+        return 'unkonwn'
+      }
+    },
+    computedTop5Players() {
+      return this.gamePlayerScores.slice(0, 5)
+    },
+    computedTop10Players() {
+      return this.gamePlayerScores.slice(5, 10)
+    },
+    computedTop12Players() {
+      return this.gamePlayerScores.slice(0, 10)
+    },
+    computedPlayerCount(){
+      return this.gamePlayers.length
+    }
+  },
+  methods: {
+    creatQRCodeImg: function () { //生成二维码
+      console.log('this.shareUrl===:', this.shareUrl);
+      QRCode.toDataURL(this.shareUrl, {
+        type: 'image/png'
+      }, function (error, gameurl) {
         if (error) {
           console.error(error);
         }
-          console.log('toDataURL success!');
-          $('#share-qrcode-img').attr('src', gameurl);
-          $('#shareimg').attr('src', gameurl);
+        console.log('toDataURL success!');
+        $('#share-qrcode-img').attr('src', gameurl);
+        $('#shareimg').attr('src', gameurl);
       })
     },
-		//绑定socket事件
-		bindSocketEvents: function(){
-			var that = this
-			console.log('bindSocketEvents...')
-			if( that.computedGameState == 'open'){
-				that.openGame()
-			}
-			//绑定 游戏开始倒计时事件，点击开始按钮
-			that.socket.on('GameStartingEvent', function(data){
-				that.gameRoundState = data.gameRoundState
-				that.timeToStart = data.timeToStart
-				console.log( 'GameStartingEvent', data)
-			});
-			//绑定 游戏倒计时事件，游戏时间倒计时
-			that.socket.on('GameRunningEvent', function(data){
-				that.gameRoundState = 'started'
-				that.timeToEnd = data.timeToEnd
-				var newGamePlayerScores = data.gamePlayerScores
-				// console.log("newGamePlayerScores=",newGamePlayerScores)
-				for( var i=0; i< newGamePlayerScores.length; i++ ){
-					var playerScore = newGamePlayerScores[i]
-					for( var j=0; j< that.gamePlayers.length; j++ ){
-						var player = that.gamePlayers[j]
-						if( player.id == playerScore.id){
-							//console.log( "player=", player)
-							playerScore.nickname = player.nickname
-							playerScore.avatar = player.avatar
-							break;
-						}
-					}
-				}
-				that.gamePlayerScores = newGamePlayerScores
-				console.log( 'GameRunningEvent', data )
-			});
-			that.socket.on('GameEndEvent', function(data){
-        console.log('data====:',data);
-				that.gameRoundState = data.gameRoundState
-				that.gamePlayerScores = data.gamePlayerScores
-				console.log( 'GameEndEvent', data)
-			});
-		},
-		// 准备开始，玩家开始注册
-		openGameHandler: function(){
-			var that = this
-			that.socket.emit('OpenGameEvent', {}, function(data){
-					that.gameRoundState = data.gameRoundState
-					console.log("	OpenGameEvent data",data )
-					that.openGame()
-			});
-		},
-		// 开始游戏, 玩家开始摇一摇
-		startGameHandler: function(){
-			var that = this;
-			if( !that.canstart ){
-				return;
-			}
-			that.canstart = false;
-			// 游戏倒计时开始
-			that.socket.emit('StartGameEvent', {}, function(data){
-				console.log( 'StartGameEvent', data)
-				that.gameRoundState = data.gameRoundState
-			});
-			clearInterval(this.playerCheckTimerId)
-			//this.timeRunning();
-		},
+    //绑定socket事件
+    bindSocketEvents: function () {
+      var that = this
+      console.log('bindSocketEvents...computedGameState', that.computedGameState)
+      if (that.computedGameState == 'open') {
+        that.openGame()
+      }
+      //绑定 游戏开始倒计时事件，点击开始按钮
+      that.socket.on('GameStartingEvent', function (data) {
+        that.gameRoundState = data.gameRoundState
+        that.timeToStart = data.timeToStart
+        console.log('GameStartingEvent', data)
+      });
+      //绑定 游戏倒计时事件，游戏时间倒计时
+      that.socket.on('GameRunningEvent', function (data) {
+        that.gameRoundState = 'started'
+        that.timeToEnd = data.timeToEnd
+        var newGamePlayerScores = data.gamePlayerScores
+        // console.log("newGamePlayerScores=",newGamePlayerScores)
+        for (var i = 0; i < newGamePlayerScores.length; i++) {
+          var playerScore = newGamePlayerScores[i]
+          for (var j = 0; j < that.gamePlayers.length; j++) {
+            var player = that.gamePlayers[j]
+            if (player.id == playerScore.id) {
+              //console.log( "player=", player)
+              playerScore.nickname = player.nickname
+              playerScore.avatar = player.avatar
+              break;
+            }
+          }
+        }
+        that.gamePlayerScores = newGamePlayerScores
+        console.log('GameRunningEvent', data)
+      });
+      that.socket.on('GameEndEvent', function (data) {
+        console.log('data====:', data);
+        that.gameRoundState = data.gameRoundState
+        that.gamePlayerScores = data.gamePlayerScores
+        console.log('GameEndEvent', data)
+      });
+    },
+    // 准备开始，玩家开始注册
+    openGameHandler: function () {
+      var that = this
+      that.socket.emit('OpenGameEvent', {}, function (data) {
+        that.gameRoundState = data.gameRoundState
+        console.log("	OpenGameEvent data", data)
+        that.openGame()
+      });
+    },
+    // 开始游戏, 玩家开始摇一摇
+    startGameHandler: function () {
+      var that = this;
+      if (!that.canstart) {
+        return;
+      }
+      that.canstart = false;
+      // 游戏倒计时开始
+      that.socket.emit('StartGameEvent', {}, function (data) {
+        console.log('StartGameEvent', data)
+        that.gameRoundState = data.gameRoundState
+      });
+      clearInterval(this.playerCheckTimerId)
+      //this.timeRunning();
+    },
 
-		// 获取游戏排名
-		getFinalScores: function(){
-			var that = this;
-			that.socket.emit('GetGamePlayersEvent', {}, function(data){
-				console.log( "GetGamePlayersEvent=", data )
-				that.gamePlayers = data.gamePlayers
-				that.gamePlayerScores = data.gamePlayers.sort(function(a,b){ return b.score-a.score; })
-			});
-		},
-		// 开放游戏签到，获取签到人员
-		openGame: function(){
-			var that = this;
-			// 如果当前游戏开放签到, 每秒取得游戏签到人员信息
-			if( this.computedGameState == 'open'){
-				var i =0
-				this.playerCheckTimerId = setInterval(function(){
-						// 取得游戏用户
-						that.socket.emit('GetGamePlayersEvent', {}, function(data){
-							console.log( `GetGamePlayersEvent  `,++i, data)
-							that.gamePlayers = data.gamePlayers
-						});
-				}, 1500);
-			}
-		},
+    // 获取游戏排名
+    getFinalScores: function () {
+      var that = this;
+      that.socket.emit('GetGamePlayersEvent', {}, function (data) {
+        console.log("GetGamePlayersEvent=", data)
+        that.gamePlayers = data.gamePlayers
+        that.gamePlayerScores = data.gamePlayers.sort(function (a, b) {
+          return b.score - a.score;
+        })
+      });
+    },
+    // 开放游戏签到，获取签到人员
+    openGame: function () {
+      console.log("openGame")
 
-		// 重置游戏
-		resetGameHandler: function(){
-			var that = this
-			console.log("	emit ResetGameEvent" )
+      //var that = this;
+      // 如果当前游戏开放签到, 每秒取得游戏签到人员信息
+      // if (this.computedGameState == 'open') {
+      //   var i = 0
+      //   this.playerCheckTimerId = setInterval(function () {
+      //     // 取得游戏用户
+      //     that.socket.emit('GetGamePlayersEvent', {}, function (data) {
+      //       console.log(`GetGamePlayersEvent  `, ++i, data)
+      //       that.gamePlayers = data.gamePlayers
+      //     });
+      //   }, 1500);
+      // }
+      this.showSignedPlayers()
+    },
+
+    // 重置游戏
+    resetGameHandler: function () {
+      var that = this
+      console.log("	emit ResetGameEvent")
       that.timeToStart = 3
-			that.socket.emit('ResetGameEvent', {}, function(data){
-					that.gameRoundState = data.gameRoundState;
-					console.log("	that.gameRoundState =",	that.gameRoundState );
-					that.timeToEnd = 3;
-					that.canstart = true;
-					clearInterval(that.playerCheckTimerId);
+      that.socket.emit('ResetGameEvent', {}, function (data) {
+        that.gameRoundState = data.gameRoundState;
+        console.log("	that.gameRoundState =", that.gameRoundState);
+        that.timeToEnd = 3;
+        that.canstart = true;
+        clearInterval(that.playerCheckTimerId);
 
-			});
-		}
-	}
+      });
+    },
+
+    handleToggleNav() {
+      this.ui.nav = !this.ui.nav
+    },
+    // 显示所有已经签到的人
+    showSignedPlayers(){
+      let that = this
+      let n = 0;
+      let playerCount = this.computedPlayerCount
+      //$('.b_player_count').html( qiandao.playerCount);
+
+      let qiandaoInterval = setInterval(function () {
+
+        if ( n< playerCount ) {
+          // run each 0.5s
+          $("#dh" + (n+1)).addClass('qiaodaosf');
+
+          var div = document.getElementById('b_players');
+
+          document.getElementById('b_players_container').scrollTop = div.scrollHeight;
+        }else {
+          if( that.computedGameState == 'open')
+          {
+            console.log( "showSignedPlayers", n)
+            if (n%3==0)// run each 1.5s
+            {
+              that.socket.emit('GetNextPlayerEvent', {position: this.computedPlayerCount}, function (data) {
+                console.log('GetNextPlayerEvent', data)
+              });
+            }
+          }else {
+             clearInterval(qiandaoInterval);
+          }
+        }
+        n= n + 1;
+
+      }, 500);
+    },
+    // 显示新签到的人员
+    addNewPlayer( game_player ){
+      var user = game_player;
+      if ( user ) {
+
+        //let i = this.computedPlayerCount + 1;
+
+        $("#qdtx").attr("src", user.avatar);
+        $("#qdname").html(user.nickname);
+        $(".tuchu").addClass('view');
+
+        setTimeout(function() {
+          this.gamePlayers.push( game_player )
+          var div = document.getElementById('b_players');
+          document.getElementById('b_players_container').scrollTop = div.scrollHeight;
+        },
+        5000);
+
+      }
+    }
+
+  }
 }
 </script>
 
-<style>
+<style scoped>
 #app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -347,25 +456,29 @@ export default {
   width: 100%;
 }
 
-.bg-nei-top-erwei{
+.bg-nei-top-erwei {
   padding: 15px;
 }
-#share-qrcode-img{
-   width: 100%;
+
+#share-qrcode-img {
+  width: 100%;
 }
-.shareimg-wrap{
+
+.shareimg-wrap {
   position: absolute;
-  top:0;
+  top: 0;
   bottom: 3em;
-  left:0;
+  left: 0;
   right: 0;
   font-size: 25px;
   padding: 20px;
 }
-.shareimg-wrap img{
+
+.shareimg-wrap img {
   height: 100%;
 }
-.shareimg-txt{
+
+.shareimg-txt {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -374,11 +487,12 @@ export default {
   font-size: 25px;
   color: #FFF;
 }
-.gameimg-wrap{
+
+.gameimg-wrap {
   position: absolute;
-  top:0;
+  top: 0;
   bottom: 3em;
-  left:0;
+  left: 0;
   right: 0;
   font-size: 25px;
   background-image: url('~@/assets/dpgame/pintu/skin-runlin/image/bgtop.png');
@@ -386,41 +500,47 @@ export default {
   background-size: contain;
   background-position: center;
 }
-.gameimg-wrap img{
+
+.gameimg-wrap img {
   width: 100%;
 }
+
 .state-created .box-body2 {
-   position: absolute;
-   text-align: center;
-   top: 24vh;
-   bottom: 24vh;
-   left: 15vw;
-   right: 15vw;
-   /* margin: 80px auto; */
+  position: absolute;
+  text-align: center;
+  top: 24vh;
+  bottom: 24vh;
+  left: 15vw;
+  right: 15vw;
+  /* margin: 80px auto; */
 }
 
 
 .state-created .box-body-background {
   position: absolute;
   text-align: center;
-  top:24vh;
-  bottom:24vh;
-  left:15vw;
-  right:15vw;
+  top: 24vh;
+  bottom: 24vh;
+  left: 15vw;
+  right: 15vw;
   background: #000;
-  filter:alpha(opacity=50); /*支持 IE 浏览器*/
-  opacity:0.50; /*支持 Chrome, Opera, Safari 等浏览器*/
+  filter: alpha(opacity=50);
+  /*支持 IE 浏览器*/
+  opacity: 0.50;
+  /*支持 Chrome, Opera, Safari 等浏览器*/
   /*margin: 80px auto;*/
 }
-.actions{
+
+.actions {
   text-align: center;
 }
+
 .dppintu {
   font-size: 14px;
 }
 
 
-.countdown-img{
+.countdown-img {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -429,7 +549,8 @@ export default {
   height: 12vh;
   margin-left: -6vh;
 }
-.timetoend{
+
+.timetoend {
   position: absolute;
   bottom: 0;
   text-align: center;
@@ -437,11 +558,60 @@ export default {
   text-align: center;
   width: 100%;
 }
-.game-wrap{
+
+.game-wrap {
   position: absolute;
   top: 30vh;
   bottom: 20vh;
   left: 0;
   right: 0;
+}
+
+.bottom-enter {
+  bottom: -70px;
+}
+
+.bottom-enter-to {
+  bottom: 0;
+}
+
+.bottom-enter-active {
+  transition: all 800ms ease-out;
+}
+
+.bottom-leave {
+  bottom: 0;
+}
+
+.bottom-leave-to {
+  bottom: -70px;
+}
+
+.bottom-leave-active {
+  transition: all 800ms ease-out;
+}
+
+.top-enter {
+  top: -100px;
+}
+
+.top-enter-to {
+  top: 0;
+}
+
+.top-enter-active {
+  transition: all 800ms ease-out;
+}
+
+.top-leave {
+  top: 0;
+}
+
+.top-leave-to {
+  top: -100px;
+}
+
+.top-leave-active {
+  transition: all 800ms ease-out;
 }
 </style>

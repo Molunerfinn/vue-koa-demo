@@ -32,10 +32,13 @@ export default class GamesController {
                   number
               }
           })
+          // 获取游戏的前200个玩家，用于签页面刷新时的显示。
+          let players = await round.getGamePlayers({ limit: 200 })
           var shareUrl = getWxShareUrl( round )
           console.log('shareUrl====:',shareUrl);
           ctx.body = {
             round: round,
+            players: players,
             shareUrl: shareUrl
           }
       } catch (error) {

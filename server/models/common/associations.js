@@ -1,7 +1,7 @@
 
 export function buildGameAssociations(db){
   // add association
-  let models = Object.keys(db)
+  let models = Object.values(db)
   models.forEach((model)=>{
     let rex = /([\w]+)GameRound$/
     let matches = rex.exec(model.name)
@@ -11,13 +11,16 @@ export function buildGameAssociations(db){
       let playerModel = models.find((m)=> m.name == (code + "GamePlayer"))
       let resultModel = models.find((m)=> m.name == (code + "GameResult"))
 
-      if( playerModel && resultName){
+      if( playerModel && resultModel){
         // keep association name same for all games
         // ZhaobabaGameRound.hasMany( ZhaobabaGamePlayer, { foreignKey: 'game_round_id', as: 'gamePlayers'})
         // ZhaobabaGamePlayer.hasMany( ZhaobabaGameResult, {foreignKey: 'game_player_id', as: 'gameResults'})
-        model.hasMany( playerModel, { foreignKey: 'game_round_id', as: 'gamePlayers'})
-        playerModel.hasMany( resultModel, {foreignKey: 'game_player_id', as: 'gameResults'})
+        console.log( "buildGameAssociations "+ code + "GamePlayer," + code + "GameResult")
+        model.hasMany( playerModel, { foreignKey: 'game_round_id', as: 'GamePlayers'})
+        playerModel.hasMany( resultModel, {foreignKey: 'game_player_id', as: 'GameResults'})
+
+        playerModel.belongsTo( model, { foreignKey: 'game_round_id', as: 'GameRound'})
       }
     }
-  })  
+  })
 }
