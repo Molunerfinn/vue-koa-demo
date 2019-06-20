@@ -38,7 +38,6 @@
   				00:<span v-text="formatTime"></span>
           <span class="pull-left">当前得分</span>
   				<span class="pull-right" v-text="score"></span>
-          <li v-for="o in o_list">{{o}}</li>
   			</div>
   			<div class="countsContainer" style="display:none;">
 
@@ -79,6 +78,7 @@
 		</div>
     <div class="debug" style="display:none;"> {{gameRoundState}}  </div>
     <SignUp :game-player="gamePlayer" :gameRound="gameRound" :command="signUpCommand" @signUpOver="signUpOver"> </SignUp>
+    <Logger ref="logger"> </Logger>
 	</div>
 
 </template>
@@ -91,6 +91,7 @@
   import HdGame from '@/lib/hdgame'
   import GameState from '@/lib/GameState'
   import SignUp from '@/components/SignUp.vue'
+  import Logger from '@/components/Logger.vue'
   import {
     // setAchievebycode,
     getGameResult
@@ -119,7 +120,8 @@
   export default {
     name: 'app',
     components: {
-      SignUp
+      SignUp,
+      Logger
     },
     data() {
       return{
@@ -408,7 +410,8 @@
   					this.status.y = t.y,
   					this.status.z = t.z;
   					var o = Math.abs(this.status.x + this.status.y + this.status.z - this.status.lastX - this.status.lastY - this.status.lastZ) / i * 1e4;
-            this.o_list.push(o)
+            //this.o_list.push(o)
+            this.$refs['logger'].log( o )
             //o > this.status.SHAKE_THRESHOLD && (this.status.count++, this.status.canShake && (this.status.canShake = !1, this.handleShaking())),
   					if( o > this.status.SHAKE_THRESHOLD ){
               this.score++;
