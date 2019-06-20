@@ -78,7 +78,7 @@
 		</div>
     <div class="debug" style="display:none;"> {{gameRoundState}}  </div>
     <SignUp :game-player="gamePlayer" :gameRound="gameRound" :command="signUpCommand" @signUpOver="signUpOver"> </SignUp>
-    <Logger ref="logger"> </Logger>
+    <Logger ref="logger" :isDebug="isDebug"> </Logger>
 	</div>
 
 </template>
@@ -125,7 +125,7 @@
     },
     data() {
       return{
-        o_list:[],
+        isDebug: false,
         signUpCommand: null,
         hg: {
           showGameBox: true
@@ -410,7 +410,6 @@
   					this.status.y = t.y,
   					this.status.z = t.z;
   					var o = Math.abs(this.status.x + this.status.y + this.status.z - this.status.lastX - this.status.lastY - this.status.lastZ) / i * 1e4;
-            //this.o_list.push(o)
             //o > this.status.SHAKE_THRESHOLD && (this.status.count++, this.status.canShake && (this.status.canShake = !1, this.handleShaking())),
   					if( o > this.status.SHAKE_THRESHOLD ){
               this.$refs['logger'].log( o )

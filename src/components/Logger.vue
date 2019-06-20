@@ -1,5 +1,5 @@
 <template>
-  <div id="loggerContainer" class="loggerContainer">
+  <div id="loggerContainer" class="loggerContainer" v-if="isDebug">
     <button @click="openLogger"> open </button>
     <button @click="closeLogger"> close </button>
     <div class="messagesWrap" v-show="isOpen">
@@ -13,7 +13,7 @@
 <script>
 export default {
   props:{
-    isLoading: {
+    isDebug: {
       default: false
     }
 
