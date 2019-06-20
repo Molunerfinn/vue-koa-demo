@@ -2,7 +2,7 @@
   <div id="loggerContainer" class="">
     <button @click="openLogger"> open </button>
     <button @click="closeLogger"> close </button>
-    <div class="" v-show="isOpen">
+    <div class="messages" v-show="isOpen">
       <ul>
         <li v-for="o in messages">{{o}}</li>
       </ul>
@@ -47,5 +47,8 @@ export default {
   top: 10px;
   bottom: 10px;
   width: 90%;
+}
+.messagesWrap{
+  overflow: auto;
 }
 </style>
