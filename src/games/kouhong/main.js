@@ -7,7 +7,7 @@ import App from './App'
 // import VueRouter from 'vue-router'
 import 'weui/dist/style/weui.css'
 import '@/assets/common/css/base2.css'
-import '@/assets/kouhong/css/game.css'
+import '@/assets/game/kouhong/css/game.css'
 
 import axios from 'axios'
 
