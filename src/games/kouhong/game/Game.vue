@@ -319,11 +319,8 @@ export default {
 
     initCanvas() {
       LGlobal.notMouseEvent = true;
-      //console.log( " LGlobal.width, LGlobal.height",  LGlobal.width, LGlobal.height, " window.innerWidth, window.innerHeight", window.innerWidth, window.innerHeight)
       //LInit(50, 'gameLayerBox', LGlobal.width, LGlobal.height, this.initGame);
       LInit(0, "gameLayerBox",  window.innerWidth, window.innerHeight, this.initGame, LEvent.INIT);
-      console.log( " LGlobal.width, LGlobal.height",  LGlobal.width, LGlobal.height, " window.innerWidth, window.innerHeight", window.innerWidth, window.innerHeight)
-      LGlobal.resize(window.innerWidth, window.innerHeight);
     },
 
     canvasDown(e) {
