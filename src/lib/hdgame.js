@@ -1510,13 +1510,13 @@ HdGame.initSound = function(soundList, soundListDef, soundListMod) {
             useWebAudio = true
           }
           sound.load(path, index, useWebAudio, true);
-          //initBackgroundMusic()
+          // initBackgroundMusic()
           // 游戏背景音乐加载,
           if( index == 0 ){
             if (Audio && sound.data instanceof Audio) {
               document.getElementById("pageMusic").appendChild(sound.data)
             }
-            //eventBus.fire(GameBackgroundMusicLoadEvent.name, new GameBackgroundMusicLoadEvent())
+            // eventBus.fire(GameBackgroundMusicLoadEvent.name, new GameBackgroundMusicLoadEvent())
           }
 
         } else {
@@ -1524,13 +1524,11 @@ HdGame.initSound = function(soundList, soundListDef, soundListMod) {
         }
       })
   }
-  //sound.readyPlay(0, 0, "loop");
-  //wx.ready(function() {
-  //  sound.readyPlay(0, 0, "loop")
-  //})
-
+  // sound.readyPlay(0, 0, "loop");
+  // wx.ready(function() {
+  //   sound.readyPlay(0, 0, "loop")
+  // })
   return sound;
-
 };
 
 HdGame.Time = Time
