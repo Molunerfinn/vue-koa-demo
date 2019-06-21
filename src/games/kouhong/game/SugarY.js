@@ -41,11 +41,12 @@ class SugarY extends LSprite {
     s.lollyWarp.addChild(lolly);
     for (var i = 0; i < rotateList.length; i++) {
       // 游戏结束条件
-      if (Math.abs(rotate - rotateList[i]) <= GameArg.minRotate) {
+      let isfail = Math.abs(rotate - rotateList[i]) <= GameArg.minRotate
+      console.log( "before GameEndEvent", isfail )
+      if (isfail) {
         console.log( "eventBus.$emit GameEndEvent.name", GameEndEvent.name)
         GameArg.eventBus.$emit( GameEndEvent.name, new GameEndEvent(lolly))
-
-        return s;
+        return s
       }
     }
     if (gradeFlag) {
