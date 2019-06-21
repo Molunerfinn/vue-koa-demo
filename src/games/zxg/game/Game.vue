@@ -12,7 +12,7 @@
 
     </div>
     <div class="timeBox">
-      时间<br><span class="time">{{time}}</span>
+      时间<br><span class="time">{{this.time}}</span>
     </div>
   </div>
   <div id="gameLayerBox" style="top: 4rem;">
@@ -94,7 +94,7 @@ export default {
       curTouchTime: 0,
       touchTime: 0,
       gameBg: null,
-      imgData: null,      
+      imgData: null,
       ui: {
         gameBoxVisible: false
       },
@@ -126,7 +126,7 @@ export default {
       this.time = val
       console.log("setTime", val)
     })
-    this.hg.time.on('end', this.endGame)
+    // this.hg.time.on('end', this.endGame)
 
 
     this.hg.sound.get("0",
