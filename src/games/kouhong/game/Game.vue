@@ -37,8 +37,6 @@ import LTweenLite from '@/lib/lufylegend/transitions/LTweenLite'
 //import LStageAlign from '@/lib/lufylegend/display/LStageAlign';
 import {setGameTopBar, showTopBar } from '@/lib/simplify'
 
-var _gameOver = false;
-
 import HdGame from '@/lib/hdgame'
 import { GameArg } from './GameArg'
 import GameRes from './GameRes'
@@ -83,6 +81,7 @@ export default {
         gameBgImg: GameRes.skinAssets.gameBgPath,
         tishiImgPath: GameRes.skinAssets.tishiImgPath
       },
+      gameOver: false,
       rem: 20
     }
   },
@@ -206,7 +205,7 @@ export default {
     },
 
     endGame(lolly) {
-      _gameOver = true;
+      this.gameOver = true;
       LTweenLite.removeAll();
       if (lolly) {
         LTweenLite.to(lolly, 0.1, {
@@ -252,7 +251,7 @@ export default {
       }, 400);
     },
     startGame() {
-      _gameOver = false;
+      this.gameOver = false;
       LGlobal.setPauseLoop(false)
       window.scrollTo(0, 0);
       GameArg.stageLayer.removeAllChild();
@@ -324,7 +323,7 @@ export default {
     },
 
     canvasDown(e) {
-      if (_gameOver) {
+      if (this.gameOver) {
         return;
       }
       GameArg.lastPageY = e.changedTouches[0].pageY;
@@ -333,7 +332,7 @@ export default {
 
     canvasMove(e) {
       console.log( "trigger canvasMove ... ")
-      if (_gameOver) {
+      if (this.gameOver) {
         return;
       }
       if (GameArg.lastPageY && GameArg.lastPageY - e.changedTouches[0].pageY > this.rem) {
