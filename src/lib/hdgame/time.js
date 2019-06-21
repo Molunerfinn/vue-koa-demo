@@ -41,6 +41,10 @@ const Methods = {
     this.pastTime = 0;
     this.setTarget();
   },
+  setInitTime( initTime ){
+    this.initTime = initTime
+    this.init()
+  },
   setAcceList(list) {
     if (typeof list === "number") {
       var n = list;
