@@ -8,8 +8,6 @@ import 'weui/dist/style/weui.css'
 import '@/assets/common/css/base2.css'
 import '@/assets/game/zhaobaba/css/game.css'
 
-//import EventBus  from '@/plugins/EventBus'
-//Vue.use(EventBus)
 
 /* eslint-disable no-new */
 new Vue({

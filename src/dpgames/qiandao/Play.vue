@@ -92,7 +92,6 @@
   import {
     getGameResult
   } from '@/api/dpgame/yiy.js'
-  import { GameBackgroundMusicLoadEvent } from '@/lib/GameEvent'
   import queryString from 'query-string'
   import io from 'socket.io-client'
   import constant from '@/game_constant.js'
@@ -202,10 +201,7 @@
       this.hg.grade = new HdGame.Grade(0)
 
       this.hg.time = new HdGame.Time(g_config.initTime, { updateFlag: true, isDesc: false })
-
-      GameArg.eventBus.$on(GameBackgroundMusicLoadEvent.name, event => {
-        this.initBackgroundMusic()
-      })
+    
       //simplifyLufylegend( this.hg, window.g_rem )
       HdGame.initJsHead(this.hg, GameRes)
 

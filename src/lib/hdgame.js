@@ -4,7 +4,6 @@ import {
   LSound2
 } from '@/lib/simplify'
 
-//import {  EventBus } from '@/lib/EventBus'
 import $ from "jquery"
 import _ from 'lodash'
 import HdUtil from './hdutil'

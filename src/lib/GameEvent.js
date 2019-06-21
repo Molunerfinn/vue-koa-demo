@@ -12,12 +12,15 @@ export class GameEvent{
 export class GameStartEvent extends GameEvent{
   constructor( target){
     super( target)
+    // 必须设置 name，babel处理后 name 为 'e'
+    this.name = 'GameStartEvent'
   }
 }
 
 export class GameEndEvent extends GameEvent{
   constructor( target){
     super( target)
+    this.name = 'GameEndEvent'
   }
 }
 
@@ -25,6 +28,7 @@ export class GameEndEvent extends GameEvent{
 export class GameScoreChangedEvent extends GameEvent{
   constructor( target, changedScore){
     super( target)
+    this.name = 'GameScoreChangedEvent'
     this.changedScore = changedScore
   }
 }
@@ -33,5 +37,6 @@ export class GameScoreChangedEvent extends GameEvent{
 export class GameBackgroundMusicLoadEvent extends GameEvent{
   constructor( target){
     super( target)
+    this.name = 'GameBackgroundMusicLoadEvent'
   }
 }

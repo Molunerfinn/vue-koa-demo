@@ -9,8 +9,6 @@ import '@/assets/common/css/play_base.css'
 import '@/assets/dpgame/pintu/css/play.css'
 import 'weui/dist/style/weui.css'
 
-//import EventBus  from '@/plugins/EventBus'
-//Vue.use(EventBus)
 
 /* eslint-disable no-new */
 new Vue({

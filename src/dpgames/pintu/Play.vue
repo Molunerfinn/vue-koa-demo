@@ -75,7 +75,6 @@
   import ResultBox from './ResultBox.vue'
   import RuleBox from './RuleBox.vue'
   import SignUp from '@/components/SignUp.vue'
-  import { GameBackgroundMusicLoadEvent } from '@/lib/GameEvent'
   import queryString from 'query-string'
   import io from 'socket.io-client'
   import constant from '@/game_constant.js'
@@ -113,9 +112,6 @@
 
       this.hg.time = new HdGame.Time(g_config.initTime, { updateFlag: true, isDesc: false })
 
-      GameArg.eventBus.$on(GameBackgroundMusicLoadEvent.name, event => {
-        this.initBackgroundMusic()
-      })
       //simplifyLufylegend( this.hg, window.g_rem )
       HdGame.initJsHead(this.hg, GameRes)
 
@@ -509,7 +505,6 @@
         that.ruleBoxCommand = 'showIcon'
         that.signUpCommand = 'hide'
       },
-      initBackgroundMusic() {},
 
       showLoadToast(text) {
         this.loadToast.isLoading = true

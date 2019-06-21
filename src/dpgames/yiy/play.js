@@ -10,8 +10,6 @@ import '@/assets/dpgame/yiy/css/basic.css'
 import '@/assets/dpgame/yiy/css/game-yiy-wx.css'
 import 'weui/dist/style/weui.css'
 
-//import EventBus  from '@/plugins/EventBus'
-//Vue.use(EventBus)
 
 /* eslint-disable no-new */
 new Vue({
