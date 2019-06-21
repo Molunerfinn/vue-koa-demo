@@ -12,10 +12,10 @@ const logger = require('../../helpers/logger')
 const md5 = require('md5');
 
 function getClientIP(req) {
-    return req.headers['x-forwarded-for'] || // 判断是否有反向代理 IP
-        req.connection.remoteAddress || // 判断 connection 的远程 IP
-        req.socket.remoteAddress || // 判断后端的 socket 的 IP
-        req.connection.socket.remoteAddress;
+  return req.headers['x-forwarded-for'] || // 判断是否有反向代理 IP
+    req.connection.remoteAddress || // 判断 connection 的远程 IP
+    req.socket.remoteAddress || // 判断后端的 socket 的 IP
+    req.connection.socket.remoteAddress;
 };
 
 export default class GamesController {
@@ -60,6 +60,11 @@ export default class GamesController {
           nickname: parsed.nickname,
           avatar: parsed.headimgurl,
           game_round_id: gameRound.id,
+          sex: parsed.sex,
+          language: parsed.language,
+          country: parsed.country,
+          province: parsed.province,
+          city: parsed.city,
           score: 0,
           max_score: 0
         }
@@ -124,7 +129,7 @@ export default class GamesController {
 
       console.log('new_player--:', new_player);
       var options = {
-        fields: ['openid', 'nickname', 'avatar', 'game_round_id', 'realname', 'tel', 'score', 'max_score', 'token','ip','sex','language','country','province','city']
+        fields: ['openid', 'nickname', 'avatar', 'game_round_id', 'realname', 'tel', 'score', 'max_score', 'token', 'ip', 'sex', 'language', 'country', 'province', 'city']
       }
       let gamePlayer = await GamePlayer.create(new_player, options)
 
@@ -176,17 +181,16 @@ export default class GamesController {
       })
 
       let secretString = 'md5' + gamePlayer.token + score + number
-      console.log('secretString--:',secretString);
       let secret = md5(secretString)
-      console.log('secret---:',secret);
 
-      console.log('secret === ctx.request.body.secret:',secret === ctx.request.body.secret);
+
 
       if (secret === ctx.request.body.secret) {
         let gameResultParams = {
           game_player_id: gamePlayerId,
           score: score,
           game_round_id: gameRound.id,
+          ip:getClientIP(ctx.req)
         }
 
         let gamePlayerId = gamePlayer.id
@@ -222,7 +226,7 @@ export default class GamesController {
         ctx.body = JSON.stringify(ret)
       } else {
         ctx.body = 'invalid score!!!'
-        throw('invalid score!!!')
+        throw ('invalid score!!!')
       }
     } catch (error) {
       logger.error("setAchieve error:", error)

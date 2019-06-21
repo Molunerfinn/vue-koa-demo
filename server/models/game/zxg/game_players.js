@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
         cellphone: { type: DataTypes.STRING(64), allowNull: false, defaultValue: '' },
         realname: { type: DataTypes.STRING(64), allowNull: false, defaultValue: '' },
         token: { type: DataTypes.STRING(64), allowNull: false, defaultValue: '' },
-        sex: { type: DataTypes.BIGINT(11) },
+        sex: { type:DataTypes.STRING(64) },
         language: { type: DataTypes.STRING(64)},
         country: { type: DataTypes.STRING(64)},
         province: { type: DataTypes.STRING(64)},

@@ -6,6 +6,7 @@ module.exports = (sequelize, DataTypes) => {
         score: { type: DataTypes.FLOAT(10,2), allowNull: false, defaultValue: '0' },
         start_at: DataTypes.DATE,
         end_at: DataTypes.DATE,
+        ip: { type: DataTypes.STRING(64)}
         //state:{ type: DataTypes.BIGINT(11), allowNull: false, defaultValue: '0' }
         //end_at: DataTypes.DATE,
 

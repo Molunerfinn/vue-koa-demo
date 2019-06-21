@@ -1,14 +1,14 @@
 #  游戏功能改进
 ---------------------------------------------------
 0. 大屏游戏，取得游戏玩家的方法，不能直接取得所有
-*1. 使用 player.token 加密 分数。
+*1. 使用 player.token 加密 分数。   ///done
 2. 摇一摇计分使用 https://github.com/alexgibson/shake.js
 
 #  添加游戏功能
 ---------------------------------------------------
 *1. 再玩一次（本轮成绩作废）功能
-*2. 添加 player.ip,  player.sex, player.province ...wechat
-*3. 添加 game_result.ip
+*2. 添加 player.ip,  player.sex, player.province ...wechat   /////done
+*3. 添加 game_result.ip                   ////done
 4. 添加 cookies 记录游戏玩家设置信息，如声音
 5. 大屏游戏，下一轮(再次开启游戏)
 

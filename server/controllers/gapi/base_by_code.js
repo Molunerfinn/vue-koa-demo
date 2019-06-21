@@ -13,6 +13,13 @@ const {
   getGameResultModelByCode
 } = require('../../helpers/model')
 
+function getClientIP(req) {
+    return req.headers['x-forwarded-for'] || // 判断是否有反向代理 IP
+        req.connection.remoteAddress || // 判断 connection 的远程 IP
+        req.socket.remoteAddress || // 判断后端的 socket 的 IP
+        req.connection.socket.remoteAddress;
+};
+
 // 'getResult' 取得抽奖结果
 //  getRankList' 排行榜
 //  joinGameBehavior
@@ -27,6 +34,7 @@ class GameBaseByCode {
   }
   static async postMsg(ctx) {
     let code = ctx.params.code
+    console.log('ctx.params---:',ctx.params);
     console.log('code=====:',code);
     let number = ctx.params.number
     let openid = ctx.request.body.openid
@@ -45,11 +53,13 @@ class GameBaseByCode {
     new_player.cellphone = cellphone
     new_player.game_round_id = gameRound.id
 
+    new_player.ip = getClientIP(ctx.req)
+
     let GamePlayer = getGamePlayerModelByCode(code)
 
     console.log('new_player--:', new_player);
     var options = {
-      fields: ['openid', 'nickname', 'avatar', 'game_round_id', 'realname', 'cellphone', 'score', 'max_score', 'token']
+      fields: ['openid', 'nickname', 'avatar', 'game_round_id', 'realname', 'cellphone', 'score', 'max_score', 'token','ip','sex','language','country','province','city']
     }
     let gamePlayer = await GamePlayer.create(new_player, options)
 
