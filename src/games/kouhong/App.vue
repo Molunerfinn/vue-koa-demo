@@ -113,7 +113,7 @@ export default {
       this.gamePlayer = this.gameInfo['gamePlayer']
       this.dataList = this.gameRound.dataList
 
-      //this.hg.time = new HdGame.Time(this.gameRound.duration)
+      this.hg.time.setInitTime(this.gameRound.duration)
 
       if (this.gamePlayer.token == undefined) {
         this.ruleBoxCommand = 'hideIcon'
