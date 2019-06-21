@@ -78,7 +78,7 @@
 		</div>
     <div class="debug" style="display:none;"> {{gameRoundState}}  </div>
     <SignUp :game-player="gamePlayer" :gameRound="gameRound" :command="signUpCommand" @signUpOver="signUpOver"> </SignUp>
-    <Logger ref="logger" :isDebug="isDebug"> </Logger>
+    <Logger ref="logger"> </Logger>
 	</div>
 
 </template>
@@ -125,7 +125,7 @@
     },
     data() {
       return{
-        isDebug: false,
+        o_list:[],
         signUpCommand: null,
         hg: {
           showGameBox: true
@@ -170,14 +170,6 @@
           ruleImgVisible: true, // 锦囊按钮
           loadToastVisible: false,
           wait: false
-        },
-        skinAssets: {
-          logoImgPath: GameRes.skinAssets.logoImgPath,
-          shareImgPath: GameRes.skinAssets.shareImgPath,
-          ruleIconPath: GameRes.skinAssets.ruleIconPath,
-          homeBgImg: GameRes.skinAssets.homeBgPath,
-          titleImg: GameRes.skinAssets.titleImgPath,
-          startBtnImg: GameRes.skinAssets.startImgPath
         }
       }
   	},
@@ -214,9 +206,6 @@
       })
       //simplifyLufylegend( this.hg, window.g_rem )
       HdGame.initJsHead(this.hg, GameRes)
-
-      this.hg.assets.add(GameRes.skinAssets)
-
       if (this.debug) {
         window.hg = this.hg
         window.gameArg = GameArg
@@ -410,6 +399,7 @@
   					this.status.y = t.y,
   					this.status.z = t.z;
   					var o = Math.abs(this.status.x + this.status.y + this.status.z - this.status.lastX - this.status.lastY - this.status.lastZ) / i * 1e4;
+            //this.o_list.push(o)
             //o > this.status.SHAKE_THRESHOLD && (this.status.count++, this.status.canShake && (this.status.canShake = !1, this.handleShaking())),
   					if( o > this.status.SHAKE_THRESHOLD ){
               this.$refs['logger'].log( o )
