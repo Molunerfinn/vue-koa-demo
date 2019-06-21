@@ -91,7 +91,7 @@ export default {
     console.log( "mounted props=", this.hg, this.command)
     this.handleInitGameData()
 
-    GameArg.eventBus.$on(GameEndEvent.name, (event)=>{
+    GameArg.eventBus.$on(GameEndEvent.ename, (event)=>{
       this.hg.time.end();
       this.gameOver = true;
       this.gameOver(this.hg.time.val);
@@ -99,7 +99,7 @@ export default {
     })
 
 
-    GameArg.eventBus.$on(GameScoreChangedEvent.name, (event)=>{
+    GameArg.eventBus.$on(GameScoreChangedEvent.ename, (event)=>{
       this.hg.grade.inc(10);
       console.log( "GameScoreChangedEvent0")
       this.hg.sound.play(1);

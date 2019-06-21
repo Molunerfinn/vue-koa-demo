@@ -194,7 +194,7 @@ console.log( "getPieceStyle", "piece=", piece, "xy=",originPosition)
       console.log( "touchendFn", "that.currentTarget", that.currentTarget)
       that.swap(index1, index2);
       if (that.setStep()) {
-         GameArg.eventBus.$emit( GameEndEvent.name, that)
+         GameArg.eventBus.$emit( GameEndEvent.ename, that)
       }
       that.currentTarget = null;
     },
@@ -367,7 +367,7 @@ console.log( "getPieceStyle", "piece=", piece, "xy=",originPosition)
 //       var index2 = that.getIndexById(that.currentTarget.id);
 //       that.swap(index1, index2);
 //       if (that.setStep()) {
-//          GameArg.eventBus.$emit( GameEndEvent.name, that)
+//          GameArg.eventBus.$emit( GameEndEvent.ename, that)
 //       }
 //       that.currentTarget = null;
 //     };

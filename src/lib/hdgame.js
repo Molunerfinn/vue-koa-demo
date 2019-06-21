@@ -1515,7 +1515,7 @@ HdGame.initSound = function(soundList, soundListDef, soundListMod) {
             if (Audio && sound.data instanceof Audio) {
               document.getElementById("pageMusic").appendChild(sound.data)
             }
-            // eventBus.fire(GameBackgroundMusicLoadEvent.name, new GameBackgroundMusicLoadEvent())
+            // eventBus.fire(GameBackgroundMusicLoadEvent.ename, new GameBackgroundMusicLoadEvent())
           }
 
         } else {
