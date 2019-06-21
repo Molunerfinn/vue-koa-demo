@@ -23,7 +23,7 @@ class Ido {
   static async login(ctx) {
     console.log('login');
     let to_player_id = ctx.query.to_player_id
-    var url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + wechat_config.appid + '&redirect_uri=http://testwx.getstore.cn/gapi/ido/get_wx_info&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect';
+    var url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + wechat_config.appid + '&redirect_uri=https://testwx.natapp4.cc/gapi/ido/get_wx_info&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect';
     ctx.redirect(url)
   }
 
@@ -47,8 +47,8 @@ class Ido {
     var userInfo = await client.getUser(openid);
     console.log('userInfo:', userInfo);
     let params = '?openid=' + userInfo.openid + '&headimgurl=' + userInfo.headimgurl + '&nickname=' + encodeURIComponent(userInfo.nickname)+'&to_player_id='+to_player_id;
-    console.log( 'http://testwx.getstore.cn/ido.html'+params)
-    ctx.redirect('http://testwx.getstore.cn/ido.html'+params)
+    console.log( 'https://testwx.natapp4.cc/ido.html'+params)
+    ctx.redirect('https://testwx.natapp4.cc/ido.html'+params)
   }
 
   static async get_start_info(ctx, next) {
