@@ -80,8 +80,6 @@
   import ResultBox from './ResultBox.vue'
   import RuleBox from './RuleBox.vue'
   import SignUp from '@/components/SignUp.vue'
-  import { GameBackgroundMusicLoadEvent } from '@/lib/GameEvent'
-  import { EventBus } from '@/lib/EventBus'
   import queryString from 'query-string'
 
   const md5 = require('md5');
@@ -114,9 +112,6 @@
 
       this.hg.time = new HdGame.Time(g_config.initTime, {updateFlag: true})
 
-      EventBus.$on(GameBackgroundMusicLoadEvent.name, event => {
-        this.initBackgroundMusic()
-      })
       //simplifyLufylegend( this.hg, window.g_rem )
       HdGame.initJsHead(this.hg, GameRes)
 
@@ -541,9 +536,6 @@
           })
 
         params = info = option = null
-      },
-      initBackgroundMusic() {
-        console.log('initBackgroundMusic->sound')
       },
 
       showLoadToast(text) {

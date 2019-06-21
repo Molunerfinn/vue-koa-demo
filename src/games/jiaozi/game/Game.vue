@@ -119,7 +119,7 @@ export default {
     });
 
 
-    GameArg.eventBus.$on(GameScoreChangedEvent.name, (event) => {
+    GameArg.eventBus.$on(GameScoreChangedEvent.ename, (event) => {
       this.hg.grade.inc(10);
       console.log("GameScoreChangedEvent0")
       this.hg.sound.play(1);

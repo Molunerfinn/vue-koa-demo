@@ -10,8 +10,6 @@ import '@/assets/common/css/control_base.css'
 import '@/assets/dpgame/yiy/css/control.css'
 
 
-//import EventBus  from '@/plugins/EventBus'
-//Vue.use(EventBus)
 /* eslint-disable no-new */
 new Vue({
   render: h => h(Control)

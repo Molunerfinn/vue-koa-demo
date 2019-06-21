@@ -121,7 +121,8 @@ export default {
       });
     });
 
-    GameArg.eventBus.$on(GameEndEvent.name, (event)=>{
+    console.log( "GameEndEvent name", GameEndEvent.ename)
+    GameArg.eventBus.$on(GameEndEvent.ename, (event)=>{
       console.log( "GameEndEvent0")
       this.hg.sound.play(2);
       this.hg.time.end();
@@ -129,8 +130,9 @@ export default {
       console.log( "GameEndEvent1")
     })
 
+    console.log( "GameScoreChangedEvent name", GameScoreChangedEvent.ename)
 
-    GameArg.eventBus.$on(GameScoreChangedEvent.name, (event)=>{
+    GameArg.eventBus.$on(GameScoreChangedEvent.ename, (event)=>{
       this.hg.grade.inc(10);
       console.log( "GameScoreChangedEvent0")
       this.hg.sound.play(1);

@@ -44,13 +44,13 @@ class SugarY extends LSprite {
       let isfail = Math.abs(rotate - rotateList[i]) <= GameArg.minRotate
       console.log( "before GameEndEvent", isfail )
       if (isfail) {
-        console.log( "eventBus.$emit GameEndEvent.name", GameEndEvent.name)
-        GameArg.eventBus.$emit( GameEndEvent.name, new GameEndEvent(lolly))
+        console.log( "eventBus.$emit GameEndEvent.ename", GameEndEvent.ename)
+        GameArg.eventBus.$emit( GameEndEvent.ename, new GameEndEvent(lolly))
         return s
       }
     }
     if (gradeFlag) {
-      GameArg.eventBus.$emit( GameScoreChangedEvent.name, new GameScoreChangedEvent(this, 10))
+      GameArg.eventBus.$emit( GameScoreChangedEvent.ename, new GameScoreChangedEvent(this, 10))
 
     }
     rotateList.push(rotate);

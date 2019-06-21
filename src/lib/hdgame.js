@@ -4,7 +4,6 @@ import {
   LSound2
 } from '@/lib/simplify'
 
-//import {  EventBus } from '@/lib/EventBus'
 import $ from "jquery"
 import _ from 'lodash'
 import HdUtil from './hdutil'
@@ -1516,7 +1515,7 @@ HdGame.initSound = function(soundList, soundListDef, soundListMod) {
             if (Audio && sound.data instanceof Audio) {
               document.getElementById("pageMusic").appendChild(sound.data)
             }
-            // eventBus.fire(GameBackgroundMusicLoadEvent.name, new GameBackgroundMusicLoadEvent())
+            // eventBus.fire(GameBackgroundMusicLoadEvent.ename, new GameBackgroundMusicLoadEvent())
           }
 
         } else {
