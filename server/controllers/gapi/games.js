@@ -9,6 +9,14 @@ const {
 } = require('../../helpers/weixin')
 
 const logger = require('../../helpers/logger')
+const md5 = require('md5');
+
+function getClientIP(req) {
+    return req.headers['x-forwarded-for'] || // 判断是否有反向代理 IP
+        req.connection.remoteAddress || // 判断 connection 的远程 IP
+        req.socket.remoteAddress || // 判断后端的 socket 的 IP
+        req.connection.socket.remoteAddress;
+};
 
 export default class GamesController {
   /**
@@ -105,11 +113,18 @@ export default class GamesController {
       new_player.cellphone = cellphone
       new_player.game_round_id = gameRound.id
 
+      new_player.ip = getClientIP(ctx.req)
+      new_player.sex = ctx.params.sex
+      new_player.language = ctx.params.language
+      new_player.country = ctx.params.country
+      new_player.province = ctx.params.province
+      new_player.city = ctx.params.city
+
       let GamePlayer = getGamePlayerModelByCode(code)
 
       console.log('new_player--:', new_player);
       var options = {
-        fields: ['openid', 'nickname', 'avatar', 'game_round_id', 'realname', 'tel', 'score', 'max_score', 'token']
+        fields: ['openid', 'nickname', 'avatar', 'game_round_id', 'realname', 'tel', 'score', 'max_score', 'token','ip','sex','language','country','province','city']
       }
       let gamePlayer = await GamePlayer.create(new_player, options)
 
@@ -160,44 +175,55 @@ export default class GamesController {
         }
       })
 
-      let gameResultParams = {
-        game_player_id: gamePlayerId,
-        score: score,
-        game_round_id: gameRound.id,
-      }
+      let secretString = 'md5' + gamePlayer.token + score + number
+      console.log('secretString--:',secretString);
+      let secret = md5(secretString)
+      console.log('secret---:',secret);
 
-      let gamePlayerId = gamePlayer.id
-      let lastMaxScore = gamePlayer.max_score
+      console.log('secret === ctx.request.body.secret:',secret === ctx.request.body.secret);
 
-      let gameResult = GameResult.build(gameResultParams)
-      let result = await gameResult.save()
+      if (secret === ctx.request.body.secret) {
+        let gameResultParams = {
+          game_player_id: gamePlayerId,
+          score: score,
+          game_round_id: gameRound.id,
+        }
 
-      await gamePlayer.update({
-        score: gameResult.score
-      })
+        let gamePlayerId = gamePlayer.id
+        let lastMaxScore = gamePlayer.max_score
 
-      if (gameResult.score > lastMaxScore) {
+        let gameResult = GameResult.build(gameResultParams)
+        let result = await gameResult.save()
+
         await gamePlayer.update({
-          max_score: gameResult.score
+          score: gameResult.score
         })
+
+        if (gameResult.score > lastMaxScore) {
+          await gamePlayer.update({
+            max_score: gameResult.score
+          })
+        } else {
+          ret.isSuc = false
+          ret.success = false
+        }
+
+        ret.playerId = gamePlayer.id //required to set g_config.playerId
+        ret.achieveToken = gamePlayer.token
+        ret.score = gameResult.score
+
+        ret.bestScore = gamePlayer.max_score //bestScore
+        let rank = await gamePlayer.currentPositionDesc()
+        let beat = await gamePlayer.beat()
+        ret.rank = rank
+        ret.beat = beat
+        ret.hasLot = false
+
+        ctx.body = JSON.stringify(ret)
       } else {
-        ret.isSuc = false
-        ret.success = false
+        ctx.body = 'invalid score!!!'
+        throw('invalid score!!!')
       }
-
-      ret.playerId = gamePlayer.id //required to set g_config.playerId
-      ret.achieveToken = gamePlayer.token
-      ret.score = gameResult.score
-
-      ret.bestScore = gamePlayer.max_score //bestScore
-      let rank = await gamePlayer.currentPositionDesc()
-      let beat = await gamePlayer.beat()
-      ret.rank = rank
-      ret.beat = beat
-      ret.hasLot = false
-
-      ctx.body = JSON.stringify(ret)
-
     } catch (error) {
       logger.error("setAchieve error:", error)
       ctx.throw(messageContent.ResponeStatus.CommonError, `show round ${ctx.params.id} fail: ` + error, {

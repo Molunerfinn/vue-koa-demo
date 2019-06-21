@@ -84,6 +84,8 @@
   import { EventBus } from '@/lib/EventBus'
   import queryString from 'query-string'
 
+  const md5 = require('md5');
+
   //import  '@/assets/game/zhaobaba/css/skin.css'
 
   //import {simplifyLufylegend } from '@/lib/simplify'
@@ -122,7 +124,6 @@
 
       const parsed = queryString.parse(location.search)
       var number = parsed.number
-
       var params = {
         parsed: parsed
       }
@@ -416,7 +417,6 @@
       },
       // 游戏结束，设置游戏成绩
       gameOver(_gameScore, callBack, option, showAjaxBar) {
-        console.log('_gameScore-----:', _gameScore)
         if (_gameScore === 'fail') {
           setTimeout(function() {}, 900)
           return
@@ -431,17 +431,19 @@
           headImg: this.gamePlayer.avatar
         }
         const parsed = queryString.parse(location.search)
+        var number = parsed.number
+
+        let secretString = 'md5'+this.gamePlayer.token+_gameScoreStr+number
+        let secret = md5(secretString)
 
         var params = {
           openId: this.gamePlayer.openid,
           score: _gameScoreStr,
-          parsed: parsed
+          parsed: parsed,
+          secret: secret
         }
-
         params.info = JSON.stringify(info)
-
         Object.assign(params, option)
-        var number = parsed.number
 
         console.log('params----:', params)
         setAchievebycode(number, params)

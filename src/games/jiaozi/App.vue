@@ -97,6 +97,7 @@
     }
   }
   const gameType = 1 // 0抽奖， 1刷记录
+  const md5 = require('md5');
 
   export default {
     name: 'app',
@@ -416,17 +417,22 @@
           headImg: this.gamePlayer.avatar
         }
         const parsed = queryString.parse(location.search)
+        var number = parsed.number
+
+        let secretString = 'md5'+this.gamePlayer.token+_gameScoreStr+number
+        let secret = md5(secretString)
 
         var params = {
           openId: this.gamePlayer.openid,
           score: _gameScoreStr,
-          parsed: parsed
+          parsed: parsed,
+          secret: secret
         }
 
         params.info = JSON.stringify(info)
 
         Object.assign(params, option)
-        var number = parsed.number
+
 
         console.log('params----:', params)
         setAchievebycode(number, params)
