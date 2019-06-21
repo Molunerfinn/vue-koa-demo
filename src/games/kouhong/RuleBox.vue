@@ -3,7 +3,7 @@
  <div class="ruleBox" >
    <a  href="javascript:void(0)" v-show="ui.iconVisible">
    <div class="ruleImg imgContainer absCenter" _mouseIn="0" >
-     <div id="ruleImg"  @touchstart="handleShowPopup" class="slaveImg abs notNeedFatherChage outSpecialDivAutoFit hd-img-fillDiv ruleImgAnimate" style='width: 3.5rem; height: 3.5rem; top: 0.35rem; left: 75vw;'></div>
+     <div id="ruleImg"  @touchstart="handleShowPopup" class="slaveImg abs notNeedFatherChage outSpecialDivAutoFit hd-img-fillDiv ruleImgAnimate" style='width: 3.5rem; height: 3.5rem; top: 0.35rem; right: 0.35rem;'></div>
    </div>
     </a>
 
@@ -223,7 +223,8 @@ export default {
     HdGame.imgReady(this.ruleIconUrl, (img)=>{
       console.log( "imgReady", this.ruleIconUrl)
       $("#ruleImg").css({
-        "background-size": "100% 100%",
+        "background-size": "contain",
+        "background-position": "center",
         "background-image":"url("+this.ruleIconUrl+")",
       })
       //this.ui.iconVisible = true // 如果是用户注册界面，不应显示icon
