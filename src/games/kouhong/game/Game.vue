@@ -19,7 +19,7 @@
 
     </div>
     <div class="timeUpImg hide"></div>
-    <div class="soundIconOff soundIcon" style="z-index:700" ></div>
+    <SoundButton :hg="hg" :gamePlayer="gamePlayer"> </SoundButton>
 
   </div>
 
@@ -33,8 +33,6 @@ import LBitmap from '@/lib/lufylegend/display/LBitmap'
 import LBitmapData from '@/lib/lufylegend/display/LBitmapData'
 import LEvent from '@/lib/lufylegend/events/LEvent'
 import LTweenLite from '@/lib/lufylegend/transitions/LTweenLite'
-//import LStageScaleMode from '@/lib/lufylegend/display/LStageScaleMode';
-//import LStageAlign from '@/lib/lufylegend/display/LStageAlign';
 import {setGameTopBar, showTopBar } from '@/lib/simplify'
 
 import HdGame from '@/lib/hdgame'
@@ -42,6 +40,7 @@ import { GameArg } from './GameArg'
 import GameRes from './GameRes'
 import Lolly from './Lolly'
 import SugarY from './SugarY'
+import SoundButton from '@/components/game/SoundButton.vue'
 
 //LGlobal.setDebug(true);
 //LGlobal.displayState = LGlobal.FULL_SCREEN
@@ -55,6 +54,9 @@ import { GameEndEvent,  GameScoreChangedEvent } from '@/lib/GameEvent'
 
 export default {
   name: 'game',
+  components: {
+    SoundButton
+  },
   props:{
     // hg, 保存游戏的所有资源，图片，音乐，时间，分数
     hg: Object,
@@ -66,7 +68,7 @@ export default {
     gamePlayer:{
       type: Object,
       default: { avatar: '/static/shared/image/avatar.jpg' }
-    }
+    },
   },
   data () {
     return {
@@ -144,16 +146,6 @@ export default {
     })
     this.hg.time.on('end', this.endGame)
 
-
-    this.hg.sound.get("0",
-      function (lsound) {
-        lsound.on("play", () => {
-          this.soundIconClass = "soundIcon"
-
-        }).on("pause", () => {
-          this.soundIconClass = "soundIconOff soundIcon"
-        })
-    })
   },
   methods:{
     handleStartGame(){
