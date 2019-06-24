@@ -252,9 +252,9 @@ export default {
 
     //
     handleShowPopup( flag ){
-      var silkBag = $("#ruleImg");
-      var popupX = silkBag.offset().left + silkBag.width() / 2 + "px ";
-      var popupY = silkBag.offset().top + silkBag.height() / 2 + "px";
+      let silkBag = $("#ruleImg");
+      let popupX = silkBag.offset().left + silkBag.width() / 2 + "px ";
+      let popupY = silkBag.offset().top + silkBag.height() / 2 + "px";
       $("#poupInfoBox").css({
         "transform-origin": popupX + popupY,
         "-webkit-transform-origin": popupX + popupY
@@ -264,14 +264,14 @@ export default {
       this.showTab( flag  )
     },
     handleHidePopup(){
-      var poupInfoBox = $("#poupInfoBox");
+      let poupInfoBox = $("#poupInfoBox");
       poupInfoBox.removeClass("enlarge").removeClass("retrans");
       poupInfoBox.hide()
     },
     // 点击查看成绩
     setSlideBar(isAnimation){
 
-        var anFlag = isAnimation;
+        let anFlag = isAnimation;
         if (anFlag) {
           if (!$("#poupInfoBox").hasClass("enlarge")) {
             $("#poupInfoBox").addClass("enlarge")
@@ -303,11 +303,11 @@ export default {
     },
     poupRank(){
 
-      var params = {
+      let params = {
         openid: this.gamePlayer.openid
       }
       getRanking(this.gameRound.number, params).then(data => {
-        var rankInfo = data
+        let rankInfo = data
         console.log('rankInfo====:',rankInfo);
         this.gamePlayerRank = rankInfo['allPlayer']
         this.currentPlayer = rankInfo['thisPlayer']

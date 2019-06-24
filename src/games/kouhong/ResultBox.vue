@@ -202,7 +202,7 @@ export default {
     },
 
     showResult(){
-      var resuleDef = {
+      let resuleDef = {
         isSuc: false,
         gameScore: 0,
         minScore: 0,
@@ -216,7 +216,7 @@ export default {
         bestCostTime: 0
       };
       console.log('params=====:',this.params);
-      var arg = Object.assign(resuleDef, this.params);
+      let arg = Object.assign(resuleDef, this.params);
       //this.resuleArg = arg; ! arg.notreal && (HdGame.currentRank = arg.rank); ! arg.notreal && (HdGame.currentScore = arg.bestScore);
       //HdGame.wxConfig.setWxShareByStatus();
       this.ui.statusScrollWrap = true

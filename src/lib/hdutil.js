@@ -3,6 +3,7 @@ import Callbacks from './hdutil/callbacks'
 import { requestAnimFrame, cancelAnimFrame } from './hdutil/animation'
 
 const HdUtil = { requestAnimFrame, cancelAnimFrame }
+let callBackInstance = 0
 
 HdUtil.encodeHtml = function(e) {
     return e && e.replace ? e.replace(/&/g, "&amp;").replace(/ /g, "&nbsp;").replace(/\b&nbsp;+/g, " ").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\\/g, "&#92;").replace(/\'/g, "&#39;").replace(/\"/g, "&quot;").replace(/\n/g, "<br/>").replace(/\r/g, "") : e
@@ -10,6 +11,7 @@ HdUtil.encodeHtml = function(e) {
 HdUtil.CallBack = function() {
   //
   function CallBackable(target) {
+    callBackInstance += 1
       //如果当前对象没有
       //console.log( "new CallBackable = ", this)
       if (! (this instanceof CallBackable)) return new CallBackable(target);
@@ -17,23 +19,32 @@ HdUtil.CallBack = function() {
       // 保存所有事件名称，ex. { 注册事件名称：1 }
       this._ones = {}
       this.free = target
+      this.callBackInstance = callBackInstance
   }
-  var CallBackableMethods= {
+  let CallBackableMethods= {
       register: function(e, t) {
-          var n = this;
-          return _.isArray(e) ? (e.forEach(
-          function(t, i) {
-              _.isArray(t) ? n.register.apply(n, t) : n.register(t)
-          }), n) : ("string" == typeof e && void 0 === this.callbacks[e] && (this.callbacks[e] = null, t && (this._ones[e] = 1)), n)
+          let n = this;
+          if( _.isArray(e) ){
+            e.forEach(function(k, i){
+                _.isArray(k) ? n.register.apply(n, k) : n.register(k)
+            })
+          }else{
+            if( "string" == typeof e && void 0 === this.callbacks[e] ){
+              this.callbacks[e] = null
+              if( t ){ // 重新注册事件后，重置ones[e]
+                this._ones[e] = 1
+              }
+            }
+          }
+          return n
       },
       on: function(e, t) {
-          var n;
+          let n;
           if (this.checkFire(e)) return t();
           if (!this.callbacks.hasOwnProperty(e)) {
               if (!this.free) return this;
               _.isFunction(this.free) && this.free(e) && (this._ones[e] = 1)
           }
-          console.log( "new CallBackable = ", this)
 
           return (n = this.callbacks[e]) || (this.callbacks[e] = n = new Callbacks("unique stopOnFalse" + (this._ones[e] ? " onec": ""))),
           n.add(t),
@@ -41,7 +52,7 @@ HdUtil.CallBack = function() {
       },
       // 事件只调用一次
       one: function(e, t) {
-          var n = this;
+          let n = this;
           return t.$$oneCallback = function() {
               t.apply(this, arguments),
               n.off(e, t)
@@ -49,7 +60,7 @@ HdUtil.CallBack = function() {
           n.on(e, t.$$oneCallback)
       },
       off: function(e, t) {
-          var n, r = this;
+          let n, r = this;
           return 0 == arguments.length ? (this.callbacks.forEach(
           function(n, e) {
               r.off(n, t)
@@ -65,10 +76,11 @@ HdUtil.CallBack = function() {
 
   ["fire", "fireWith"].forEach(  function(n, i) {
       CallBackableMethods[n] = function() {
-          var e = Array.from( arguments),
+          let e = Array.from( arguments),
           t = e.shift(),
           r = this.callbacks[t];
-          //console.log( "CallBackableMethods r, n = ",r, n, "this =", this )
+          console.log( "callbacks fire-> r, n , t, e= ",r, n, t, e, "this =", this )
+
           return this._ones[t] && (this._ones[t] = 2),
           !r || r[n].apply(r, e)
       }
@@ -81,7 +93,7 @@ HdUtil.CallBack = function() {
 
 HdUtil.imgReady = function(){
   let list = [], intervalId = null, tick = function() {
-      for (var e = 0; e < list.length; e++)
+      for (let e = 0; e < list.length; e++)
       {
         list[e].end ? list.splice(e--, 1) : list[e]();
         if(list.length == 0){

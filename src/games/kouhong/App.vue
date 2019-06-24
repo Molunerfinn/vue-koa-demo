@@ -92,9 +92,9 @@ export default {
     window.hg = this.hg
 
     const parsed = queryString.parse(location.search)
-    var number = parsed.number
+    let number = parsed.number
 
-    var params = {
+    let params = {
       parsed: parsed
     }
 
@@ -241,7 +241,7 @@ export default {
         }
 
         function cookies() {
-          // var cookOpt = {
+          // let cookOpt = {
           //   domain: 'hd.getstore.cn',
           //   expires: 1,
           //   path: '/'
@@ -314,7 +314,7 @@ export default {
       try {
         if (HdGame.isIPhone() && this.hg.sound.list && this.hg.sound.list.length > 0 && !this.hg.sound._activate) {
           this.hg.sound.list.forEach(function (val, i) {
-            var data = this.hg.sound.cache[i];
+            let data = this.hg.sound.cache[i];
             if (i > 0 && data && data.soundType == "LWebAudio") {
               data.play();
               data.stop();
@@ -368,9 +368,9 @@ export default {
       //$('.ajaxLoadBg').show();
       //$('.ajaxLoadBar').addClass('ajaxLoad');
       this.showLoadToast('数据加载中');
-      var _gameScoreStr = _gameScore + '';
+      let _gameScoreStr = _gameScore + '';
 
-      var info = {
+      let info = {
         headImg: this.game_player.avatar
       };
       //g_config.awardUsername && (info.ausername = g_config.awardUsername);
@@ -378,12 +378,12 @@ export default {
       //g_config.awardAddress && (info.aadress = g_config.awardAddress);
       //info.ip = '60.20.175.68';
       const parsed = queryString.parse(location.search)
-      var number = parsed.number
+      let number = parsed.number
 
       let secretString = 'md5'+this.gamePlayer.token+_gameScoreStr+number
       let secret = md5(secretString)
 
-      var params = {
+      let params = {
         openId: this.gamePlayer.openid,
         score: _gameScoreStr,
         parsed: parsed,
@@ -399,10 +399,10 @@ export default {
       setAchievebycode(number,params).then(data => {
         this.hideLoadToast();
         HdGame.tlog('gameOver', data);
-        var r = data;
-        var isShowPoup = true;
+        let r = data;
+        let isShowPoup = true;
         if (r.rt == 0) {
-          var arg = {
+          let arg = {
             isSuc: r.isSuc,
             gameScore: r.score,
             minScore: 0, //到多少分可以抽奖
@@ -462,7 +462,7 @@ export default {
       }).catch(err => {
         this.hideLoadToast();
         HdGame.otherAjaxComplete();
-        var rt = {
+        let rt = {
           rt: -999,
           msg: "ajax返回错误"
         };

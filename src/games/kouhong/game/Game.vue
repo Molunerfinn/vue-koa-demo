@@ -142,7 +142,7 @@ export default {
     })
 
     this.hg.time.on( 'setTime', (e)=>{
-      console.log( "setTime", e)
+      console.log( "setTime e=", e)
     })
     this.hg.time.on('end', this.endGame)
 
@@ -261,7 +261,7 @@ export default {
         showTopBar()
         //console.log( " readyLayer onframe event", this.hg.time);
       })
-      for (var i = 0; i < 1; i++) {
+      for (let i = 0; i < 1; i++) {
         this.addReadyList(true);
       }
       if (!HdGame.isplaySucess) {
@@ -269,9 +269,9 @@ export default {
       }
     },
     creatSugarY() {
-      var sugarY = new SugarY( this.imgData, this.sugarYsize );
+      let sugarY = new SugarY( this.imgData, this.sugarYsize );
       console.log( "creatSugarY ", this.sugarYsize, sugarY )
-      for (var i = 0; i < 4; i++) {
+      for (let i = 0; i < 4; i++) {
         sugarY.add(new Lolly(this.clubImg, GameArg.launchY * this.rem, true), this.GetRandomNum(i * 90 + GameArg.minRotate + 7, (i + 1) * 90 - GameArg.minRotate + 3));
       }
       GameArg.sugarY = sugarY;
@@ -282,7 +282,7 @@ export default {
       let jtBitmap = new LBitmap(new LBitmapData(tishiImg, 20, 12, 90, 300), 6.875 * this.rem, LGlobal.height - 7.5 * this.rem, 2.25 * this.rem, 7.5 * this.rem)
       let handBitmap = new LBitmap(new LBitmapData(tishiImg, 220, 30, 84, 95), 7.7 * this.rem, LGlobal.height, 2.1 * this.rem, 2.375 * this.rem)
       GameArg.mask = new LSprite(true);
-      var maskObj = new LBitmap(new LBitmapData("#000000", 0, 0, LGlobal.width, LGlobal.height));
+      let maskObj = new LBitmap(new LBitmapData("#000000", 0, 0, LGlobal.width, LGlobal.height));
       maskObj.alpha = 0.6;
       GameArg.mask.addChild(maskObj);
       GameArg.mask.addChild(jtBitmap);
@@ -349,9 +349,9 @@ export default {
     //
     addReadyList(isInit) {
       console.log( " addReadyList ", isInit)
-      var readyList = GameArg.readyList;
-      var interval = (GameArg.lollyH + 0.5) * this.rem;
-      var firstY = LGlobal.height - (GameArg.lollyH + 0.5) * this.rem;
+      let readyList = GameArg.readyList;
+      let interval = (GameArg.lollyH + 0.5) * this.rem;
+      let firstY = LGlobal.height - (GameArg.lollyH + 0.5) * this.rem;
       if (isInit) {
         readyList.push(new Lolly(this.clubImg, firstY - readyList.length * interval));
       } else {

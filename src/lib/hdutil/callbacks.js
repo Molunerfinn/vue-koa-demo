@@ -132,6 +132,7 @@ function Callbacks(options) {
   };
 
   this.fireWith = function( context, args){
+    console.log( "callbacks fireWith-> this", this, "context=", context )
     return this.fire( args )
   }
 }

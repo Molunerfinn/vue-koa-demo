@@ -19,7 +19,8 @@ export default {
     }
   },
   mounted(){
-    this.hg.sound.get("0",
+    let hg = this.hg
+    hg.sound.get("0",
        (lsound)=> {
         lsound.on("play", () => {
           console.log( "sound on play")
@@ -30,14 +31,20 @@ export default {
           this.soundoff = true
         })
     })
+
+    let soundPauseCord = this.getSoundPauseCord()
+    if (HdGame.getLocalStorage(soundPauseCord)) {
+      hg.sound.allowPlay = false;
+      hg.sound.pauseAll()
+    }
   },
   methods: {
     handlePlaySound( event ){
-      var soundPauseCord = "soundPause|" + this.gamePlayer.game_round_id + "|" + this.gamePlayer.openId;
-
-      console.log( "handlePlaySound", (new Date()).getTime())
       event.stopPropagation();
       event.preventDefault();
+      var soundPauseCord = this.getSoundPauseCord()
+
+      console.log( "handlePlaySound", (new Date()).getTime())
       if ( !this.soundoff ) {
         this.hg.sound.allowPlay = false;
         this.hg.sound.pauseAll();
@@ -48,7 +55,9 @@ export default {
         HdGame.removeLocalStorage(soundPauseCord)
       }
     },
-
+    getSoundPauseCord(){
+      return "soundPause|" + this.gamePlayer.game_round_id + "|" + this.gamePlayer.openid
+    }
   }
 }
 </script>

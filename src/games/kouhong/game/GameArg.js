@@ -1,10 +1,10 @@
 import {  EventBus } from '@/lib/EventBus'
 
-var g_rem = window.g_rem;
+let g_rem = window.g_rem;
 
 
 // 对游戏的配置
-var GameArg = {
+let GameArg = {
   createTime: 0.8,
   clubH: 2.625, //支架高
   lollyH: 3.625, //棒棒糖高

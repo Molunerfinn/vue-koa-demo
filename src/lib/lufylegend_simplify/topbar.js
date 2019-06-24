@@ -30,9 +30,10 @@ export function setGameTopBar(selector, hg, canvas, o ) {
     query(selector).set({'display': 'none'});
 
     let topBarStyles = query(selector).get([ 'offsetWidth', 'offsetHeight', 'background-color', 'color'])
-    let imgBoxStyles = query('.userImgBox').get([ 'border-color', 'color'])
+    let imgBoxStyles = query(selector +' .userImgBox').get([ 'border-color', 'color'])
     let gradeStyles = query('#grade').get([ 'font' ])
-    let timeStyles = query('.time').get([ 'font' ])
+    let timeBoxStyles = query(selector + ' .timeBox').get([ 'font' ])
+    let timeStyles = query(selector + ' .time').get([ 'font' ])
     console.log( "setGameTopBar=", topBarStyles, imgBoxStyles, gradeStyles, timeStyles)
 
     let r = canvas || LGlobal.canvas;
@@ -56,7 +57,7 @@ export function setGameTopBar(selector, hg, canvas, o ) {
     }
     if (timeStyles && hg.time.initTime !== 99999) {
         p.timeText = ["时间", 8 * l, 1 * l, {
-            font: q(timeStyles.font),
+            font: q(timeBoxStyles.font),
             textAlign: "center",
             textBaseline: "middle",
             fillStyle: topBarStyles.color
@@ -65,14 +66,18 @@ export function setGameTopBar(selector, hg, canvas, o ) {
             font: q(timeStyles.font)
         }]
     }
-    hg.time && hg.time.initTime !== 99999 && (hg.time.on("setTime",
-    function(s) {
-        p.time[0] = s
-    }).targetFlag = false);
-    hg.grade && (hg.grade.on("setGrade",
-    function(s) {
-        p.grade[0] = s
-    }).target = null);
+    if( hg.time && hg.time.initTime !== 99999){
+      hg.time.on("setTime", function(s) {
+          p.time[0] = s
+      })
+      hg.time.targetFlag = false
+    }
+    if(hg.grade){
+      hg.grade.on("setGrade", function(s) {
+          p.grade[0] = s
+      })
+      hg.grade.target = null
+    }
     hg.time.init();
     b(r, p);
     //

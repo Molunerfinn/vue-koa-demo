@@ -6,14 +6,6 @@ import LSound from '@/lib/lufylegend/media/LSound'
 import { UNDEFINED } from '@/lib/lufylegend/utils/LConstant';
 import lufylegend from '@/lib/lufylegend/ll';
 
-// gameTopBar{
-//  outerWidth, outerHeight backgroundColor color,
-//  userImgBox: {borderColor},
-//  userImg: {width, height, imgdata},
-//  timeBox:{ font },
-//  time:{ font },
-//  grade:{ font}
-//  }
 export class LWebAudio2 extends LWebAudio {
   constructor() {
     super()
