@@ -127,7 +127,6 @@ export default {
     })
     this.hg.time.on('end', this.endGame)
 
-
     this.hg.sound.get("0",
        (lsound)=> {
         lsound.on("play", () => {
@@ -159,7 +158,6 @@ export default {
       } else {
         this.startGame();
       }
-
     },
 
     handleRestartGame() {
