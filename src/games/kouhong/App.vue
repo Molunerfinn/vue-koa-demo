@@ -208,6 +208,7 @@ export default {
 
         //$('.homeBtnBox,.bottomSkill').hide();
         //$('.footerBox').hide();
+        that.ruleBoxCommand = 'hideIcon'
         that.ui.homeVisible = false
         that.ui.gameBoxVisible = true
         //$('.home, #ruleImg').hide();
@@ -287,6 +288,7 @@ export default {
       //$('.homeBtnBox').show();
       //$('.footerBox').show();
       //$('.gameBox').hide();
+      this.ruleBoxCommand = 'showIcon'
       this.ui.gameBoxVisible = false
       this.startBtnDelay();
       this.ui.homeVisible = true
@@ -417,6 +419,7 @@ export default {
           g_config.playerId = r.playerId
           this.resultBoxParams = arg
           this.resultBoxCommand = 'showResult'
+          this.ruleBoxCommand = 'showIcon'
           this.resultBoxVisible = true
           g_config.achieveToken = r.achieveToken
         } else if (r.rt == 11) {
