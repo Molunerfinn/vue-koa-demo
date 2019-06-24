@@ -66,6 +66,19 @@ export default class DpYiySocket {
       })
 
     });
+
+    socket.on('addReultEvent', async (data, callback) => {
+      console.log('addReultEvent');
+      console.log('data-------:',data);
+      const namespace = socket.nsp; // newNamespace.name === '/dynamic-101'
+      let runner = new YiyRunner(number)
+      let game_player_id = data.game_player_id
+      let score = data.score
+      runner.insertGameResult(game_player_id, score ).then((result)=>{
+        console.log(' insertGameResult return ',result )
+      })
+
+    });
 	}
 
 

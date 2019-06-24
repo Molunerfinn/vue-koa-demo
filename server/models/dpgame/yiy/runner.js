@@ -4,7 +4,8 @@
 const {
   Sequelize,
   DpYiyGameRound,
-  DpYiyGamePlayer
+  DpYiyGamePlayer,
+  DpYiyGameResult
 } = require('../../index')
 const {
   DpGameRoundStates
@@ -68,7 +69,7 @@ class YiyRunner {
     let game_round = await DpYiyGameRound.findByPk(gameroundid)
 
     const players = await this.GetRoundAllPlayers()
-    console.log('players=========:',players);
+    console.log('players=========:', players);
     let key = this.getRedisKey(gameroundid)
 
     redisdb.remove(key, () => {
@@ -86,10 +87,28 @@ class YiyRunner {
     let round = await this.getGameRound()
     let gameroundid = round.id
     let key = this.getRedisKey(gameroundid)
-    console.log('playerid===:',playerid,'score=====:',score);
+    console.log('playerid===:', playerid, 'score=====:', score);
     redisdb.hSet(key, playerid, {
       score
     })
+
+  }
+
+  async insertGameResult(playerid, score) {
+    let round = await this.getGameRound()
+    let gameroundid = round.id
+
+    console.log('playerid===:', playerid, 'score=====:', score);
+
+    let gameResultParams = {
+      gamePlayerId: playerid,
+      score: score,
+      game_round_id: gameroundid,
+      start_at: round.start_at
+    }
+
+    let gameResult = DpYiyGameResult.build(gameResultParams)
+    let result = await gameResult.save()
 
   }
 
@@ -206,6 +225,17 @@ class YiyRunner {
     await round.update({
       state: DpGameRoundStates.created
     })
+
+    let now = new Date();
+
+    let res = await DpYiyGameResult.update({
+      deleted_at: now
+    }, {
+      where: {
+        game_round_id: round.id
+      }
+    })
+
     return round
   }
 

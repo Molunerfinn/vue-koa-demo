@@ -36,11 +36,10 @@
   			<div class="timeContainer">
   				<img src="~@/assets/dpgame/yiy/images/shakeMP_timeIcon.png" class="time-icon">
   				00:<span v-text="formatTime"></span>
-          <span class="pull-left">当前得分</span>
-  				<span class="pull-right" v-text="score"></span>
   			</div>
-  			<div class="countsContainer" style="display:none;">
-
+  			<div class="countsContainer" >
+          <span class="pull-left">当前得分</span>
+          <span class="pull-right" v-text="score"></span>
   			</div>
       </div>
       <div class="indexb-bottom">
@@ -199,7 +198,7 @@
       this.hg.grade = new HdGame.Grade(0)
 
       this.hg.time = new HdGame.Time(g_config.initTime, { updateFlag: true, isDesc: false })
-    
+
       //simplifyLufylegend( this.hg, window.g_rem )
       HdGame.initJsHead(this.hg, GameRes)
       if (this.debug) {
@@ -443,6 +442,7 @@
   				score: that.score
   			};
   			that.socket.emit('ShakeEvent', query);
+        that.socket.emit('addReultEvent', query);
   		},
       signUpOver(res) {
         console.log('==============signUpOver==============')
