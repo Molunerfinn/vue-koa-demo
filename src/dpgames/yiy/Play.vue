@@ -98,6 +98,9 @@
   import queryString from 'query-string'
   import io from 'socket.io-client'
   import constant from '@/game_constant.js'
+  import Shake from '@/lib/shake.js'
+
+  // const Shake = require('@/lib/shake.js');
 
   const gameUrlBase = process.env.GAME_URL_BASE
   // //import {simplifyLufylegend } from '@/lib/simplify'
@@ -383,38 +386,56 @@
   			}
   		},
   		// 处理摇一摇事件
-  		handleMotion: function(e){
-  			//var t = e.acceleration;
-  			var t = e.accelerationIncludingGravity;
-  			var n = (new Date).getTime();
-  			if (n - this.status.lastUpdate > 10) {
-  					var i = n - this.status.lastUpdate;
-  					this.status.lastUpdate = n,
-  					this.status.x = t.x,
-  					this.status.y = t.y,
-  					this.status.z = t.z;
-  					var o = Math.abs(this.status.x + this.status.y + this.status.z - this.status.lastX - this.status.lastY - this.status.lastZ) / i * 1e4;
-            //this.o_list.push(o)
-            //o > this.status.SHAKE_THRESHOLD && (this.status.count++, this.status.canShake && (this.status.canShake = !1, this.handleShaking())),
-  					if( o > this.status.SHAKE_THRESHOLD ){
-              this.$refs['logger'].log( o )
-              this.score++;
-              if( this.status.canShake){
-                this.status.canShake = false, this.handleShaking();
-              }
-            }
-
-  					this.status.lastX = this.status.x,
-  					this.status.lastY = this.status.y,
-  					this.status.lastZ = this.status.z
-  			}
-  		},
+  		// handleMotion: function(e){
+  		// 	//var t = e.acceleration;
+  		// 	var t = e.accelerationIncludingGravity;
+  		// 	var n = (new Date).getTime();
+  		// 	if (n - this.status.lastUpdate > 10) {
+  		// 			var i = n - this.status.lastUpdate;
+  		// 			this.status.lastUpdate = n,
+  		// 			this.status.x = t.x,
+  		// 			this.status.y = t.y,
+  		// 			this.status.z = t.z;
+  		// 			var o = Math.abs(this.status.x + this.status.y + this.status.z - this.status.lastX - this.status.lastY - this.status.lastZ) / i * 1e4;
+      //       //this.o_list.push(o)
+      //       //o > this.status.SHAKE_THRESHOLD && (this.status.count++, this.status.canShake && (this.status.canShake = !1, this.handleShaking())),
+  		// 			if( o > this.status.SHAKE_THRESHOLD ){
+      //         this.$refs['logger'].log( o )
+      //         this.score++;
+      //         if( this.status.canShake){
+      //           this.status.canShake = false, this.handleShaking();
+      //         }
+      //       }
+      //
+  		// 			this.status.lastX = this.status.x,
+  		// 			this.status.lastY = this.status.y,
+  		// 			this.status.lastZ = this.status.z
+  		// 	}
+  		// },
   		// 开始游戏
   		startGame: function(){
   			var that = this;
   			this.status.canShake = true;
   			// 添加事件监听器
-  			window.addEventListener("devicemotion", that.handleMotion, true);
+  			// window.addEventListener("devicemotion", that.handleMotion, true);
+        function handler() {
+          that.score++;
+        }
+        //create a new instance of shake.js.
+        var myShakeEvent = new Shake({
+          threshold: 0.1, //default velocity threshold for shake to register
+          timeout: 30, //default interval between events
+          handler: handler
+        });
+        // start listening to device motion
+        myShakeEvent.start();
+        // register a shake event
+        window.addEventListener('shake', shakeEventDidOccur, false);
+        //shake event callback
+        function shakeEventDidOccur() {
+          //put your own code here etc.
+          alert('Shake!');
+        }
   			// 将分数实时发送给服务端
   			that.sendCount();
 

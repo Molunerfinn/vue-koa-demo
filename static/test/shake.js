@@ -20,7 +20,8 @@
     } else {
       global.Shake = factory(global, global.document);
     }
-  }(typeof window !== 'undefined' ? window : this, function(window, document) {
+  }
+  (typeof window !== 'undefined' ? window : this, function(window, document) {
 
     'use strict';
 
