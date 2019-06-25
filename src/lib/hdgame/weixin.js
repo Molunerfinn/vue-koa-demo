@@ -46,8 +46,6 @@ export function setWxShare(wxShareArg, desc, url, callBack) {
   console.log('wxShareArg url=====================',url);
 
   wx.ready(function() {
-
-
     try {
       wx.onMenuShareAppMessage({
         title: decodeHtml(wxShareArg.title),
@@ -105,6 +103,7 @@ export function setWxShare(wxShareArg, desc, url, callBack) {
   wxConfigArg.url = url;
   wxConfigArg.callBack = callBack;
   wxConfigArg.pyqUrl = pyqUrl;
+
   //g_config._minapp_findAct && (wx.miniProgram.postMessage({
   //  data: HdGame.getminData()
   //}))
