@@ -277,8 +277,8 @@
           (this.gameInfo['gameResult'] !== null && this.gameInfo['gameResult'] !== undefined)
         ) {
           var r = this.gameInfo['ret']
-          if (this.gameInfo['gamePlayer'].score == constant.GameConstant.maxTime) {
-            this.gameInfo['gamePlayer'].score = 0
+          if (this.gameInfo['gameResult'].score == constant.GameConstant.maxTime) {
+            this.gameInfo['gameResult'].score = 0
           }
           this.rank = r.rank
         }
@@ -455,7 +455,7 @@
   		//结束游戏
   		endGame:function(){
   			var that = this;
-  			clearInterval(that.sendCountTimeId);
+  			clearInterval(that.sendCountTimeId) ;
   			window.removeEventListener("devicemotion", that.handleMotion, true);
   			// 将最后一次的分数发送给服务端
   			var query = {

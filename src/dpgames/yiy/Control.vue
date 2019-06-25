@@ -293,10 +293,16 @@ export default {
 		// 获取游戏排名
 		getFinalScores: function(){
 			var that = this;
-			that.socket.emit('GetGamePlayersEvent', {}, function(data){
-				console.log( "GetGamePlayersEvent=", data )
-				that.gamePlayers = data.gamePlayers
-				that.gamePlayerScores = data.gamePlayers.sort(function(a,b){ return b.score-a.score; })
+			that.socket.emit('GetGameResultsEvent', {}, function(data){
+				console.log( "GetGameResultsEvent=", data )
+        let gameResults = data.gamePlayers
+				that.gamePlayers = gameResults.map((res)=>{
+          return {
+            nickname: res.GamePlayer.nickname,
+            avatar: res.GamePlayer.avatar,
+            score:res.score}
+        })
+				that.gamePlayerScores = that.gamePlayers.sort(function(a,b){ return b.score-a.score; })
 			});
 		},
 		// 开放游戏签到，获取签到人员

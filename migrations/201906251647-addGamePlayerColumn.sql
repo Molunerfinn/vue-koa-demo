@@ -1,0 +1,7 @@
+ALTER TABLE `game_players`
+ADD COLUMN `sex` VARCHAR(45) NULL AFTER `token`,
+ADD COLUMN `language` VARCHAR(45) NULL AFTER `sex`,
+ADD COLUMN `country` VARCHAR(45) NULL AFTER `language`,
+ADD COLUMN `province` VARCHAR(45) NULL AFTER `country`,
+ADD COLUMN `city` VARCHAR(45) NULL AFTER `province`,
+ADD COLUMN `ip` VARCHAR(45) NULL AFTER `city`;

@@ -133,18 +133,19 @@
 
         this.hg.time.setInitTime(this.gameRound.duration)
 
-        if (this.gamePlayer.token == undefined) {
+        if (this.gamePlayer.token == undefined&&this.gameRound.contact_required) {
           this.ruleBoxCommand = 'hideIcon'
           this.ui.homeVisible = false
           this.ui.unstarted = false
           this.signUpCommand = 'show'
-        } else if (this.gamePlayer.token !== undefined) {
+        } else if (this.gamePlayer.token !== undefined||this.gameRound.contact_required) {
           this.ruleBoxCommand = 'showIcon'
           this.ui.homeVisible = true
         }
 
         let wxConfig = this.gameInfo['wxConfig']
         console.log('App wxConfig=======:', wxConfig)
+        console.log('imgUrl---:',process.env.GAME_HOST + this.skinAssets.shareImgPath);
         if (wxConfig) {
           HdGame.initWxConfig(wxConfig)
 
@@ -337,7 +338,7 @@
           this.gamePlayer = this.gameInfo['gamePlayer']
           this.dataList = this.gameRound.dataList
 
-          this.hg.time = new HdGame.Time(this.gameRound.duration, {updateFlag: true})
+          this.hg.time.setInitTime(this.gameRound.duration)
         })
         this.gameState = 'restart'
         this.resultBoxVisible = false

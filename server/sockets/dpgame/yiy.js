@@ -103,13 +103,25 @@ export default class DpYiySocket {
       })
     });
 
-    // 取得签到用户事件, 当游戏结束后，重新加载页面，也会调用这个事件，列出成绩
+    // 取得签到用户事件
     socket.on('GetGamePlayersEvent', async (data, callback) => {
       console.log("GetGamePlayersEvent:", socket.id)
       //console.log("GetGamePlayersEvent rooms=",socket.rooms);
       let number = getGameRoundNumber(socket)
       let runner = new YiyRunner(number)
       let gamePlayers = await runner.getAllPlayers()
+      callback({
+        gamePlayers
+      })
+    });
+
+    //当游戏结束后，调用这个事件，列出成绩
+    socket.on('GetGameResultsEvent', async (data, callback) => {
+      console.log("GetGameResultsEvent:", socket.id)
+      //console.log("GetGamePlayersEvent rooms=",socket.rooms);
+      let number = getGameRoundNumber(socket)
+      let runner = new YiyRunner(number)
+      let gamePlayers = await runner.getAllResults()
       callback({
         gamePlayers
       })
