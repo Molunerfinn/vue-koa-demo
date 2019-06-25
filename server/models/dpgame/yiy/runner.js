@@ -101,7 +101,7 @@ class YiyRunner {
     console.log('playerid===:', playerid, 'score=====:', score);
 
     let gameResultParams = {
-      gamePlayerId: playerid,
+      game_player_id: playerid,
       score: score,
       game_round_id: gameroundid,
       start_at: round.start_at
@@ -168,6 +168,7 @@ class YiyRunner {
         association: 'GamePlayer'
       }]
     })
+    console.log('getAllResults----:',gameResults);
     return gameResults
   }
 

@@ -120,6 +120,7 @@ export default class GamesController {
           game_round_id: gameRound.id,
         }
       })
+      console.log('gameResult------:',gameResult);
       let ret = {
         rt: 0,
         isSuc: true,
