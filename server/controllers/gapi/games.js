@@ -65,6 +65,7 @@ export default class GamesController {
           country: parsed.country,
           province: parsed.province,
           city: parsed.city,
+          ip: getClientIP(ctx.req),
           score: 0,
           max_score: 0
         }
