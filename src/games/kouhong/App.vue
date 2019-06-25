@@ -44,6 +44,7 @@
 </template>
 
 <script>
+import $ from 'jquery'
 import Game from './game/Game.vue'
 import GameRes from './game/GameRes'
 import HdGame from '@/lib/hdgame'
@@ -173,6 +174,11 @@ export default {
       gameRound: {},
     }
   },
+  mounted(){
+    this.$nextTick(()=>{
+      this.startBtnDelay()
+    })
+  },
   methods: {
     signUpOver(res) {
       console.log('==============signUpOver==============')
@@ -301,14 +307,15 @@ export default {
       this.hg.fire('home');
     },
     startBtnDelay() {
-      //$('.titleImg').removeClass('titleDown').addClass('titleDown');
-      //$('#startBtnImg').removeClass('startTada');
+      $('#titleImg').removeClass('titleDown')
+      $('#startBtnImg').removeClass('startTada');
 
       this.hg.sound.pauseAll();
 
-      //setTimeout(function() {
-      //  $('#startBtnImg').addClass('startTada');
-      //}, 1000);
+      setTimeout(function() {
+        $('#titleImg').addClass('titleDown');
+        $('#startBtnImg').addClass('startTada');
+      }, 1000);
     },
     activateSound() { //兼容ios下 WebAudio类型的对象无法自动播放，必须在点击事件中播放过一次，才允许播放
       try {
@@ -507,4 +514,5 @@ export default {
 .kouhong {
   font-size: 14px;
 }
+
 </style>
