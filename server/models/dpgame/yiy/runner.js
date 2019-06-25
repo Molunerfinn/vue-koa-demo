@@ -153,6 +153,25 @@ class YiyRunner {
     return gamePlayers
   }
   /**
+   * 取得玩家信息，在数据库取得，以便显示玩家列表
+   * @param {} gameroundid
+   */
+  async getAllResults() {
+    let round = await this.getGameRound()
+    let gameroundid = round.id
+    let gameResults = await DpYiyGameResult.findAll({
+      where: {
+        game_round_id: gameroundid
+      },
+      include: [{
+        attributes: ['nickname', 'avatar', 'openid'],
+        association: 'GamePlayer'
+      }]
+    })
+    return gameResults
+  }
+
+  /**
    * 取得玩家成绩，结果按照成绩排序
    * 开始游戏后，缓存中取得
    * @param {} gameroundid

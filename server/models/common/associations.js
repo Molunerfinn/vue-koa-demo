@@ -18,8 +18,8 @@ export function buildGameAssociations(db){
         console.log( "buildGameAssociations "+ code + "GamePlayer," + code + "GameResult")
         model.hasMany( playerModel, { foreignKey: 'game_round_id', as: 'GamePlayers'})
         playerModel.hasMany( resultModel, {foreignKey: 'game_player_id', as: 'GameResults'})
-
         playerModel.belongsTo( model, { foreignKey: 'game_round_id', as: 'GameRound'})
+        resultModel.belongsTo( playerModel, { foreignKey: 'game_player_id', as: 'GamePlayer'})
       }
     }
   })
