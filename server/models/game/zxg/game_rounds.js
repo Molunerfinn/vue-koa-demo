@@ -137,7 +137,8 @@ function getInfo() {
     dataList,
     playPath,
     code: this.code,
-    duration: this.duration
+    duration: this.duration,
+    contact_required: this.contact_required
   }
 
 }

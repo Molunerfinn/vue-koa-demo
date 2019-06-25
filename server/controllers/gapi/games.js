@@ -69,11 +69,11 @@ export default class GamesController {
           max_score: 0
         }
         if (gameRound.contact_required == 0) {
-          let res = await GamePlayer.create(gamePlayer)
+          gamePlayer = await GamePlayer.create(gamePlayer)
         }
       }
       let playerInfo = gamePlayer
-      if (gamePlayer.id) {
+      if (gamePlayer.token!=undefined) {
         // 取得玩家相关信息
         playerInfo = await gamePlayer.getInfo()
       }
