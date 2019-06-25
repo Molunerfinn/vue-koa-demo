@@ -38,12 +38,15 @@ export function setWxShare(wxShareArg, desc, url, callBack) {
   console.log('wxShareArg =====================',wxShareArg);
   var pyqUrl = url;
 
+  var wxConfigShareImg = wxShareArg.imgUrl;
+  if (!/^http:/.test(wxConfigShareImg) && /^\/\//.test(wxConfigShareImg)) {
+    wxConfigShareImg = "http:" + wxConfigShareImg
+  }
+  console.log('wxConfigShareImg------:',wxConfigShareImg);
+  console.log('wxShareArg url=====================',url);
+
   wx.ready(function() {
-    var wxConfigShareImg = wxShareArg.imgUrl;
-    if (!/^http:/.test(wxConfigShareImg) && /^\/\//.test(wxConfigShareImg)) {
-      wxConfigShareImg = "http:" + wxConfigShareImg
-    }
-    console.log('wxShareArg url=====================',url);
+
 
     try {
       wx.onMenuShareAppMessage({

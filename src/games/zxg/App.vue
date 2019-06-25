@@ -145,6 +145,7 @@
 
         let wxConfig = this.gameInfo['wxConfig']
         console.log('App wxConfig=======:', wxConfig)
+        console.log('imgUrl---:',process.env.GAME_HOST + this.skinAssets.shareImgPath);
         if (wxConfig) {
           HdGame.initWxConfig(wxConfig)
 
