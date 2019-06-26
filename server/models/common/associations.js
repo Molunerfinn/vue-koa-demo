@@ -10,6 +10,19 @@ export function buildGameAssociations(db){
 
       let playerModel = models.find((m)=> m.name == (code + "GamePlayer"))
       let resultModel = models.find((m)=> m.name == (code + "GameResult"))
+      let albumModel = models.find((m)=> m.name == (code + "Album"))
+      let photoModel = models.find((m)=> m.name == (code + "Photo"))
+      console.log('code----------------:',code);
+      if(code=='ztoupiao'||code=='ZTouPiao'){
+        console.log('albumModel',albumModel,'PhotoModel',photoModel);
+      }
+
+
+      if(albumModel&&photoModel){
+        console.log( "buildGameAssociations "+ code + "Album," + code + "Photo")
+        photoModel.belongsTo( albumModel, { foreignKey: 'photo_id', as: 'Album'})
+        albumModel.hasMany( photoModel, {foreignKey: 'photo_id', as: 'Photo'})
+      }
 
       if( playerModel && resultModel){
         // keep association name same for all games
