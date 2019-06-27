@@ -298,21 +298,22 @@
           function cookies() {}
           if (that.canPlay == true) {
             showGame()
-          }
-          console.log('showGameBox: ' + that.hg.showGameBox)
-          logs()
-          cookies()
+            console.log('showGameBox: ' + that.hg.showGameBox)
+            logs()
+            cookies()
 
-          complete(true)
-          console.log('fire startGame')
-          that.hg.fire('startGame')
+            complete(true)
+            console.log('fire startGame')
+            that.hg.fire('startGame')
+            that.gameState = 'start'
+          }
+
         }
 
         Promise.resolve()
           .then(() => {
             console.log(' then->handleResult')
             handleResult()
-            this.gameState = 'start'
           })
           .catch(error => {
             console.log(' catch->handleFail', error)
