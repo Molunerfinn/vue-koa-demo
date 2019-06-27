@@ -1,8 +1,8 @@
 import { gameSkinName } from '@/config/env'
 
 const sharedBase = '/static/shared'
-const imageBase = '/static/game/zxg/image'
-const skinResRoot = '/static/game/zxg/skin_'+ gameSkinName + '/image'
+const imageBase = '/static/game/ztoupiao/images'
+const skinResRoot = '/static/game/ztoupiao/skin_'+ gameSkinName
 
 const GameRes = {
     "loadingStyle": 1,
@@ -64,8 +64,8 @@ const GameRes = {
     "homeBgPath": skinResRoot + "/wx/homebg.jpg",
     "titleImg_path": skinResRoot + "/wx/titleimg.png",
     skinAssets: {
-      logoImgPath: skinResRoot + "/wx/logo.png",
-      shareImgPath: skinResRoot + "/wx/share.jpg",
+      reviewImgPath: skinResRoot + "/images/poster1.jpg",
+      photographsImgPath: skinResRoot + "/images/poster2.jpg",
       ruleIconPath: skinResRoot + "/wx/ruleicon.png",
       startImgPath: skinResRoot + "/wx/startbtn.png",
       gameBgPath: skinResRoot + "/wx/gamebg.jpg",

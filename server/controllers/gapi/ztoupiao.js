@@ -51,13 +51,19 @@ export default class GamesController {
         }
       })
       console.log('gameRound--:', gameRound);
+      let allPlayer = await GamePlayer.findAndCountAll({
+        where: {
+          game_round_id: gameRound.id
+        }
+      })
+
 
       let gameResult = await GameResult.findAll({
         where: {
           game_round_id: gameRound.id
         }
       })
-      // 取得玩家信息
+      // 取得当前玩家信息
       let gamePlayer = await GamePlayer.findOne({
         where: {
           game_round_id: gameRound.id,
@@ -106,6 +112,7 @@ export default class GamesController {
       let url = ctx.header.referer
       console.log('url===================:', url);
       let gameInfo = await gameRound.getInfo()
+      gameInfo.playerCount = allPlayer.count
       let wxConfig = await getWxJsConfig(url, gameRound)
       var allInfo = {
         gameAlbums: gameAlbums,
@@ -411,7 +418,7 @@ export default class GamesController {
   }
 
   static async getRoundState(ctx) {
-    let code = ctx.params.code
+    let code = ctx.request.body.code
     let GameRound = getGameRoundModelByCode(code)
     let number = ctx.params.number
 
