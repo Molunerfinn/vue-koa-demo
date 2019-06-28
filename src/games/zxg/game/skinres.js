@@ -13,8 +13,8 @@ skinRes.runlin = {
     {
       "name": "xg2",
       "size": {
-        "width": "2.75rem",
-        "height": "4.5rem"
+        "height": "2.75rem",
+        "width": "4.5rem"
       }
     },
     {

@@ -1,35 +1,38 @@
 module.exports = (sequelize, DataTypes) => {
   const Op = sequelize.Op
+  //filename: filename, byte_size: byte_size, checksum: checksum, content_type: content_type, metadata: metadata
 
   const model = sequelize.define('ZTouPiaoPhoto', {
-    photo_id: {
+    album_id: {
       type: DataTypes.BIGINT(11),
       allowNull: false,
       defaultValue: '0'
     },
-    type: {
+    key: {
+      type: DataTypes.STRING(64),
+      allowNull: false,
+      unique: true
+    },
+    checksum: {
+      type: DataTypes.STRING(64),
+      allowNull: false,
+      defaultValue: ''
+    },
+    file_name: {
       type: DataTypes.STRING(300),
       allowNull: false,
       defaultValue: ''
     },
-    name: DataTypes.STRING(128),
-    desc: DataTypes.STRING(128),
-    image_file_name: {
+    content_type: {
       type: DataTypes.STRING(300),
       allowNull: false,
       defaultValue: ''
     },
-    image_content_type: {
-      type: DataTypes.STRING(300),
-      allowNull: false,
-      defaultValue: ''
-    },
-    image_file_size: {
+    file_size: {
       type: DataTypes.BIGINT(11),
       allowNull: false,
       defaultValue: '0'
     },
-    image_updated_at: DataTypes.DATE
   }, {
     createdAt: 'created_at',
     updatedAt: 'updated_at',
