@@ -1,175 +1,32 @@
 <template>
   <!-- 锦囊 -->
- <div class="MyAccountBox" >
-   <a  href="javascript:void(0)"  v-show="ui.iconVisible">
-   <div class="ruleImg imgContainer absCenter" _mouseIn="0" >
-     <div id="ruleImg" @touchstart="handleShowPopup" class="slaveImg abs notNeedFatherChage outSpecialDivAutoFit hd-img-fillDiv ruleImgAnimate" style='width: 3.5rem; height: 3.5rem; top: 0.35rem; left: 75vw;'></div>
-   </div>
-    </a>
-
-   <div id="poupInfoBox">
-     <div class="poupHead">
-       <div class="poupTitleBox">
-         <div id="actionExpBtn" class="poupTitleMune checked" _flag="0" @touchstart="showTab( 0 )">
-           <div class="item">活动说明</div>
-         </div>
-
-         <div id="ranBtn" class="poupTitleMune " _flag="1"  @touchstart="showTab( 1 )">
-           <div class="item">排行榜</div>
-         </div>
-
-
-         <div id="prizeBtn" class="poupTitleMune hide" _flag="3">
-           <div class="item">我的奖品<span id='Award_Round_Dot' class='redDot hide'></span></div>
-         </div>
-         <div id="winnerBtn" class="poupTitleMune hide" _flag="4">
-           <div class="item">获奖名单</div>
-         </div>
-
-         <div class="poupSlideBar">
-           <div class="slideBarTip transitionPanel"></div>
-         </div>
+ <div class="MyAccountBox" v-show="ui.myAccountVisible">
+   <div class="works_list">
+     <div class="weui-navbar works">
+       <div class="weui-navbar__item" @touchend="showWork()">
+         我的作品
        </div>
-       <div class="poupClose" @touchstart="handleHidePopup"></div>
-       <div style="clear:both; height:0"></div>
-     </div>
-     <div id="popTabBox" class="popTabBox transitionPanel" style="left:0">
-
-       <div id="ruleBox" class="poupMain" _flag="2" style="-webkit-overflow-scrolling:touch;">
-         <div class="poupMainInfo">
-           <div id="explainBox" class="poupLine" data-sortKey="a">
-             <div class="mainTitle">游戏规则</div>
-
-             <p id="explaiDrawInfoBox" class="" v-html="gameRound.desc">
-             </p>
-
-           </div>
-
-           <div id="awardLine" class="poupLine hide" data-sortKey="b">
-             <div class="mainTitle">活动奖品</div>
-             <div id="awardLineBox">
-               <div class='unComfortLine awardItem '><span class='awardStyle'>一等奖</span> : <span class='award'>价值100元礼品</span></div>
-               <div class='unComfortLine awardItem '><span class='awardStyle'>二等奖</span> : <span class='award'>价值50元礼品</span></div>
-               <div class='unComfortLine awardItem '><span class='awardStyle'>三等奖</span> : <span class='award'>价值10元礼品</span></div>
-               <div class='unComfortLine awardItem hide'><span class='awardStyle'>四等奖</span> : <span class='award'>价值5元小礼品</span></div>
-               <div class='unComfortLine awardItem hide'><span class='awardStyle'>五等奖</span> : <span class='award'>价值5元小礼品</span></div>
-               <div class='unComfortLine awardItem hide'><span class='awardStyle'>六等奖</span> : <span class='award'>价值5元小礼品</span></div>
-               <div class='unComfortLine awardItem hide'><span class='awardStyle'>七等奖</span> : <span class='award'>价值5元小礼品</span></div>
-               <div class='unComfortLine awardItem hide'><span class='awardStyle'>八等奖</span> : <span class='award'>价值5元小礼品</span></div>
-               <div class='awardItem anwei hide'><span class='awardStyle'>安慰奖</span> : <span class='award'>价值5元小礼品</span></div>
-
-             </div>
-             <div id="selfAwardLine" class="hide" style="word-wrap: break-word;"></div>
-           </div>
-
-           <div id="gameDateTime" class="poupLine" data-sortKey="c">
-             <div class="mainTitle">活动时间</div>
-             <p><span id="startDate">{{displayStartAt}}</span>&nbsp;-&nbsp;<span id="endDate">{{displayEndAt}}</span></p>
-           </div>
-           <div class="hostLine poupLine" data-sortKey="d">
-             <div class="mainTitle">奖品描述</div>
-             <p><a class="hostName" v-html="gameRound.award_desc"/></a>
-             </p>
-           </div>
-
-           <!--<div id="" style="font-size: 0.6rem; position: relative;" class="noMove">投诉</div>-->
-         </div>
-
-       </div>
-
-       <div id="rankBox" class="poupMain hide" _flag="1" style="-webkit-overflow-scrolling:touch;">
-         <div class="poupMainInfo">
-           <div id="noRank" class='' v-show="!hasRank">暂无排名</div>
-           <div id="rankMain" class="getRankHeight" v-show="hasRank">
-             <div style="margin-top:0.7rem;margin-left: 0.25rem;">当前排名：<span id="rank"> {{currentPlayerRank}}</span> （只显示前<span id="showRankNum">100</span>名）</div>
-             <div style="padding:0rem 0.5rem">
-               <table class="rankTable" cellspacing="0" cellpadding="0">
-                 <thead>
-                   <tr style="line-height: 1rem;">
-                     <th>排行</th>
-                     <th>头像</th>
-                     <th>昵称</th>
-                     <th>成绩</th>
-                   </tr>
-                 </thead>
-                 <tr class="rankInfo" v-for="(player,i) in gamePlayerRank">
-                   <td>{{i+1}}</td>
-                   <td><div><img class="userImg" :src="player.avatar"   /> </div></td>
-                   <td class="userName" > {{player.nickname}}</td>
-                   <td> {{player.max_score}} 个</td>
-                 </tr>
-
-               </table>
-             </div>
-           </div>
-           <div id="rankHeight">
-             <table id="rankInfoBox" class="rankTable" cellspacing="0" cellpadding="0" style="margin-top: 0;"></table>
-           </div>
-         </div>
-
-       </div>
-
-       <div id="awardBox" class="poupMain hide" _flag="3">
-         <div id="awardInfoBox">
-           <div id="awardInfo">
-             <div style="line-height: 2.6rem">暂无中奖记录</div>
-           </div>
-
-           <div id="awardContactInfo" class="hide">
-             <div class="titleLine"><span class="title">联系信息</span></div>
-             <div class="contactGroup">
-               <div class="contactItem contactName hide">姓名： <span>monica</span></div>
-               <div class="contactItem contactPhone hide">电话： <span>13200000000</span></div>
-
-               <div class="contactItem contactAddress hide">地址： <span>广东省广州市海...</span></div>
-
-             </div>
-             <div class="updateBtn abs">修改</div>
-           </div>
-         </div>
-         <div class='attentionBox'>
-           <div class='menuBtnBox'>
-             <a class='menuName'>关注我们</a>
-           </div>
-           <div class='holdBox'></div>
-         </div>
-       </div>
-
-       <div id="regAwardBox" class="poupMain hide" _flag="4" style="-webkit-overflow-scrolling:touch;">
-         <div class="poupMainInfo">
-           <div id="noRegAward" class="hide" style="margin-left:3px;">尚未公布获奖名单，详情请查看活动说明</div>
-           <div id="regAwardMain" style="display:none;">
-
-             <div class="regAwardList">
-               <div class="mainTitle">一等奖</div>
-               <div class="playerName" style="margin-bottom:12px;"></div>
-             </div>
-
-             <div class="regAwardList">
-               <div class="mainTitle">二等奖</div>
-               <div class="playerName" style="margin-bottom:12px;"></div>
-             </div>
-
-             <div class="regAwardList">
-               <div class="mainTitle">三等奖</div>
-               <div class="playerName" style="margin-bottom:12px;"></div>
-             </div>
-
-           </div>
-         </div>
-         <div class='attentionBox'>
-           <div class='hdskillInfo skillInfo theRunningAdClass'><a class="theSpecialTarget" href='http://mp.weixin.qq.com/s?__biz=MjM5MTk5MjI3OA==&#x26;mid=209854000&#x26;idx=1&#x26;sn=82241d924839270d3ea820ad2d56c01b#rd'>我也要创建活动</a><span class='gotoFlag'><i></i></span></div>
-           <div class='holdBox'></div>
-         </div>
+       <div class="weui-navbar__item" @touchend="showCard()">
+         我的卡券
        </div>
      </div>
-   </div>
-
-   <div id="activityKit" class="poupMain bg hide">
-     <div class="arrow" id="arrow"></div>
-     <div id="tip_txt">
-       <p>提示</p>
-       <p style="margin-top: 0.25rem">点击锦囊即可查看活动规则、排行榜、奖品等信息。</p>
+     <div class="myWorks_list" v-show="ui.workVisible">
+       我的作品
+       <li v-for="work in myWorks">
+         <img  :src="work.image_file_name"/>
+         <a>{{work.name}}</a>
+         <a>{{work.score}}</a>
+         <div class="userImgBox" style="border-color:"><img :src="gamePlayer.avatar" class="userImg" /></div>
+       </li>
+     </div>
+     <div class="myCards_list" v-show="ui.cardVisible">
+       我的卡券
+       <li v-for="card in myCards">
+         <img  :src="card.image_file_name"/>
+         <a>{{card.name}}</a>
+         <a>{{card.score}}</a>
+         <div class="userImgBox" style="border-color:"><img :src="card.GamePlayers.avatar" class="userImg" /></div>
+       </li>
      </div>
    </div>
 
@@ -182,6 +39,11 @@ import {
   getRanking
 } from '@/api/games/zxg'
 import moment from 'moment';
+// import { getRoundState } from '@/api/games/ztoupiao'
+// import queryString from 'query-string'
+
+import queryString from 'query-string'
+import { getMyWorkInfo,getMyCardInfo } from '@/api/games/ztoupiao'
 
 import HdGame from '@/lib/hdgame'
 
@@ -192,31 +54,53 @@ export default {
     },
     ruleIconUrl: String, // 锦囊按钮图片
     command:{
-      default: 'none' // 可选值: showResult, showGift
+      default: false // 可选值: showResult, showGift
     },
-    gamePlayer:{
-      type: Object
+    gameResult:{
+      type: Array
     }
   },
   data() {
     return {
+      getRoundState:{},
       ui:{
-        iconVisible: false,
-        statusBox: true,
-        statusScrollWrap: true,
-        noRank: false,
-        rankMain: false
+        myAccountVisible:false,
+        workVisible:true,
+        cardVisible:false,
       },
       style:{
         statusUserImg: {}
       },
+      gamePlayer:{},
       gamePlayerRank: [],
       menuLen: 2,
-      currentPlayer:{}
+      currentPlayer:{},
+      myWorks:[],
+      myCards:[]
     }
   },
   created() {
     window.$ = $
+
+    const parsed = queryString.parse(location.search)
+    var number = parsed.number
+
+    var params = {
+      parsed: parsed,
+      code:'ztoupiao'
+    }
+
+    getMyWorkInfo(number, params).then(data => {
+      console.log('getMyWorkInfo---:',data);
+      this.myWorks = data.gameAlbums;
+      this.gamePlayer = data.gamePlayer
+      console.log('gamePlayer in account',this.gamePlayer);
+    });
+    getMyCardInfo(number, params).then(data => {
+      console.log('getMyCardInfo---:',data);
+      // this.myCards = data;
+    });
+
   },
   mounted(){
     // mounted 之后 document 才有ruleIme，可以设置css
@@ -231,6 +115,7 @@ export default {
 
     $(".poupTitleBox .poupTitleMune,.poupTitleBox .slideBarTip").css("width", 13.25 / this.menuLen + "rem");
     $("#poupInfoBox .poupMain").height($("#poupInfoBox").height() - $(".poupHead").outerHeight()  );
+
 
   },
   computed:{
@@ -248,6 +133,18 @@ export default {
     }
   },
   methods: {
+    showWork(){
+      var that = this
+      console.log('showNew');
+      that.ui.workVisible = true
+      that.ui.cardVisible = false
+    },
+    showCard(){
+      var that = this
+      console.log('showHot');
+      that.ui.workVisible = false
+      that.ui.cardVisible = true
+    },
 
     //
     handleShowPopup( flag ){
@@ -323,31 +220,19 @@ export default {
     command: function (val, oldVal) {
       //外部触发游戏开始
       console.log('rulebox','watch-command new: %s, old: %s', val, oldVal)
-      if( val == 'showIcon'){
-        this.ui.iconVisible = true
+      if( val == true){
+        this.ui.myAccountVisible = true
       }
-      if( val == 'hideIcon'){
-        this.ui.iconVisible = false
+      if( val == false){
+        this.ui.myAccountVisible = false
       }
-      if( val == 'showResult'){
-        this.showResult()
-      }
-      if( val == 'showRank'){
-        this.handleShowPopup( 1 )
-      }
-      // 用于重置command值，以便下次调用时不会因为相同而不触发。
-      this.$emit('commandDone')
-
     }
   }
 }
 </script>
 
 <style lang="css" scoped>
-  .ruleBox{
-
-  }
-  .poupMain{
-    /*display: none;*/
+  .weui-navbar.works{
+    position: relative;
   }
 </style>

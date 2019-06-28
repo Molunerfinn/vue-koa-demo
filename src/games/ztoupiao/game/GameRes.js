@@ -66,16 +66,11 @@ const GameRes = {
     skinAssets: {
       reviewImgPath: skinResRoot + "/images/poster1.jpg",
       photographsImgPath: skinResRoot + "/images/poster2.jpg",
-      ruleIconPath: skinResRoot + "/wx/ruleicon.png",
-      startImgPath: skinResRoot + "/wx/startbtn.png",
-      gameBgPath: skinResRoot + "/wx/gamebg.jpg",
-      homeBgPath: skinResRoot + "/wx/homebg.jpg",
-      titleImgPath: skinResRoot + "/wx/titleimg.png",
-      score: skinResRoot + "/wx/score.png",
-      xg1: skinResRoot + "/wx/xg1.png",
-      xg2: skinResRoot + "/wx/xg2.png",
-      xg3: skinResRoot + "/wx/xg3.png",
-
+      workstop1ImgPath: skinResRoot + "/images/workstop1.jpg",
+      reviewDesc1ImgPath: skinResRoot + "/images/trace_1.jpg",
+      reviewDesc2ImgPath: skinResRoot + "/images/trace_2.jpg",
+      reviewDesc3ImgPath: skinResRoot + "/images/trace_3.jpg",
+      reviewDesc4ImgPath: skinResRoot + "/images/trace_4.jpg"
     },
     "gameTimeNumDef": 10,
     "soundList": [

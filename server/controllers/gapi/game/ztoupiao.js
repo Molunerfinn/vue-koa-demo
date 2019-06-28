@@ -52,42 +52,11 @@ export default class GamesController {
         }
       })
 
-
       let gameResult = await GameResult.findAll({
         where: {
           game_round_id: gameRound.id
         }
       })
-      // 取得当前玩家信息
-      let gamePlayer = await GamePlayer.findOne({
-        where: {
-          game_round_id: gameRound.id,
-          openid: openid,
-        }
-      })
-      // 如果 gamePlayer 为 null， 检查是否需要创建
-      if (gamePlayer == null) {
-        gamePlayer = {
-          openid: parsed.openid,
-          nickname: parsed.nickname,
-          avatar: parsed.headimgurl,
-          game_round_id: gameRound.id,
-          sex: parsed.sex,
-          language: parsed.language,
-          country: parsed.country,
-          province: parsed.province,
-          city: parsed.city,
-          ip: getClientIP(ctx.req),
-          score: 0,
-          max_score: 0
-        }
-        gamePlayer = await GamePlayer.create(gamePlayer)
-      }
-      let playerInfo = gamePlayer
-      if (gamePlayer.token != undefined) {
-        // 取得玩家相关信息
-        playerInfo = await gamePlayer.getInfo()
-      }
 
       let gameAlbums = await GameAlbum.findAll({
         where: {
@@ -110,7 +79,6 @@ export default class GamesController {
         gameAlbums: gameAlbums,
         gameResult: gameResult,
         gameRound: gameInfo,
-        gamePlayer: playerInfo,
         wxConfig: wxConfig
       }
       ctx.body = allInfo
@@ -218,6 +186,140 @@ export default class GamesController {
     }
   }
 
+
+  static async getMyWorkInfo(ctx) {
+    try {
+      console.log('=================getMyWorkInfo================');
+      let number = ctx.params.number
+      let parsed = ctx.request.body.parsed || {}
+      console.log('parsed---:', parsed);
+      let code = ctx.request.body.code
+      let openid = parsed.openid
+
+      let GameRound = getGameRoundModelByCode(code)
+      let GamePlayer = getGamePlayerModelByCode(code)
+      let GameResult = getGameResultModelByCode(code)
+      let GameAlbum = getGameAlbumModelByCode(code)
+      let GamePhoto = getGamePhotoModelByCode(code)
+
+      // 取得游戏信息
+      let gameRound = await GameRound.findOne({
+        where: {
+          number
+        }
+      })
+
+      // 取得当前玩家信息
+      let gamePlayer = await GamePlayer.findOne({
+        where: {
+          game_round_id: gameRound.id,
+          openid: openid,
+        }
+      })
+      // 如果 gamePlayer 为 null， 检查是否需要创建
+      if (gamePlayer == null) {
+        gamePlayer = {
+          openid: parsed.openid,
+          nickname: parsed.nickname,
+          avatar: parsed.headimgurl,
+          game_round_id: gameRound.id,
+          sex: parsed.sex,
+          language: parsed.language,
+          country: parsed.country,
+          province: parsed.province,
+          city: parsed.city,
+          ip: getClientIP(ctx.req),
+          score: 0,
+          max_score: 0
+        }
+        gamePlayer = await GamePlayer.create(gamePlayer)
+      }
+
+      let playerInfo = gamePlayer
+      if (gamePlayer.token != undefined) {
+        // 取得玩家相关信息
+        playerInfo = await gamePlayer.getInfo()
+        let gameAlbums = await GameAlbum.findAll({
+          where: {
+            game_round_id: gameRound.id,
+            game_player_id:playerInfo.id
+          },
+          include: [{
+            attributes: ['file_name'],
+            association: 'Photo'
+          }],
+          limit: 6,
+          order: [
+            ['created_at', 'DESC']
+          ]
+        })
+
+        ctx.body = {
+          gameAlbums:gameAlbums,
+          gamePlayer:playerInfo
+        }
+      }else{
+        ctx.body = null
+      }
+
+
+
+    } catch (error) {
+      logger.error("getGameInfo error:", error)
+      ctx.throw(messageContent.ResponeStatus.CommonError, `show round ${ctx.params.id} fail: ` + error, {
+        expose: true
+      })
+    }
+  }
+
+  static async getMyCardInfo(ctx) {
+    try {
+      console.log('=================getinfo================');
+      let number = ctx.params.number
+      let parsed = ctx.request.body.parsed || {}
+      console.log('parsed---:', parsed);
+      let code = ctx.request.body.code
+
+      let GameRound = getGameRoundModelByCode(code)
+      let GamePlayer = getGamePlayerModelByCode(code)
+      let GameResult = getGameResultModelByCode(code)
+      let GameAlbum = getGameAlbumModelByCode(code)
+      let GamePhoto = getGamePhotoModelByCode(code)
+
+      // 取得游戏信息
+      let gameRound = await GameRound.findOne({
+        where: {
+          number
+        }
+      })
+      let gameAlbums = await GameAlbum.findAll({
+        where: {
+          game_round_id: gameRound.id
+        },
+        include: [{
+          attributes: ['file_name'],
+          association: 'Photo'
+        }],
+        include: [{
+          attributes: ['avatar'],
+          association: 'GamePlayers'
+        }],
+        limit: 6,
+        order: [
+          ['created_at', 'DESC']
+        ]
+      })
+
+      ctx.body = gameAlbums
+
+    } catch (error) {
+      logger.error("getGameInfo error:", error)
+      ctx.throw(messageContent.ResponeStatus.CommonError, `show round ${ctx.params.id} fail: ` + error, {
+        expose: true
+      })
+    }
+  }
+
   static async addPlayer(ctx) {
     try {
       let code = ctx.params.code
@@ -231,28 +333,21 @@ export default class GamesController {
           number
         }
       })
-      let new_player = ctx.request.body.gamePlayer
+
+      let gamePlayer = await GamePlayer.findOne({
+        where: {
+          game_round_id: gameRound.id,
+          openid: openid,
+        }
+      })
+
       let realname = ctx.request.body.realname
       let cellphone = ctx.request.body.tel
 
-      new_player.realname = realname
-      new_player.cellphone = cellphone
-      new_player.game_round_id = gameRound.id
-
-      new_player.ip = getClientIP(ctx.req)
-      new_player.sex = ctx.params.sex
-      new_player.language = ctx.params.language
-      new_player.country = ctx.params.country
-      new_player.province = ctx.params.province
-      new_player.city = ctx.params.city
-
-      let GamePlayer = getGamePlayerModelByCode(code)
-
-      console.log('new_player--:', new_player);
-      var options = {
-        fields: ['openid', 'nickname', 'avatar', 'game_round_id', 'realname', 'tel', 'score', 'max_score', 'token', 'ip', 'sex', 'language', 'country', 'province', 'city']
-      }
-      let gamePlayer = await GamePlayer.create(new_player, options)
+      gamePlayer = await GamePlayer.update({
+        realname:realname,
+        cellphone:cellphone
+      })
 
       ctx.body = gamePlayer
 

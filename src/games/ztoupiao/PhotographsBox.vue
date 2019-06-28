@@ -1,353 +1,151 @@
 <template>
-  <!-- 锦囊 -->
- <div class="PhotographsBox" >
-   <a  href="javascript:void(0)"  v-show="ui.iconVisible">
-   <div class="ruleImg imgContainer absCenter" _mouseIn="0" >
-     <div id="ruleImg" @touchstart="handleShowPopup" class="slaveImg abs notNeedFatherChage outSpecialDivAutoFit hd-img-fillDiv ruleImgAnimate" style='width: 3.5rem; height: 3.5rem; top: 0.35rem; left: 75vw;'></div>
-   </div>
-    </a>
+  <div class="PhotographsBox" style="display:none" v-show="ui.statusBox">
+    <div class="weui-toptips weui-toptips_warn js_tooltips"></div>
+    <div id="awardUserInfoBox" class="page  input js_show">
+      <div class="awardUserInfoForm">
+        <img id="PhotographsTitle" v-bind:src="skinAssets.workstop1ImgPath">
+        <div class="weui-cells weui-cells_form">
 
-   <div id="poupInfoBox">
-     <div class="poupHead">
-       <div class="poupTitleBox">
-         <div id="actionExpBtn" class="poupTitleMune checked" _flag="0" @touchstart="showTab( 0 )">
-           <div class="item">活动说明</div>
-         </div>
+          <div class="weui-cells__tips" style="text-align:left;">温馨提示：<br>建议您上传的萌宝照片尺寸不要超过8M，否则可能读取不到照片的参数而造成不能成功上传。</div>
 
-         <div id="ranBtn" class="poupTitleMune " _flag="1"  @touchstart="showTab( 1 )">
-           <div class="item">排行榜</div>
-         </div>
+          <div class="weui-cell contactInput-ausername contactInput">
+            <div class="weui-cell__hd"><label class="weui-label">作品名称</label></div>
+            <div class="weui-cell__bd">
+              <input style="margin:0px;border: none;" id="workname" class="weui-input theInputDecide textInput" propname="作品名称" propkey="albumName"
+                     type="text"
+                     placeholder="限15字符">
+            </div>
+            <div class="weui-cell__ft warnIcon hide">
+              <i class="weui-icon-warn"></i>
+            </div>
+          </div>
 
+          <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <textarea class="weui-textarea" id="workdesc" placeholder="限60字符" rows="3"></textarea>
+                    <div class="weui-textarea-counter"><span>0</span>/60</div>
+                </div>
+            </div>
 
-         <div id="prizeBtn" class="poupTitleMune hide" _flag="3">
-           <div class="item">我的奖品<span id='Award_Round_Dot' class='redDot hide'></span></div>
-         </div>
-         <div id="winnerBtn" class="poupTitleMune hide" _flag="4">
-           <div class="item">获奖名单</div>
-         </div>
+          <div class="weui-cell contactInput-ausername contactInput">
+            <div class="weui-cell__hd"><label class="weui-label">姓名</label></div>
+            <div class="weui-cell__bd">
+              <input style="margin:0px;border: none;" id="name" class="weui-input theInputDecide textInput" propname="姓名" propkey="ausername"
+                     type="text"
+                     placeholder="请输入姓名">
+            </div>
+            <div class="weui-cell__ft warnIcon hide">
+              <i class="weui-icon-warn"></i>
+            </div>
+          </div>
+          <div class="weui-cell contactInput-aphone contactInput">
+            <div class="weui-cell__hd"><label class="weui-label">联系电话</label></div>
+            <div class="weui-cell__bd">
+              <input style="margin:0px;border: none;" id="tel" class="weui-input theInputDecide textInput" propname="联系电话" propkey="aphone"
+                     type="text"
+                     placeholder="请输入联系电话">
+            </div>
+            <div class="weui-cell__ft warnIcon phoneWarn hide">
+              <i class="weui-icon-warn"></i>
+            </div>
+          </div>
+        </div>
+      </div>
 
-         <div class="poupSlideBar">
-           <div class="slideBarTip transitionPanel"></div>
-         </div>
-       </div>
-       <div class="poupClose" @touchstart="handleHidePopup"></div>
-       <div style="clear:both; height:0"></div>
-     </div>
-     <div id="popTabBox" class="popTabBox transitionPanel" style="left:0">
+      <div class="weui-cells__tips">
+        注:若因未填写资料或资料填写错误导致无法兑奖，主办方不承担相关法律责任;
+      </div>
+      <div class="weui-btn-area">
+        <a class="weui-btn weui-btn_primary userSubmitBtn" @click="post_msg()" href="javascript:" id="showTooltips">提交</a>
+      </div>
+    </div>
+  </div>
 
-       <div id="ruleBox" class="poupMain" _flag="2" style="-webkit-overflow-scrolling:touch;">
-         <div class="poupMainInfo">
-           <div id="explainBox" class="poupLine" data-sortKey="a">
-             <div class="mainTitle">游戏规则</div>
-
-             <p id="explaiDrawInfoBox" class="" v-html="gameRound.desc">
-             </p>
-
-           </div>
-
-           <div id="awardLine" class="poupLine hide" data-sortKey="b">
-             <div class="mainTitle">活动奖品</div>
-             <div id="awardLineBox">
-               <div class='unComfortLine awardItem '><span class='awardStyle'>一等奖</span> : <span class='award'>价值100元礼品</span></div>
-               <div class='unComfortLine awardItem '><span class='awardStyle'>二等奖</span> : <span class='award'>价值50元礼品</span></div>
-               <div class='unComfortLine awardItem '><span class='awardStyle'>三等奖</span> : <span class='award'>价值10元礼品</span></div>
-               <div class='unComfortLine awardItem hide'><span class='awardStyle'>四等奖</span> : <span class='award'>价值5元小礼品</span></div>
-               <div class='unComfortLine awardItem hide'><span class='awardStyle'>五等奖</span> : <span class='award'>价值5元小礼品</span></div>
-               <div class='unComfortLine awardItem hide'><span class='awardStyle'>六等奖</span> : <span class='award'>价值5元小礼品</span></div>
-               <div class='unComfortLine awardItem hide'><span class='awardStyle'>七等奖</span> : <span class='award'>价值5元小礼品</span></div>
-               <div class='unComfortLine awardItem hide'><span class='awardStyle'>八等奖</span> : <span class='award'>价值5元小礼品</span></div>
-               <div class='awardItem anwei hide'><span class='awardStyle'>安慰奖</span> : <span class='award'>价值5元小礼品</span></div>
-
-             </div>
-             <div id="selfAwardLine" class="hide" style="word-wrap: break-word;"></div>
-           </div>
-
-           <div id="gameDateTime" class="poupLine" data-sortKey="c">
-             <div class="mainTitle">活动时间</div>
-             <p><span id="startDate">{{displayStartAt}}</span>&nbsp;-&nbsp;<span id="endDate">{{displayEndAt}}</span></p>
-           </div>
-           <div class="hostLine poupLine" data-sortKey="d">
-             <div class="mainTitle">奖品描述</div>
-             <p><a class="hostName" v-html="gameRound.award_desc"/></a>
-             </p>
-           </div>
-
-           <!--<div id="" style="font-size: 0.6rem; position: relative;" class="noMove">投诉</div>-->
-         </div>
-
-       </div>
-
-       <div id="rankBox" class="poupMain hide" _flag="1" style="-webkit-overflow-scrolling:touch;">
-         <div class="poupMainInfo">
-           <div id="noRank" class='' v-show="!hasRank">暂无排名</div>
-           <div id="rankMain" class="getRankHeight" v-show="hasRank">
-             <div style="margin-top:0.7rem;margin-left: 0.25rem;">当前排名：<span id="rank"> {{currentPlayerRank}}</span> （只显示前<span id="showRankNum">100</span>名）</div>
-             <div style="padding:0rem 0.5rem">
-               <table class="rankTable" cellspacing="0" cellpadding="0">
-                 <thead>
-                   <tr style="line-height: 1rem;">
-                     <th>排行</th>
-                     <th>头像</th>
-                     <th>昵称</th>
-                     <th>成绩</th>
-                   </tr>
-                 </thead>
-                 <tr class="rankInfo" v-for="(player,i) in gamePlayerRank">
-                   <td>{{i+1}}</td>
-                   <td><div><img class="userImg" :src="player.avatar"   /> </div></td>
-                   <td class="userName" > {{player.nickname}}</td>
-                   <td> {{player.max_score}} 个</td>
-                 </tr>
-
-               </table>
-             </div>
-           </div>
-           <div id="rankHeight">
-             <table id="rankInfoBox" class="rankTable" cellspacing="0" cellpadding="0" style="margin-top: 0;"></table>
-           </div>
-         </div>
-
-       </div>
-
-       <div id="awardBox" class="poupMain hide" _flag="3">
-         <div id="awardInfoBox">
-           <div id="awardInfo">
-             <div style="line-height: 2.6rem">暂无中奖记录</div>
-           </div>
-
-           <div id="awardContactInfo" class="hide">
-             <div class="titleLine"><span class="title">联系信息</span></div>
-             <div class="contactGroup">
-               <div class="contactItem contactName hide">姓名： <span>monica</span></div>
-               <div class="contactItem contactPhone hide">电话： <span>13200000000</span></div>
-
-               <div class="contactItem contactAddress hide">地址： <span>广东省广州市海...</span></div>
-
-             </div>
-             <div class="updateBtn abs">修改</div>
-           </div>
-         </div>
-         <div class='attentionBox'>
-           <div class='menuBtnBox'>
-             <a class='menuName'>关注我们</a>
-           </div>
-           <div class='holdBox'></div>
-         </div>
-       </div>
-
-       <div id="regAwardBox" class="poupMain hide" _flag="4" style="-webkit-overflow-scrolling:touch;">
-         <div class="poupMainInfo">
-           <div id="noRegAward" class="hide" style="margin-left:3px;">尚未公布获奖名单，详情请查看活动说明</div>
-           <div id="regAwardMain" style="display:none;">
-
-             <div class="regAwardList">
-               <div class="mainTitle">一等奖</div>
-               <div class="playerName" style="margin-bottom:12px;"></div>
-             </div>
-
-             <div class="regAwardList">
-               <div class="mainTitle">二等奖</div>
-               <div class="playerName" style="margin-bottom:12px;"></div>
-             </div>
-
-             <div class="regAwardList">
-               <div class="mainTitle">三等奖</div>
-               <div class="playerName" style="margin-bottom:12px;"></div>
-             </div>
-
-           </div>
-         </div>
-         <div class='attentionBox'>
-           <div class='hdskillInfo skillInfo theRunningAdClass'><a class="theSpecialTarget" href='http://mp.weixin.qq.com/s?__biz=MjM5MTk5MjI3OA==&#x26;mid=209854000&#x26;idx=1&#x26;sn=82241d924839270d3ea820ad2d56c01b#rd'>我也要创建活动</a><span class='gotoFlag'><i></i></span></div>
-           <div class='holdBox'></div>
-         </div>
-       </div>
-     </div>
-   </div>
-
-   <div id="activityKit" class="poupMain bg hide">
-     <div class="arrow" id="arrow"></div>
-     <div id="tip_txt">
-       <p>提示</p>
-       <p style="margin-top: 0.25rem">点击锦囊即可查看活动规则、排行榜、奖品等信息。</p>
-     </div>
-   </div>
-
- </div>
 </template>
 
 <script>
-import $ from "jquery"
+import weui from 'weui.js'
+import queryString from 'query-string'
+import GameRes from './game/GameRes'
 import {
-  getRanking
-} from '@/api/games/zxg'
-import moment from 'moment';
-
-import HdGame from '@/lib/hdgame'
-
+  postMsg
+} from '@/api/base.js'
 export default {
   props: {
-    gameRound: { // 游戏成绩相关数据
-      type: Object
+    gameRound: { // 游戏player相关数据
+      type: Object,
+      default: {}
     },
-    ruleIconUrl: String, // 锦囊按钮图片
     command:{
-      default: 'none' // 可选值: showResult, showGift
-    },
-    gamePlayer:{
-      type: Object
+      default: 'none' // 可选值: show, hide
     }
   },
-  data() {
+  data () {
     return {
+      skinAssets: {
+        workstop1ImgPath: GameRes.skinAssets.workstop1ImgPath
+      },
       ui:{
-        iconVisible: false,
-        statusBox: true,
-        statusScrollWrap: true,
-        noRank: false,
-        rankMain: false
+        statusBox: false
       },
-      style:{
-        statusUserImg: {}
-      },
-      gamePlayerRank: [],
-      menuLen: 2,
-      currentPlayer:{}
-    }
-  },
-  created() {
-    window.$ = $
-  },
-  mounted(){
-    // mounted 之后 document 才有ruleIme，可以设置css
-    HdGame.imgReady(this.ruleIconUrl, (img)=>{
-      console.log( "imgReady", this.ruleIconUrl)
-      $("#ruleImg").css({
-        "background-size": "100% 100%",
-        "background-image":"url("+this.ruleIconUrl+")",
-      })
-      //this.ui.iconVisible = true // 如果是用户注册界面，不应显示icon
-    })
-
-    $(".poupTitleBox .poupTitleMune,.poupTitleBox .slideBarTip").css("width", 13.25 / this.menuLen + "rem");
-    $("#poupInfoBox .poupMain").height($("#poupInfoBox").height() - $(".poupHead").outerHeight()  );
-
-  },
-  computed:{
-    hasRank(){
-      return this.gamePlayerRank.length > 0
-    },
-    currentPlayerRank(){
-      return (this.currentPlayer.rank!=undefined&&this.currentPlayer.rank!=null) && this.currentPlayer.rank>=0 ? this.currentPlayer.rank : '无'
-    },
-    displayStartAt(){
-      return moment(this.gameRound.start_at).format('YYYY年MM月DD日 HH时mm分')
-    },
-    displayEndAt(){
-      return moment(this.gameRound.end_at).format('YYYY年MM月DD日 HH时mm分')
+      account: '',
+      password: ''
     }
   },
   methods: {
+    post_msg: function () {
+      console.log('========post_msg========');
+      var msg_is_ok = true
+      var realname = document.getElementById('name').value
+      var tel = parseInt(document.getElementById('tel').value)
 
-    //
-    handleShowPopup( flag ){
-      var silkBag = $("#ruleImg");
-      var popupX = silkBag.offset().left + silkBag.width() / 2 + "px ";
-      var popupY = silkBag.offset().top + silkBag.height() / 2 + "px";
-      $("#poupInfoBox").css({
-        "transform-origin": popupX + popupY,
-        "-webkit-transform-origin": popupX + popupY
-      });
+      if (realname == '') {
+        weui.form.showErrorTips({
+          ele: document.getElementById("name"),
+          msg: '姓名不能为空'
+        });
+        msg_is_ok = false
+      }
 
-      this.setSlideBar(true)
-      this.showTab( flag  )
-    },
-    handleHidePopup(){
-      var poupInfoBox = $("#poupInfoBox");
-      poupInfoBox.removeClass("enlarge").removeClass("retrans");
-      poupInfoBox.hide()
-    },
-    // 点击查看成绩
-    setSlideBar(isAnimation){
-
-        var anFlag = isAnimation;
-        if (anFlag) {
-          if (!$("#poupInfoBox").hasClass("enlarge")) {
-            $("#poupInfoBox").addClass("enlarge")
-          }
-        } else {
-          $("#poupInfoBox").addClass("retrans")
+      var tel0 = /^1\d{10}$/
+      var ema = document.getElementById('tel').value
+      if (tel0.test(ema) == false) {
+          weui.form.showErrorTips({
+            ele: document.getElementById("tel"),
+            msg: '手机号码格式错误'
+          });
+          msg_is_ok = false
+      }
+      if(msg_is_ok){
+        const parsed = queryString.parse(location.search);
+        var number = parsed.number;
+        var code = this.gameRound.code;
+        console.log('this.gameRound',this.gameRound);
+        var data = {
+          realname:realname,
+          tel:tel
         }
-        //$(".gameBox,.home,.body").addClass("overflow-y-hidden");
-    },
-    showTab( flag ){
-      console.log('showTab',flag);
-      $("#poupInfoBox").show();
-      $(".poupTitleMune").removeClass("checked");
+        postMsg(code,number,data).then((res)=>{
+          this.$emit('signUpOver',res)
+          this.statusBox = false
+        })
 
-      $(".poupTitleBox .poupTitleMune").each(function(i, value) {
-        if ($.trim($(this).attr("_flag")) == flag) {
-          $(this).addClass("checked")
-        }
-      })
-
-      $(".poupSlideBar .slideBarTip").css("left", (13.25 / this.menuLen) * flag + "rem")
-
-      if (flag === 0) {
-        this.poupRule()
-      } else
-      if (flag === 1) {
-        this.poupRank()
       }
     },
-    poupRank(){
-
-      var params = {
-        openid: this.gamePlayer.openid
-      }
-      getRanking(this.gameRound.number, params).then(data => {
-        var rankInfo = data
-        console.log('rankInfo====:',rankInfo);
-        this.gamePlayerRank = rankInfo['allPlayer']
-        this.currentPlayer = rankInfo['thisPlayer']
-      })
-      $('.poupMain').not("#rankBox").hide()
-      $("#rankBox").show()
-    },
-    poupRule(){
-      $('.poupMain').not("#ruleBox").hide()
-      $("#ruleBox").show()
-    }
   },
   watch: {
     command: function (val, oldVal) {
       //外部触发游戏开始
-      console.log('rulebox','watch-command new: %s, old: %s', val, oldVal)
-      if( val == 'showIcon'){
-        this.ui.iconVisible = true
+      console.log('watch-command new: %s, old: %s', val, oldVal)
+      if( val == true){
+        console.log('show');
+        this.ui.statusBox = true
+      }else{
+        console.log('hide');
+        this.ui.statusBox = false
       }
-      if( val == 'hideIcon'){
-        this.ui.iconVisible = false
-      }
-      if( val == 'showResult'){
-        this.showResult()
-      }
-      if( val == 'showRank'){
-        this.handleShowPopup( 1 )
-      }
-      // 用于重置command值，以便下次调用时不会因为相同而不触发。
-      this.$emit('commandDone')
 
     }
   }
 }
 </script>
-
-<style lang="css" scoped>
-  .ruleBox{
-
-  }
-  .poupMain{
-    /*display: none;*/
-  }
-</style>

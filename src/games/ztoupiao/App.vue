@@ -17,11 +17,11 @@
           <div class="footer_text">我的</div>
         </div>
     </div>
-    <!-- <IndexBox :game-player="gamePlayer" :gameRound="gameRound":command="ui.indexBoxVisible" > </IndexBox> -->
-    <WorksBox :game-player="gamePlayer" :gameRound="gameRound" :gameAlbums="gameAlbums" :gameResult="gameResult" :command="ui.worksBoxVisible" > </WorksBox>
-    <!-- <PhotographsBox :game-player="gamePlayer" :gameRound="gameRound":command="ui.photographsBoxVisible" > </PhotographsBox> -->
-    <!-- <ReviewBox :game-player="gamePlayer" :gameRound="gameRound":command="ui.reviewBoxVisible" > </ReviewBox> -->
-    <!-- <MyAccountBox :game-player="gamePlayer" :gameRound="gameRound":command="ui.my_accountBoxVisible" > </MyAccountBox> -->
+    <IndexBox :gameRound="gameRound":command="ui.indexBoxVisible" > </IndexBox>
+    <WorksBox :gameRound="gameRound" :gameAlbums="gameAlbums" :gameResult="gameResult" :command="ui.worksBoxVisible" > </WorksBox>
+    <PhotographsBox :gameRound="gameRound":command="ui.photographsBoxVisible" > </PhotographsBox>
+    <ReviewBox :gameRound="gameRound":command="ui.reviewBoxVisible" > </ReviewBox>
+    <MyAccountBox :gameRound="gameRound":command="ui.my_accountBoxVisible" > </MyAccountBox>
   </div>
 </template>
 
@@ -56,7 +56,6 @@
       }
       getGameResult(number, params).then(data => {
         console.log('getGameResult data-----:',data);
-        this.gamePlayer = data.gamePlayer;
         this.gameRound = data.gameRound;
         this.gameAlbums = data.gameAlbums;
         this.gameResult = data.gameResult;
@@ -78,7 +77,6 @@
     },
     data() {
       return {
-        gamePlayer:{},
         gameRound:{},
         gameAlbums:[],
         gameResult:[],
@@ -152,7 +150,6 @@
         width: 20%;
         height: auto;
   }
-
 
   .kouhong {
     font-size: 14px;

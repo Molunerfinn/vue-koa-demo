@@ -1,19 +1,11 @@
 <template>
- <div class="ReviewBox" >
-   <article class="weui-article review">
-     <section>
-       <%4.times do |index|%>
-         <%if index == 0%>
-           <%=image_tag "trace_"+(index+1).to_s+".jpg", usemap:"#Map"%>
-         <%else%>
-           <%=image_tag "trace_"+(index+1).to_s+".jpg"%>
-         <%end%>
-       <%end%>
-       <map name="Map" id="Map">
-         <area id="area" shape="rect" coords="0,0,0,0" href="<%=@card.url%>" />
-       </map>
-     </section>
-   </article>
+ <div class="ReviewBox" v-show="ui.reviewBoxVisible">
+   <div class="reviewDesc">
+     <img class="reviewDesc img" :src="skinAssets.reviewDesc1ImgPath"/>
+     <img class="reviewDesc img" :src="skinAssets.reviewDesc2ImgPath"/>
+     <img class="reviewDesc img" :src="skinAssets.reviewDesc3ImgPath"/>
+     <img class="reviewDesc img" :src="skinAssets.reviewDesc4ImgPath"/>
+   </div>
  </div>
 </template>
 
@@ -25,6 +17,7 @@ import {
 import moment from 'moment';
 
 import HdGame from '@/lib/hdgame'
+import GameRes from './game/GameRes'
 
 export default {
   props: {
@@ -33,7 +26,7 @@ export default {
     },
     ruleIconUrl: String, // 锦囊按钮图片
     command:{
-      default: 'none' // 可选值: showResult, showGift
+      default: false // 可选值: showResult, showGift
     },
     gamePlayer:{
       type: Object
@@ -41,12 +34,14 @@ export default {
   },
   data() {
     return {
+      skinAssets: {
+        reviewDesc1ImgPath: GameRes.skinAssets.reviewDesc1ImgPath,
+        reviewDesc2ImgPath: GameRes.skinAssets.reviewDesc2ImgPath,
+        reviewDesc3ImgPath: GameRes.skinAssets.reviewDesc3ImgPath,
+        reviewDesc4ImgPath: GameRes.skinAssets.reviewDesc4ImgPath,
+      },
       ui:{
-        iconVisible: false,
-        statusBox: true,
-        statusScrollWrap: true,
-        noRank: false,
-        rankMain: false
+        reviewBoxVisible:false
       },
       style:{
         statusUserImg: {}
@@ -164,21 +159,12 @@ export default {
     command: function (val, oldVal) {
       //外部触发游戏开始
       console.log('rulebox','watch-command new: %s, old: %s', val, oldVal)
-      if( val == 'showIcon'){
-        this.ui.iconVisible = true
+      if( val == true){
+        this.ui.reviewBoxVisible = true
       }
-      if( val == 'hideIcon'){
-        this.ui.iconVisible = false
+      if( val == false){
+        this.ui.reviewBoxVisible = false
       }
-      if( val == 'showResult'){
-        this.showResult()
-      }
-      if( val == 'showRank'){
-        this.handleShowPopup( 1 )
-      }
-      // 用于重置command值，以便下次调用时不会因为相同而不触发。
-      this.$emit('commandDone')
-
     }
   }
 }
@@ -190,5 +176,9 @@ export default {
   }
   .poupMain{
     /*display: none;*/
+  }
+  .reviewDesc.img{
+    width: 100%;
+    height: auto;
   }
 </style>
