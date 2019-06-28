@@ -109,15 +109,14 @@ export default {
   },
   created() {
     this.rem = window.g_rem
-  },
-  mounted() {
-    console.log("mounted props=", this.hg, this.command)
-
+    // 修正在mounted中 游戏界面初始白屏问题
     this.hg.assets.onReady(() => {
       console.log(" hg.assets.onReady 1")
       this.gameBg = GameRes.skinAssets.gameBgPath
     });
-
+  },
+  mounted() {
+    console.log("mounted props=", this.hg, this.command)
     this.hg.grade.on('setGrade',( val)=>{
       this.grade = val
     });
@@ -127,7 +126,6 @@ export default {
       console.log("setTime", val)
     })
     // this.hg.time.on('end', this.endGame)
-
 
     this.hg.sound.get("0",
        (lsound)=> {
