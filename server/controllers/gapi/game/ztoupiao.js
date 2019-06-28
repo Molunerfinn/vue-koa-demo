@@ -35,22 +35,17 @@ export default class GamesController {
       let openid = parsed.openid
       let code = ctx.request.body.code
 
-      console.log('openid=======:', openid);
-
       let GameRound = getGameRoundModelByCode(code)
       let GamePlayer = getGamePlayerModelByCode(code)
       let GameResult = getGameResultModelByCode(code)
       let GameAlbum = getGameAlbumModelByCode(code)
       let GamePhoto = getGamePhotoModelByCode(code)
-
-      console.log('GameAlbum',GameAlbum,'GamePhoto',GamePhoto);
       // 取得游戏信息
       let gameRound = await GameRound.findOne({
         where: {
           number
         }
       })
-      console.log('gameRound--:', gameRound);
       let allPlayer = await GamePlayer.findAndCountAll({
         where: {
           game_round_id: gameRound.id
@@ -70,7 +65,6 @@ export default class GamesController {
           openid: openid,
         }
       })
-      console.log('gamePlayer == null-----------:',gamePlayer == null);
       // 如果 gamePlayer 为 null， 检查是否需要创建
       if (gamePlayer == null) {
         gamePlayer = {
@@ -95,18 +89,16 @@ export default class GamesController {
         playerInfo = await gamePlayer.getInfo()
       }
 
-      console.log('playerInfo---:',playerInfo);
-
       let gameAlbums = await GameAlbum.findAll({
         where: {
           game_round_id: gameRound.id,
           // game_player_id: playerInfo.id
         },
         include: [{
-          attributes: ['name', 'image_file_name'],
+          attributes: ['file_name'],
           association: 'Photo'
         }],
-        limit:2
+        limit: 2
       })
       // 每个游戏 GameRound
       let url = ctx.header.referer
@@ -137,9 +129,7 @@ export default class GamesController {
       let number = ctx.params.number
       let parsed = ctx.request.body.parsed || {}
       console.log('parsed---:', parsed);
-      let code = parsed.code
-
-      console.log('openid=======:', openid);
+      let code = ctx.request.body.code
 
       let GameRound = getGameRoundModelByCode(code)
       let GamePlayer = getGamePlayerModelByCode(code)
@@ -153,13 +143,12 @@ export default class GamesController {
           number
         }
       })
-      console.log('gameRound--:', gameRound);
       let gameAlbums = await GameAlbum.findAll({
         where: {
           game_round_id: gameRound.id
         },
         include: [{
-          attributes: ['name', 'image_file_name'],
+          attributes: ['file_name'],
           association: 'Photo'
         }],
         include: [{
@@ -187,9 +176,7 @@ export default class GamesController {
       let number = ctx.params.number
       let parsed = ctx.request.body.parsed || {}
       console.log('parsed---:', parsed);
-      let code = parsed.code
-
-      console.log('openid=======:', openid);
+      let code = ctx.request.body.code
 
       let GameRound = getGameRoundModelByCode(code)
       let GamePlayer = getGamePlayerModelByCode(code)
@@ -203,13 +190,12 @@ export default class GamesController {
           number
         }
       })
-      console.log('gameRound--:', gameRound);
       let gameAlbums = await GameAlbum.findAll({
         where: {
           game_round_id: gameRound.id
         },
         include: [{
-          attributes: ['name', 'image_file_name'],
+          attributes: ['file_name'],
           association: 'Photo'
         }],
         include: [{

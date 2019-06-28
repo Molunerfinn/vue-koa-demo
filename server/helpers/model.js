@@ -38,10 +38,8 @@ export function getModelByCode(code, basename) {
       throw "code requires a string"
     }
     let re = new RegExp(code+basename, 'i')
-    console.log('re=====:',re);
     let sequelize = db.sequelize
     let modelByCode = null
-    console.log('sequelize.models',sequelize.models);
     for( let [key, model] of Object.entries(sequelize.models)){
       // DpPintuGameRound, DpPintuGamePlayer
       if (re.test(model.name)) {

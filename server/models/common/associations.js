@@ -14,7 +14,7 @@ export function buildGameAssociations(db){
       let photoModel = models.find((m)=> m.name == (code + "Photo"))
 
       if(albumModel&&playerModel){
-        console.log( "buildGameAssociations "+ code + "Album," + code + "Photo")
+        console.log( "buildGameAssociations "+ code + "Album," + code + "GamePlayers")
         albumModel.belongsTo( playerModel, { foreignKey: 'game_player_id', as: 'GamePlayers'})
         playerModel.hasMany( albumModel, {foreignKey: 'game_player_id', as: 'Album'})
       }
@@ -22,8 +22,8 @@ export function buildGameAssociations(db){
 
       if(albumModel&&photoModel){
         console.log( "buildGameAssociations "+ code + "Album," + code + "Photo")
-        photoModel.belongsTo( albumModel, { foreignKey: 'photo_id', as: 'Album'})
-        albumModel.hasMany( photoModel, {foreignKey: 'photo_id', as: 'Photo'})
+        photoModel.belongsTo( albumModel, { foreignKey: 'album_id', as: 'Album'})
+        albumModel.hasMany( photoModel, {foreignKey: 'album_id', as: 'Photo'})
       }
 
       if( playerModel && resultModel){

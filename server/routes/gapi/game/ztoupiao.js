@@ -9,4 +9,7 @@ router.post('/addPlayer', game.addPlayer)
 router.post('/getRanking', game.getRanking)
 router.post('/getRoundState', game.getRoundState)
 
+router.post('/getNewAlbumInfo', game.getNewAlbumInfo)
+router.post('/getHotAlbumInfo', game.getHotAlbumInfo)
+
 export default router
