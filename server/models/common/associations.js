@@ -12,9 +12,11 @@ export function buildGameAssociations(db){
       let resultModel = models.find((m)=> m.name == (code + "GameResult"))
       let albumModel = models.find((m)=> m.name == (code + "Album"))
       let photoModel = models.find((m)=> m.name == (code + "Photo"))
-      console.log('code----------------:',code);
-      if(code=='ztoupiao'||code=='ZTouPiao'){
-        console.log('albumModel',albumModel,'PhotoModel',photoModel);
+
+      if(albumModel&&playerModel){
+        console.log( "buildGameAssociations "+ code + "Album," + code + "Photo")
+        albumModel.belongsTo( playerModel, { foreignKey: 'game_player_id', as: 'GamePlayers'})
+        playerModel.hasMany( albumModel, {foreignKey: 'game_player_id', as: 'Album'})
       }
 
 
