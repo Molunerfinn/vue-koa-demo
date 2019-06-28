@@ -1,4 +1,4 @@
-import game from '../../controllers/gapi/ztoupiao.js'
+import game from '../../../controllers/gapi/game/ztoupiao.js'
 import koaRouter from 'koa-router'
 const router = koaRouter()
 router.prefix('/:number')

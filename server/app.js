@@ -115,7 +115,7 @@ import dpgames from './routes/gapi/dpgames.js'
 //'/gapi/games/:code/:number/'
 router.use('/gapi/dpgames', dpgames.routes())
 
-import ztoupiao from './routes/gapi/ztoupiao.js'
+import ztoupiao from './routes/gapi/game/ztoupiao.js'
 router.use('/gapi/ztoupiao', ztoupiao.routes())
 app.use(router.routes()) // 将路由规则挂载到Koa上。
 app.use(historyApiFallback())

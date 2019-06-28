@@ -1,16 +1,16 @@
-const messageContent = require('../constant')
+const messageContent = require('../../constant')
 const {
   getGameRoundModelByCode,
   getGamePlayerModelByCode,
   getGameResultModelByCode,
   getGameAlbumModelByCode,
   getGamePhotoModelByCode
-} = require('../../helpers/model')
+} = require('../../../helpers/model')
 const {
   getWxJsConfig
-} = require('../../helpers/weixin')
+} = require('../../../helpers/weixin')
 
-const logger = require('../../helpers/logger')
+const logger = require('../../../helpers/logger')
 const md5 = require('md5');
 
 function getClientIP(req) {
