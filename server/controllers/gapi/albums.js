@@ -9,8 +9,12 @@ const {
 // route  /gapi/photos
 export default class AlbumsController {
 
-  // 阿里云直传时，先创建photo对象，
-  // 再返回云服务请求参数
+
+  /**
+   *  阿里云直传时，先创建photo对象，再返回云服务请求参数
+   * @param {*} album
+   * @return {*}
+   */
   static async createBeforeDirectUpload(ctx) {
       try {
           let code = ctx.params.code
@@ -26,6 +30,8 @@ export default class AlbumsController {
               }
           })
           let Album = getGameAlbumModelByCode( code )
+          // game_player_id, game_round_id, name, desc
+
           // create! filename: filename, byte_size: byte_size, checksum: checksum, content_type: content_type, metadata: metadata
           var options = {
             fields: ['file_name', 'file_size', 'content_type', 'checksum']

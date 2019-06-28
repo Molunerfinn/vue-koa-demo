@@ -1,4 +1,5 @@
 game_round.code 使用说明
+===
 # zxg 捉小鬼
 
 
@@ -16,3 +17,12 @@ game_round.code 使用说明
 {Code}{model}, 如 pintu,  PintuGameRound
                   dppingtu,  DpPintuGameRound
 当创建游戏时，使用 code = PintuGameRound.name.replace('GameRound', '').lowercase
+
+游戏皮肤
+===
+1. css, 定义每个皮肤用的css
+/src/assets/game/:code/css/skin.css
+2. image, 游戏过程用图片,所有游戏保持同名图片
+/static/game/:code/:skin_name/image
+3. config 游戏参数, 如图片的宽度，
+/src/games/:code/game/skinres.js

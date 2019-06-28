@@ -1,0 +1,27 @@
+/* all css skin use this file */
+.skin-default .attentionBox{
+  bottom: 2.3rem;
+}
+.skin-default .titleImg img{
+  width: 76vw;
+  height: auto;
+  top: 11vh;
+  left: 12vw;
+}
+.skin-runlin .startBtn img{
+  top: 75vh;
+}
+
+.skin-runlin .attentionBox{
+  bottom: 2.3rem;
+}
+
+.skin-runlin .titleImg img{
+  width: 76vw;
+  height: auto;
+  top: 11vh;
+  left: 12vw;
+}
+.skin-runlin .startBtn img{
+  top: 80vh;
+}

@@ -7,6 +7,7 @@ import App from './App'
 import 'weui/dist/style/weui.css'
 import '@/assets/common/css/base2.css'
 import '@/assets/game/zhaobaba/css/game.css'
+import '@/assets/game/zhaobaba/css/skin.css'
 
 /* eslint-disable no-new */
 new Vue({
