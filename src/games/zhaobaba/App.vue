@@ -73,16 +73,13 @@
   import Game from './game/Game.vue'
   import GameRes from './game/GameRes'
   import HdGame from '@/lib/hdgame'
-  import weui from 'weui.js'
-  import { setAchievebycode, postMsg, getGameResult, getRoundState } from '@/api/games/zhaobaba'
+  import { setAchievebycode, getGameResult, getRoundState } from '@/api/games/zhaobaba'
   import LoadToast from '@/components/LoadToast.vue'
   import MessageBox from '@/components/MessageBox.vue'
   import ResultBox from './ResultBox.vue'
   import RuleBox from './RuleBox.vue'
   import SignUp from '@/components/SignUp.vue'
   import queryString from 'query-string'
-
-  import  '@/assets/game/zhaobaba/css/skin.css'
 
   //import {simplifyLufylegend } from '@/lib/simplify'
   //关于玩家的配置信息
@@ -201,47 +198,6 @@
       }
     },
     methods: {
-      post_msg: function() {
-        console.log('========post_msg========')
-        var msg_is_ok = true
-        var realname = document.getElementById('name').value
-        var tel = parseInt(document.getElementById('tel').value)
-
-        if (realname == '') {
-          weui.form.showErrorTips({
-            ele: document.getElementById('name'),
-            msg: '姓名不能为空'
-          })
-          msg_is_ok = false
-        }
-
-        var tel0 = /^1\d{10}$/
-        var ema = document.getElementById('tel').value
-        if (tel0.test(ema) == false) {
-          weui.form.showErrorTips({
-            ele: document.getElementById('tel'),
-            msg: '电话格式错误'
-          })
-          msg_is_ok = false
-        }
-        if (msg_is_ok) {
-          const parsed = queryString.parse(location.search)
-          var number = parsed.number
-          var data = {
-            gamePlayer: this.gamePlayer,
-            realname: realname,
-            tel: tel
-          }
-          postMsg(number, data).then(res => {
-            this.gamePlayer = res
-            this.signUpCommand = 'hide'
-            this.ui.homeVisible = true
-            return res
-          })
-          let that = this
-          that.ruleBoxCommand = 'showIcon'
-        }
-      },
       async handleStartGame(event) {
         event.preventDefault()
         const parsed = queryString.parse(location.search)

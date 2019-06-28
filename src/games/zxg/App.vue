@@ -7,8 +7,7 @@
       </div>
       <div class="gameInfoBox">
         <div class="titleImg imgContainer absCenter">
-          <img id="titleImg" class="slaveImg abs" :src="skinAssets.titleImg" style="width:auto;height:9rem;top:11vh;left:15vw;"
-          />
+          <img id="titleImg" class="slaveImg abs" :src="skinAssets.titleImg" />
         </div>
       </div>
 
@@ -30,7 +29,7 @@
              id="startBtnImg"
              class="slaveImg abs"
              :src="skinAssets.startBtnImg"
-             style="width:7.35rem;height:2.25rem;top:75vh;left:4.6rem;" />
+             style="width:7.35rem;height:2.25rem;left:4.6rem;" />
       </div>
 
       <div id="logoImgBox" class="logoImgBox imgContainer absCenter" style="">
@@ -73,8 +72,7 @@
   import Game from './game/Game.vue'
   import GameRes from './game/GameRes'
   import HdGame from '@/lib/hdgame'
-  import weui from 'weui.js'
-  import { setAchievebycode, postMsg, getGameResult, getRoundState } from '@/api/games/zxg'
+  import { setAchievebycode, getGameResult, getRoundState } from '@/api/games/zxg'
   import LoadToast from '@/components/LoadToast.vue'
   import MessageBox from '@/components/MessageBox.vue'
   import ResultBox from './ResultBox.vue'
@@ -202,47 +200,6 @@
       }
     },
     methods: {
-      post_msg: function() {
-        console.log('========post_msg========')
-        var msg_is_ok = true
-        var realname = document.getElementById('name').value
-        var tel = parseInt(document.getElementById('tel').value)
-
-        if (realname == '') {
-          weui.form.showErrorTips({
-            ele: document.getElementById('name'),
-            msg: '姓名不能为空'
-          })
-          msg_is_ok = false
-        }
-
-        var tel0 = /^1\d{10}$/
-        var ema = document.getElementById('tel').value
-        if (tel0.test(ema) == false) {
-          weui.form.showErrorTips({
-            ele: document.getElementById('tel'),
-            msg: '电话格式错误'
-          })
-          msg_is_ok = false
-        }
-        if (msg_is_ok) {
-          const parsed = queryString.parse(location.search)
-          var number = parsed.number
-          var data = {
-            gamePlayer: this.gamePlayer,
-            realname: realname,
-            tel: tel
-          }
-          postMsg(number, data).then(res => {
-            this.gamePlayer = res
-            this.signUpCommand = 'hide'
-            this.ui.homeVisible = true
-            return res
-          })
-          let that = this
-          that.ruleBoxCommand = 'showIcon'
-        }
-      },
       async handleStartGame(event) {
         event.preventDefault()
         const parsed = queryString.parse(location.search)
