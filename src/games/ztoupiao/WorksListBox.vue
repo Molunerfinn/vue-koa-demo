@@ -12,18 +12,20 @@
      </div>
      <div class="works_list new" v-show="ui.newAlbumsVisible">
        最新
-       <li v-for="photo in newGameAlbums">
-         <img  :src="photo.image_file_name"/>
-         <a>{{photo.name}}</a>
-         <a>{{photo.score}}</a>
+       <li v-for="album in newGameAlbums">
+         <img  :src="album.image_file_name"/>
+         <a>{{album.name}}</a>
+         <a>{{album.score}}</a>
+         <div class="userImgBox" style="border-color:"><img :src="album.GamePlayers.avatar" class="userImg" /></div>
        </li>
      </div>
      <div class="works_list hot" v-show="ui.hotAlbumsVisible">
        最热
-       <li v-for="photo in hotGameAlbums">
-         <img  :src="photo.image_file_name"/>
-         <a>{{photo.name}}</a>
-         <a>{{photo.score}}</a>
+       <li v-for="album in hotGameAlbums">
+         <img  :src="album.image_file_name"/>
+         <a>{{album.name}}</a>
+         <a>{{album.score}}</a>
+         <div class="userImgBox" style="border-color:"><img :src="album.GamePlayers.avatar" class="userImg" /></div>
        </li>
      </div>
    </div>
@@ -40,16 +42,13 @@ import moment from 'moment';
 // import { getRoundState } from '@/api/games/ztoupiao'
 // import queryString from 'query-string'
 
+import queryString from 'query-string'
+import { getNewAlbumInfo,getHotAlbumInfo } from '@/api/games/ztoupiao'
+
 import HdGame from '@/lib/hdgame'
 
 export default {
   props: {
-    newGameAlbums:{
-      type: Array
-    },
-    hotGameAlbums:{
-      type: Array
-    },
     gameRound: { // 游戏成绩相关数据
       type: Object
     },
@@ -87,11 +86,30 @@ export default {
       },
       gamePlayerRank: [],
       menuLen: 2,
-      currentPlayer:{}
+      currentPlayer:{},
+      newGameAlbums:[],
+      hotGameAlbums:[]
     }
   },
   created() {
     window.$ = $
+
+    const parsed = queryString.parse(location.search)
+    var number = parsed.number
+
+    var params = {
+      parsed: parsed,
+      code:'ztoupiao'
+    }
+
+    getNewAlbumInfo(number, params).then(data => {
+      console.log('getNewAlbumInfo---:',data);
+      this.newGameAlbums = data;
+    });
+    getHotAlbumInfo(number, params).then(data => {
+      console.log('getHotAlbumInfo---:',data);
+      this.hotGameAlbums = data;
+    });
 
   },
   mounted(){
