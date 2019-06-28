@@ -12,7 +12,7 @@
      </div>
      <div class="works_list new" v-show="ui.newAlbumsVisible">
        最新
-       <li v-for="photo in gameAlbums">
+       <li v-for="photo in newGameAlbums">
          <img  :src="photo.image_file_name"/>
          <a>{{photo.name}}</a>
          <a>{{photo.score}}</a>
@@ -20,7 +20,7 @@
      </div>
      <div class="works_list hot" v-show="ui.hotAlbumsVisible">
        最热
-       <li v-for="photo in gameAlbums">
+       <li v-for="photo in hotGameAlbums">
          <img  :src="photo.image_file_name"/>
          <a>{{photo.name}}</a>
          <a>{{photo.score}}</a>
@@ -44,7 +44,10 @@ import HdGame from '@/lib/hdgame'
 
 export default {
   props: {
-    gameAlbums:{
+    newGameAlbums:{
+      type: Array
+    },
+    hotGameAlbums:{
       type: Array
     },
     gameRound: { // 游戏成绩相关数据

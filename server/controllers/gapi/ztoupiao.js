@@ -162,6 +162,10 @@ export default class GamesController {
           attributes: ['name', 'image_file_name'],
           association: 'Photo'
         }],
+        include: [{
+          attributes: ['avatar'],
+          association: 'GamePlayers'
+        }],
         limit: 6,
         order: [
           ['created_at', 'DESC']
@@ -207,6 +211,10 @@ export default class GamesController {
         include: [{
           attributes: ['name', 'image_file_name'],
           association: 'Photo'
+        }],
+        include: [{
+          attributes: ['avatar'],
+          association: 'GamePlayers'
         }],
         limit: 6,
         order: [

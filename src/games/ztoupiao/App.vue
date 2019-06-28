@@ -18,7 +18,7 @@
         </div>
     </div>
     <!-- <IndexBox :game-player="gamePlayer" :gameRound="gameRound":command="ui.indexBoxVisible" > </IndexBox> -->
-    <WorksBox :game-player="gamePlayer" :gameRound="gameRound" :gameAlbums="gameAlbums" :gameResult="gameResult" :command="ui.worksBoxVisible" > </WorksBox>
+    <WorksBox :game-player="gamePlayer" :gameRound="gameRound" :gameAlbums="gameAlbums" :newGameAlbums="newGameAlbums" :hotGameAlbums="hotGameAlbums" :gameResult="gameResult" :command="ui.worksBoxVisible" > </WorksBox>
     <!-- <PhotographsBox :game-player="gamePlayer" :gameRound="gameRound":command="ui.photographsBoxVisible" > </PhotographsBox> -->
     <!-- <ReviewBox :game-player="gamePlayer" :gameRound="gameRound":command="ui.reviewBoxVisible" > </ReviewBox> -->
     <!-- <MyAccountBox :game-player="gamePlayer" :gameRound="gameRound":command="ui.my_accountBoxVisible" > </MyAccountBox> -->
@@ -35,7 +35,7 @@
   import ReviewBox from './ReviewBox.vue'
   import MyAccountBox from './MyAccountBox.vue'
   import queryString from 'query-string'
-  import { getGameResult } from '@/api/games/ztoupiao'
+  import { getGameResult,getNewAlbumInfo,getHotAlbumInfo } from '@/api/games/ztoupiao'
 
   export default {
     name: 'app',
@@ -75,12 +75,23 @@
         document.title = this.gameRound.name
 
       });
+
+      getNewAlbumInfo(number, params).then(data => {
+        console.log('getNewAlbumInfo---:',data);
+        this.newGameAlbums = data.gameAlbums;
+      });
+      getHotAlbumInfo(number, params).then(data => {
+        console.log('getHotAlbumInfo---:',data);
+        this.hotGameAlbums = data.gameAlbums;
+      });
     },
     data() {
       return {
         gamePlayer:{},
         gameRound:{},
         gameAlbums:[],
+        newGameAlbums:[],
+        hotGameAlbums:[],
         gameResult:[],
         ui: {
           indexBoxVisible: true, // 初始页面是否可见

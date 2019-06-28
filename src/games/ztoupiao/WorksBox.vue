@@ -146,7 +146,7 @@
      </div>
 
    </div>
-  <WorksListBox :gameAlbums="gameAlbums" :command="ui.worksVisible"> </WorksListBox>
+  <WorksListBox :gameAlbums="gameAlbums" :newGameAlbums="newGameAlbums" :hotGameAlbums="hotGameAlbums" :command="ui.worksVisible"> </WorksListBox>
 
  </div>
 </template>
@@ -167,6 +167,12 @@ export default {
   },
   props: {
     gameAlbums:{
+      type: Array
+    },
+    newGameAlbums:{
+      type: Array
+    },
+    hotGameAlbums:{
       type: Array
     },
     gameRound: { // 游戏成绩相关数据
