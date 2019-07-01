@@ -242,7 +242,7 @@ export default class GamesController {
         let gameAlbums = await GameAlbum.findAll({
           where: {
             game_round_id: gameRound.id,
-            game_player_id:playerInfo.id
+            game_player_id: playerInfo.id
           },
           include: [{
             attributes: ['file_name'],
@@ -255,10 +255,10 @@ export default class GamesController {
         })
 
         ctx.body = {
-          gameAlbums:gameAlbums,
-          gamePlayer:playerInfo
+          gameAlbums: gameAlbums,
+          gamePlayer: playerInfo
         }
-      }else{
+      } else {
         ctx.body = null
       }
 
@@ -322,13 +322,16 @@ export default class GamesController {
 
   static async addPlayer(ctx) {
     try {
-      let code = ctx.params.code
+      let code = ctx.request.body.code
       let number = ctx.params.number
-      console.log("showRoundByNumber= ", ctx.params)
-      let Model = getGameRoundModelByCode(code)
-      console.log('Model--:', Model);
+      let openid = ctx.request.body.parsed.openid
+      let GameRound = getGameRoundModelByCode(code)
+      let GamePlayer = getGamePlayerModelByCode(code)
+      let GameResult = getGameResultModelByCode(code)
+      let GameAlbum = getGameAlbumModelByCode(code)
+      let GamePhoto = getGamePhotoModelByCode(code)
 
-      let gameRound = await Model.findOne({
+      let gameRound = await GameRound.findOne({
         where: {
           number
         }
@@ -341,15 +344,28 @@ export default class GamesController {
         }
       })
 
+
       let realname = ctx.request.body.realname
       let cellphone = ctx.request.body.tel
 
-      gamePlayer = await GamePlayer.update({
-        realname:realname,
-        cellphone:cellphone
+      await gamePlayer.update({
+        realname: realname,
+        cellphone: cellphone
       })
 
-      ctx.body = gamePlayer
+      let gameAlbums = {
+        name: ctx.request.body.workname,
+        desc: ctx.request.body.workdesc,
+        game_player_id: gamePlayer.id,
+        game_round_id: gameRound.id
+      }
+
+      gameAlbums = await GameAlbum.create(gameAlbums)
+
+      ctx.body = {
+        gamePlayer: gamePlayer,
+        gameAlbums: gameAlbums
+      }
 
     } catch (error) {
       logger.error("addPlayer error:", error)
@@ -357,6 +373,60 @@ export default class GamesController {
         expose: true
       })
     }
+  }
+
+  static async thumbUp(ctx) {
+    console.log('thumbUp');
+    ctx.body = 'ok'
+    let code = ctx.request.body.code
+    let number = ctx.params.number
+    let openid = ctx.request.body.parsed.openid
+    let album_id = ctx.request.body.album_id
+    let GameRound = getGameRoundModelByCode(code)
+    let GamePlayer = getGamePlayerModelByCode(code)
+    let GameResult = getGameResultModelByCode(code)
+    let GameAlbum = getGameAlbumModelByCode(code)
+    let GamePhoto = getGamePhotoModelByCode(code)
+
+    let gameRound = await GameRound.findOne({
+      where: {
+        number
+      }
+    })
+
+    let gamePlayer = await GamePlayer.findOne({
+      where: {
+        game_round_id: gameRound.id,
+        openid: openid,
+      }
+    })
+
+    let gameResult = {
+      game_player_id: gamePlayer.id,
+      to_game_player_id: album_id
+    }
+    gameResult = await GameResult.create(gameResult)
+
+    let allResult = await GameResult.findAndCountAll({
+      where: {
+        to_game_player_id: album_id
+      }
+    })
+
+    let Result_count = allResult.count
+
+    let gameAlbum = await GameAlbum.findOne({
+      where: {
+        id:album_id
+      }
+    })
+
+    await gameAlbum.update({
+      score:Result_count
+    })
+
+    ctx.body = gameResult
+
   }
 
   static async setAchieve(ctx) {

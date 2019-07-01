@@ -16,6 +16,7 @@
          <img  :src="album.image_file_name"/>
          <a>{{album.name}}</a>
          <a>{{album.score}}</a>
+         <a class="weui-btn weui-btn_primary userSubmitBtn" @click="thumb_up(album.id)" href="javascript:" id="showTooltips">点赞</a>
          <div class="userImgBox" style="border-color:"><img :src="album.GamePlayers.avatar" class="userImg" /></div>
        </li>
      </div>
@@ -25,6 +26,7 @@
          <img  :src="album.image_file_name"/>
          <a>{{album.name}}</a>
          <a>{{album.score}}</a>
+         <a class="weui-btn weui-btn_primary userSubmitBtn" @click="thumb_up(album.id)" href="javascript:" id="showTooltips">点赞</a>
          <div class="userImgBox" style="border-color:"><img :src="album.GamePlayers.avatar" class="userImg" /></div>
        </li>
      </div>
@@ -40,10 +42,9 @@ import {
 } from '@/api/games/zxg'
 import moment from 'moment';
 // import { getRoundState } from '@/api/games/ztoupiao'
-// import queryString from 'query-string'
 
 import queryString from 'query-string'
-import { getNewAlbumInfo,getHotAlbumInfo } from '@/api/games/ztoupiao'
+import { getNewAlbumInfo,getHotAlbumInfo,thumbUp } from '@/api/games/ztoupiao'
 
 import HdGame from '@/lib/hdgame'
 
@@ -143,6 +144,27 @@ export default {
     }
   },
   methods: {
+    thumb_up: function(id){
+      const parsed = queryString.parse(location.search)
+      var number = parsed.number
+
+      var params = {
+        parsed: parsed,
+        code:'ztoupiao',
+        album_id:id
+      }
+
+      thumbUp(number, params).then(data => {
+        getNewAlbumInfo(number, params).then(data => {
+          console.log('getNewAlbumInfo---:',data);
+          this.newGameAlbums = data;
+        });
+        getHotAlbumInfo(number, params).then(data => {
+          console.log('getHotAlbumInfo---:',data);
+          this.hotGameAlbums = data;
+        });
+      });
+    },
     countTime: function () {
 
       var that = this

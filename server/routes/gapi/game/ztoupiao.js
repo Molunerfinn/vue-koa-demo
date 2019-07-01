@@ -14,5 +14,6 @@ router.post('/getHotAlbumInfo', game.getHotAlbumInfo)
 
 router.post('/getMyWorkInfo', game.getMyWorkInfo)
 router.post('/getMyCardInfo', game.getMyCardInfo)
+router.post('/thumbUp', game.thumbUp)
 
 export default router

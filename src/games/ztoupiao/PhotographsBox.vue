@@ -69,7 +69,7 @@ import queryString from 'query-string'
 import GameRes from './game/GameRes'
 import {
   postMsg
-} from '@/api/base.js'
+} from '@/api/games/ztoupiao.js'
 export default {
   props: {
     gameRound: { // 游戏player相关数据
@@ -98,11 +98,27 @@ export default {
       var msg_is_ok = true
       var realname = document.getElementById('name').value
       var tel = parseInt(document.getElementById('tel').value)
+      var workname = document.getElementById('workname').value
+      var workdesc = document.getElementById('workdesc').value
 
       if (realname == '') {
         weui.form.showErrorTips({
           ele: document.getElementById("name"),
           msg: '姓名不能为空'
+        });
+        msg_is_ok = false
+      }
+      if (workname == '') {
+        weui.form.showErrorTips({
+          ele: document.getElementById("workname"),
+          msg: '作品名不能为空'
+        });
+        msg_is_ok = false
+      }
+      if (workdesc == '') {
+        weui.form.showErrorTips({
+          ele: document.getElementById("workdesc"),
+          msg: '作品描述不能为空'
         });
         msg_is_ok = false
       }
@@ -123,9 +139,13 @@ export default {
         console.log('this.gameRound',this.gameRound);
         var data = {
           realname:realname,
-          tel:tel
+          tel:tel,
+          workname:workname,
+          workdesc:workdesc,
+          code:code,
+          parsed: parsed
         }
-        postMsg(code,number,data).then((res)=>{
+        postMsg(number,data).then((res)=>{
           this.$emit('signUpOver',res)
           this.statusBox = false
         })
