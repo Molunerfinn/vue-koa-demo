@@ -13,10 +13,8 @@ router.post('/getRoundState', game.getRoundState)
 
 //  routes /photos/
 //  routes /albums/
-const albumsRouter = koaRouter()
-
-router.post('/createBeforeDirectUpload', albums.createBeforeDirectUpload)
-
-router.use('/albums', albumsRouter.routes(), albumsRouter.allowedMethods());
+// const albumsRouter = koaRouter()
+// albumsRouter.post('/createBeforeDirectUpload', albums.createBeforeDirectUpload)
+// router.use('/albums', albumsRouter.routes(), albumsRouter.allowedMethods());
 
 export default router
