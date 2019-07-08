@@ -1,11 +1,10 @@
 import { generateUniqueSecureToken } from './helper'
 
-export function bindGameRoundMethods( db ){
+export function bindPhotoMethods( db ){
   let models = Object.values(db)
   models.forEach((model)=>{
     let rex = /([\w]+)Photo$/
     if( rex.test(model.name)){
-
       addHooks( model )
     }
   })
@@ -14,8 +13,8 @@ export function bindGameRoundMethods( db ){
 
 
 function addHooks( model ){
-  model.addHook( 'beforeCreate', 'generate_key', (game, options) => {
-     game.key =  generateUniqueSecureToken()
+  model.addHook( 'beforeCreate', 'generate_photo_key', (game, options) => {
+      game.okey =  generateUniqueSecureToken()
   })
 
 }

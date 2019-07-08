@@ -4,11 +4,11 @@ module.exports = (sequelize, DataTypes) => {
 
   const model = sequelize.define('ZTouPiaoPhoto', {
     album_id: {
-      type: DataTypes.BIGINT(11),
+      type: DataTypes.INTEGER(11),
       allowNull: false,
       defaultValue: '0'
     },
-    key: {
+    okey: {
       type: DataTypes.STRING(64),
       allowNull: false,
       unique: true

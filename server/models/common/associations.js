@@ -15,15 +15,16 @@ export function buildGameAssociations(db){
 
       if(albumModel&&playerModel){
         console.log( "buildGameAssociations "+ code + "Album," + code + "GamePlayers")
-        albumModel.belongsTo( playerModel, { foreignKey: 'game_player_id', as: 'GamePlayers'})
-        playerModel.hasMany( albumModel, {foreignKey: 'game_player_id', as: 'Album'})
+        albumModel.belongsTo( playerModel, { foreignKey: 'game_player_id', as: 'GamePlayer'})
+        playerModel.hasMany( albumModel, {foreignKey: 'game_player_id', as: 'Albums'})
       }
 
 
       if(albumModel&&photoModel){
         console.log( "buildGameAssociations "+ code + "Album," + code + "Photo")
+        // cause db initialize fail: SequelizeDatabaseError: Cannot add foreign key constraint??
         photoModel.belongsTo( albumModel, { foreignKey: 'album_id', as: 'Album'})
-        albumModel.hasMany( photoModel, {foreignKey: 'album_id', as: 'Photo'})
+        albumModel.hasMany( photoModel, {foreignKey: 'album_id', as: 'Photos'})
       }
 
       if( playerModel && resultModel){
