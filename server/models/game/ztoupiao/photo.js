@@ -1,3 +1,6 @@
+const { getObjectUrl } = require('../../helpers/aliyun_oss')
+
+
 module.exports = (sequelize, DataTypes) => {
   const Op = sequelize.Op
   //filename: filename, byte_size: byte_size, checksum: checksum, content_type: content_type, metadata: metadata
@@ -37,7 +40,12 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     createdAt: 'created_at',
     updatedAt: 'updated_at',
-    tableName: 'game_photos'
+    tableName: 'game_photos',
+    getterMethods:{
+      url(){
+        getObjectUrl( this.okey)
+      }
+    }
   })
 
   // bindMethods(model)
