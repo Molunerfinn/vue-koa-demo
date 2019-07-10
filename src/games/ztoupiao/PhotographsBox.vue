@@ -106,6 +106,7 @@ import {
 } from '@/api/albums.js'
 const oss = require('ali-oss');
 import { FileChecksum } from "@/lib/direct_upload/file_checksum"
+import { BlobUpload } from "@/lib/direct_upload/blob_upload"
 export default {
   props: {
     gameRound: { // 游戏player相关数据
@@ -168,7 +169,13 @@ export default {
                 $gallery.fadeOut(100);
             });
       },
-    post_msg: function (e) {
+
+       notify: function(object, methodName, ...messages) {
+        if (object && typeof object[methodName] == "function") {
+          return object[methodName](...messages)
+        }
+      },
+    post_msg: async function (e) {
       console.log('========post_msg========');
       var files = this.filelist;
       console.log('files----:',files);
@@ -215,50 +222,73 @@ export default {
         var code = this.gameRound.code;
         let album = {
           workname:workname,
-          workdesc:workdesc,
+          workdesc:workdesc
         }
         console.log('this.gameRound',this.gameRound);
         let photos =[]
-        for(var i=0;i<files.length;i++){
-          let photo = {}
+        let promise = new Promise(async (resolve, reject)=>{
+          for(var i=0;i<files.length;i++){
+            let photo = {}
+            photo.okey="okey";
+            photo.file_name = files[i].name;
+            photo.content_type = files[i].type;
+            photo.file_size = files[i].size;
+            await FileChecksum.create(files[i], (error, checksum) => {
+              if (error) {
+                return
+              }
+              photo.checksum = checksum
+              photos.push(photo);
+              console.log(' photos.length:', photos.length,'files.length:',files.length);
+              if( photos.length == files.length){
+                console.log('========resolve=======');
+                var data = {
+                  realname:realname,
+                  tel:tel,
+                  code:code,
+                  parsed: parsed,
+                  album:album,
+                  photos:photos
+                }
 
-          photo.okey="okey";
-          photo.file_name = files[i].name;
-          photo.content_type = files[i].type;
-          photo.file_size = files[i].size;
-          FileChecksum.create(files[i], (error, checksum) => {
-            if (error) {
-              return
-            }
-            console.log('checksum----:',checksum);
-            photo.checksum = checksum
-            photos.push(photo);
-          })
-        }
-        var data = {
-          realname:realname,
-          tel:tel,
-          code:code,
-          parsed: parsed,
-          album:album,
-          photos:photos
-        }
-        console.log('data------:',data);
-        createBeforeDirectUpload(number,data).then((res)=>{
-          console.log('res========:',res);
-          let headers = res.headers
-          console.log('headers----:',headers);
-          for(var i=0;i<headers.length;i++){
-            let options = {
-              headers:headers[i]
-            }
-             this.ossclient.put('tupian',files[i],options);
+                resolve(data)
+              }
+            })
           }
         })
-        postMsg(number,data).then((res)=>{
-          this.$emit('signUpOver',res)
-          this.statusBox = false
-        })
+
+
+        await promise.then((data)=>{
+          console.log('data------:',data);
+          postMsg(number,data).then((res)=>{
+            this.$emit('signUpOver',res)
+            this.statusBox = false
+          })
+          createBeforeDirectUpload(number,data).then((res)=>{
+            console.log('res========:',res);
+            let directUploadData = res.directUploadData
+            console.log('directUploadData----:',directUploadData);
+
+            for(var i=0;i<directUploadData.length;i++){
+              let url = directUploadData[i].url;
+              let headers = directUploadData[i].headers;
+              console.log('url---:',url);
+              console.log('headers----:',headers);
+
+              const upload = new BlobUpload(files[i],directUploadData[i])
+              this.notify(null, "directUploadWillStoreFileWithXHR", upload.xhr)
+              upload.create(error => {
+                if (error) {
+                  // upload.callback(error)
+                } else {
+                  // upload.callback(null, blob.toJSON())
+                }
+              })
+
+            }
+          })
+
+        });
 
       }
     },

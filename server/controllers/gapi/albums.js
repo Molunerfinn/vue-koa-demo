@@ -37,13 +37,25 @@ export default class AlbumsController {
                   number
               }
           })
+
+          let GamePlayer = getGamePlayerModelByCode(code)
+          let openid = ctx.request.body.parsed.openid
+          let gamePlayer = await GamePlayer.findOne({
+            where: {
+              game_round_id: round.id,
+              openid: openid,
+            }
+          })
+
+          albumParam.game_player_id = gamePlayer.id;
+          albumParam.game_round_id = round.id;
           let Album = getGameAlbumModelByCode( code )
           let Photo = getGamePhotoModelByCode( code )
           // game_player_id, game_round_id, name, desc
 
           // create! filename: filename, byte_size: byte_size, checksum: checksum, content_type: content_type, metadata: metadata
           let albumOptions = {
-            fields: ['name', 'desc']
+            fields: ['name', 'desc','game_player_id','game_round_id']
           }
           let photoOptions = {
             fields: ['album_id', 'file_name', 'file_size', 'content_type', 'checksum', 'okey']

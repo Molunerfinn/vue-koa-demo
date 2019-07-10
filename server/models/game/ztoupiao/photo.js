@@ -1,4 +1,4 @@
-const { getObjectUrl } = require('../../helpers/aliyun_oss')
+const { getObjectUrl } = require('../../../helpers/aliyun_oss')
 
 
 module.exports = (sequelize, DataTypes) => {
@@ -42,8 +42,8 @@ module.exports = (sequelize, DataTypes) => {
     updatedAt: 'updated_at',
     tableName: 'game_photos',
     getterMethods:{
-      url(){
-        getObjectUrl( this.okey)
+      originalUrl(){
+        return getObjectUrl( this.okey)
       }
     }
   })

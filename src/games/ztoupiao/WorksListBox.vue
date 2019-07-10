@@ -13,21 +13,21 @@
      <div class="works_list new" v-show="ui.newAlbumsVisible">
        最新
        <li v-for="album in newGameAlbums">
-         <img  :src="album.image_file_name"/>
+         <img  :src="album.Photos[0].originalUrl"/>
          <a>{{album.name}}</a>
          <a>{{album.score}}</a>
          <a class="weui-btn weui-btn_primary userSubmitBtn" @click="thumb_up(album.id)" href="javascript:" id="showTooltips">点赞</a>
-         <div class="userImgBox" style="border-color:"><img :src="album.GamePlayers.avatar" class="userImg" /></div>
+         <div class="userImgBox" style="border-color:"><img :src="album.GamePlayer.avatar" class="userImg" /></div>
        </li>
      </div>
      <div class="works_list hot" v-show="ui.hotAlbumsVisible">
        最热
        <li v-for="album in hotGameAlbums">
-         <img  :src="album.image_file_name"/>
+         <img  :src="album.Photos[0].originalUrl"/>
          <a>{{album.name}}</a>
          <a>{{album.score}}</a>
          <a class="weui-btn weui-btn_primary userSubmitBtn" @click="thumb_up(album.id)" href="javascript:" id="showTooltips">点赞</a>
-         <div class="userImgBox" style="border-color:"><img :src="album.GamePlayers.avatar" class="userImg" /></div>
+         <div class="userImgBox" style="border-color:"><img :src="album.GamePlayer.avatar" class="userImg" /></div>
        </li>
      </div>
    </div>

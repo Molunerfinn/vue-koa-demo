@@ -10,6 +10,8 @@ const {
   getWxJsConfig
 } = require('../../../helpers/weixin')
 
+const { getObjectUrl } = require('../../../helpers/aliyun_oss')
+
 const logger = require('../../../helpers/logger')
 const md5 = require('md5');
 
@@ -62,16 +64,16 @@ export default class GamesController {
       let gameAlbums = await GameAlbum.findAll({
         where: {
           game_round_id: gameRound.id,
-          // game_player_id: playerInfo.id
         },
         include: [{
-          attributes: ['file_name'],
+          attributes: ['okey'],
           association: 'Photos'
         }],
         limit: 2
       })
 
       console.log('gameAlbums----:',gameAlbums);
+
       // 每个游戏 GameRound
       let url = ctx.header.referer
       console.log('url===================:', url);
@@ -119,10 +121,9 @@ export default class GamesController {
           game_round_id: gameRound.id
         },
         include: [{
-          attributes: ['file_name'],
+          attributes: ['okey'],
           association: 'Photos'
-        }],
-        include: [{
+        },{
           attributes: ['avatar'],
           association: 'GamePlayer'
         }],
@@ -131,6 +132,7 @@ export default class GamesController {
           ['created_at', 'DESC']
         ]
       })
+      console.log('gameAlbums************:',gameAlbums);
 
       ctx.body = gameAlbums
 
@@ -166,10 +168,9 @@ export default class GamesController {
           game_round_id: gameRound.id
         },
         include: [{
-          attributes: ['file_name'],
+          attributes: ['okey'],
           association: 'Photos'
-        }],
-        include: [{
+        },{
           attributes: ['avatar'],
           association: 'GamePlayer'
         }],
@@ -244,11 +245,10 @@ export default class GamesController {
         playerInfo = await gamePlayer.getInfo()
         let gameAlbums = await GameAlbum.findAll({
           where: {
-            game_round_id: gameRound.id,
-            game_player_id: playerInfo.id
+            game_round_id: gameRound.id
           },
           include: [{
-            attributes: ['file_name'],
+            attributes: ['okey'],
             association: 'Photos'
           }],
           limit: 6,
@@ -300,10 +300,9 @@ export default class GamesController {
           game_round_id: gameRound.id
         },
         include: [{
-          attributes: ['file_name'],
+          attributes: ['okey'],
           association: 'Photos'
-        }],
-        include: [{
+        },{
           attributes: ['avatar'],
           association: 'GamePlayer'
         }],
@@ -346,8 +345,6 @@ export default class GamesController {
           openid: openid,
         }
       })
-
-
       let realname = ctx.request.body.realname
       let cellphone = ctx.request.body.tel
 
@@ -356,18 +353,8 @@ export default class GamesController {
         cellphone: cellphone
       })
 
-      let gameAlbums = {
-        name: ctx.request.body.workname,
-        desc: ctx.request.body.workdesc,
-        game_player_id: gamePlayer.id,
-        game_round_id: gameRound.id
-      }
-
-      gameAlbums = await GameAlbum.create(gameAlbums)
-
       ctx.body = {
-        gamePlayer: gamePlayer,
-        gameAlbums: gameAlbums
+        gamePlayer: gamePlayer
       }
 
     } catch (error) {

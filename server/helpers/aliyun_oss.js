@@ -37,9 +37,11 @@ export function urlForDirectUpload(key, expires_in, content_type, content_length
 // key: photo.okey
 export function getObjectUrl(key, params = {}){
   let filekey = path_for(key)
-  let url = client.getObjectUrl( filekey )
-  let query = {}.merge!( params )
-  return [url, query.to_query].join('?')
+  let url = client.generateObjectUrl( filekey )
+  console.log('url----:',url);
+  // let query = {}.merge( params )
+  // return [url, query.to_query].join('?')
+  return url
 }
 
 function authorization(key, content_type, checksum, date){

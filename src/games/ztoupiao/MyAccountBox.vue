@@ -13,7 +13,7 @@
      <div class="myWorks_list" v-show="ui.workVisible">
        我的作品
        <li v-for="work in myWorks">
-         <img  :src="work.image_file_name"/>
+         <img  :src="work.Photos[0].originalUrl"/>
          <a>{{work.name}}</a>
          <a>{{work.score}}</a>
          <div class="userImgBox" style="border-color:"><img :src="gamePlayer.avatar" class="userImg" /></div>
@@ -22,7 +22,7 @@
      <div class="myCards_list" v-show="ui.cardVisible">
        我的卡券
        <li v-for="card in myCards">
-         <img  :src="card.image_file_name"/>
+         <img  :src="card.Photos[0].originalUrl"/>
          <a>{{card.name}}</a>
          <a>{{card.score}}</a>
          <div class="userImgBox" style="border-color:"><img :src="card.GamePlayers.avatar" class="userImg" /></div>

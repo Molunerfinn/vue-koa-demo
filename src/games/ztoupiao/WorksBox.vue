@@ -338,9 +338,9 @@ export default {
       }
     },
     poupRank(){
-
+      const parsed = queryString.parse(location.search);
       var params = {
-        openid: this.gamePlayer.openid
+        openid: parsed.openid
       }
       getRanking(this.gameRound.number, params).then(data => {
         var rankInfo = data
