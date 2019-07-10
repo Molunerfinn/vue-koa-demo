@@ -34,6 +34,14 @@ export function urlForDirectUpload(key, expires_in, content_type, content_length
   return generated_url
 }
 
+// key: photo.okey
+export function getObjectUrl(key, params = {}){
+  let filekey = path_for(key)
+  let url = client.getObjectUrl( filekey )
+  let query = {}.merge!( params )
+  return [url, query.to_query].join('?')
+}
+
 function authorization(key, content_type, checksum, date){
   let bucketName =  config.ossBucket
   let filename = `/${bucketName}/${path_for(key)}`
@@ -45,7 +53,7 @@ function authorization(key, content_type, checksum, date){
 }
 
 function endpoint(){
-  return config.ossPath || "https://oss-cn-hangzhou.aliyuncs.com"
+  return config.ossEndpoint
 }
 
 
