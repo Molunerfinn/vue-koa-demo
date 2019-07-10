@@ -57,6 +57,7 @@ export default class GamesController {
           game_round_id: gameRound.id
         }
       })
+      console.log('gameResult----:',gameResult);
 
       let gameAlbums = await GameAlbum.findAll({
         where: {
@@ -65,10 +66,12 @@ export default class GamesController {
         },
         include: [{
           attributes: ['file_name'],
-          association: 'Photo'
+          association: 'Photos'
         }],
         limit: 2
       })
+
+      console.log('gameAlbums----:',gameAlbums);
       // 每个游戏 GameRound
       let url = ctx.header.referer
       console.log('url===================:', url);
@@ -117,11 +120,11 @@ export default class GamesController {
         },
         include: [{
           attributes: ['file_name'],
-          association: 'Photo'
+          association: 'Photos'
         }],
         include: [{
           attributes: ['avatar'],
-          association: 'GamePlayers'
+          association: 'GamePlayer'
         }],
         limit: 6,
         order: [
@@ -164,11 +167,11 @@ export default class GamesController {
         },
         include: [{
           attributes: ['file_name'],
-          association: 'Photo'
+          association: 'Photos'
         }],
         include: [{
           attributes: ['avatar'],
-          association: 'GamePlayers'
+          association: 'GamePlayer'
         }],
         limit: 6,
         order: [
@@ -246,7 +249,7 @@ export default class GamesController {
           },
           include: [{
             attributes: ['file_name'],
-            association: 'Photo'
+            association: 'Photos'
           }],
           limit: 6,
           order: [
@@ -298,11 +301,11 @@ export default class GamesController {
         },
         include: [{
           attributes: ['file_name'],
-          association: 'Photo'
+          association: 'Photos'
         }],
         include: [{
           attributes: ['avatar'],
-          association: 'GamePlayers'
+          association: 'GamePlayer'
         }],
         limit: 6,
         order: [

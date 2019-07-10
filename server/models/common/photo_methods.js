@@ -13,7 +13,7 @@ export function bindPhotoMethods( db ){
 
 
 function addHooks( model ){
-  model.addHook( 'beforeCreate', 'generate_photo_key', (game, options) => {
+  model.addHook( 'beforeCreate', 'generate_photo_okey', (game, options) => {
       game.okey =  generateUniqueSecureToken()
   })
 

@@ -23,7 +23,7 @@ export default class AlbumsController {
    */
   static async createBeforeDirectUpload(ctx) {
       //try {
-
+      console.log('==================createBeforeDirectUpload===============');
           let number = ctx.params.number
           let code = ctx.request.body.code
           let albumParam = ctx.request.body.album
