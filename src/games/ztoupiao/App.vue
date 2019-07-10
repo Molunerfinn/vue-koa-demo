@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div class="weui-tabbar footer">
-        <div align="center" class="index" @touchend="handleTouchIndex" >
+        <div align="center" class="index" @touchend="handleTouchIndex" @gotoReview="handleTouchReview" @gotoPhotographs="handleTouchPhotographs">
           <div class="footer_text">首页</div>
         </div>
         <div align="center" class="works" @touchend="handleTouchWorks">

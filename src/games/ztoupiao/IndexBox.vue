@@ -2,13 +2,13 @@
 <div class="swiper-container swiper-container-initialized swiper-container-horizontal" v-show="ui.indexVisible">
   <div class="swiper-wrapper">
     <div class="swiper-slide">
-      <img  @touchend="gotoReview"
+      <img  @click="gotoReview"
            id="gotoReview"
 
            :src="skinAssets.reviewImgPath"/>
     </div>
     <div class="swiper-slide" id="gotoPhotographsImg">
-      <img  @touchend="gotoPhotographs"
+      <img  @click="gotoPhotographs"
            id="gotoReview"
            :src="skinAssets.photographsImgPath"/>
     </div>
@@ -77,9 +77,11 @@ export default {
   methods: {
     gotoReview(event){
       console.log('gotoReview');
+      this.$emit('gotoReview')
     },
     gotoPhotographs(event){
       console.log('gotoPhotographs');
+      this.$emit('gotoPhotographs')
     },
 
   },

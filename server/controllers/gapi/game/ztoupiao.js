@@ -10,7 +10,9 @@ const {
   getWxJsConfig
 } = require('../../../helpers/weixin')
 
-const { getObjectUrl } = require('../../../helpers/aliyun_oss')
+const {
+  getObjectUrl
+} = require('../../../helpers/aliyun_oss')
 
 const logger = require('../../../helpers/logger')
 const md5 = require('md5');
@@ -59,7 +61,7 @@ export default class GamesController {
           game_round_id: gameRound.id
         }
       })
-      console.log('gameResult----:',gameResult);
+      console.log('gameResult----:', gameResult);
 
       let gameAlbums = await GameAlbum.findAll({
         where: {
@@ -72,7 +74,7 @@ export default class GamesController {
         limit: 2
       })
 
-      console.log('gameAlbums----:',gameAlbums);
+      console.log('gameAlbums----:', gameAlbums);
 
       // 每个游戏 GameRound
       let url = ctx.header.referer
@@ -123,7 +125,7 @@ export default class GamesController {
         include: [{
           attributes: ['okey'],
           association: 'Photos'
-        },{
+        }, {
           attributes: ['avatar'],
           association: 'GamePlayer'
         }],
@@ -132,7 +134,7 @@ export default class GamesController {
           ['created_at', 'DESC']
         ]
       })
-      console.log('gameAlbums************:',gameAlbums);
+      console.log('gameAlbums************:', gameAlbums);
 
       ctx.body = gameAlbums
 
@@ -170,7 +172,7 @@ export default class GamesController {
         include: [{
           attributes: ['okey'],
           association: 'Photos'
-        },{
+        }, {
           attributes: ['avatar'],
           association: 'GamePlayer'
         }],
@@ -302,7 +304,7 @@ export default class GamesController {
         include: [{
           attributes: ['okey'],
           association: 'Photos'
-        },{
+        }, {
           attributes: ['avatar'],
           association: 'GamePlayer'
         }],
@@ -393,7 +395,8 @@ export default class GamesController {
 
     let gameResult = {
       game_player_id: gamePlayer.id,
-      to_game_player_id: album_id
+      to_game_player_id: album_id,
+      game_round_id: gameRound.id
     }
     gameResult = await GameResult.create(gameResult)
 
@@ -407,12 +410,12 @@ export default class GamesController {
 
     let gameAlbum = await GameAlbum.findOne({
       where: {
-        id:album_id
+        id: album_id
       }
     })
 
     await gameAlbum.update({
-      score:Result_count
+      score: Result_count
     })
 
     ctx.body = gameResult
