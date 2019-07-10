@@ -39,7 +39,7 @@ function authorization(key, content_type, checksum, date){
   let filename = `/${bucketName}/${path_for(key)}`
   let addition_headers = `x-oss-date:${date}`
   let sign = ["PUT", checksum, content_type, date, addition_headers, filename].join("\n")
-  let signature = client.signatureUrl(sign)
+  let signature = client.signature(sign)
   return "OSS " + config.ossId + ":" + signature
 
 }
