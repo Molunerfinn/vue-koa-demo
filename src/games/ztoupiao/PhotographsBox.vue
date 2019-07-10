@@ -105,7 +105,7 @@ import {
   createBeforeDirectUpload
 } from '@/api/albums.js'
 const oss = require('ali-oss');
-const md5 = require('md5');
+import { FileChecksum } from "@/lib/direct_upload/file_checksum"
 export default {
   props: {
     gameRound: { // 游戏player相关数据
@@ -226,10 +226,14 @@ export default {
           photo.file_name = files[i].name;
           photo.content_type = files[i].type;
           photo.file_size = files[i].size;
-          let secretString = 'md5'+photo.file_name+photo.content_type+photo.file_size
-          let secret = md5(secretString)
-          photo.checksum = secret
-          photos.push(photo);
+          FileChecksum.create(files[i], (error, checksum) => {
+            if (error) {
+              return
+            }
+            console.log('checksum----:',checksum);
+            photo.checksum = checksum
+            photos.push(photo);
+          })
         }
         var data = {
           realname:realname,
