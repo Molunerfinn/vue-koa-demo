@@ -11,7 +11,8 @@ module.exports = (sequelize, DataTypes) => {
     okey: {
       type: DataTypes.STRING(64),
       allowNull: false,
-      unique: true
+      unique: true,
+      defaultValue: ''
     },
     checksum: {
       type: DataTypes.STRING(64),

@@ -9,6 +9,36 @@
           <div class="weui-cells__tips" style="text-align:left;">温馨提示：<br>建议您上传的萌宝照片尺寸不要超过8M，否则可能读取不到照片的参数而造成不能成功上传。</div>
 
           <div class="weui-cell contactInput-ausername contactInput">
+            <div class="page__bd">
+        <div class="weui-gallery" id="gallery">
+            <span class="weui-gallery__img" id="galleryImg"></span>
+            <div class="weui-gallery__opr">
+                <a href="javascript:" class="weui-gallery__del">
+                    <i class="weui-icon-delete weui-icon_gallery-delete"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="weui-cells weui-cells_form">
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <div class="weui-uploader">
+                        <div class="weui-uploader__hd">
+                            <p class="weui-uploader__title">图片上传</p>
+                            <div class="weui-uploader__info">0/2</div>
+                        </div>
+                        <div class="weui-uploader__bd">
+                            <ul class="weui-uploader__files" id="uploaderFiles">
+                            </ul>
+                            <div class="weui-uploader__input-box">
+                                <input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" @change="showImg" multiple="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
             <div class="weui-cell__hd"><label class="weui-label">作品名称</label></div>
             <div class="weui-cell__bd">
               <input style="margin:0px;border: none;" id="workname" class="weui-input theInputDecide textInput" propname="作品名称" propkey="albumName"
@@ -56,7 +86,7 @@
         注:若因未填写资料或资料填写错误导致无法兑奖，主办方不承担相关法律责任;
       </div>
       <div class="weui-btn-area">
-        <a class="weui-btn weui-btn_primary userSubmitBtn" @click="post_msg()" href="javascript:" id="showTooltips">提交</a>
+        <a class="weui-btn weui-btn_primary userSubmitBtn" @click="post_msg" href="javascript:" id="showTooltips">提交</a>
       </div>
     </div>
   </div>
@@ -65,11 +95,17 @@
 
 <script>
 import weui from 'weui.js'
+import $ from 'jquery'
 import queryString from 'query-string'
 import GameRes from './game/GameRes'
 import {
   postMsg
 } from '@/api/games/ztoupiao.js'
+import {
+  createBeforeDirectUpload
+} from '@/api/albums.js'
+const oss = require('ali-oss');
+import { FileChecksum } from "@/lib/direct_upload/file_checksum"
 export default {
   props: {
     gameRound: { // 游戏player相关数据
@@ -82,6 +118,8 @@ export default {
   },
   data () {
     return {
+      ossclient :{},
+      filelist:[],
       skinAssets: {
         workstop1ImgPath: GameRes.skinAssets.workstop1ImgPath
       },
@@ -92,9 +130,48 @@ export default {
       password: ''
     }
   },
+  created(){
+    this.ossclient = new oss({
+      region: 'oss-cn-beijing',
+      accessKeyId: '1Ib17cOySykg7JeR',
+      accessKeySecret: 'mmvbXa8mC23blsUVcMllW9HMydlmy8',
+      bucket:'otest'
+    })
+  },
   methods: {
-    post_msg: function () {
+      showImg (e) {
+        console.log('=============================showImg==================================');
+            var tmpl = '<li class="weui-uploader__file" style="background-image:url(#url#)"></li>',
+                $gallery = $("#gallery"), $galleryImg = $("#galleryImg"),
+                // $uploaderInput = $("#uploaderInput"),
+                $uploaderFiles = $("#uploaderFiles");
+
+              console.log('e----------:',e);
+                var src, url = window.URL || window.webkitURL || window.mozURL, files = e.target.files;
+                console.log('files----:',files);
+                for (var i = 0, len = files.length; i < len; ++i) {
+                    var file = files[i];
+                    this.filelist.push(file);
+                    if (url) {
+                        src = url.createObjectURL(file);
+                    } else {
+                        src = e.target.result;
+                    }
+
+                    $uploaderFiles.append($(tmpl.replace('#url#', src)));
+                }
+            $uploaderFiles.on("click", "li", function(){
+                $galleryImg.attr("style", this.getAttribute("style"));
+                $gallery.fadeIn(100);
+            });
+            $gallery.on("click", function(){
+                $gallery.fadeOut(100);
+            });
+      },
+    post_msg: function (e) {
       console.log('========post_msg========');
+      var files = this.filelist;
+      console.log('files----:',files);
       var msg_is_ok = true
       var realname = document.getElementById('name').value
       var tel = parseInt(document.getElementById('tel').value)
@@ -136,15 +213,48 @@ export default {
         const parsed = queryString.parse(location.search);
         var number = parsed.number;
         var code = this.gameRound.code;
+        let album = {
+          workname:workname,
+          workdesc:workdesc,
+        }
         console.log('this.gameRound',this.gameRound);
+        let photos =[]
+        for(var i=0;i<files.length;i++){
+          let photo = {}
+
+          photo.okey="okey";
+          photo.file_name = files[i].name;
+          photo.content_type = files[i].type;
+          photo.file_size = files[i].size;
+          FileChecksum.create(files[i], (error, checksum) => {
+            if (error) {
+              return
+            }
+            console.log('checksum----:',checksum);
+            photo.checksum = checksum
+            photos.push(photo);
+          })
+        }
         var data = {
           realname:realname,
           tel:tel,
-          workname:workname,
-          workdesc:workdesc,
           code:code,
-          parsed: parsed
+          parsed: parsed,
+          album:album,
+          photos:photos
         }
+        console.log('data------:',data);
+        createBeforeDirectUpload(number,data).then((res)=>{
+          console.log('res========:',res);
+          let headers = res.headers
+          console.log('headers----:',headers);
+          for(var i=0;i<headers.length;i++){
+            let options = {
+              headers:headers[i]
+            }
+             this.ossclient.put('tupian',files[i],options);
+          }
+        })
         postMsg(number,data).then((res)=>{
           this.$emit('signUpOver',res)
           this.statusBox = false

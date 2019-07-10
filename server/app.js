@@ -117,6 +117,11 @@ router.use('/gapi/dpgames', dpgames.routes())
 
 import ztoupiao from './routes/gapi/game/ztoupiao.js'
 router.use('/gapi/ztoupiao', ztoupiao.routes())
+
+import album from './routes/gapi/album.js'
+router.use('/gapi/album', album.routes())
+
+
 app.use(router.routes()) // 将路由规则挂载到Koa上。
 app.use(historyApiFallback())
 app.use(serve(path.resolve('public'))) // 将webpack打包好的项目目录作为Koa静态文件服务的目录
