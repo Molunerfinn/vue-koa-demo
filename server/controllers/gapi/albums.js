@@ -7,7 +7,7 @@ const {
   getGamePhotoModelByCode
 } = require('../../helpers/model')
 
-const { headers_for_direct_upload } = require('../../helpers/aliyun_oss')
+const { headersForDirectUpload,urlForDirectUpload } = require('../../helpers/aliyun_oss')
 
 // route  /gapi/photos
 
@@ -55,11 +55,13 @@ export default class AlbumsController {
             return album.createPhoto( param, photoOptions )
           })
           let photos = await Promise.all(promises )
-          let headers = photos.map((photo)=>{
-            return headers_for_direct_upload( photo.okey, photo.content_type, photo.checksum )
+          let directUploadData = photos.map((photo)=>{
+            let url = urlForDirectUpload( photo.okey )
+            let headers = headersForDirectUpload( photo.okey, photo.content_type, photo.checksum )
+            return { url,  headers }
           })
 
-          ctx.body = { album, photos, headers }
+          ctx.body = { album, photos, directUploadData  }
       // } catch (error) {
       //
       //     ctx.throw(messageContent.ResponeStatus.CommonError, `show round ${ctx.params.id} fail: ` + error, { expose: true })

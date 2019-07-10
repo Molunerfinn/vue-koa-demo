@@ -12,7 +12,7 @@ const client = new OSS({
 // Headers for Direct Upload
 // https://help.aliyun.com/document_detail/31951.html
 // headers["Date"] is required use x-oss-date instead
-export function headers_for_direct_upload(key, content_type, checksum){
+export function headersForDirectUpload(key, content_type, checksum){
   let date = (new Date()).toUTCString()
   return {
     "Content-Type": content_type,
@@ -21,6 +21,17 @@ export function headers_for_direct_upload(key, content_type, checksum){
     "x-oss-date": date
   }
 
+}
+
+// # You must setup CORS on OSS control panel to allow JavaScript request from your site domain.
+// # https://www.alibabacloud.com/help/zh/doc-detail/31988.htm
+// # https://help.aliyun.com/document_detail/31925.html
+// # Source: *.your.host.com
+// # Allowed Methods: POST, PUT, HEAD
+// # Allowed Headers: *
+export function urlForDirectUpload(key, expires_in, content_type, content_length, checksum){
+  let generated_url = client.generateObjectUrl(path_for(key))
+  return generated_url
 }
 
 function authorization(key, content_type, checksum, date){
@@ -46,6 +57,6 @@ function path_for(key){
   } else{
     fullPath = path.join(rootPath, key)
   }
+  fullPath.replace(/^\//, "").replace(/[\/]+/, "/")
   return fullPath
-  // full_path.gsub(/^\//, "").gsub(/[\/]+/, "/")
 }
