@@ -10,11 +10,11 @@
 
           <div class="weui-cell contactInput-ausername contactInput">
             <div class="page__bd">
-        <div class="weui-gallery" id="gallery_2">
-            <span class="weui-gallery__img" id="gallery_2Img"></span>
+        <div class="weui-gallery" id="gallery">
+            <span class="weui-gallery__img" id="galleryImg"></span>
             <div class="weui-gallery__opr">
                 <a href="javascript:" class="weui-gallery__del">
-                    <i class="weui-icon-delete weui-icon_gallery-delete" ></i>
+                    <i class="weui-icon-delete weui-icon_gallery-delete"></i>
                 </a>
             </div>
         </div>
@@ -28,11 +28,12 @@
                             <div class="weui-uploader__info">0/2</div>
                         </div>
                         <div class="weui-uploader__bd">
-                            <ul class="weui-uploader__files" id="modifyFiles">
+                            <ul class="weui-uploader__files" id="uploaderFiles">
                               <li class="weui-uploader__file"
                                 :style="{backgroundImage:'url(\''+photo.originalUrl+'\')'}"
-                                v-for="photo in album.Photos"
-                                @click="readyToRemove(photo)"></li>
+                                v-for="photo in albumData.Photos"
+                                @click="readyToRemove(photo)">
+                              </li>
                             </ul>
                             <div class="weui-uploader__input-box">
                                 <input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" @change="showImg" multiple="">
@@ -45,10 +46,10 @@
     </div>
             <div class="weui-cell__hd"><label class="weui-label">作品名称</label></div>
             <div class="weui-cell__bd">
-              <input style="margin:0px;border: none;" id="mworkname" class="weui-input theInputDecide textInput" propname="作品名称" propkey="albumName"
+              <input style="margin:0px;border: none;" id="workname" class="weui-input theInputDecide textInput" propname="作品名称" propkey="albumName"
                      type="text"
                      placeholder="限15字符"
-                     :value="album.name">
+                     v-model="albumData.name">
             </div>
             <div class="weui-cell__ft warnIcon hide">
               <i class="weui-icon-warn"></i>
@@ -57,7 +58,7 @@
 
           <div class="weui-cell">
                 <div class="weui-cell__bd">
-                    <textarea class="weui-textarea" id="mworkdesc" placeholder="限60字符" rows="3" :value="album.desc"></textarea>
+                    <textarea class="weui-textarea" id="workdesc" placeholder="限60字符" rows="3" v-model="albumData.desc"></textarea>
                     <div class="weui-textarea-counter"><span>0</span>/60</div>
                 </div>
             </div>
@@ -65,10 +66,10 @@
           <div class="weui-cell contactInput-ausername contactInput">
             <div class="weui-cell__hd"><label class="weui-label">姓名</label></div>
             <div class="weui-cell__bd">
-              <input style="margin:0px;border: none;" id="mname" class="weui-input theInputDecide textInput" propname="姓名" propkey="ausername"
+              <input style="margin:0px;border: none;" id="name" class="weui-input theInputDecide textInput" propname="姓名" propkey="ausername"
                      type="text"
                      placeholder="请输入姓名"
-                     :value="gamePlayer.realname">
+                     v-model="gamePlayerData.realname">
             </div>
             <div class="weui-cell__ft warnIcon hide">
               <i class="weui-icon-warn"></i>
@@ -77,10 +78,10 @@
           <div class="weui-cell contactInput-aphone contactInput">
             <div class="weui-cell__hd"><label class="weui-label">联系电话</label></div>
             <div class="weui-cell__bd">
-              <input style="margin:0px;border: none;" id="mtel" class="weui-input theInputDecide textInput" propname="联系电话" propkey="aphone"
+              <input style="margin:0px;border: none;" id="tel" class="weui-input theInputDecide textInput" propname="联系电话" propkey="aphone"
                      type="text"
                      placeholder="请输入联系电话"
-                     :value="gamePlayer.cellphone">
+                     v-model="gamePlayerData.cellphone">
             </div>
             <div class="weui-cell__ft warnIcon phoneWarn hide">
               <i class="weui-icon-warn"></i>
@@ -111,7 +112,6 @@ import {
 import {
   modifyAlbum
 } from '@/api/albums.js'
-const oss = require('ali-oss');
 import { FileChecksum } from "@/lib/direct_upload/file_checksum"
 import { BlobUpload } from "@/lib/direct_upload/blob_upload"
 export default {
@@ -134,9 +134,18 @@ export default {
   },
   data () {
     return {
-      ossclient :{},
       filelist:[],
-      fileToDelete:[],
+      newfileToDelete:[],
+      oldfileToDelete:[],
+      albumData:{
+        name: "",
+        desc: "",
+        Photos:[]
+      },
+      gamePlayerData:{
+        realname:"",
+        cellphone:""
+      },
       skinAssets: {
         workstop1ImgPath: GameRes.skinAssets.workstop1ImgPath
       },
@@ -148,25 +157,20 @@ export default {
     }
   },
   created(){
-    this.ossclient = new oss({
-      region: 'oss-cn-beijing',
-      accessKeyId: '1Ib17cOySykg7JeR',
-      accessKeySecret: 'mmvbXa8mC23blsUVcMllW9HMydlmy8',
-      bucket:'otest'
-    })
   },
   methods: {
     readyToRemove(photo){
       console.log('==========readyToRemove==========');
-      console.log('photo---:',photo);
-      this.fileToDelete.push(photo)
-      for(var i=0;i<this.album.Photos.length;i++){
-        if(this.album.Photos[i].okey == photo.okey){
-          this.album.Photos.splice(i, 1); //删除下标为i的元素
+      this.newfileToDelete.push(photo.originalUrl)
+      if(photo.okey!=undefined){
+        this.oldfileToDelete.push(photo)
+      }
+      for(var i=0;i<this.albumData.Photos.length;i++){
+        if(this.albumData.Photos[i].originalUrl == photo.originalUrl){
+          this.albumData.Photos.splice(i, 1); //删除下标为i的元素
           break;
         }
       }
-
       console.log('this.album------:',this.album);
     },
     async readyToModify(){
@@ -175,42 +179,41 @@ export default {
         console.log('files----:',files);
         console.log('this.album---:',this.album);
         var msg_is_ok = true
-        var realname = document.getElementById('mname').value
-        var mtel = parseInt(document.getElementById('mtel').value)
-        var mworkname = document.getElementById('mworkname').value
-        var mworkdesc = document.getElementById('mworkdesc').value
-        console.log('mworkname---:',mworkname);
+        var realname = this.gamePlayerData.name
+        var tel = this.gamePlayerData.cellphone
+        var workname = this.albumData.name
+        var workdesc = this.albumData.desc
 
         if (realname == '') {
           weui.form.showErrorTips({
-            ele: document.getElementById("mname"),
+            ele: realname,
             msg: '姓名不能为空'
           });
           msg_is_ok = false
         }
-        if (mworkname == '') {
+        if (workname == '') {
           console.log('作品名不能为空')
           weui.form.showErrorTips({
-            ele: document.getElementById("mworkname"),
+            ele: workname,
             msg: '作品名不能为空'
           });
           msg_is_ok = false
         }
-        if (mworkdesc == '') {
+        if (workdesc == '') {
           console.log('作品描述不能为空');
           weui.form.showErrorTips({
-            ele: document.getElementById("mworkdesc"),
+            ele: workdesc,
             msg: '作品描述不能为空'
           });
           msg_is_ok = false
         }
 
         var tel0 = /^1\d{10}$/
-        var ema = document.getElementById('mtel').value
+        var ema = tel
         if (tel0.test(ema) == false) {
           console.log('手机号码格式错误');
             weui.form.showErrorTips({
-              ele: document.getElementById("mtel"),
+              ele: tel,
               msg: '手机号码格式错误'
             });
             msg_is_ok = false
@@ -222,17 +225,20 @@ export default {
           var code = this.gameRound.code;
           let album = {
             id:this.album.id,
-            name:mworkname,
-            desc:mworkdesc
+            name:workname,
+            desc:workdesc
           }
           console.log('this.gameRound',this.gameRound);
           let photos =[]
           console.log('files---:',files);
           console.log('photos---:',photos);
-          console.log('this.fileToDelete---:',this.fileToDelete);
+          console.log('this.newfileToDelete---:',this.newfileToDelete);
           let promise = new Promise(async (resolve, reject)=>{
             for(var i=0;i<files.length;i++){
               let photo = {}
+              if(this.newfileToDelete.indexOf(files[i].src)>-1){
+                continue;
+              }
               photo.okey="okey";
               photo.file_name = files[i].name;
               photo.content_type = files[i].type;
@@ -244,16 +250,16 @@ export default {
                 photo.checksum = checksum
                 photos.push(photo);
                 console.log(' photos.length:', photos.length,'files.length:',files.length);
-                if( photos.length == files.length){
+                if( photos.length == files.length-this.newfileToDelete.length){
                   console.log('========resolve=======');
                   var data = {
                     realname:realname,
-                    tel:mtel,
+                    tel:tel,
                     code:code,
                     parsed: parsed,
                     album:album,
                     photos:photos,
-                    photosToDelete:this.fileToDelete
+                    photosToDelete:this.oldfileToDelete
                   }
 
                   resolve(data)
@@ -288,7 +294,6 @@ export default {
 
                     console.log('emit gotoMyAccountBox');
                     this.$emit('gotoMyAccountBox')
-                    location.reload()
                   }
                 })
               }
@@ -300,6 +305,9 @@ export default {
       console.log('=============================showAlbum==================================');
           var $gallery_2 = $("#gallery_2"), $gallery_2Img = $("#gallery_2Img"),
           $modifyFiles = $("#modifyFiles");
+          this.albumData = this.album;
+          this.gamePlayerData = this.gamePlayer;
+
 
       $modifyFiles.on("click", "li", function(){
           $gallery_2Img.attr("style", this.getAttribute("style"));
@@ -311,23 +319,25 @@ export default {
     },
       showImg (e) {
         console.log('=============================showImg==================================');
-            var tmpl = '<li class="weui-uploader__file" style="background-image:url(#url#)"></li>',
-                $gallery_2 = $("#gallery_2"), $gallery_2Img = $("#gallery_2Img"),
+            // var tmpl = '<li class="weui-uploader__file" style="background-image:url(#url#)"></li>',
+                var $gallery_2 = $("#gallery_2"), $gallery_2Img = $("#gallery_2Img"),
                 // $uploaderInput = $("#uploaderInput"),
                 $modifyFiles = $("#modifyFiles");
-
-              console.log('e----------:',e);
                 var src, url = window.URL || window.webkitURL || window.mozURL, files = e.target.files;
                 console.log('files----:',files);
                 for (var i = 0, len = files.length; i < len; ++i) {
                     var file = files[i];
-                    this.filelist.push(file);
                     if (url) {
                         src = url.createObjectURL(file);
                     } else {
                         src = e.target.result;
                     }
-                    $modifyFiles.append($(tmpl.replace('#url#', src)));
+                    let photo ={
+                      originalUrl:src
+                    }
+                    file.src = src
+                    this.filelist.push(file);
+                    this.albumData.Photos.push(photo)
                 }
             $modifyFiles.on("click", "li", function(){
                 $gallery_2Img.attr("style", this.getAttribute("style"));

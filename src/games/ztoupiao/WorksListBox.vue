@@ -71,7 +71,7 @@ export default {
   data() {
     return {
       showAlbum:{
-        Photos:[]
+        Photos:[{originalUrl:''}]
       },
       getRoundState:{},
       ui:{

@@ -29,6 +29,11 @@
                         </div>
                         <div class="weui-uploader__bd">
                             <ul class="weui-uploader__files" id="uploaderFiles">
+                              <li class="weui-uploader__file"
+                                :style="{backgroundImage:'url(\''+photo.originalUrl+'\')'}"
+                                v-for="photo in albumData.Photos"
+                                @click="readyToRemove(photo)">
+                              </li>
                             </ul>
                             <div class="weui-uploader__input-box">
                                 <input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" @change="showImg" multiple="">
@@ -43,7 +48,8 @@
             <div class="weui-cell__bd">
               <input style="margin:0px;border: none;" id="workname" class="weui-input theInputDecide textInput" propname="作品名称" propkey="albumName"
                      type="text"
-                     placeholder="限15字符">
+                     placeholder="限15字符"
+                     v-model="albumData.name">
             </div>
             <div class="weui-cell__ft warnIcon hide">
               <i class="weui-icon-warn"></i>
@@ -52,7 +58,7 @@
 
           <div class="weui-cell">
                 <div class="weui-cell__bd">
-                    <textarea class="weui-textarea" id="workdesc" placeholder="限60字符" rows="3"></textarea>
+                    <textarea class="weui-textarea" id="workdesc" placeholder="限60字符" rows="3" v-model="albumData.desc"></textarea>
                     <div class="weui-textarea-counter"><span>0</span>/60</div>
                 </div>
             </div>
@@ -62,7 +68,8 @@
             <div class="weui-cell__bd">
               <input style="margin:0px;border: none;" id="name" class="weui-input theInputDecide textInput" propname="姓名" propkey="ausername"
                      type="text"
-                     placeholder="请输入姓名">
+                     placeholder="请输入姓名"
+                     v-model="gamePlayerData.name">
             </div>
             <div class="weui-cell__ft warnIcon hide">
               <i class="weui-icon-warn"></i>
@@ -73,7 +80,8 @@
             <div class="weui-cell__bd">
               <input style="margin:0px;border: none;" id="tel" class="weui-input theInputDecide textInput" propname="联系电话" propkey="aphone"
                      type="text"
-                     placeholder="请输入联系电话">
+                     placeholder="请输入联系电话"
+                     v-model="gamePlayerData.cellphone">
             </div>
             <div class="weui-cell__ft warnIcon phoneWarn hide">
               <i class="weui-icon-warn"></i>
@@ -104,7 +112,7 @@ import {
 import {
   createBeforeDirectUpload
 } from '@/api/albums.js'
-const oss = require('ali-oss');
+
 import { FileChecksum } from "@/lib/direct_upload/file_checksum"
 import { BlobUpload } from "@/lib/direct_upload/blob_upload"
 export default {
@@ -119,7 +127,16 @@ export default {
   },
   data () {
     return {
-      ossclient :{},
+      fileToDelete:[],
+      albumData:{
+        name: "",
+        desc: "",
+        Photos:[]
+      },
+      gamePlayerData:{
+        name:"",
+        cellphone:""
+      },
       filelist:[],
       skinAssets: {
         workstop1ImgPath: GameRes.skinAssets.workstop1ImgPath
@@ -132,18 +149,25 @@ export default {
     }
   },
   created(){
-    this.ossclient = new oss({
-      region: 'oss-cn-beijing',
-      accessKeyId: '1Ib17cOySykg7JeR',
-      accessKeySecret: 'mmvbXa8mC23blsUVcMllW9HMydlmy8',
-      bucket:'otest'
-    })
+
   },
   methods: {
+    readyToRemove(photo){
+      console.log('==========readyToRemove==========');
+      this.fileToDelete.push(photo.originalUrl)
+      for(var i=0;i<this.albumData.Photos.length;i++){
+        if(this.albumData.Photos[i].originalUrl == photo.originalUrl){
+          this.albumData.Photos.splice(i, 1); //删除下标为i的元素
+          break;
+        }
+      }
+
+      console.log('this.album------:',this.album);
+    },
       showImg (e) {
         console.log('=============================showImg==================================');
-            var tmpl = '<li class="weui-uploader__file" style="background-image:url(#url#)"></li>',
-                $gallery = $("#gallery"), $galleryImg = $("#galleryImg"),
+            // var tmpl = '<li class="weui-uploader__file" style="background-image:url(#url#)"></li>',
+                var $gallery = $("#gallery"), $galleryImg = $("#galleryImg"),
                 // $uploaderInput = $("#uploaderInput"),
                 $uploaderFiles = $("#uploaderFiles");
 
@@ -152,14 +176,18 @@ export default {
                 console.log('files----:',files);
                 for (var i = 0, len = files.length; i < len; ++i) {
                     var file = files[i];
-                    this.filelist.push(file);
                     if (url) {
                         src = url.createObjectURL(file);
                     } else {
                         src = e.target.result;
                     }
-
-                    $uploaderFiles.append($(tmpl.replace('#url#', src)));
+                    let photo ={
+                      originalUrl:src
+                    }
+                    file.src = src
+                    this.filelist.push(file);
+                    this.albumData.Photos.push(photo)
+                    // $uploaderFiles.append($(tmpl.replace('#url#', src)));
                 }
             $uploaderFiles.on("click", "li", function(){
                 $galleryImg.attr("style", this.getAttribute("style"));
@@ -178,40 +206,40 @@ export default {
     post_msg: async function (e) {
       console.log('========post_msg========');
       var files = this.filelist;
-      console.log('files----:',files);
+      console.log('files----:',files, 'albumData', this.albumData);
       var msg_is_ok = true
-      var realname = document.getElementById('name').value
-      var tel = parseInt(document.getElementById('tel').value)
-      var workname = document.getElementById('workname').value
-      var workdesc = document.getElementById('workdesc').value
+      var realname = this.gamePlayerData.name
+      var tel = this.gamePlayerData.cellphone
+      var workname = this.albumData.name
+      var workdesc = this.albumData.desc
 
       if (realname == '') {
         weui.form.showErrorTips({
-          ele: document.getElementById("name"),
+          ele: realname,
           msg: '姓名不能为空'
         });
         msg_is_ok = false
       }
       if (workname == '') {
         weui.form.showErrorTips({
-          ele: document.getElementById("workname"),
+          ele: workname,
           msg: '作品名不能为空'
         });
         msg_is_ok = false
       }
       if (workdesc == '') {
         weui.form.showErrorTips({
-          ele: document.getElementById("workdesc"),
+          ele: workdesc,
           msg: '作品描述不能为空'
         });
         msg_is_ok = false
       }
 
       var tel0 = /^1\d{10}$/
-      var ema = document.getElementById('tel').value
+      var ema = tel
       if (tel0.test(ema) == false) {
           weui.form.showErrorTips({
-            ele: document.getElementById("tel"),
+            ele: tel,
             msg: '手机号码格式错误'
           });
           msg_is_ok = false
@@ -228,6 +256,9 @@ export default {
         let photos =[]
         let promise = new Promise(async (resolve, reject)=>{
           for(var i=0;i<files.length;i++){
+            if(this.fileToDelete.indexOf(files[i].src)>-1){
+              continue;
+            }
             let photo = {}
             photo.okey="okey";
             photo.file_name = files[i].name;
@@ -239,8 +270,8 @@ export default {
               }
               photo.checksum = checksum
               photos.push(photo);
-              console.log(' photos.length:', photos.length,'files.length:',files.length);
-              if( photos.length == files.length){
+              console.log(' photos.length:', photos.length,'files.length:',files.length - this.fileToDelete.length);
+              if( photos.length == files.length - this.fileToDelete.length){
                 console.log('========resolve=======');
                 var data = {
                   realname:realname,
@@ -283,7 +314,7 @@ export default {
                 } else {
                   // upload.callback(null, blob.toJSON())
                   console.log('emit gotoWorksBox');
-                  this.$emit('gotoWorksBox')
+                  this.$emit('gotoWorksBox');
                 }
               })
             }
@@ -301,6 +332,15 @@ export default {
       if( val == true){
         console.log('show');
         this.ui.statusBox = true
+        this.albumData = {
+          name: "",
+          desc: "",
+          Photos:[]
+        },
+        this.gamePlayerData = {
+          name:"",
+          cellphone:""
+        }
       }else{
         console.log('hide');
         this.ui.statusBox = false
