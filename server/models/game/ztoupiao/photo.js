@@ -40,6 +40,9 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     createdAt: 'created_at',
     updatedAt: 'updated_at',
+    // 并且希望 deletedA t被称为 destroyTime(请记住启用paranoid以使其工作)
+    deletedAt: 'deleted_at',
+    paranoid: true,
     tableName: 'game_photos',
     getterMethods:{
       originalUrl(){

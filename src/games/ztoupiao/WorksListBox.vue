@@ -1,7 +1,7 @@
 <template>
   <!-- 锦囊 -->
  <div class="WorksBox" v-show="ui.worksVisible">
-   <div class="works_list">
+   <div class="works_list" v-show="!ui.PhotosListBoxVisible">
      <div class="weui-navbar works">
        <div class="weui-navbar__item" @touchend="showNew()">
          最新
@@ -13,7 +13,7 @@
      <div class="works_list new" v-show="ui.newAlbumsVisible">
        最新
        <li v-for="album in newGameAlbums">
-         <img  :src="album.Photos[0].originalUrl"/>
+         <img  :src="album.Photos[0].originalUrl" @touchend="showPhotosList(album)"/>
          <a>{{album.name}}</a>
          <a>{{album.score}}</a>
          <a class="weui-btn weui-btn_primary userSubmitBtn" @click="thumb_up(album.id)" href="javascript:" id="showTooltips">点赞</a>
@@ -31,7 +31,7 @@
        </li>
      </div>
    </div>
-
+   <PhotosListBox :gamePlayer="gamePlayer" :album="showAlbum" :command="ui.PhotosListBoxVisible" > </PhotosListBox>
  </div>
 </template>
 
@@ -46,9 +46,13 @@ import moment from 'moment';
 import queryString from 'query-string'
 import { getNewAlbumInfo,getHotAlbumInfo,thumbUp } from '@/api/games/ztoupiao'
 
+import PhotosListBox from './PhotosListBox.vue'
 import HdGame from '@/lib/hdgame'
 
 export default {
+  components: {
+    PhotosListBox
+  },
   props: {
     gameRound: { // 游戏成绩相关数据
       type: Object
@@ -66,11 +70,15 @@ export default {
   },
   data() {
     return {
+      showAlbum:{
+        Photos:[]
+      },
       getRoundState:{},
       ui:{
         worksVisible:false,
         newAlbumsVisible:true,
         hotAlbumsVisible:false,
+        PhotosListBoxVisible:false
       },
       timeToEnd:{
         d1:0,
@@ -144,6 +152,12 @@ export default {
     }
   },
   methods: {
+    showPhotosList: function(album){
+      console.log('===============showPhotosList==============');
+      this.showAlbum = album;
+      this.ui.PhotosListBoxVisible = true;
+      this.$emit('showPhotosList')
+    },
     thumb_up: function(id){
       const parsed = queryString.parse(location.search)
       var number = parsed.number
@@ -283,7 +297,24 @@ export default {
       //外部触发游戏开始
       console.log('rulebox','watch-command new: %s, old: %s', val, oldVal)
       if( val == true){
+        const parsed = queryString.parse(location.search)
+        var number = parsed.number
+
+        var params = {
+          parsed: parsed,
+          code:'ztoupiao'
+        }
+
+        getNewAlbumInfo(number, params).then(data => {
+          console.log('getNewAlbumInfo---:',data);
+          this.newGameAlbums = data;
+        });
+        getHotAlbumInfo(number, params).then(data => {
+          console.log('getHotAlbumInfo---:',data);
+          this.hotGameAlbums = data;
+        });
         this.ui.worksVisible = true
+        this.ui.PhotosListBoxVisible = false
       }
       if( val == false){
         this.ui.worksVisible = false

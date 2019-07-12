@@ -221,8 +221,8 @@ export default {
         var number = parsed.number;
         var code = this.gameRound.code;
         let album = {
-          workname:workname,
-          workdesc:workdesc
+          name:workname,
+          desc:workdesc
         }
         console.log('this.gameRound',this.gameRound);
         let photos =[]
@@ -282,15 +282,16 @@ export default {
                   // upload.callback(error)
                 } else {
                   // upload.callback(null, blob.toJSON())
+                  console.log('emit gotoWorksBox');
+                  this.$emit('gotoWorksBox')
                 }
               })
-
             }
           })
 
         });
-
       }
+
     },
   },
   watch: {

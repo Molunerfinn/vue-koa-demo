@@ -79,4 +79,68 @@ export default class AlbumsController {
       //     ctx.throw(messageContent.ResponeStatus.CommonError, `show round ${ctx.params.id} fail: ` + error, { expose: true })
       // }
   }
+
+
+
+  static async modifyAlbum(ctx) {
+      //try {
+      console.log('==================modifyAlbum===============');
+          let number = ctx.params.number
+          let code = ctx.request.body.code
+          let albumParam = ctx.request.body.album
+          let photoParams = ctx.request.body.photos
+          let photosToDelete = ctx.request.body.photosToDelete
+
+          console.log("showRoundByNumber= ", ctx.request.body)
+          let Model = getGameRoundModelByCode(code)
+          let round = await Model.findOne({
+              //attributes: ['id', 'name', 'state', 'start_at', 'end_at'],
+              where: {
+                  number
+              }
+          })
+
+
+          let AlbumModel = getGameAlbumModelByCode( code )
+          let PhotoModel = getGamePhotoModelByCode( code )
+
+          let album = await AlbumModel.findOne({
+            where: {
+              id:albumParam.id
+            }
+          })
+          console.log('album----:',album);
+
+          photosToDelete.map(async (param)=>{
+            console.log( " param ",  param)
+            let res = await PhotoModel.destroy( {
+              where: {
+                album_id: album.id,
+                okey:param.okey
+              }
+            })
+          })
+
+          let photoOptions = {
+            fields: ['album_id', 'file_name', 'file_size', 'content_type', 'checksum', 'okey']
+          }
+
+          let promises = photoParams.map((param)=>{
+            console.log( " param, photoOptions= ",  param, photoOptions)
+            return photos = album.createPhoto( param, photoOptions )
+          })
+          let photos = await Promise.all(promises )
+
+          let directUploadData = photos.map((photo)=>{
+            let url = urlForDirectUpload( photo.okey )
+            let headers = headersForDirectUpload( photo.okey, photo.content_type, photo.checksum )
+            return { url,  headers }
+          })
+
+          ctx.body = { album, photos, directUploadData  }
+      // } catch (error) {
+      //
+      //     ctx.throw(messageContent.ResponeStatus.CommonError, `show round ${ctx.params.id} fail: ` + error, { expose: true })
+      // }
+  }
 }

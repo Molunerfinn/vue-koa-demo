@@ -7,7 +7,7 @@
         <div align="center" class="works" @touchend="handleTouchWorks">
           <div class="footer_text">作品</div>
         </div>
-        <div align="center" class="photographs" @touchend="handleTouchPhotographs">
+        <div align="center" class="photographs" @touchend="handleTouchPhotographs" >
           <div class="footer_text">上传</div>
         </div>
         <div align="center" class="review" @touchend="handleTouchReview">
@@ -19,7 +19,7 @@
     </div>
     <IndexBox :gameRound="gameRound":command="ui.indexBoxVisible" > </IndexBox>
     <WorksBox :gameRound="gameRound" :gameAlbums="gameAlbums" :gameResult="gameResult" :command="ui.worksBoxVisible" > </WorksBox>
-    <PhotographsBox :gameRound="gameRound":command="ui.photographsBoxVisible" > </PhotographsBox>
+    <PhotographsBox :gameRound="gameRound":command="ui.photographsBoxVisible" @gotoWorksBox="gotoWorksBox"> </PhotographsBox>
     <ReviewBox :gameRound="gameRound":command="ui.reviewBoxVisible" > </ReviewBox>
     <MyAccountBox :gameRound="gameRound":command="ui.my_accountBoxVisible" > </MyAccountBox>
   </div>
@@ -130,6 +130,14 @@
         this.ui.reviewBoxVisible = false
         this.ui.my_accountBoxVisible = true
       },
+      gotoWorksBox: function(){
+        console.log('gotoWorksBox');
+        this.ui.indexBoxVisible = false
+        this.ui.worksBoxVisible = true
+        this.ui.photographsBoxVisible = false
+        this.ui.reviewBoxVisible = false
+        this.ui.my_accountBoxVisible = false
+      }
     }
 
   }

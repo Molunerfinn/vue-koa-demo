@@ -78,6 +78,8 @@ async function getInfo() {
     openid: this.openid,
     avatar: this.avatar,
     nickname: this.nickname,
+    realname:this.realname,
+    cellphone:this.cellphone,
     isSuc,
     score,
     bestScore,

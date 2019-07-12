@@ -13,7 +13,7 @@
      <div class="myWorks_list" v-show="ui.workVisible">
        我的作品
        <li v-for="work in myWorks">
-         <img  :src="work.Photos[0].originalUrl"/>
+         <img :src="work.Photos[0].originalUrl" @touchend="modifyAlbum(work)"/>
          <a>{{work.name}}</a>
          <a>{{work.score}}</a>
          <div class="userImgBox" style="border-color:"><img :src="gamePlayer.avatar" class="userImg" /></div>
@@ -29,6 +29,7 @@
        </li>
      </div>
    </div>
+     <ModifyBox :gamePlayer="gamePlayer" :album="album" :gameRound="gameRound" :command="ui.modifyBoxVisible" @gotoMyAccountBox="gotoMyAccountBox"> </ModifyBox>
 
  </div>
 </template>
@@ -39,9 +40,7 @@ import {
   getRanking
 } from '@/api/games/zxg'
 import moment from 'moment';
-// import { getRoundState } from '@/api/games/ztoupiao'
-// import queryString from 'query-string'
-
+import ModifyBox from './ModifyBox.vue'
 import queryString from 'query-string'
 import { getMyWorkInfo,getMyCardInfo } from '@/api/games/ztoupiao'
 
@@ -60,6 +59,9 @@ export default {
       type: Array
     }
   },
+  components: {
+    ModifyBox
+  },
   data() {
     return {
       getRoundState:{},
@@ -67,6 +69,7 @@ export default {
         myAccountVisible:false,
         workVisible:true,
         cardVisible:false,
+        modifyBoxVisible:false
       },
       style:{
         statusUserImg: {}
@@ -76,7 +79,8 @@ export default {
       menuLen: 2,
       currentPlayer:{},
       myWorks:[],
-      myCards:[]
+      myCards:[],
+      album:{}
     }
   },
   created() {
@@ -133,17 +137,45 @@ export default {
     }
   },
   methods: {
+    gotoMyAccountBox: function(){
+      const parsed = queryString.parse(location.search)
+      var number = parsed.number
+
+      var params = {
+        parsed: parsed,
+        code:'ztoupiao'
+      }
+      getMyWorkInfo(number, params).then(data => {
+        console.log('getMyWorkInfo---:',data);
+        this.myWorks = data.gameAlbums;
+        this.gamePlayer = data.gamePlayer
+        console.log('gamePlayer in account',this.gamePlayer);
+      });
+
+      this.ui.modifyBoxVisible = false;
+      this.ui.workVisible = true;
+      this.ui.cardVisible = false;
+    },
     showWork(){
       var that = this
-      console.log('showNew');
+      console.log('showWork');
       that.ui.workVisible = true
       that.ui.cardVisible = false
+      this.ui.modifyBoxVisible = false
     },
     showCard(){
       var that = this
-      console.log('showHot');
+      console.log('showCard');
       that.ui.workVisible = false
       that.ui.cardVisible = true
+      this.ui.modifyBoxVisible = false
+    },
+    modifyAlbum(album){
+      this.album = album;
+      this.ui.workVisible = false,
+      this.ui.cardVisible = false,
+      this.ui.modifyBoxVisible = true
+
     },
 
     //

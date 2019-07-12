@@ -4,5 +4,6 @@ const router = koaRouter()
 router.prefix('/:number')
 
 router.post('/getAlbumsInfo', album.createBeforeDirectUpload)
+router.post('/modifyAlbum', album.modifyAlbum)
 
 export default router
