@@ -254,6 +254,20 @@ export default {
       console.log('rulebox','watch-command new: %s, old: %s', val, oldVal)
       if( val == true){
         this.ui.myAccountVisible = true
+        const parsed = queryString.parse(location.search)
+        var number = parsed.number
+
+        var params = {
+          parsed: parsed,
+          code:'ztoupiao'
+        }
+
+        getMyWorkInfo(number, params).then(data => {
+          console.log('getMyWorkInfo---:',data);
+          this.myWorks = data.gameAlbums;
+          this.gamePlayer = data.gamePlayer
+          console.log('gamePlayer in account',this.gamePlayer);
+        });
       }
       if( val == false){
         this.ui.myAccountVisible = false

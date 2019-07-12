@@ -4,6 +4,7 @@
    <div class="title">
      <div class="headImg">
        <img id="PhotographsTitle" v-bind:src="album.Photos[0].originalUrl">
+       <a class="weui-btn weui-btn_primary userSubmitBtn" @click="thumb_up(album.id)" href="javascript:" id="showTooltips">点赞</a>
      </div>
    </div>
    <div class="photo_list">
