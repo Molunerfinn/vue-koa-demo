@@ -326,6 +326,8 @@ export default class GamesController {
 
   static async addPlayer(ctx) {
     try {
+      console.log('===========addPlayer===========');
+      console.log('ctx.request.body-----:',ctx.request.body);
       let code = ctx.request.body.code
       let number = ctx.params.number
       let openid = ctx.request.body.parsed.openid
@@ -340,6 +342,7 @@ export default class GamesController {
           number
         }
       })
+      console.log('gameRound__:',gameRound);
 
       let gamePlayer = await GamePlayer.findOne({
         where: {
@@ -347,14 +350,16 @@ export default class GamesController {
           openid: openid,
         }
       })
+      console.log('gamePlayer__:',gamePlayer);
       let realname = ctx.request.body.realname
       let cellphone = ctx.request.body.tel
 
-      await gamePlayer.update({
+      gamePlayer = await gamePlayer.update({
         realname: realname,
         cellphone: cellphone
       })
 
+      console.log('gamePlayer123+++++:',gamePlayer);
       ctx.body = {
         gamePlayer: gamePlayer
       }

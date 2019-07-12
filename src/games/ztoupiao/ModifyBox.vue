@@ -179,7 +179,7 @@ export default {
         console.log('files----:',files);
         console.log('this.album---:',this.album);
         var msg_is_ok = true
-        var realname = this.gamePlayerData.name
+        var realname = this.gamePlayerData.realname
         var tel = this.gamePlayerData.cellphone
         var workname = this.albumData.name
         var workdesc = this.albumData.desc
