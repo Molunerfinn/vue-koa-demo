@@ -288,6 +288,7 @@ export default {
 
                     console.log('emit gotoMyAccountBox');
                     this.$emit('gotoMyAccountBox')
+                    location.reload()
                   }
                 })
               }
@@ -326,7 +327,6 @@ export default {
                     } else {
                         src = e.target.result;
                     }
-
                     $modifyFiles.append($(tmpl.replace('#url#', src)));
                 }
             $modifyFiles.on("click", "li", function(){
@@ -354,7 +354,7 @@ export default {
         this.showAlbum();
       }else{
         console.log('hide');
-        
+
         this.ui.statusBox = false
       }
 
