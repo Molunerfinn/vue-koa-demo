@@ -285,9 +285,7 @@ export default {
                     // upload.callback(error)
                   } else {
                     // upload.callback(null, blob.toJSON())
-                    this.album = {
-                      Photos:[]
-                    }
+
                     console.log('emit gotoMyAccountBox');
                     this.$emit('gotoMyAccountBox')
                   }
@@ -356,9 +354,7 @@ export default {
         this.showAlbum();
       }else{
         console.log('hide');
-        this.album = {
-          Photos:[]
-        }
+        
         this.ui.statusBox = false
       }
 
