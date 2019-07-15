@@ -250,7 +250,7 @@ export default {
                 photo.checksum = checksum
                 photos.push(photo);
                 console.log(' photos.length:', photos.length,'files.length:',files.length);
-                if( photos.length == files.length-this.newfileToDelete.length){
+                if( photos.length == files.length){
                   console.log('========resolve=======');
                   var data = {
                     realname:realname,
@@ -288,6 +288,7 @@ export default {
                 this.notify(null, "directUploadWillStoreFileWithXHR", upload.xhr)
                 upload.create(error => {
                   if (error) {
+                    console.log('error---:',error);
                     // upload.callback(error)
                   } else {
                     // upload.callback(null, blob.toJSON())
