@@ -60,6 +60,7 @@
     "vue-lazyload": "^1.2.6",
     "vue-router": "^2.3.1",
     "vuex": "^3.1.0",
+    "wechat-open-toolkit": "^1.1.2",
     "weixin-js-sdk": "^1.4.0-test",
     "weui": "^1.1.3",
     "weui.js": "^1.1.4"
@@ -120,7 +121,8 @@
     "webpack-bundle-analyzer": "^2.9.0",
     "webpack-dev-middleware": "^1.12.0",
     "webpack-hot-middleware": "^2.18.2",
-    "webpack-merge": "^4.1.0"
+    "webpack-merge": "^4.1.0",
+    "wechat-open-toolkit": "^1.1.2"
   },
   "engines": {
     "node": ">= 4.0.0",
