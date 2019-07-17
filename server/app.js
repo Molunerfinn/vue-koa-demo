@@ -121,6 +121,9 @@ router.use('/gapi/ztoupiao', ztoupiao.routes())
 import album from './routes/gapi/album.js'
 router.use('/gapi/album', album.routes())
 
+import backend from './routes/api/backend.js'
+router.use('/api/backend', backend.routes())
+
 
 app.use(router.routes()) // 将路由规则挂载到Koa上。
 app.use(historyApiFallback())

@@ -27,6 +27,7 @@
     "cross-fetch": "^3.0.2",
     "dotenv-webpack": "^1.7.0",
     "element-ui": "^1.4.13",
+    "fs": "^0.0.1-security",
     "jquery": "^3.4.0",
     "jquery.qrcode": "^1.0.3",
     "koa": "^2.2.0",

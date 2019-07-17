@@ -1,6 +1,9 @@
 const db = require('../models')
 
-
+export function getCompanies() {
+  let basename = 'companies'
+  return getModel(basename)
+}
   // code代表游戏类型
 export function getGameRoundModelByCode(code) {
 
@@ -48,6 +51,23 @@ export function getModelByCode(code, basename) {
       }
     }
     return modelByCode
+}
+
+export function getModel(basename) {
+    if (typeof(basename) != 'string') {
+      throw "basename requires a string"
+    }
+    let re = new RegExp(basename, 'i')
+    let sequelize = db.sequelize
+    let Model = null
+    for( let [key, model] of Object.entries(sequelize.models)){
+      // DpPintuGameRound, DpPintuGamePlayer
+      if (re.test(model.name)) {
+        Model = model
+        break
+      }
+    }
+    return Model
 }
 
 // 查找一局游戏

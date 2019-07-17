@@ -137,4 +137,13 @@ function readDirSync( ){
       let moduleId = ['dp'+ id, name].join('-') // 这里的 dp+id 必须和 gameround.code 一致
       moduleList.push( { moduleID: moduleId, moduleEntry: filePath, moduleHTML:  ns.join('/') } )
   })
+
+  glob.sync(`./src/backend/${targetWildcard}/main.js`).forEach(function(name){
+      // src/games/yiy/main.js
+      // src/games/yiy/index.html
+      let ns = name.split('/')
+      let id = ns[ns.length-2]
+      ns[ns.length -1] = 'index.html'
+      moduleList.push( { moduleID: id, moduleEntry: name, moduleHTML:  ns.join('/') } )
+  })
 }

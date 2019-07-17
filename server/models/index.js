@@ -29,7 +29,7 @@ var walk = function(dir) {
 }
 
 
-let modelfiles = [...walk(__dirname + '/game'), ...walk(__dirname + '/dpgame')]
+let modelfiles = [...walk(__dirname + '/game'), ...walk(__dirname + '/dpgame'), ...walk(__dirname + '/backend')]
 modelfiles.forEach((modelfile) => {
   if( !/(index|runner).js$/.test(modelfile)){
     let model = sequelize.import(modelfile)
