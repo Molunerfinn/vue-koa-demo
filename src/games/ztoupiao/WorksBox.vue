@@ -56,16 +56,16 @@
             </li>
             <li> <span class="time">{{timeToEnd.h1}}</span>
               <span class="time">{{timeToEnd.h2}}</span>
-              <span> 天 </span></li>
+              <span> 时 </span></li>
             <li> <span class="time">{{timeToEnd.m1}}</span>
               <span class="time">{{timeToEnd.m2}}</span>
-              <span> 天 </span></li>
+              <span> 分 </span></li>
             <li> <span class="time">{{timeToEnd.s1}}</span>
               <span class="time">{{timeToEnd.s2}}</span>
-              <span> 天 </span></li>
+              <span> 秒 </span></li>
           </ul>
         </div>
-      
+
       </div>
       <table class="activity_info" width="100%">
         <tr>{{gameRound.start_at}}至{{gameRound.end_at}}</tr>
