@@ -1,0 +1,16 @@
+开放平台： ticket
+          access_token
+          refresh_token
+
+公众号：   auth_code
+          expires_in
+
+
+##redis 内容
+
+wxopen[ appid+'_ticket']
+wxopen[ appid+'_access_token']
+wxopen[ appid+'_access_token']
+
+wxmp[ appid+'_auth_code']
+wxmp[ appid+'_expires_in']
