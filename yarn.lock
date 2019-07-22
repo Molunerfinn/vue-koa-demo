@@ -9221,9 +9221,10 @@ vue@2.6.4:
   version "2.6.4"
   resolved "http://registry.npm.taobao.org/vue/download/vue-2.6.4.tgz#8a5a44e5740d8b8423a420c8655c97663421fb4d"
 
-vuex@^3.1.0:
-  version "3.1.0"
-  resolved "http://registry.npm.taobao.org/vuex/download/vuex-3.1.0.tgz#634b81515cf0cfe976bd1ffe9601755e51f843b9"
+vuex@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.npm.taobao.org/vuex/download/vuex-3.1.1.tgz#0c264bfe30cdbccf96ab9db3177d211828a5910e"
+  integrity sha1-DCZL/jDNvM+Wq52zF30hGCilkQ4=
 
 vxx@^1.2.0:
   version "1.2.2"

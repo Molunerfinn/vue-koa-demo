@@ -4,20 +4,33 @@
     <div class="weui-tab">
 
       <div class="weui-tab__panel">
-        <IndexBox :gameRound="gameRound" :command="ui.indexBoxVisible" @gotoReview="handleTouchReview" @gotoPhotographs="handleTouchPhotographs">
-        </IndexBox>
+
+        <router-view class="view"></router-view>
         <WorksBox :gameRound="gameRound" :gameAlbums="gameAlbums" :gameResult="gameResult" :command="ui.worksBoxVisible"> </WorksBox>
         <PhotographsBox :gameRound="gameRound" :command="ui.photographsBoxVisible" @gotoWorksBox="gotoWorksBox"> </PhotographsBox>
         <ReviewBox :gameRound="gameRound" :command="ui.reviewBoxVisible"> </ReviewBox>
         <MyAccountBox :gameRound="gameRound" :command="ui.my_accountBoxVisible"> </MyAccountBox>
       </div>
       <div class="weui-tabbar footer">
-        <a class="weui-tabbar__item weui-bar__item_on" @touchend="handleTouchIndex">
-          <span >
+
+        <router-link to="/" class="weui-tabbar__item">
+          <span>
             <img src="~@/assets/game/ztoupiao/image/icons/home.jpg" alt="" class="weui-tabbar__icon">
           </span>
           <p class="weui-tabbar__label">首页</p>
-        </a>
+        </router-link>
+        <router-link to="/works" class="weui-tabbar__item">
+          <span>
+            <img src="~@/assets/game/ztoupiao/image/icons/work.jpg" alt="" class="weui-tabbar__icon">
+          </span>
+          <p class="weui-tabbar__label">作品</p>
+        </router-link>
+        <router-link to="/apply" class="weui-tabbar__item">
+          <span>
+            <img src="~@/assets/game/ztoupiao/image/icons/upload.jpg" alt="" class="weui-tabbar__icon">
+          </span>
+          <p class="weui-tabbar__label">上传</p>
+        </router-link>
         <a class="weui-tabbar__item " @touchend="handleTouchWorks">
           <span>
             <img src="~@/assets/game/ztoupiao/image/icons/work.jpg" alt="" class="weui-tabbar__icon">
@@ -60,15 +73,29 @@
   import MyAccountBox from './MyAccountBox.vue'
   import queryString from 'query-string'
   import { getGameResult } from '@/api/games/ztoupiao'
+  import storeMixin from './store_mixin'
 
   export default {
     name: 'app',
+    mixins: [storeMixin],
     components: {
       IndexBox,
       WorksBox,
       PhotographsBox,
       ReviewBox,
       MyAccountBox
+    },
+    data() {
+      return {
+        gameResult: [],
+        ui: {
+          indexBoxVisible: true, // 初始页面是否可见
+          worksBoxVisible: false,
+          photographsBoxVisible: false,
+          reviewBoxVisible: false,
+          my_accountBoxVisible: false
+        }
+      }
     },
     created() {
       const parsed = queryString.parse(location.search)
@@ -80,8 +107,12 @@
       }
       getGameResult(number, params).then(data => {
         console.log('getGameResult data-----:', data)
-        this.gameRound = data.gameRound
-        this.gameAlbums = data.gameAlbums
+        //this.gameRound = data.gameRound
+        this.setGameRound( data.gameRound )
+        this.setGameResults( data.gameResult )
+        this.setGameResults( data.gameResult )
+        console.log( "this.gameRound=", this.gameRound)
+
         this.gameResult = data.gameResult
 
         let wxConfig = data.wxConfig
@@ -98,20 +129,7 @@
         document.title = this.gameRound.name
       })
     },
-    data() {
-      return {
-        gameRound: {},
-        gameAlbums: [],
-        gameResult: [],
-        ui: {
-          indexBoxVisible: true, // 初始页面是否可见
-          worksBoxVisible: false,
-          photographsBoxVisible: false,
-          reviewBoxVisible: false,
-          my_accountBoxVisible: false
-        }
-      }
-    },
+
     methods: {
       handleTouchIndex(event) {
         console.log('handleTouchIndex')

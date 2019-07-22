@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import GameRes from './game/GameRes'
+import GameRes from '../game/GameRes'
 import Swiper from 'swiper'
 export default {
   props: {
@@ -95,9 +95,7 @@ export default {
         that.ui.indexVisible = false
       }
     }
-
   }
-
 }
 </script>
 

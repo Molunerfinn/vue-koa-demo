@@ -114,4 +114,8 @@ open browser: `localhost:8889`
 
 [MIT](http://opensource.org/licenses/MIT)
 
+<<<<<<< HEAD
 Copyright (c) 2017 Molunerfinn
+=======
+Copyright (c) 2019 RuanShan
+>>>>>>> 9cd6a70b05caf11fccd360e3d5e349bd9e003e88
