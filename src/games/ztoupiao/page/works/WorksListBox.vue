@@ -13,7 +13,11 @@
      <div class="works_list new" v-show="ui.newAlbumsVisible">
        最新
        <li v-for="album in newGameAlbums">
-         <img  :src="album.Photos[0].originalUrl" @touchend="showPhotosList(album)"/>
+         <router-link :to="album.link" class="weui-tabbar__item">
+           <span>
+             <img :src="album.Photos[0].originalUrl" alt="" class="weui-tabbar__icon">
+           </span>
+         </router-link>
          <a>{{album.name}}</a>
          <a>{{album.score}}</a>
          <a class="weui-btn weui-btn_primary userSubmitBtn" @click="thumb_up(album.id)" href="javascript:" id="showTooltips">点赞</a>
@@ -31,7 +35,7 @@
        </li>
      </div>
    </div>
-   <PhotosListBox :gamePlayer="gamePlayer" :album="showAlbum" :command="ui.PhotosListBoxVisible" > </PhotosListBox>
+
  </div>
 </template>
 
@@ -112,11 +116,20 @@ export default {
 
     getNewAlbumInfo(number, params).then(data => {
       console.log('getNewAlbumInfo---:',data);
-      this.newGameAlbums = data;
+      let Albums = data
+      for(var i=0;i<Albums.length;i++){
+        Albums[i].link = 'photos='+Albums[i].id;
+      }
+      console.log('Albums----:',Albums);
+      this.newGameAlbums = Albums;
     });
     getHotAlbumInfo(number, params).then(data => {
       console.log('getHotAlbumInfo---:',data);
-      this.hotGameAlbums = data;
+      let Albums = data
+      for(var i=0;i<Albums.length;i++){
+        Albums[i].link = 'photos='+Albums[i].id;
+      }
+      this.newGameAlbums = Albums;
     });
 
   },
@@ -314,7 +327,7 @@ export default {
         });
         this.ui.PhotosListBoxVisible = false
       }
-       
+
     }
   }
 }

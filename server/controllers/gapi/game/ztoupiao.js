@@ -192,6 +192,24 @@ export default class GamesController {
     }
   }
 
+  static async getAlbumInfo(ctx){
+    let parsed = ctx.request.body.parsed || {}
+    let code = ctx.request.body.code
+    let GameAlbum = getGameAlbumModelByCode(code)
+
+      let gameAlbums = await GameAlbum.findOne({
+        where: {
+          id: parsed.photos
+        },
+        include: [{
+          association: 'Photos'
+        }, {
+          association: 'GamePlayer'
+        }],
+      })
+      ctx.body = gameAlbums
+  }
+
 
   static async getMyWorkInfo(ctx) {
     try {

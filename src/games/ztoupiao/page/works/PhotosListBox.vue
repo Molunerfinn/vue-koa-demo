@@ -1,6 +1,6 @@
 <template>
   <!-- 锦囊 -->
- <div class="PhotosListBox" v-show="ui.photosListVisible">
+ <div class="PhotosListBox">
    <div class="title">
      <div class="headImg">
        <img id="PhotographsTitle" v-bind:src="album.Photos[0].originalUrl">
@@ -23,22 +23,22 @@
 // import { getRoundState } from '@/api/games/ztoupiao'
 
 import queryString from 'query-string'
-import {thumbUp } from '@/api/games/ztoupiao'
+import {thumbUp,getAlbumInfo } from '@/api/games/ztoupiao'
 
 export default {
   props: {
-    album: { // 游戏成绩相关数据
-      type: Object
-    },
-    gamePlayer: { // 游戏成绩相关数据
-      type: Object
-    },
     command:{
       default: false // 可选值: showResult, showGift
     }
   },
   data() {
     return {
+      album: {
+        Photos:[{
+          originalUrl:''
+        }]
+      },
+      gamePlayer:{},
       getRoundState:{},
       ui:{
         photosListVisible:false
@@ -46,6 +46,16 @@ export default {
     }
   },
   created() {
+    let parsed =  JSON.parse(JSON.stringify(queryString.parse(location.hash)).replace('/',''));
+    var params = {
+        parsed: parsed,
+        code:'ztoupiao'
+      }
+    getAlbumInfo(queryString.parse(location.search).number, params).then(data => {
+      console.log('getAlbumInfo---:',data);
+      this.album = data
+    });
+
   },
   mounted(){
   },
@@ -54,6 +64,7 @@ export default {
   methods: {
     thumb_up: function(id){
       const parsed = queryString.parse(location.search)
+
       var number = parsed.number
 
       var params = {

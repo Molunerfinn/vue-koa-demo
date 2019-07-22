@@ -21,6 +21,9 @@ export const getNewAlbumInfo = ( number, data) => fetch(basePath + '/' + number 
 
 export const getHotAlbumInfo = ( number, data) => fetch(basePath + '/' + number + '/getHotAlbumInfo', data, 'POST')
 
+export const getAlbumInfo = ( number, data) => fetch(basePath + '/' + number + '/getAlbumInfo', data, 'POST')
+
+
 export const getMyWorkInfo = ( number, data) => fetch(basePath + '/' + number + '/getMyWorkInfo', data, 'POST')
 
 export const getMyCardInfo = ( number, data) => fetch(basePath + '/' + number + '/getMyCardInfo', data, 'POST')

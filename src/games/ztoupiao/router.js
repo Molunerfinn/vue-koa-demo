@@ -5,6 +5,8 @@ import CreateAlbum from './page/CreateAlbum.vue'
 import Index from './page/Index.vue'
 import Review from './page/Review.vue'
 import MyAccount from './page/Account.vue'
+import PhotosList from './page/works/PhotosListBox.vue'
+
 // 2. Define some routes
 // Each route should map to a component. The "component" can
 // either be an actual component constructor created via
@@ -16,7 +18,8 @@ const routes = [
   { path: '/works', component: Works },
   { path: '/apply', component: CreateAlbum },
   { path: '/review', component: Review },
-  { path: '/myaccount', component: MyAccount }
+  { path: '/myaccount', component: MyAccount },
+  { path: '/photos=:album_id', component: PhotosList }
 ]
 
 // 3. Create the router instance and pass the `routes` option
