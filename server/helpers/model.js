@@ -4,6 +4,16 @@ export function getCompanies() {
   let basename = 'companies'
   return getModel(basename)
 }
+
+export function getWxMpUsersModel(){
+  let basename = 'wx_mp_users'
+  return getModel(basename)
+}
+
+export function getUsersModel(){
+  let basename = 'users'
+  return getModel(basename)
+}
   // code代表游戏类型
 export function getGameRoundModelByCode(code) {
 

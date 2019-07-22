@@ -1,5 +1,6 @@
 const {
-  getCompanies
+  getUsersModel,
+  getGameRoundModelByCode
 } = require('../../../helpers/model')
 // const {
 //   getWxJsConfig
@@ -20,36 +21,37 @@ export default class base {
       console.log('-----------login-----------');
       console.log('ctx.request.body--:', ctx.request.body);
       let params = ctx.request.body
-      let username = params.username
+      let cellphone = params.cellphone
       let secret = params.secret
 
-      let companies = getCompanies()
+      let users = getUsersModel()
 
-      let userInfo = await companies.findOne({
-        attributes: ['username', 'password'],
+      let userInfo = await users.findOne({
+        attributes: ['id', 'cellphone', 'password'],
         where: {
-          username: username
+          cellphone: cellphone
         }
       })
 
-      console.log('userInfo---:',userInfo);
+      console.log('userInfo---:', userInfo);
 
-      if(userInfo!=null){
+      if (userInfo != null) {
         let password = userInfo.password
         let secretString = 'md5' + username + password + 'md5'
         if (secret == md5(secretString)) {
           ctx.body = {
-            res:'login success!'
+            userId: userInfo.id,
+            res: 'login success!'
           }
         } else {
           ctx.body = {
-            res:'Wrong password !'
+            res: 'Wrong password !'
           }
           throw ('Wrong password !')
         }
-      }else {
+      } else {
         ctx.body = {
-          res:'Wrong username !'
+          res: 'Wrong username !'
         }
         throw ('Wrong username !')
       }
@@ -66,31 +68,31 @@ export default class base {
       let username = params.username
       let secret = params.secret
 
-      let companies = getCompanies()
+      let users = getusers()
 
-      let userInfo = await companies.findOne({
+      let userInfo = await users.findOne({
         attributes: ['username', 'password'],
         where: {
           username: username
         }
       })
 
-      if(userInfo!=null){
+      if (userInfo != null) {
         let password = userInfo.password
         let secretString = 'md5' + username + password + 'md5'
         if (secret == md5(secretString)) {
           ctx.body = {
-            res:'login success!'
+            res: 'login success!'
           }
         } else {
           ctx.body = {
-            res:'Wrong password !'
+            res: 'Wrong password !'
           }
           throw ('Wrong password !')
         }
-      }else {
+      } else {
         ctx.body = {
-          res:'Wrong username !'
+          res: 'Wrong username !'
         }
         throw ('Wrong username !')
       }
@@ -107,24 +109,38 @@ export default class base {
       let username = params.username
       let newpassword = params.newpassword
 
-      let companies = getCompanies()
+      let users = getusers()
 
-      let userInfo = await companies.findOne({
+      let userInfo = await users.findOne({
         where: {
           username: username
         }
       })
 
-      if(userInfo!=undefined){
+      if (userInfo != undefined) {
         await userInfo.update({
           password: newpassword
         })
         ctx.body = {
-          res:'modify success!'
+          res: 'modify success!'
         }
       }
     } catch (e) {
       console.log('error!:', e);
     }
+  }
+
+  static async getGameRoundInfo(ctx) {
+    let params = ctx.request.body
+    let userId = params.id
+    let gameRoundModel = getGameRoundModelByCode('backend');
+
+    let gameRounds = await gameRoundModel.finAll({
+      where: {
+        user_id: userId
+      }
+    })
+
+    ctx.body = gameRounds
   }
 }

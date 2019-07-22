@@ -35,6 +35,7 @@ export default async (url = '', data = {}, type = 'GET', method = 'fetch') => {
     }
 
     try {
+      console.log('url---------:',url);
       const response = await fetch(url, requestConfig)
 
       if (response.status >= 400) {

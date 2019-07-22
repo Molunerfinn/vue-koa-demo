@@ -10,13 +10,15 @@ import KoaRouter from 'koa-router'
 import koaBodyparser from 'koa-bodyparser'
 import session  from 'koa-session'    // session for flash messages
 import http from 'http'
-
+const xmlParser = require('koa-xml-body')
 const app = new Koa()
 const router = new KoaRouter()
 
 let port = process.env.API_SERVER_PORT || 3000
 
-app.use(koaBodyparser())
+app.use(xmlParser({key: 'xmlBody'}))
+
+app.use(koaBodyparser({}))
 app.use(json())
 app.use(logger())
 
@@ -123,6 +125,9 @@ router.use('/gapi/album', album.routes())
 
 import backend from './routes/api/backend.js'
 router.use('/api/backend', backend.routes())
+
+import wxopen from './routes/wxopen.js'
+router.use('/api/wxopen', wxopen.routes())
 
 
 app.use(router.routes()) // 将路由规则挂载到Koa上。
