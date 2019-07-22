@@ -64,12 +64,8 @@
     "vue-bscroll": "^1.0.4",
     "vue-lazyload": "^1.2.6",
     "vue-router": "^2.3.1",
-<<<<<<< HEAD
-    "vuex": "^3.1.0",
     "wechat-encrypt": "^1.0.0",
-=======
     "vuex": "^3.1.1",
->>>>>>> 9cd6a70b05caf11fccd360e3d5e349bd9e003e88
     "wechat-open-toolkit": "^1.1.2",
     "weixin-js-sdk": "^1.4.0-test",
     "weui": "^1.1.3",
