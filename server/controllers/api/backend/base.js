@@ -37,7 +37,7 @@ export default class base {
 
       if (userInfo != null) {
         let password = userInfo.password
-        let secretString = 'md5' + username + password + 'md5'
+        let secretString = 'md5' + cellphone + password + 'md5'
         if (secret == md5(secretString)) {
           ctx.body = {
             userId: userInfo.id,

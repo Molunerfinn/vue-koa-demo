@@ -1,4 +1,4 @@
-# vue-koa-demo
+# zgame
 
 A fullstack demo used Vue2 & Koa2(Koa1 version is [here](https://github.com/Molunerfinn/vue-koa-demo/tree/koa1))
 
@@ -6,7 +6,7 @@ A fullstack demo used Vue2 & Koa2(Koa1 version is [here](https://github.com/Molu
 
 :100: Api test coverage
 
-:rocket: Instant feedback 
+:rocket: Instant feedback
 
 :stuck_out_tongue_winking_eye: Vue SSR support in the [ssr](https://github.com/Molunerfinn/vue-koa-demo/tree/ssr) branch
 
@@ -56,7 +56,7 @@ After that, create a `.env` file and set the database username & password:
 # your database username
 DB_USER=XXXX
 # your database
-DB_PASSWORD=YYYY 
+DB_PASSWORD=YYYY
 # Koa is listening to this port
 PORT=8889
 ```
@@ -67,7 +67,7 @@ If you want to run the test for the Project, please create a `.env.test` file to
 # your database username
 DB_USER=XXXX
 # your database
-DB_PASSWORD=YYYY 
+DB_PASSWORD=YYYY
 # The port which is listened by koa in the test environment
 PORT=8888
 ```
@@ -80,7 +80,7 @@ PORT=8888
 
 Beacuse of using Koa2, `Node.js >= v7.6.0` is needed.
 
-#### Development: 
+#### Development:
 
 `npm run dev` && `npm run server`
 
@@ -90,7 +90,7 @@ open browser: `localhost:8080`
 
 #### Production:
 
-`npm run start` 
+`npm run start`
 
 open browser: `localhost:8889`
 
@@ -115,5 +115,3 @@ open browser: `localhost:8889`
 [MIT](http://opensource.org/licenses/MIT)
 
 Copyright (c) 2017 Molunerfinn
-
-
