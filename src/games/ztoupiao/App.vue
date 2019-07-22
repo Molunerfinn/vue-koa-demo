@@ -1,18 +1,10 @@
 <template>
-
   <div id="app">
     <div class="weui-tab">
-
       <div class="weui-tab__panel">
-
         <router-view class="view"></router-view>
-        <WorksBox :gameRound="gameRound" :gameAlbums="gameAlbums" :gameResult="gameResult" :command="ui.worksBoxVisible"> </WorksBox>
-        <PhotographsBox :gameRound="gameRound" :command="ui.photographsBoxVisible" @gotoWorksBox="gotoWorksBox"> </PhotographsBox>
-        <ReviewBox :gameRound="gameRound" :command="ui.reviewBoxVisible"> </ReviewBox>
-        <MyAccountBox :gameRound="gameRound" :command="ui.my_accountBoxVisible"> </MyAccountBox>
       </div>
       <div class="weui-tabbar footer">
-
         <router-link to="/" class="weui-tabbar__item">
           <span>
             <img src="~@/assets/game/ztoupiao/image/icons/home.jpg" alt="" class="weui-tabbar__icon">
@@ -31,30 +23,18 @@
           </span>
           <p class="weui-tabbar__label">上传</p>
         </router-link>
-        <a class="weui-tabbar__item " @touchend="handleTouchWorks">
-          <span>
-            <img src="~@/assets/game/ztoupiao/image/icons/work.jpg" alt="" class="weui-tabbar__icon">
-          </span>
-          <p class="weui-tabbar__label">作品</p>
-        </a>
-        <a class="weui-tabbar__item " @touchend="handleTouchPhotographs">
-          <span>
-            <img src="~@/assets/game/ztoupiao/image/icons/upload.jpg" alt="" class="weui-tabbar__icon">
-          </span>
-          <p class="weui-tabbar__label">上传</p>
-        </a>
-        <a class="weui-tabbar__item " @touchend="handleTouchReview">
+        <router-link to="/review" class="weui-tabbar__item">
           <span>
             <img src="~@/assets/game/ztoupiao/image/icons/review.jpg" alt="" class="weui-tabbar__icon">
           </span>
           <p class="weui-tabbar__label">追溯</p>
-        </a>
-        <a class="weui-tabbar__item " @touchend="handleTouchMyAccount">
+        </router-link>
+        <router-link to="/myaccount" class="weui-tabbar__item">
           <span>
             <img src="~@/assets/game/ztoupiao/image/icons/account.jpg" alt="" class="weui-tabbar__icon">
           </span>
           <p class="weui-tabbar__label">我的</p>
-        </a>
+        </router-link>
       </div>
     </div>
   </div>
@@ -110,7 +90,7 @@
         //this.gameRound = data.gameRound
         this.setGameRound( data.gameRound )
         this.setGameResults( data.gameResult )
-        this.setGameResults( data.gameResult )
+        this.setGameAlbums( data.gameAlbums )
         console.log( "this.gameRound=", this.gameRound)
 
         this.gameResult = data.gameResult

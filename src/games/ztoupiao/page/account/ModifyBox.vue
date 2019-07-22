@@ -120,10 +120,6 @@ export default {
       type: Object,
       default: {}
     },
-    gameRound: { // 游戏player相关数据
-      type: Object,
-      default: {}
-    },
     album: { // 游戏player相关数据
       type: Object,
       default: {}
@@ -220,9 +216,10 @@ export default {
         }
         console.log('msg_is_ok:',msg_is_ok);
         if(msg_is_ok){
+          console.log('this.$store.state---:',this.$store.state);
           const parsed = queryString.parse(location.search);
           var number = parsed.number;
-          var code = this.gameRound.code;
+          var code = this.$store.state.gameRound.code;
           let album = {
             id:this.album.id,
             name:workname,

@@ -322,32 +322,32 @@
           await promise.then(data => {
             console.log('data------:', data)
             postMsg(number, data).then(res => {
-              this.$emit('signUpOver', res)
-            })
-            createBeforeDirectUpload(number, data).then(res => {
-              console.log('res========:', res)
-              let directUploadData = res.directUploadData
-              console.log('directUploadData----:', directUploadData)
+              createBeforeDirectUpload(number, data).then(res => {
+                console.log('res========:', res)
+                let directUploadData = res.directUploadData
+                console.log('directUploadData----:', directUploadData)
 
-              for (var i = 0; i < directUploadData.length; i++) {
-                let url = directUploadData[i].url
-                let headers = directUploadData[i].headers
-                console.log('url---:', url)
-                console.log('headers----:', headers)
+                for (var i = 0; i < directUploadData.length; i++) {
+                  let url = directUploadData[i].url
+                  let headers = directUploadData[i].headers
+                  console.log('url---:', url)
+                  console.log('headers----:', headers)
 
-                const upload = new BlobUpload(files[i], directUploadData[i])
-                this.notify(null, 'directUploadWillStoreFileWithXHR', upload.xhr)
-                upload.create(error => {
-                  if (error) {
-                    // upload.callback(error)
-                  } else {
-                    // upload.callback(null, blob.toJSON())
-                    console.log('emit gotoWorksBox')
-                    this.$emit('gotoWorksBox')
-                  }
-                })
-              }
+                  const upload = new BlobUpload(files[i], directUploadData[i])
+                  this.notify(null, 'directUploadWillStoreFileWithXHR', upload.xhr)
+                  upload.create(error => {
+                    if (error) {
+                      // upload.callback(error)
+                    } else {
+                      // upload.callback(null, blob.toJSON())
+                      console.log('emit gotoWorksBox')
+                      this.$emit('gotoWorksBox')
+                    }
+                  })
+                }
+              })
             })
+
           })
         }
       }

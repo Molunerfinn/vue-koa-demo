@@ -331,6 +331,7 @@ export default class GamesController {
       let code = ctx.request.body.code
       let number = ctx.params.number
       let openid = ctx.request.body.parsed.openid
+      let parsed = ctx.request.body.parsed || {}
       let GameRound = getGameRoundModelByCode(code)
       let GamePlayer = getGamePlayerModelByCode(code)
       let GameResult = getGameResultModelByCode(code)
@@ -350,6 +351,25 @@ export default class GamesController {
           openid: openid,
         }
       })
+      console.log('gamePlayer///////:',gamePlayer);
+
+      if (gamePlayer == null) {
+        gamePlayer = {
+          openid: parsed.openid,
+          nickname: parsed.nickname,
+          avatar: parsed.headimgurl,
+          game_round_id: gameRound.id,
+          sex: parsed.sex,
+          language: parsed.language,
+          country: parsed.country,
+          province: parsed.province,
+          city: parsed.city,
+          ip: getClientIP(ctx.req),
+          score: 0,
+          max_score: 0
+        }
+        gamePlayer = await GamePlayer.create(gamePlayer)
+      }
       console.log('gamePlayer__:',gamePlayer);
       let realname = ctx.request.body.realname
       let cellphone = ctx.request.body.tel

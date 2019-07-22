@@ -1,6 +1,6 @@
 <template>
   <!-- 锦囊 -->
- <div class="MyAccountBox" v-show="ui.myAccountVisible">
+ <div class="MyAccountBox">
    <div class="works_list">
      <div class="weui-navbar works">
        <div class="weui-navbar__item" @touchend="showWork()">
@@ -29,7 +29,7 @@
        </li>
      </div>
    </div>
-     <ModifyBox :gamePlayer="gamePlayer" :album="album" :gameRound="gameRound" :command="ui.modifyBoxVisible" @gotoMyAccountBox="gotoMyAccountBox"> </ModifyBox>
+     <ModifyBox :gamePlayer="gamePlayer" :album="album" :command="ui.modifyBoxVisible" @gotoMyAccountBox="gotoMyAccountBox"> </ModifyBox>
 
  </div>
 </template>
@@ -47,9 +47,6 @@ import { getMyWorkInfo,getMyCardInfo } from '@/api/games/ztoupiao'
 
 export default {
   props: {
-    gameRound: { // 游戏成绩相关数据
-      type: Object
-    },
     ruleIconUrl: String, // 锦囊按钮图片
     command:{
       default: false // 可选值: showResult, showGift
