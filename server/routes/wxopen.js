@@ -1,3 +1,4 @@
+/// 第三方平台授权绑定
 import queryString from 'query-string'
 const {
   componentAPI
