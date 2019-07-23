@@ -131,16 +131,41 @@ export default class base {
   }
 
   static async getGameRoundInfo(ctx) {
+    console.log('=============getGameRoundInfo===========');
     let params = ctx.request.body
     let userId = params.id
     let gameRoundModel = getGameRoundModelByCode('backend');
 
-    let gameRounds = await gameRoundModel.finAll({
+    let gameRounds = await gameRoundModel.findAll({
       where: {
         user_id: userId
       }
     })
 
     ctx.body = gameRounds
+  }
+
+  static async addGameRound(ctx){
+    let body = ctx.request.body;
+    let gamename = body.name;
+    let gamedesc = body.desc;
+    let code = body.code;
+    let duration = body.duration
+
+    let gameRound = {
+      name:gamename,
+      desc:gamedesc,
+      code:code,
+      duration:duration,
+      start_at:'2019-07-22',
+      end_at:'2019-09-22'
+
+    }
+
+    let GameRoundModel = getGameRoundModelByCode(code)
+
+    gameRound = await GameRoundModel.create(gameRound)
+
+    ctx.body = gameRound
   }
 }

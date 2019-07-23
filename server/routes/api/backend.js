@@ -9,6 +9,9 @@ router.post('/base/login', base.login)
 router.post('/base/check', base.check)
 router.post('/base/modify', base.modify)
 
+router.post('/base/getGameRoundInfo', base.getGameRoundInfo)
+router.post('/base/addGameRound', base.addGameRound)
+
 // router.post('/weixin_open', weixin.createRound)
 // router.post('/gameRound', gameRound.createRound)
 

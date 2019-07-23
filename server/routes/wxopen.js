@@ -1,35 +1,38 @@
 import queryString from 'query-string'
+const {
+  componentAPI
+} = require('../helpers/wxopen');
 const Redis = require('ioredis');
 const redis = new Redis();
 const router = require('koa-router')(); // router middleware for koa
 const WechatEncrypt = require('wechat-encrypt')
 const xml2js = require('xml2js')
 const wxopenConfig = require('../config/wxopen')
-const raw = require('raw-body')
 const {
   getWxMpUsersModel,
-  getCompanies
+  getCompanies,
+  getGameRoundModelByCode
 } = require('../helpers/model')
 const {
   ComponentAPI,
   API
 } = require('es-wechat-open-api');
 
-const componentAPI = new ComponentAPI({
-  componentAppId: wxopenConfig.appid,
-  componentAppSecret: wxopenConfig.secret,
-  getComponentTicket: async () => {
-    const ticket = await redis.get('componentTicket');
-    return ticket;
-  },
-  getComponentToken: async () => {
-    const ticket = await redis.get('componentToken');
-    return ticket;
-  },
-  saveComponentToken: async componentToken => {
-    await redis.set('componentToken', JSON.stringify(componentToken));
-  }
-});
+// const componentAPI = new ComponentAPI({
+//   componentAppId: wxopenConfig.appid,
+//   componentAppSecret: wxopenConfig.secret,
+//   getComponentTicket: async () => {
+//     const ticket = await redis.get('componentTicket');
+//     return ticket;
+//   },
+//   getComponentToken: async () => {
+//     const ticket = await redis.get('componentToken');
+//     return ticket;
+//   },
+//   saveComponentToken: async componentToken => {
+//     await redis.set('componentToken', JSON.stringify(componentToken));
+//   }
+// });
 
 
 
@@ -51,13 +54,6 @@ function convertXml2Json(str) {
   })
 }
 
-
-// const wxopenConfig = {
-//   componentAppId: 'wx600b115058543c37', // 微信第三方平台 appId
-//   componentAppSecret: '6e3025c644d99c3b71e03a7d4bb0ff34', // 微信第三方平台 appSecret
-//   token: 'token', // 消息校验 Token
-//   encodingAESKey: 'winc44b9f22bcef72d2ea76b621b6f2c095160e81e6' // 消息加解密 key
-// }
 router.post('/ticket', async (ctx) => {
   let xml = ctx.request.xmlBody // 解析XML数据成JS对象
 
@@ -132,10 +128,10 @@ router.post('/message', async (ctx) => {
 })
 
 router.post('/auth', async (ctx) => {
-  // var url = await componentAPI.getAppWebAuthorizeURL('https://testwx.natapp4.cc/api/wxopen/authdone')
+  var url = await componentAPI.getAppWebAuthorizeURL('https://testwx.natapp4.cc/api/wxopen/authdone')
 
-  // console.log('url---:', url);
-  var url=''
+  console.log('url---:', url);
+  var url = ''
   ctx.body = {
     url: url
   }
@@ -151,7 +147,7 @@ router.get('/authdone', async (ctx) => {
   let auth_code = parsed.auth_code
   let expires_in = parsed.expires_in
 
-  getAuthorInfo('1',auth_code, expires_in)
+  getAuthorInfo('1', auth_code, expires_in)
 
   ctx.body = {
     auth_code: auth_code,
@@ -159,7 +155,7 @@ router.get('/authdone', async (ctx) => {
   }
 })
 
-async function getAuthorInfo(companyId,auth_code, expires_in) {
+async function getAuthorInfo(companyId, auth_code, expires_in) {
   console.log('auth_code--:', auth_code);
   var info = {}
   info = await componentAPI.getAuthorizationInfo(auth_code)
@@ -210,7 +206,8 @@ async function getAuthorInfo(companyId,auth_code, expires_in) {
   await userInfo.update({
     appid: authorizer_appid
   })
-
 }
+
+
 
 module.exports = router;
