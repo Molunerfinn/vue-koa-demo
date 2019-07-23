@@ -14,3 +14,5 @@ wxopen[ appid+'_access_token']
 
 wxmp[ appid+'_auth_code']
 wxmp[ appid+'_expires_in']
+
+wxuser[ openid+'_access_token']
