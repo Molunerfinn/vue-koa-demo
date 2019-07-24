@@ -3,6 +3,7 @@ var moment = require('moment')
 module.exports = (sequelize, DataTypes) => {
   const model = sequelize.define('ZTouPiaoGameRound', {
     game_id: DataTypes.BIGINT(11),
+    user_id: DataTypes.BIGINT(11),
     name: {
       type:DataTypes.STRING,
       allowNull: false,

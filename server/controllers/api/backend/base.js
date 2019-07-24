@@ -147,12 +147,15 @@ export default class base {
 
   static async addGameRound(ctx){
     let body = ctx.request.body;
+    console.log('body---:',body);
     let gamename = body.name;
     let gamedesc = body.desc;
     let code = body.code;
     let duration = body.duration
+    let user_id = body.user_id
 
     let gameRound = {
+      user_id:user_id,
       name:gamename,
       desc:gamedesc,
       code:code,
@@ -162,9 +165,13 @@ export default class base {
 
     }
 
+
+
     let GameRoundModel = getGameRoundModelByCode(code)
 
     gameRound = await GameRoundModel.create(gameRound)
+
+      console.log('gameRound----:',gameRound);
 
     ctx.body = gameRound
   }

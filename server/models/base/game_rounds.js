@@ -3,6 +3,7 @@ var moment = require('moment')
 module.exports = (sequelize, DataTypes) => {
     return sequelize.define('game_rounds', {
         game_id: DataTypes.BIGINT(11),
+        user_id: DataTypes.BIGINT(11),
         name: DataTypes.STRING,
         creator_id: DataTypes.BIGINT(11),
         /* created	   0 created	新建
