@@ -62,6 +62,9 @@ router.use('/auth', auth.routes()) // 挂载到koa-router上，同时会让所�
 import wxoauth from './routes/wxmp_oauth.js'
 router.use('/authwx', wxoauth.routes())
 
+import wxopen_oauth from './routes/wxopen_oauth.js'
+router.use('/wxopen_oauth', wxopen_oauth.routes())
+
 // 游戏管理api
 // 兼容 以前使用的API  /game_rounds/:id
 import gameRounds from './routes/api/game_rounds.js'

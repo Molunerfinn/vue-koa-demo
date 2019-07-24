@@ -4,8 +4,11 @@ const redis = new Redis();
 
 const {
   ComponentAPI,
-  API
+  API,
+  Oauth
 } = require('es-wechat-open-api');
+
+var wxOpenOauth = {}
 
 const componentAPI = new ComponentAPI({
   componentAppId: wxopenConfig.appid,
@@ -23,4 +26,19 @@ const componentAPI = new ComponentAPI({
   }
 })
 
-module.exports = {componentAPI};
+function setOpenOauth(options) {
+  console.log('options=====:',options);
+  wxOpenOauth = new Oauth(options)
+}
+
+function getOpenOauth() {
+  return wxOpenOauth;
+}
+
+
+
+module.exports = {
+  componentAPI,
+  setOpenOauth,
+  getOpenOauth
+};

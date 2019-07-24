@@ -11,7 +11,7 @@ const xml2js = require('xml2js')
 const wxopenConfig = require('../config/wxopen')
 const {
   getWxMpUsersModel,
-  getCompanies,
+  getUsersModel,
   getGameRoundModelByCode
 } = require('../helpers/model')
 const {
@@ -56,7 +56,9 @@ function convertXml2Json(str) {
 }
 
 router.post('/ticket', async (ctx) => {
+  console.log('===========ticket============');
   let xml = ctx.request.xmlBody // 解析XML数据成JS对象
+  console.log('xml---------:',xml);
 
   let {
     AppId,
@@ -132,7 +134,7 @@ router.post('/auth', async (ctx) => {
   var url = await componentAPI.getAppWebAuthorizeURL('https://testwx.natapp4.cc/api/wxopen/authdone')
 
   console.log('url---:', url);
-  var url = ''
+  // var url = ''
   ctx.body = {
     url: url
   }
@@ -156,57 +158,61 @@ router.get('/authdone', async (ctx) => {
   }
 })
 
-async function getAuthorInfo(companyId, auth_code, expires_in) {
-  console.log('auth_code--:', auth_code);
-  var info = {}
-  info = await componentAPI.getAuthorizationInfo(auth_code)
-  console.log('authorization_info====:', info);
-  var authorizer_appid = info.authorization_info.authorizer_appid
-  var authorizer_access_token = info.authorization_info.authorizer_access_token
-  var authorizer_refresh_token = info.authorization_info.authorizer_refresh_token
-  var func_info = info.authorization_info.func_info
+async function getAuthorInfo(userId, auth_code, expires_in) {
 
-  info = await componentAPI.getAuthorizerInfo(authorizer_appid)
-  console.log('authorizer_info====:', info);
+  try{
+    console.log('auth_code--:', auth_code);
+    var info = {}
+    info = await componentAPI.getAuthorizationInfo(auth_code)
+    console.log('authorization_info====:', info);
+    var authorizer_appid = info.authorization_info.authorizer_appid
+    var authorizer_access_token = info.authorization_info.authorizer_access_token
+    var authorizer_refresh_token = info.authorization_info.authorizer_refresh_token
+    var func_info = info.authorization_info.func_info
 
-  var nick_name = info.authorizer_info.nick_name
-  var head_img = info.authorizer_info.head_img
-  var user_name = info.authorizer_info.user_name
-  var principal_name = info.authorizer_info.principal_name
-  var signature = info.authorizer_info.signature
+    info = await componentAPI.getAuthorizerInfo(authorizer_appid)
+    console.log('authorizer_info====:', info);
+
+    var nick_name = info.authorizer_info.nick_name
+    var head_img = info.authorizer_info.head_img
+    var user_name = info.authorizer_info.user_name
+    var principal_name = info.authorizer_info.principal_name
+    var signature = info.authorizer_info.signature
 
 
-  redis.hmset('wxmp', {
-    [authorizer_appid + '_access_token']: authorizer_access_token,
-    [authorizer_appid + '_refresh_token']: authorizer_refresh_token,
-    [authorizer_appid + '_func_info']: func_info
-  })
+    redis.hmset('wxmp', {
+      [authorizer_appid + '_access_token']: authorizer_access_token,
+      [authorizer_appid + '_refresh_token']: authorizer_refresh_token
+    })
 
-  let wxMpUserModel = getWxMpUsersModel();
-  let wxMpUser = {
-    nick_name: nick_name,
-    head_img: head_img,
-    user_name: user_name,
-    alias: principal_name,
-    wx_token: signature,
-    appid: authorizer_appid,
-    access_token: authorizer_access_token,
-    refresh_token: authorizer_refresh_token,
-    func_info: func_info
+    let wxMpUserModel = getWxMpUsersModel();
+    let wxMpUser = {
+      nick_name: nick_name,
+      head_img: head_img,
+      user_name: user_name,
+      alias: principal_name,
+      wx_token: signature,
+      appid: authorizer_appid,
+      access_token: authorizer_access_token,
+      refresh_token: authorizer_refresh_token
+    }
+
+    wxMpUser = await wxMpUserModel.create(wxMpUser)
+
+    let user = getUsersModel()
+    let userInfo = await user.findOne({
+      where: {
+        id: userId
+      }
+    })
+
+    await userInfo.update({
+      appid: authorizer_appid
+    })
+  }catch(e){
+    console.log('error--:',e);
   }
 
-  wxMpUser = await wxMpUserModel.create(wxMpUser)
-
-  let companies = getCompanies()
-  let userInfo = await companies.findOne({
-    where: {
-      id: companyId
-    }
-  })
-
-  await userInfo.update({
-    appid: authorizer_appid
-  })
 }
 
 

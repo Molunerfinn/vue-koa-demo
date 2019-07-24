@@ -1,7 +1,7 @@
 var moment = require('moment')
 
 module.exports = (sequelize, DataTypes) => {
-  const model = sequelize.define('wxmpusers', {
+  const model = sequelize.define('wx_mp_users', {
     appid: {
       type: DataTypes.STRING(255),
       allowNull: false,

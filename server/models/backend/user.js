@@ -30,6 +30,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(128),
       defaultValue: ''
     },
+    appid: {
+      type: DataTypes.STRING(255),
+      defaultValue: ''
+    },
     encrypted_password: {
       type: DataTypes.STRING(255),
       defaultValue: ''
