@@ -7,12 +7,14 @@ const router = new Router()
 
 router.post('/base/login', base.login)
 router.post('/base/check', base.check)
-router.post('/base/modify', base.modify)
 
 router.post('/base/getGameRoundInfo', base.getGameRoundInfo)
 router.post('/base/addGameRound', base.addGameRound)
+router.post('/base/removeGameRound', base.removeGameRound)
+router.post('/base/modifyGameRound', base.modifyGameRound)
+router.post('/base/getWxMpUsers', base.getWxMpUsers)
 
-router.post('/ztoupiao/:number/entry', gameRound.entry)
+router.get('/ztoupiao/:number/entry', gameRound.entry)
 
 // router.post('/weixin_open', weixin.createRound)
 // router.post('/gameRound', gameRound.createRound)

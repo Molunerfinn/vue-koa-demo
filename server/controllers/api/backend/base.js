@@ -1,6 +1,7 @@
 const {
   getUsersModel,
-  getGameRoundModelByCode
+  getGameRoundModelByCode,
+  getWxMpUsersModel
 } = require('../../../helpers/model')
 // const {
 //   getWxJsConfig
@@ -102,29 +103,30 @@ export default class base {
     }
   }
 
-  static async modify(ctx) {
+  static async modifyGameRound(ctx) {
     try {
-      console.log('-----------modify-----------');
-      let params = ctx.request.body
-      let username = params.username
-      let newpassword = params.newpassword
+      console.log('==================modifyGameRound=================');
+      let body = ctx.request.body;
+      console.log('body---:', body);
+      let number = body.number
+      let code = body.code
+      let duration = body.duration
+      let gamename = body.name;
+      let gamedesc = body.desc;
 
-      let users = getusers()
-
-      let userInfo = await users.findOne({
+      let GameRoundModel = getGameRoundModelByCode(code)
+      let gameRound = await GameRoundModel.findOne({
         where: {
-          username: username
+          number: number
         }
       })
 
-      if (userInfo != undefined) {
-        await userInfo.update({
-          password: newpassword
-        })
-        ctx.body = {
-          res: 'modify success!'
-        }
-      }
+      gameRound = await gameRound.update({
+        name: gamename,
+        desc: gamedesc,
+        duration: duration
+      })
+      ctx.body = gameRound
     } catch (e) {
       console.log('error!:', e);
     }
@@ -145,9 +147,9 @@ export default class base {
     ctx.body = gameRounds
   }
 
-  static async addGameRound(ctx){
+  static async addGameRound(ctx) {
     let body = ctx.request.body;
-    console.log('body---:',body);
+    console.log('body---:', body);
     let gamename = body.name;
     let gamedesc = body.desc;
     let code = body.code;
@@ -155,24 +157,59 @@ export default class base {
     let user_id = body.user_id
 
     let gameRound = {
-      user_id:user_id,
-      name:gamename,
-      desc:gamedesc,
-      code:code,
-      duration:duration,
-      start_at:'2019-07-22',
-      end_at:'2019-09-22'
+      user_id: user_id,
+      name: gamename,
+      desc: gamedesc,
+      code: code,
+      duration: duration,
+      start_at: '2019-07-22',
+      end_at: '2019-09-22'
 
     }
+    let GameRoundModel = getGameRoundModelByCode(code)
+    gameRound = await GameRoundModel.create(gameRound)
+    console.log('gameRound----:', gameRound);
+    ctx.body = gameRound
+  }
 
-
+  static async removeGameRound(ctx) {
+    let body = ctx.request.body;
+    console.log('body---:', body);
+    let number = body.number
+    let code = body.code
 
     let GameRoundModel = getGameRoundModelByCode(code)
+    let res = await GameRoundModel.destroy({
+      where: {
+        number: number
+      }
+    })
+    ctx.body = res
+  }
 
-    gameRound = await GameRoundModel.create(gameRound)
+  static async getWxMpUsers(ctx){
+    console.log('==================getWxMpUsers================');
+    let body = ctx.request.body;
+    let user_id = body.user_id
 
-      console.log('gameRound----:',gameRound);
+    let UsersModel = getUsersModel()
+    let WxMpUsersModel = getWxMpUsersModel()
 
-    ctx.body = gameRound
+    let user = await UsersModel.findOne({
+      where:{
+        id:user_id
+      }
+    })
+    console.log('user=========:',user);
+
+    if(user.appid){
+      let WxMpUsers = await WxMpUsersModel.findAll({
+        where:{
+          appid:user.appid
+        }
+      })
+      console.log('WxMpUsers=============:',WxMpUsers);
+      ctx.body = WxMpUsers
+    }
   }
 }
