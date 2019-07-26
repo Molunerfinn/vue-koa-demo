@@ -365,7 +365,6 @@ export default {
         this.showAlbum();
       }else{
         console.log('hide');
-
         this.ui.statusBox = false
       }
 
