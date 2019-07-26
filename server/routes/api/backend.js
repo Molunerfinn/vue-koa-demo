@@ -1,7 +1,6 @@
 import setting from '../../controllers/api/backend/setting.js'
 import base from '../../controllers/api/backend/base.js'
 //import wxOpen from '../../controllers/wxopen.js'
-import gameRound from '../../controllers/game_round.js'
 import Router from 'koa-router'
 const router = new Router()
 
@@ -13,8 +12,6 @@ router.post('/base/addGameRound', base.addGameRound)
 router.post('/base/removeGameRound', base.removeGameRound)
 router.post('/base/modifyGameRound', base.modifyGameRound)
 router.post('/base/getWxMpUsers', base.getWxMpUsers)
-
-router.get('/ztoupiao/:number/entry', gameRound.entry)
 
 // router.post('/weixin_open', weixin.createRound)
 // router.post('/gameRound', gameRound.createRound)

@@ -6,4 +6,6 @@ router.prefix('/:number')
 router.post('/getAlbumsInfo', album.createBeforeDirectUpload)
 router.post('/modifyAlbum', album.modifyAlbum)
 
+router.post('/createPoster', album.createPosterBeforeDirectUpload)
+
 export default router

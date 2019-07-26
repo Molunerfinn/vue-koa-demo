@@ -80,6 +80,48 @@ export default class AlbumsController {
       // }
   }
 
+  static async createPosterBeforeDirectUpload(ctx) {
+      //try {
+      console.log('==================createBeforeDirectUpload===============');
+          let number = ctx.params.number
+          let code = ctx.request.body.code
+          let photoParams = ctx.request.body.photos
+
+          console.log("showRoundByNumber= ", ctx.request.body)
+          let Model = getGameRoundModelByCode(code)
+          let round = await Model.findOne({
+              //attributes: ['id', 'name', 'state', 'start_at', 'end_at'],
+              where: {
+                  number
+              }
+          })
+
+          let Photo = getGamePhotoModelByCode( code )
+
+          let photoOptions = {
+            fields: ['album_id', 'file_name', 'file_size', 'content_type', 'checksum', 'okey','viewable_id','viewable_type']
+          }
+
+          let promises = photoParams.map((param)=>{
+            console.log( " param, photoOptions= ",  param, photoOptions)
+            param.viewable_id = round.id
+            param.viewable_type = 'poster'
+            return Photo.create( param, photoOptions )
+          })
+          let photos = await Promise.all(promises )
+          let directUploadData = photos.map((photo)=>{
+            let url = urlForDirectUpload( photo.okey )
+            let headers = headersForDirectUpload( photo.okey, photo.content_type, photo.checksum )
+            return { url,  headers }
+          })
+
+          ctx.body = { photos, directUploadData  }
+      // } catch (error) {
+      //
+      //     ctx.throw(messageContent.ResponeStatus.CommonError, `show round ${ctx.params.id} fail: ` + error, { expose: true })
+      // }
+  }
+
 
 
   static async modifyAlbum(ctx) {

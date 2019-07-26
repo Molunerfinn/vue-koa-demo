@@ -17,6 +17,12 @@ module.exports = (sequelize, DataTypes) => {
       unique: true,
       defaultValue: ''
     },
+    viewable_id:{
+      type: DataTypes.INTEGER(11),
+    },
+    viewable_type:{
+      type: DataTypes.STRING(64),
+    },
     checksum: {
       type: DataTypes.STRING(64),
       allowNull: false,

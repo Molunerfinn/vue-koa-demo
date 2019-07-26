@@ -129,6 +129,9 @@ router.use('/gapi/album', album.routes())
 import backend from './routes/api/backend.js'
 router.use('/api/backend', backend.routes())
 
+import game_round from './routes/game_round.js'
+router.use('/ztoupiao', game_round.routes())
+
 import wxopen from './routes/wxopen.js'
 router.use('/api/wxopen', wxopen.routes())
 
