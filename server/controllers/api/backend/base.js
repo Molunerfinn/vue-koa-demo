@@ -132,6 +132,30 @@ export default class base {
     }
   }
 
+  static async modifyDesc(ctx) {
+    try {
+      console.log('==================modifyDesc=================');
+      let body = ctx.request.body;
+      let number = body.number
+      let code = body.code
+      let gamedesc = body.desc;
+
+      let GameRoundModel = getGameRoundModelByCode(code)
+      let gameRound = await GameRoundModel.findOne({
+        where: {
+          number: number
+        }
+      })
+
+      gameRound = await gameRound.update({
+        desc: gamedesc
+      })
+      ctx.body = gameRound
+    } catch (e) {
+      console.log('error!:', e);
+    }
+  }
+
   static async getGameRoundInfo(ctx) {
     console.log('=============getGameRoundInfo===========');
     let params = ctx.request.body

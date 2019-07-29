@@ -160,7 +160,7 @@ export default class AlbumsController {
       fields: ['album_id', 'file_name', 'file_size', 'content_type', 'checksum', 'okey', 'viewable_id', 'viewable_type']
     }
 
-    photoParam.viewable_id = round.id
+    // photoParam.viewable_id = round.id
     photoParam.viewable_type = 'desc'
     let photo = await Photo.create(photoParam, photoOptions)
     let directUploadData = {
