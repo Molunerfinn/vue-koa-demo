@@ -2,6 +2,17 @@
 
   <!-- 锦囊 -->
   <div class="WorksBox" v-show="ui.worksVisible">
+
+    <div class="swiper-container swiper-container-initialized swiper-container-horizontal">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide" v-for="photo in postersData">
+          <img  :src="photo.originalUrl"/>
+        </div>
+      </div>
+      <div class="swiper-pagination"></div>
+    </div>
+
+
     <div class="home" v-show="ui.showHome">
       <div class="weui-grids" style="background-color:#F8B62D;">
         <table style="width:100%;color:#40220F;">
@@ -141,6 +152,8 @@
   import queryString from 'query-string'
   import HdGame from '@/lib/hdgame'
   import WorksListBox from './WorksListBox.vue'
+  import { getPoster } from '@/api/albums.js'
+
   export default {
     components: {
       WorksListBox
@@ -166,6 +179,7 @@
     },
     data() {
       return {
+        postersData: [],
         getRoundState: {},
         ui: {
           worksVisible: false,
@@ -196,13 +210,19 @@
 
       var params = {
         parsed: parsed,
-        code: 'ztoupiao'
+        code: 'ztoupiao',
+        number:number
       }
 
       getRoundState(number, params).then(data => {
         console.log('data===:', data)
         this.getRoundState = data
         this.countTime()
+      })
+
+      getPoster(number, params).then((data) => {
+        this.postersData = data
+        console.log('this.postersData----:', this.postersData)
       })
     },
     mounted() {

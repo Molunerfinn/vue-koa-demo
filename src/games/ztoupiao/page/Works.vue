@@ -2,6 +2,14 @@
 
   <!-- 锦囊 -->
   <div class="WorksBox" >
+    <div class="swiper-container swiper-container-initialized swiper-container-horizontal">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide" v-for="photo in postersData">
+          <img  :src="photo.originalUrl"/>
+        </div>
+      </div>
+      <div class="swiper-pagination"></div>
+    </div>
     <div class="home" v-show="ui.showHome">
       <div class="weui-grids" style="background-color:#F8B62D;">
         <table style="width:100%;color:#40220F;">
@@ -140,8 +148,9 @@
   import storeMixin from '../store_mixin'
   import { getRoundState } from '@/api/games/ztoupiao'
   import queryString from 'query-string'
-
+  import { getPoster } from '@/api/albums.js'
   import WorksListBox from './works/WorksListBox.vue'
+  import Swiper from 'swiper'
   export default {
     components: {
       WorksListBox
@@ -154,6 +163,7 @@
     mixins: [storeMixin],
     data() {
       return {
+        postersData: [],
         getRoundState: {},
         ui: {
           showHome: true
@@ -173,7 +183,8 @@
         },
         gamePlayerRank: [],
         menuLen: 2,
-        currentPlayer: {}
+        currentPlayer: {},
+        mySwiper: null
       }
     },
     created() {
@@ -183,7 +194,8 @@
 
       var params = {
         parsed: parsed,
-        code: 'ztoupiao'
+        code: 'ztoupiao',
+        number:number
       }
 
       getRoundState(number, params).then(data => {
@@ -191,8 +203,24 @@
         this.getRoundState = data
         this.countTime()
       })
+
+      getPoster(number, params).then((data) => {
+        this.postersData = data
+        console.log('this.postersData----:', this.postersData)
+      })
     },
     mounted() {
+      this.mySwiper = new Swiper('.swiper-container',
+        {
+          direction: 'horizontal',
+          loop : true,
+          autoplay:true,
+          noSwiping: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true
+          }
+        })
     },
     computed: {
       hasRank() {
@@ -372,6 +400,23 @@
     right: 5px;
     border: 1px solid gray;
     z-index: -1;
+  }
+
+  .swiper-container {
+    width: 100%;
+    height: 100%;
+  }
+  .swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
   }
 
 </style>
