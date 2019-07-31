@@ -1,11 +1,15 @@
 import setting from '../../controllers/api/backend/setting.js'
 import base from '../../controllers/api/backend/base.js'
+import session from '../../controllers/api/backend/session.js'
 //import wxOpen from '../../controllers/wxopen.js'
 import Router from 'koa-router'
 const router = new Router()
 
 router.post('/base/login', base.login)
 router.post('/base/check', base.check)
+
+router.post('/session/login', session.login)
+router.post('/session/check', session.check)
 
 router.post('/base/getGameRoundInfo', base.getGameRoundInfo)
 router.post('/base/addGameRound', base.addGameRound)

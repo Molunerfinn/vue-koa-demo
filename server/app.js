@@ -11,11 +11,13 @@ import koaBodyparser from 'koa-bodyparser'
 import session  from 'koa-session'    // session for flash messages
 import http from 'http'
 const xmlParser = require('koa-xml-body')
+const secret = require('./config/secret')
 const app = new Koa()
 const router = new KoaRouter()
 
 let port = process.env.API_SERVER_PORT || 3000
 
+// 处理微信请求
 app.use(xmlParser({key: 'xmlBody'}))
 
 app.use(koaBodyparser({}))
@@ -47,7 +49,7 @@ app.use(async function (ctx, next) {  //  如果JWT验证失败，返回验证�
 })
 
 // set signed cookie keys for JWT cookie & session cookie
-app.keys = [ 'koa-sample-app' ];
+app.keys = [ secret.sessionSecret ];
 
 // session for flash messages (uses signed session cookies, with no server storage)
 app.use(session(app)); // note koa-session@3.4.0 is v1 middleware which generates deprecation notice
@@ -57,7 +59,6 @@ app.use(session(app)); // note koa-session@3.4.0 is v1 middleware which generate
 // })
 
 router.use('/auth', auth.routes()) // 挂载到koa-router上，同时会让所有的auth的请求路径前面加上'/auth'的请求路径。
-//router.use('/api', jwt({secret: 'vue-koa-demo'}), api.routes()) // 所有走/api/打头的请求都需要经过jwt验证。
 
 import wxoauth from './routes/wxmp_oauth.js'
 router.use('/authwx', wxoauth.routes())
@@ -127,7 +128,9 @@ import album from './routes/gapi/album.js'
 router.use('/gapi/album', album.routes())
 
 import backend from './routes/api/backend.js'
-router.use('/api/backend', backend.routes())
+// 所有走/api/backend 开头的请求都需要经过jwt验证。
+router.use('/api/backend', jwt({secret: secret.jwtSecret, passthrough: true}), backend.routes())
+//router.use('/api/backend', backend.routes())
 
 import game_round from './routes/game_round.js'
 router.use('/ztoupiao', game_round.routes())
