@@ -36,11 +36,14 @@ app.use(async function (ctx, next) {  //  如果JWT验证失败，返回验证�
     await next()
   } catch (err) {
     if (err.status === 401) {
-      ctx.status = 401
-      ctx.body = {
-        success: false,
-        token: null,
-        info: 'Protected resource, use Authorization header to get access'
+      // 处理JWT验证失败
+      if (ctx.url.match(/^\/api\/backend/)) {
+        ctx.status = 401
+        ctx.body = {
+          success: false,
+          token: null,
+          info: 'Protected resource, use Authorization header to get access'
+        }
       }
     } else {
       throw err
@@ -127,9 +130,14 @@ router.use('/gapi/ztoupiao', ztoupiao.routes())
 import album from './routes/gapi/album.js'
 router.use('/gapi/album', album.routes())
 
+
+import sessions from './routes/api/sessions.js'
+// 所有走/api/backend 开头的请求都需要先请求 sessions 获取token。
+router.use('/api/sessions',  sessions.routes())
+
 import backend from './routes/api/backend.js'
 // 所有走/api/backend 开头的请求都需要经过jwt验证。
-router.use('/api/backend', jwt({secret: secret.jwtSecret, passthrough: true}), backend.routes())
+router.use('/api/backend', jwt({secret: secret.jwtSecret}), backend.routes())
 //router.use('/api/backend', backend.routes())
 
 import game_round from './routes/game_round.js'

@@ -9,7 +9,7 @@ module.exports = {
       logging: true
     },
     development: {
-      database: 'wechatmore_test',
+      database: 'wechatmore_dev',
       username: 'root',
       password: 'root',
       dialect: 'mysql',
