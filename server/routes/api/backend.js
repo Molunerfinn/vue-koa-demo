@@ -1,14 +1,15 @@
 import setting from '../../controllers/api/backend/setting.js'
 import base from '../../controllers/api/backend/base.js'
-import users from '../../controllers/api/backend/users.js'
+import Users from '../../controllers/api/backend/users.js'
+import GameRounds from '../../controllers/api/backend/game_rounds.js'
 //import wxOpen from '../../controllers/wxopen.js'
 import Router from 'koa-router'
 const router = new Router()
 
-router.post('/base/login', base.login)
-router.post('/base/check', base.check)
 
-router.get('/users/show', users.show)
+
+router.get('/users/show', Users.show)
+router.get('/game_rounds', GameRounds.index)
 
 router.post('/base/getGameRoundInfo', base.getGameRoundInfo)
 router.post('/base/addGameRound', base.addGameRound)

@@ -52,6 +52,7 @@
     "query-string": "^4.2.3",
     "raw-body": "^2.4.1",
     "sequelize": "^4.38.0",
+    "sequelize-querystring-converter": "^1.0.3",
     "socket.io": "^2.2.0",
     "socket.io-client": "^2.2.0",
     "socket.io-redis": "^5.2.0",
