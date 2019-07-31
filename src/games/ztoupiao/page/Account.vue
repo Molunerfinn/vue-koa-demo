@@ -1,6 +1,16 @@
 <template>
   <!-- 锦囊 -->
  <div class="MyAccountBox">
+
+   <div class="swiper-container swiper-container-initialized swiper-container-horizontal">
+     <div class="swiper-wrapper">
+       <div class="swiper-slide" v-for="photo in postersData">
+         <img  :src="photo.originalUrl"/>
+       </div>
+     </div>
+     <div class="swiper-pagination"></div>
+   </div>
+
    <div class="works_list">
      <div class="weui-navbar works">
        <div class="weui-navbar__item" @touchend="showWork()">
@@ -43,7 +53,8 @@ import moment from 'moment';
 import ModifyBox from './account/ModifyBox.vue'
 import queryString from 'query-string'
 import { getMyWorkInfo,getMyCardInfo } from '@/api/games/ztoupiao'
-
+import { getPoster } from '@/api/albums.js'
+import Swiper from 'swiper'
 
 export default {
   props: {
@@ -60,6 +71,7 @@ export default {
   },
   data() {
     return {
+      postersData: [],
       getRoundState:{},
       ui:{
         myAccountVisible:false,
@@ -76,7 +88,8 @@ export default {
       currentPlayer:{},
       myWorks:[],
       myCards:[],
-      album:{}
+      album:{},
+      mySwiper: null
     }
   },
   created() {
@@ -87,7 +100,8 @@ export default {
 
     var params = {
       parsed: parsed,
-      code:'ztoupiao'
+      code:'ztoupiao',
+      number:number
     }
 
     getMyWorkInfo(number, params).then(data => {
@@ -100,6 +114,21 @@ export default {
       console.log('getMyCardInfo---:',data);
       // this.myCards = data;
     });
+    getPoster(number, params).then((data) => {
+      this.postersData = data
+      console.log('this.postersData----:', this.postersData)
+      this.mySwiper = new Swiper('.swiper-container',
+        {
+          direction: 'horizontal',
+          loop : true,
+          autoplay:true,
+          noSwiping: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true
+          }
+        })
+    })
 
   },
   mounted(){
@@ -260,8 +289,24 @@ export default {
 }
 </script>
 
-<style lang="css" scoped>
+<style>
   .weui-navbar.works{
     position: relative;
+  }
+  .swiper-container {
+    width: 100%;
+    height: 100%;
+  }
+  .swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
   }
 </style>

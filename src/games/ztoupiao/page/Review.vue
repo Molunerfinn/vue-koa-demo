@@ -1,10 +1,7 @@
 <template>
  <div class="ReviewBox">
    <div class="reviewDesc">
-     <img class="reviewDesc img" :src="skinAssets.reviewDesc1ImgPath"/>
-     <img class="reviewDesc img" :src="skinAssets.reviewDesc2ImgPath"/>
-     <img class="reviewDesc img" :src="skinAssets.reviewDesc3ImgPath"/>
-     <img class="reviewDesc img" :src="skinAssets.reviewDesc4ImgPath"/>
+     <p id="explaiDrawInfoBox" class="" v-html="gameRoundState.desc"></p>
    </div>
  </div>
 </template>
@@ -18,6 +15,9 @@ import moment from 'moment';
 
 import HdGame from '@/lib/hdgame'
 import GameRes from '../game/GameRes'
+
+import { getRoundState } from '@/api/games/ztoupiao'
+import queryString from 'query-string'
 
 export default {
   props: {
@@ -46,6 +46,7 @@ export default {
       style:{
         statusUserImg: {}
       },
+      gameRoundState: {},
       gamePlayerRank: [],
       menuLen: 2,
       currentPlayer:{}
@@ -53,6 +54,18 @@ export default {
   },
   created() {
     window.$ = $
+    const parsed = queryString.parse(location.search)
+    var number = parsed.number
+
+    var params = {
+      parsed: parsed,
+      code: 'ztoupiao'
+    }
+
+    getRoundState(number, params).then(data => {
+      console.log('data===:', data)
+      this.gameRoundState = data
+    })
   },
   mounted(){
     // mounted 之后 document 才有ruleIme，可以设置css

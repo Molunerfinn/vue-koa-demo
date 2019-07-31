@@ -16,6 +16,7 @@ router.post('/base/addGameRound', base.addGameRound)
 router.post('/base/removeGameRound', base.removeGameRound)
 router.post('/base/modifyGameRound', base.modifyGameRound)
 router.post('/base/getWxMpUsers', base.getWxMpUsers)
+router.post('/base/modifyDesc', base.modifyDesc)
 
 // router.post('/weixin_open', weixin.createRound)
 // router.post('/gameRound', gameRound.createRound)
