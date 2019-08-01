@@ -207,20 +207,22 @@
       getPoster(number, params).then((data) => {
         this.postersData = data
         console.log('this.postersData----:', this.postersData)
+        this.$nextTick(()=> {
+          this.mySwiper = new Swiper('.swiper-container',
+          {
+            direction: 'horizontal',
+            loop : true,
+            autoplay:true,
+            noSwiping: true,
+            pagination: {
+              el: '.swiper-pagination',
+              clickable: true
+            }
+          })
+    })
       })
     },
     mounted() {
-      this.mySwiper = new Swiper('.swiper-container',
-        {
-          direction: 'horizontal',
-          loop : true,
-          autoplay:true,
-          noSwiping: true,
-          pagination: {
-            el: '.swiper-pagination',
-            clickable: true
-          }
-        })
     },
     computed: {
       hasRank() {

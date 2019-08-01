@@ -1,7 +1,10 @@
 const {
   getUsersModel,
   getGameRoundModelByCode,
-  getWxMpUsersModel
+  getWxMpUsersModel,
+  getPostModel,
+  getTermModel,
+  getRelationshipModel
 } = require('../../../helpers/model')
 // const {
 //   getWxJsConfig
@@ -195,6 +198,8 @@ export default class base {
     console.log('gameRound----:', gameRound);
     ctx.body = gameRound
   }
+
+  
 
   static async removeGameRound(ctx) {
     let body = ctx.request.body;
