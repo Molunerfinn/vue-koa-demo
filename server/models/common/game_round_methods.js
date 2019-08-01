@@ -12,6 +12,7 @@ export function bindGameRoundMethods( db ){
       }else{
         bindMethods(model)
       }
+      //sequelizePaginate.paginate(model)
       addHooks( model )
     }
   })

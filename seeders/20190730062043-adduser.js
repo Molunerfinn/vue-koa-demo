@@ -47,7 +47,7 @@ async function doWork(queryInterface) {
 
 
   let userAttrs = [{
-    cellphone: 'admin',
+    cellphone: '13844445555',
     password: '123456',
     created_at: '2019-06-10',
     updated_at: '2019-06-10'

@@ -12,3 +12,10 @@ https://www.cnblogs.com/chris-oil/p/4067415.html?utm_source=tuicool&utm_medium=r
 
 
 # scr/components 路径下的vue 调用API路径为 gapi/base/ 表示所有游戏调用的公共路径
+
+
+# 关于 model 的命名
+
+类名使用帕斯卡命名方式，且为名词单数 如：VelocityResponseWriter
+表名使用下划线命名方式，且为名词复数 如：velocity_response_writers
+示例: 表名为super_users, 类名为User
