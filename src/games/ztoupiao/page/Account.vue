@@ -7,9 +7,17 @@
        <div class="swiper-slide" v-for="photo in postersData">
          <img  :src="photo.originalUrl"/>
        </div>
+       <!-- <div class="swiper-slide">
+         <img  src="https://otest.oss-cn-beijing.aliyuncs.com/zgame/kMu8fjHTKz%2BxgAZzcWxjTgU%2BcIDCp9v4"/>
+       </div>
+       <div class="swiper-slide" >
+         <img  src="https://otest.oss-cn-beijing.aliyuncs.com/zgame/CBWTV%2BEuNHmlzUHsQxpeDYuGQn%2BXggXb"/>
+       </div> -->
      </div>
      <div class="swiper-pagination"></div>
    </div>
+
+
 
    <div class="works_list">
      <div class="weui-navbar works">
@@ -117,7 +125,8 @@ export default {
     getPoster(number, params).then((data) => {
       this.postersData = data
       console.log('this.postersData----:', this.postersData)
-      this.mySwiper = new Swiper('.swiper-container',
+      this.$nextTick(()=> {
+        this.mySwiper = new Swiper('.swiper-container',
         {
           direction: 'horizontal',
           loop : true,
@@ -128,6 +137,8 @@ export default {
             clickable: true
           }
         })
+  })
+
     })
 
   },

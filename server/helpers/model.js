@@ -5,6 +5,21 @@ export function getCompanies() {
   return getModel(basename)
 }
 
+export function getPostModel(){
+  let basename = 'post'
+  return getModel(basename)
+}
+
+export function getRelationshipModel(){
+  let basename = 'relationship'
+  return getModel(basename)
+}
+
+export function getTermModel(){
+  let basename = 'term'
+  return getModel(basename)
+}
+
 export function getWxMpUsersModel(){
   let basename = 'wx_mp_users'
   return getModel(basename)
