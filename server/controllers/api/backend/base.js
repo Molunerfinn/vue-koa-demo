@@ -199,71 +199,7 @@ export default class base {
     ctx.body = gameRound
   }
 
-  static async addPost(ctx) {
-    let body = ctx.request.body;
-    console.log('body---:', body);
-    let name = body.name;
-    let desc = body.desc;
-    let title = body.title;
-    let content = body.content
-    let user_id = body.user_id
-    let termList = body.term
-
-    let post = {
-      creator: user_id,
-      name: name,
-      desc: desc,
-      title: title,
-      content: content
-    }
-
-    let PostModel = getPostModel()
-    post = await PostModel.create(post)
-    console.log('post----:', post);
-
-    let RelationshipModel = getRelationshipModel()
-
-    for(var i=0;i<termList.length;i++){
-      let relationship = {
-        type:'post',
-        post_id:post.id,
-        term_id:termList[i]
-      }
-      await RelationshipModel.create(relationship)
-    }
-
-
-    ctx.body = post
-  }
-
-  static async getTermInfo(ctx) {
-    console.log('=============getTermInfo===========');
-    let TermModel = getTermModel()
-
-    let terms = await TermModel.findAll({})
-
-    ctx.body = terms
-  }
-
-  static async addTerm(ctx) {
-    let body = ctx.request.body;
-    console.log('body---:', body);
-    let name = body.name;
-    let alias = body.alias;
-    let desc = body.desc;
-    let parent = body.parent
-
-    let term = {
-      name: name,
-      alias: alias,
-      desc: desc,
-      parent: parent,
-    }
-    let TermModel = getTermModel()
-    term = await TermModel.create(term)
-    console.log('term----:', term);
-    ctx.body = term
-  }
+  
 
   static async removeGameRound(ctx) {
     let body = ctx.request.body;
