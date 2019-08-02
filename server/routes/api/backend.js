@@ -12,6 +12,7 @@ const router = new Router()
 
 router.get('/users/show', Users.show)
 router.get('/game_rounds', GameRounds.index)
+router.get('/game_rounds/:id', GameRounds.show)
 
 router.post('/base/getGameRoundInfo', base.getGameRoundInfo)
 router.post('/base/addGameRound', base.addGameRound)

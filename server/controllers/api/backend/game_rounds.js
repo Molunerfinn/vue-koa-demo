@@ -6,6 +6,7 @@ const {
 } = require('../../../helpers/pagination')
 
 
+
 export default class GameRounds {
 
 
@@ -101,6 +102,16 @@ export default class GameRounds {
     let GameRoundModel = getGameRoundModelByCode(code)
     gameRound = await GameRoundModel.create(gameRound)
     console.log('gameRound----:', gameRound);
+    ctx.body = gameRound
+  }
+
+  static async show(ctx) {
+    let gid = ctx.params.id;
+    console.log('body---:', ctx.params);
+
+    // let GameRoundModel = getGameRoundModelByCode(code)
+    let gameRound = await ZTouPiaoGameRound.findByPk(gid)
+
     ctx.body = gameRound
   }
 
