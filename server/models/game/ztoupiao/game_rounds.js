@@ -1,11 +1,12 @@
 var moment = require('moment')
+const PromiseFromHash = require('../../../lib/promise_from_hash');
 
 module.exports = (sequelize, DataTypes) => {
   const model = sequelize.define('ZTouPiaoGameRound', {
     game_id: DataTypes.BIGINT(11),
     user_id: DataTypes.BIGINT(11),
     name: {
-      type:DataTypes.STRING,
+      type: DataTypes.STRING,
       allowNull: false,
       validate: {
         IsNull: function(value) {
@@ -22,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     creator_id: DataTypes.BIGINT(11),
     start_at: {
-      type:DataTypes.DATE,
+      type: DataTypes.DATE,
       allowNull: false,
       validate: {
         IsNull: function(value) {
@@ -34,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     end_at: {
-      type:DataTypes.DATE,
+      type: DataTypes.DATE,
       allowNull: false,
       validate: {
         IsNull: function(value) {
@@ -45,10 +46,10 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
-    desc: DataTypes.TEXT,         //游戏描述
+    desc: DataTypes.TEXT, //游戏描述
     award_desc: DataTypes.TEXT,
-    host: DataTypes.STRING(128),  //游戏主办方
-    duration: {                   //游戏时间，多少秒
+    host: DataTypes.STRING(128), //游戏主办方
+    duration: { //游戏时间，多少秒
       type: DataTypes.BIGINT(11),
       defaultValue: '0',
       allowNull: false,
@@ -61,7 +62,7 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
-    code: {                       //缺省值为空，必填
+    code: { //缺省值为空，必填
       type: DataTypes.STRING(24),
       allowNull: false,
       defaultValue: '',
@@ -96,21 +97,55 @@ module.exports = (sequelize, DataTypes) => {
   })
 
   addHooks(model)
-  bindMethods(model)
-
+  bindClassMethods(model)
+  bindMemberMethods(model)
   return model
 }
 
 function addHooks(model) {
   model.addHook('beforeCreate', 'set_defults', (game, options) => {
     game.code = 'ztoupiao'
-
   })
 }
 
-function bindMethods(model) {
-  model.prototype.getInfo = getInfo
+const permittedAttributes = ['number', 'state', 'name', 'desc', 'award_desc', 'start_at', 'end_at', 'code', 'duration', 'host']
 
+function bindClassMethods(model) {
+  model.getAllInfoByNumber = async function(number) {
+    let gameRound = model.findOne({
+      attributes: permittedAttributes,
+      where: {
+        number
+      }
+    })
+    let playerCount = model.count({
+      where: {
+        number
+      },
+      include: 'GamePlayers'
+    })
+    let resultCount = model.count({
+      where: {
+        number
+      },
+      include: 'GameResults'
+    })
+
+    let results = await Promise.all([gameRound,playerCount, resultCount])
+
+    let info = results[0]
+    info.playPath = info.getPlayPath()
+    info.playerCount = results[1]
+    info.resultCount = results[2]
+    return info
+  }
+
+
+}
+
+
+function bindMemberMethods(model) {
+  model.prototype.getInfo = getInfo
 }
 
 /**
@@ -133,9 +168,9 @@ function getInfo() {
     start_at: this.start_at,
     end_at: this.end_at,
     host: this.host,
-    playPath,
     code: this.code,
-    duration: this.duration
+    duration: this.duration,
+    playPath
   }
 
 }

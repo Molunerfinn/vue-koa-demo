@@ -55,6 +55,7 @@ export async function getWxJsConfig( url, gameRound ){
   }
 
   wxConfig.shareUrl = getWxShareUrl( gameRound )
+  console.log( "getWxJsConfig = ", wxConfig)
 
   return wxConfig
 }
@@ -106,7 +107,6 @@ console.log( " RUNLIN_GET_WX_PARAM_URL+params ", RUNLIN_GET_WX_PARAM_URL+params)
   } catch (err) {
     console.error("got error-", err);
   }
-
   return wxConfig
 }
 

@@ -33,7 +33,7 @@
                   <td align="center">累计投票</td>
                 </tr>
                 <tr>
-                  <td align="center">{{gameResults.length}}</td>
+                  <td align="center">{{gameRound.resultCount}}</td>
                 </tr>
               </table>
             </td>

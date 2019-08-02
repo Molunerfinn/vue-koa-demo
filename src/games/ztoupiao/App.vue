@@ -5,30 +5,26 @@
         <router-view class="view"></router-view>
       </div>
       <div class="weui-tabbar footer">
+        <router-link to="/review" class="weui-tabbar__item">
+          <span>
+            <img src="~@/assets/game/ztoupiao/image/icons/review.jpg" alt="" class="weui-tabbar__icon">
+          </span>
+          <p class="weui-tabbar__label">介绍</p>
+        </router-link>
         <router-link to="/" class="weui-tabbar__item">
           <span>
             <img src="~@/assets/game/ztoupiao/image/icons/home.jpg" alt="" class="weui-tabbar__icon">
           </span>
-          <p class="weui-tabbar__label">首页</p>
-        </router-link>
-        <router-link to="/works" class="weui-tabbar__item">
-          <span>
-            <img src="~@/assets/game/ztoupiao/image/icons/work.jpg" alt="" class="weui-tabbar__icon">
-          </span>
           <p class="weui-tabbar__label">作品</p>
         </router-link>
+
         <router-link to="/apply" class="weui-tabbar__item">
           <span>
             <img src="~@/assets/game/ztoupiao/image/icons/upload.jpg" alt="" class="weui-tabbar__icon">
           </span>
           <p class="weui-tabbar__label">上传</p>
         </router-link>
-        <router-link to="/review" class="weui-tabbar__item">
-          <span>
-            <img src="~@/assets/game/ztoupiao/image/icons/review.jpg" alt="" class="weui-tabbar__icon">
-          </span>
-          <p class="weui-tabbar__label">追溯</p>
-        </router-link>
+
         <router-link to="/myaccount" class="weui-tabbar__item">
           <span>
             <img src="~@/assets/game/ztoupiao/image/icons/account.jpg" alt="" class="weui-tabbar__icon">
@@ -70,7 +66,6 @@
         console.log('getGameResult data-----:', data)
         //this.gameRound = data.gameRound
         this.setGameRound( data.gameRound )
-        this.setGameResults( data.gameResult )
         this.setGameAlbums( data.gameAlbums )
         console.log( "this.gameRound=", this.gameRound)
 

@@ -2,7 +2,6 @@ import VueRouter from 'vue-router'
 import Account from './page/Account.vue'
 import Works from './page/Works.vue'
 import CreateAlbum from './page/CreateAlbum.vue'
-import Index from './page/Index.vue'
 import Review from './page/Review.vue'
 import MyAccount from './page/Account.vue'
 import PhotosList from './page/works/PhotosListBox.vue'
@@ -13,7 +12,7 @@ import PhotosList from './page/works/PhotosListBox.vue'
 // `Vue.extend()`, or just a component options object.
 // We'll talk about nested routes later.
 const routes = [
-  { path: '/', component: Index },
+  { path: '/', component: Works },
   { path: '/account', component: Account },
   { path: '/works', component: Works },
   { path: '/apply', component: CreateAlbum },

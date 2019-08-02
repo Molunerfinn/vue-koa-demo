@@ -16,6 +16,7 @@ const {
 
 const logger = require('../../../helpers/logger')
 const md5 = require('md5');
+const PromiseFromHash = require('../../../lib/promise_from_hash');
 
 function getClientIP(req) {
   return req.headers['x-forwarded-for'] || // 判断是否有反向代理 IP
@@ -35,35 +36,22 @@ export default class GamesController {
       console.log('=================getinfo================');
       let number = ctx.params.number
       let parsed = ctx.request.body.parsed || {}
-      console.log('parsed---:', parsed);
+      let preview = parsed.preview
       let openid = parsed.openid
       let code = ctx.request.body.code
+      let url = ctx.header.referer
 
       let GameRound = getGameRoundModelByCode(code)
       let GamePlayer = getGamePlayerModelByCode(code)
-      let GameResult = getGameResultModelByCode(code)
       let GameAlbum = getGameAlbumModelByCode(code)
-      let GamePhoto = getGamePhotoModelByCode(code)
       // 取得游戏信息
       let gameRound = await GameRound.findOne({
         where: {
           number
         }
       })
-      let allPlayer = await GamePlayer.findAndCountAll({
-        where: {
-          game_round_id: gameRound.id
-        }
-      })
 
-      let gameResult = await GameResult.findAll({
-        where: {
-          game_round_id: gameRound.id
-        }
-      })
-      console.log('gameResult----:', gameResult);
-
-      let gameAlbums = await GameAlbum.findAll({
+      let gameAlbums = GameAlbum.findAll({
         where: {
           game_round_id: gameRound.id,
         },
@@ -73,26 +61,45 @@ export default class GamesController {
         }],
         limit: 2
       })
+      let gamePlayer =  GamePlayer.findOne({
+        where: {
+          openid
+        }
+      })
+      let playerCount = GameRound.count({
+        where: {
+          number
+        },
+        include: 'GamePlayers'
+      })
+      let resultCount = GameRound.count({
+        where: {
+          number
+        },
+        include: 'GameResults'
+      })
 
-      console.log('gameAlbums----:', gameAlbums);
+      const results = await PromiseFromHash({
+        gameAlbums,
+        gamePlayer,
+        playerCount,
+        resultCount,
+        slides: gameRound.getSlides(),
+        wxJsConfig: getWxJsConfig(url, gameRound)
+      })
 
-      // 每个游戏 GameRound
-      let url = ctx.header.referer
-      console.log('url===================:', url);
-      let gameInfo = await gameRound.getInfo()
-      gameInfo.playerCount = allPlayer.count
-      let wxConfig = await getWxJsConfig(url, gameRound)
-      var allInfo = {
-        gameAlbums: gameAlbums,
-        gameResult: gameResult,
-        gameRound: gameInfo,
-        wxConfig: wxConfig
+      if( preview == true){
+        let avatar = 'http://wx.qlogo.cn/mmopen/VX7U0xDSUxiaYgiasax2BWhlFuXmDaGvibY27Zknyy2WWrgNQwHvTfrKicupics0tdlFqBWGicy3heHOyRKPrBvEibFZtHCicf8zyKkr/0'
+        gamePlayer = { nickname: 'previewer', avatar: avatar }
       }
-      ctx.body = allInfo
+
+      results.gameRound = gameRound.getInfo()
+
+      ctx.body = results
 
     } catch (error) {
       logger.error("getGameInfo error:", error)
-      ctx.throw(messageContent.ResponeStatus.CommonError, `show round ${ctx.params.id} fail: ` + error, {
+      ctx.throw(messageContent.ResponeStatus.CommonError, `show round ${ctx.params.number} fail: ` + error, {
         expose: true
       })
     }
