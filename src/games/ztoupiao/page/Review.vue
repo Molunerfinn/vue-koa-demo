@@ -14,7 +14,6 @@ import {
 import moment from 'moment';
 
 import HdGame from '@/lib/hdgame'
-import GameRes from '../game/GameRes'
 
 import { getRoundState } from '@/api/games/ztoupiao'
 import queryString from 'query-string'
@@ -25,24 +24,12 @@ export default {
       type: Object
     },
     ruleIconUrl: String, // 锦囊按钮图片
-    command:{
-      default: false // 可选值: showResult, showGift
-    },
     gamePlayer:{
       type: Object
     }
   },
   data() {
     return {
-      skinAssets: {
-        reviewDesc1ImgPath: GameRes.skinAssets.reviewDesc1ImgPath,
-        reviewDesc2ImgPath: GameRes.skinAssets.reviewDesc2ImgPath,
-        reviewDesc3ImgPath: GameRes.skinAssets.reviewDesc3ImgPath,
-        reviewDesc4ImgPath: GameRes.skinAssets.reviewDesc4ImgPath,
-      },
-      ui:{
-        reviewBoxVisible:false
-      },
       style:{
         statusUserImg: {}
       },
@@ -169,16 +156,6 @@ export default {
     }
   },
   watch: {
-    command: function (val, oldVal) {
-      //外部触发游戏开始
-      console.log('rulebox','watch-command new: %s, old: %s', val, oldVal)
-      if( val == true){
-        this.ui.reviewBoxVisible = true
-      }
-      if( val == false){
-        this.ui.reviewBoxVisible = false
-      }
-    }
   }
 }
 </script>

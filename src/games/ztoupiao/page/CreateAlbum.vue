@@ -131,9 +131,6 @@
   import { BlobUpload } from '@/lib/direct_upload/blob_upload'
   export default {
     props: {
-      command: {
-        default: 'none' // 可选值: show, hide
-      }
     },
     mixins: [storeMixin],
     data() {
@@ -353,24 +350,6 @@
       }
     },
     watch: {
-      command: function(val, oldVal) {
-        //外部触发游戏开始
-        console.log('watch-command new: %s, old: %s', val, oldVal)
-        if (val == true) {
-          console.log('show')
-          ;(this.albumData = {
-            name: '',
-            desc: '',
-            Photos: []
-          }),
-            (this.gamePlayerData = {
-              name: '',
-              cellphone: ''
-            })
-        } else {
-          console.log('hide')
-        }
-      }
     }
   }
 

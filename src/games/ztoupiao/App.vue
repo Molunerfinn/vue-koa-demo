@@ -46,11 +46,6 @@
   // import { gameSkinName } from '@/config/env'
   import HdGame from '@/lib/hdgame'
   // import weui from 'weui.js'
-  import IndexBox from './IndexBox.vue'
-  import WorksBox from './WorksBox.vue'
-  import PhotographsBox from './PhotographsBox.vue'
-  import ReviewBox from './ReviewBox.vue'
-  import MyAccountBox from './MyAccountBox.vue'
   import queryString from 'query-string'
   import { getGameResult } from '@/api/games/ztoupiao'
   import storeMixin from './store_mixin'
@@ -58,23 +53,9 @@
   export default {
     name: 'app',
     mixins: [storeMixin],
-    components: {
-      IndexBox,
-      WorksBox,
-      PhotographsBox,
-      ReviewBox,
-      MyAccountBox
-    },
     data() {
       return {
-        gameResult: [],
-        ui: {
-          indexBoxVisible: true, // 初始页面是否可见
-          worksBoxVisible: false,
-          photographsBoxVisible: false,
-          reviewBoxVisible: false,
-          my_accountBoxVisible: false
-        }
+        gameResult: []
       }
     },
     created() {
@@ -111,54 +92,6 @@
     },
 
     methods: {
-      handleTouchIndex(event) {
-        console.log('handleTouchIndex')
-        this.ui.indexBoxVisible = true
-        this.ui.worksBoxVisible = false
-        this.ui.photographsBoxVisible = false
-        this.ui.reviewBoxVisible = false
-        this.ui.my_accountBoxVisible = false
-      },
-      handleTouchWorks(event) {
-        console.log('handleTouchWorks')
-        this.ui.indexBoxVisible = false
-        this.ui.worksBoxVisible = true
-        this.ui.photographsBoxVisible = false
-        this.ui.reviewBoxVisible = false
-        this.ui.my_accountBoxVisible = false
-      },
-      handleTouchPhotographs(event) {
-        console.log('handleTouchPhotographs')
-        this.ui.indexBoxVisible = false
-        this.ui.worksBoxVisible = false
-        this.ui.photographsBoxVisible = true
-        this.ui.reviewBoxVisible = false
-        this.ui.my_accountBoxVisible = false
-      },
-      handleTouchReview(event) {
-        console.log('handleTouchReview')
-        this.ui.indexBoxVisible = false
-        this.ui.worksBoxVisible = false
-        this.ui.photographsBoxVisible = false
-        this.ui.reviewBoxVisible = true
-        this.ui.my_accountBoxVisible = false
-      },
-      handleTouchMyAccount(event) {
-        console.log('handleTouchMyAccount')
-        this.ui.indexBoxVisible = false
-        this.ui.worksBoxVisible = false
-        this.ui.photographsBoxVisible = false
-        this.ui.reviewBoxVisible = false
-        this.ui.my_accountBoxVisible = true
-      },
-      gotoWorksBox: function() {
-        console.log('gotoWorksBox')
-        this.ui.indexBoxVisible = false
-        this.ui.worksBoxVisible = true
-        this.ui.photographsBoxVisible = false
-        this.ui.reviewBoxVisible = false
-        this.ui.my_accountBoxVisible = false
-      }
     }
   }
 

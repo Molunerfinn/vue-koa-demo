@@ -7,12 +7,6 @@
        <div class="swiper-slide" v-for="photo in postersData">
          <img  :src="photo.originalUrl"/>
        </div>
-       <!-- <div class="swiper-slide">
-         <img  src="https://otest.oss-cn-beijing.aliyuncs.com/zgame/kMu8fjHTKz%2BxgAZzcWxjTgU%2BcIDCp9v4"/>
-       </div>
-       <div class="swiper-slide" >
-         <img  src="https://otest.oss-cn-beijing.aliyuncs.com/zgame/CBWTV%2BEuNHmlzUHsQxpeDYuGQn%2BXggXb"/>
-       </div> -->
      </div>
      <div class="swiper-pagination"></div>
    </div>
@@ -67,9 +61,6 @@ import Swiper from 'swiper'
 export default {
   props: {
     ruleIconUrl: String, // 锦囊按钮图片
-    command:{
-      default: false // 可选值: showResult, showGift
-    },
     gameResult:{
       type: Array
     }
@@ -272,30 +263,6 @@ export default {
     }
   },
   watch: {
-    command: function (val, oldVal) {
-      //外部触发游戏开始
-      console.log('rulebox','watch-command new: %s, old: %s', val, oldVal)
-      if( val == true){
-        this.ui.myAccountVisible = true
-        const parsed = queryString.parse(location.search)
-        var number = parsed.number
-
-        var params = {
-          parsed: parsed,
-          code:'ztoupiao'
-        }
-
-        getMyWorkInfo(number, params).then(data => {
-          console.log('getMyWorkInfo---:',data);
-          this.myWorks = data.gameAlbums;
-          this.gamePlayer = data.gamePlayer
-          console.log('gamePlayer in account',this.gamePlayer);
-        });
-      }
-      if( val == false){
-        this.ui.myAccountVisible = false
-      }
-    }
   }
 }
 </script>

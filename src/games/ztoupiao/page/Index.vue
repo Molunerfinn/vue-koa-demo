@@ -1,5 +1,5 @@
 <template>
-<div class="swiper-container swiper-container-initialized swiper-container-horizontal" v-show="ui.indexVisible">
+<div class="swiper-container swiper-container-initialized swiper-container-horizontal">
   <div class="swiper-wrapper">
     <div class="swiper-slide">
       <img  @click="gotoReview"
@@ -22,22 +22,6 @@ import GameRes from '../game/GameRes'
 import Swiper from 'swiper'
 export default {
   props: {
-    // params: { // 游戏成绩相关数据
-    //   type: Object,
-    //   default: {}
-    // },
-    // againCallback: {
-    //   type: Function
-    // },
-    // gamePlayerAvatar:{
-    //   default: ''
-    // },
-    // isVisible: {
-    //   default: false
-    // },
-    command:{
-      default: true // 可选值: showResult, showGift
-    }
   },
   data() {
     return {
@@ -46,9 +30,6 @@ export default {
         photographsImgPath: GameRes.skinAssets.photographsImgPath
       },
       menuLen: 2,
-      ui:{
-        indexVisible : true
-      },
       style:{
         statusUserImg: {}
       },
@@ -84,17 +65,6 @@ export default {
 
   },
   watch: {
-    command: function (val, oldVal) {
-      var that = this
-      //外部触发游戏开始
-      console.log('watch-command new: %s, old: %s', val, oldVal)
-      if( val == true){
-        that.ui.indexVisible = true
-      }
-      if( val == false){
-        that.ui.indexVisible = false
-      }
-    }
   }
 }
 </script>
