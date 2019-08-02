@@ -17,6 +17,21 @@ export default class term {
     ctx.body = terms
   }
 
+  static async getTermDetail(ctx) {
+    console.log('=============getTermInfo===========');
+    let body = ctx.request.body;
+    let id = body.id
+    let TermModel = getTermModel()
+
+    let terms = await TermModel.findOne({
+      where:{
+        id:id
+      }
+    })
+
+    ctx.body = terms
+  }
+
   static async addTerm(ctx) {
     let body = ctx.request.body;
     console.log('body---:', body);

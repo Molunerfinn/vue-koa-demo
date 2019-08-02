@@ -23,10 +23,15 @@ router.post('/base/modifyDesc', base.modifyDesc)
 router.post('/base/addPost', post.addPost)
 router.post('/base/getPostInfo', post.getPostInfo)
 router.post('/base/removePost', post.removePost)
+router.post('/base/getPostDetail', post.getPostDetail)
+router.post('/base/modifyPost', post.modifyPost)
+
 
 router.post('/base/addTerm', term.addTerm)
 router.post('/base/getTermInfo', term.getTermInfo)
 router.post('/base/removeTerm', term.removeTerm)
+router.post('/base/getTermDetail', term.getTermDetail)
+router.post('/base/modifyTerm', term.modifyTerm)
 
 // router.post('/weixin_open', weixin.createRound)
 // router.post('/gameRound', gameRound.createRound)

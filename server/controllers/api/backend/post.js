@@ -18,6 +18,36 @@ export default class post {
     ctx.body = post
   }
 
+  static async getPostDetail(ctx) {
+    console.log('=============getPostDetail===========');
+    let body = ctx.request.body;
+    let id = body.id
+    let PostModel = getPostModel()
+
+    let post = await PostModel.findOne({
+      where:{
+        id:id
+      }
+    })
+
+    let RelationshipModel = getRelationshipModel()
+    let termids = await RelationshipModel.findAll({
+      attributes: ['term_id'],
+      where:{
+        post_id:post.id
+      }
+    })
+    let term=[]
+    for(var i=0;i<termids.length;i++){
+      term.push(termids[i].term_id)
+    }
+
+    ctx.body = {
+      post:post,
+      term:term
+    }
+  }
+
   static async addPost(ctx) {
     let body = ctx.request.body;
     console.log('body---:', body);
@@ -89,9 +119,9 @@ export default class post {
         }
       })
 
-      post = await PostModel.update({
-        name: gamename,
-        desc: gamedesc,
+      post = await post.update({
+        name: name,
+        desc: desc,
         title: title,
         content:content
       })
