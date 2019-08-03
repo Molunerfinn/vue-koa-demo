@@ -7,12 +7,16 @@ import GameRounds from '../../controllers/api/backend/game_rounds.js'
 import post from '../../controllers/api/backend/post.js'
 import term from '../../controllers/api/backend/term.js'
 //import wxOpen from '../../controllers/wxopen.js'
+
+import Photos from '../../controllers/photos.js'
+
 import Router from 'koa-router'
 const router = new Router()
 
 router.get('/users/show', Users.show)
 router.get('/game_rounds', GameRounds.index)
 router.get('/game_rounds/:id', GameRounds.show)
+router.post('/photos/:code/create', Photos.createBeforeDirectUpload)
 
 router.post('/base/getGameRoundInfo', base.getGameRoundInfo)
 router.post('/base/addGameRound', base.addGameRound)

@@ -61,32 +61,31 @@ app.use(session(app)); // note koa-session@3.4.0 is v1 middleware which generate
 //  console.log('server error', err)
 // })
 
-router.use('/auth', auth.routes()) // 挂载到koa-router上，同时会让所有的auth的请求路径前面加上'/auth'的请求路径。
-
+// 微信公众号 网页授权
 import wxoauth from './routes/wxmp_oauth.js'
 router.use('/authwx', wxoauth.routes())
-
+// 微信开放平台 第三方网页授权
 import wxopen_oauth from './routes/wxopen_oauth.js'
 router.use('/wxopen_oauth', wxopen_oauth.routes())
 
 // 游戏管理api
-// 兼容 以前使用的API  /game_rounds/:id
+// 兼容 以前使用的API  /api/game_rounds/:id
 import gameRounds from './routes/api/game_rounds.js'
 router.use('/api/game_rounds', gameRounds.routes())
 
-// 支持路径 /api/dpgames/:code/
+// 大屏游戏管理api 支持路径 /api/dpgames/:code/
 import dpgameRoundByCode from './routes/api/dpgames.js'
 router.use('/api/dpgames', dpgameRoundByCode.routes())
 
 import gameRoundByCode from './routes/api/games.js'
-// 支持路径 /api/games/:code/
+// H5游戏管理api  支持路径 /api/games/:code/
 router.use('/api/games', gameRoundByCode.routes())
 
-// 微信api
+// 微信公众号自动回复 api
 import wechat from './routes/api/wechat.js'
 router.use('/api/wechat', wechat.routes())
 
-// 游戏过程api
+// H5游戏过程api
 import gameBaseByCode from './routes/gapi/base_by_code.js'
 router.use('/gapi/base', gameBaseByCode.routes())
 
@@ -94,27 +93,12 @@ router.use('/gapi/base', gameBaseByCode.routes())
 import dpgameBaseByCode from './routes/gapi/dpbase_by_code.js'
 router.use('/gapi/dpbase', dpgameBaseByCode.routes())
 
-//import roundByCode from './routes/gapi/game_round_by_code.js'
-//router.use('/gapi/game', roundByCode.routes())
-
+// 取得微信jssdk Config API
 import weixin from './routes/gapi/weixin.js'
 router.use('/gapi/weixin', weixin.routes())
 
-
-import test from './routes/test.js'
-router.use('/api/test', test.routes())
-
-//import gameBargain from './routes/gapi/game/bargain.js'
-//router.use('/gapi/bargain', gameBargain.routes())
-
-//import gameIdo from './routes/gapi/game/ido.js'
-//router.use('/gapi/ido', gameIdo.routes())
-
-//import gamePintu from './routes/gapi/dpgame/pintu.js'
-//router.use('/gapi/dppintu', gamePintu.routes())
-
-//import gameZhaobaba from './routes/gapi/game/zhaobaba.js'
-//router.use('/gapi/zhaobaba', gameZhaobaba.routes())
+// import test from './routes/test.js'
+// router.use('/api/test', test.routes())
 
 import games from './routes/gapi/games.js'
 //'/gapi/games/:code/:number/'
@@ -124,22 +108,36 @@ import dpgames from './routes/gapi/dpgames.js'
 //'/gapi/games/:code/:number/'
 router.use('/gapi/dpgames', dpgames.routes())
 
-import ztoupiao from './routes/gapi/game/ztoupiao.js'
-router.use('/gapi/ztoupiao', ztoupiao.routes())
-
 import album from './routes/gapi/album.js'
 router.use('/gapi/album', album.routes())
 
+import photos from './routes/gapi/photos'
+// 在路径中使用code，以便其他游戏使用photo
+router.use('/gapi/photos/:code', photos.routes())
 
+//===============================================================
+// ztoupiao
+//===============================================================
+import ztoupiao from './routes/gapi/game/ztoupiao.js'
+router.use('/gapi/ztoupiao', ztoupiao.routes())
+
+
+
+//===============================================================
+// backend 使用api
+//===============================================================
 import sessions from './routes/api/sessions.js'
 // 所有走/api/backend 开头的请求都需要先请求 sessions 获取token。
 router.use('/api/sessions',  sessions.routes())
 
 import backend from './routes/api/backend.js'
 // 所有走/api/backend 开头的请求都需要经过jwt验证。
-router.use('/api/backend', jwt({secret: secret.jwtSecret}), backend.routes())
-//router.use('/api/backend', backend.routes())
+// 支持 query.token 上传文件请求时需要。
+router.use('/api/backend', jwt({secret: secret.jwtSecret, getToken:(ctx)=>ctx.query.token}), backend.routes())
 
+//===============================================================
+// FIXME
+//===============================================================
 import game_round from './routes/game_round.js'
 router.use('/ztoupiao', game_round.routes())
 
