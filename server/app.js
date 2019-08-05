@@ -130,6 +130,9 @@ router.use('/gapi/ztoupiao', ztoupiao.routes())
 import album from './routes/gapi/album.js'
 router.use('/gapi/album', album.routes())
 
+import handleUpload from './routes/handle_upload.js'
+router.use('/handleupload', handleUpload.routes())
+
 
 import sessions from './routes/api/sessions.js'
 // 所有走/api/backend 开头的请求都需要先请求 sessions 获取token。
