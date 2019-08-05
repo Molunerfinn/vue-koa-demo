@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     album_id: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
-      defaultValue: '0'
+      defaultValue: 0
     },
     okey: {
       type: DataTypes.STRING(64),
@@ -22,6 +22,12 @@ module.exports = (sequelize, DataTypes) => {
     },
     viewable_type:{
       type: DataTypes.STRING(64),
+      validate: {
+        isIn: {
+           args: [['photo', 'slide', 'poster']],
+           msg: "Must be photo, slide, poster."
+         }
+      }
     },
     checksum: {
       type: DataTypes.STRING(64),
@@ -41,7 +47,7 @@ module.exports = (sequelize, DataTypes) => {
     file_size: {
       type: DataTypes.BIGINT(11),
       allowNull: false,
-      defaultValue: '0'
+      defaultValue: 0
     },
   }, {
     createdAt: 'created_at',
