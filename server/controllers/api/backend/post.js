@@ -38,10 +38,34 @@ export default class post {
         post_id:post.id
       }
     })
-    let term=[]
+
+    let terms = new Array()
     for(var i=0;i<termids.length;i++){
-      term.push(termids[i].term_id)
+      let TermModel = getTermModel()
+      let term = await TermModel.findOne({
+        where:{
+          id:termids[i].term_id
+        }
+      })
+      terms.push(term)
     }
+console.log('terms,',terms);
+
+
+    let termList = new Array()
+    for(var i=0;i<terms.length;i++){
+      let term ={
+        key:terms[i].id,
+        value:terms[i].id,
+        label:terms[i].name
+      }
+      termList.push(term)
+    }
+    console.log('22222222termList,',termList);
+
+    // :key="term.id"
+    // :label="term.name"
+    // :value="term.id"
 
     let Photo = getGamePhotoModelByCode('ztoupiao')
 
@@ -54,7 +78,7 @@ export default class post {
 
     ctx.body = {
       post:post,
-      term:term,
+      term:termList,
       cover:cover
     }
   }
