@@ -3,7 +3,8 @@ const {
   getWxMpUsersModel,
   getPostModel,
   getTermModel,
-  getRelationshipModel
+  getRelationshipModel,
+  getGamePhotoModelByCode
 } = require('../../../helpers/model')
 
 
@@ -42,9 +43,19 @@ export default class post {
       term.push(termids[i].term_id)
     }
 
+    let Photo = getGamePhotoModelByCode('ztoupiao')
+
+    let cover = await Photo.findOne({
+      where:{
+        viewable_id:id,
+        viewable_type:'cover'
+      }
+    })
+
     ctx.body = {
       post:post,
-      term:term
+      term:term,
+      cover:cover
     }
   }
 
@@ -94,6 +105,21 @@ export default class post {
     let res = await PostModel.destroy({
       where: {
         id: id
+      }
+    })
+    ctx.body = res
+  }
+
+  static async removeCover(ctx) {
+    let body = ctx.request.body;
+    console.log('body---:', body);
+    let id = body.id
+
+    let Photo = getGamePhotoModelByCode('ztoupiao')
+    let res = await Photo.destroy({
+      where: {
+        viewable_id: id,
+        viewable_type: 'cover'
       }
     })
     ctx.body = res

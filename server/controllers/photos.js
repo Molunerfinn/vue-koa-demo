@@ -32,9 +32,6 @@ export default class PhotosController {
     let type = ctx.request.body.type
     let  id = ctx.request.body.id
 
-
-
-
     let Photo = getGamePhotoModelByCode(code)
 
     let photoOptions = {
