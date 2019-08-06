@@ -110,8 +110,8 @@ export default class GameRounds {
     console.log('body---:', ctx.params);
 
     // let GameRoundModel = getGameRoundModelByCode(code)
-    let gameRound = await ZTouPiaoGameRound.findByPk(gid)
-
+    let gameRound = await ZTouPiaoGameRound.findByPk(gid, { include: [{association: 'Slides'}]})
+  
     ctx.body = gameRound
   }
 
