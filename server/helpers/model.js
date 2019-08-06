@@ -10,13 +10,19 @@ export function getPostModel(){
   return getModel(basename)
 }
 
-export function getRelationshipModel(){
-  let basename = 'relationship'
+export function getTermRelationshipModel(){
+  let basename = 'TermRelationship'
   return getModel(basename)
 }
 
+export function getPhotoRelationshipModel(){
+  let basename = 'photo_relationship'
+  return getModel(basename)
+}
+
+
 export function getTermModel(){
-  let basename = 'term'
+  let basename = 'Terms'
   return getModel(basename)
 }
 

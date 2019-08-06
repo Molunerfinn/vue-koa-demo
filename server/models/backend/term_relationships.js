@@ -1,7 +1,7 @@
 var moment = require('moment')
 
 module.exports = (sequelize, DataTypes) => {
-  const model = sequelize.define('Relationship', {
+  const model = sequelize.define('TermRelationship', {
     type: {
       type: DataTypes.STRING(255),
       defaultValue: ''
@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     createdAt: 'created_at',
     updatedAt: 'updated_at',
-    tableName: 'relationships'
+    tableName: 'term_relationships'
   })
   return model
 }

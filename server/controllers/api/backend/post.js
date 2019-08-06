@@ -3,7 +3,7 @@ const {
   getWxMpUsersModel,
   getPostModel,
   getTermModel,
-  getRelationshipModel,
+  getTermRelationshipModel,
   getGamePhotoModelByCode
 } = require('../../../helpers/model')
 
@@ -31,7 +31,7 @@ export default class post {
       }
     })
 
-    let RelationshipModel = getRelationshipModel()
+    let RelationshipModel = getTermRelationshipModel()
     let termids = await RelationshipModel.findAll({
       attributes: ['term_id'],
       where:{
@@ -105,7 +105,7 @@ console.log('terms,',terms);
     post = await PostModel.create(post)
     console.log('post----:', post);
 
-    let RelationshipModel = getRelationshipModel()
+    let RelationshipModel = getTermRelationshipModel()
 
     for (var i = 0; i < termList.length; i++) {
       let relationship = {
@@ -176,7 +176,7 @@ console.log('terms,',terms);
         content:content
       })
 
-      let RelationshipModel = getRelationshipModel()
+      let RelationshipModel = getTermRelationshipModel()
 
       let res = await RelationshipModel.destroy({
         where: {

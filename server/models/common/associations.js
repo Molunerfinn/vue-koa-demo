@@ -12,6 +12,9 @@ export function buildGameAssociations(db) {
       let albumModel = models.find((m) => m.name == (code + "Album"))
       let photoModel = models.find((m) => m.name == (code + "Photo"))
 
+      let PhotoRelationship = db.PhotoRelationship
+      let postModel = db.Post
+
       if (albumModel && playerModel && photoModel) {
         console.log("buildGameAssociations " + code + "Album," + code + "GamePlayers")
         // album and player
@@ -33,15 +36,32 @@ export function buildGameAssociations(db) {
           foreignKey: 'album_id',
           as: 'Photos'
         })
-
         // round and slide
-        model.hasMany(photoModel, {
-          foreignKey: 'viewable_id',
-          scope: {
-            viewable_type: 'slide'
+        model.belongsToMany(photoModel, {
+          through:{
+            model: PhotoRelationship,
+            scope: {
+                viewable_type: 'slide'
+            }
           },
+          foreignKey: 'viewable_id',
+          otherKey: 'photo_id',
           as: 'Slides'
         })
+
+        postModel.belongsToMany(photoModel, {
+          through:{
+            model: PhotoRelationship,
+            scope: {
+                viewable_type: 'cover'
+            }
+          },
+          foreignKey: 'viewable_id',
+          otherKey: 'photo_id',
+          as: 'Covers'
+        })
+
+
       }
 
 

@@ -4,7 +4,8 @@ const {
   getGamePlayerModelByCode,
   getGameResultModelByCode,
   getGameAlbumModelByCode,
-  getGamePhotoModelByCode
+  getGamePhotoModelByCode,
+  getPostModel
 } = require('../helpers/model')
 
 const {
@@ -30,7 +31,8 @@ export default class PhotosController {
     let number = ctx.request.body.number
     let photoParam = ctx.request.body.photo
     let type = ctx.request.body.type
-    let  id = ctx.request.body.id
+    let id = ctx.request.body.id
+
 
     let Photo = getGamePhotoModelByCode(code)
 
@@ -38,7 +40,13 @@ export default class PhotosController {
       fields: ['album_id', 'file_name', 'file_size', 'content_type', 'checksum', 'okey', 'viewable_id', 'viewable_type']
     }
 
-    if(number){
+    // let photoRelationshipOptions = {
+    //   fields: ['photo_id', 'viewable_id', 'viewable_type']
+    // }
+
+    let photo = await Photo.create(photoParam, photoOptions)
+
+    if (number) {
       let Round = getGameRoundModelByCode(code)
       //try{
       let round = await Round.findOne({
@@ -47,13 +55,21 @@ export default class PhotosController {
           number
         }
       })
-      photoParam.viewable_id = round.id
-    }else if (id) {
-      photoParam.viewable_id = id
-    }
-    photoParam.viewable_type = type
+      let PhotoRelationship = await round.addSlide(photo)
+    } else if (id) {
+      let PostModel = getPostModel()
 
-    let photo = await Photo.create(photoParam, photoOptions)
+      let post = await PostModel.findOne({
+        //attributes: ['id', 'name', 'state', 'start_at', 'end_at'],
+        where: {
+          id: id
+        }
+      })
+      let PhotoRelationship = await post.addCover(photo)
+    }
+
+
+
     let url = urlForDirectUpload(photo.okey)
     let headers = headersForDirectUpload(photo.okey, photo.content_type, photo.checksum)
 
