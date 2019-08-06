@@ -3,7 +3,8 @@ const {
   getWxMpUsersModel,
   getPostModel,
   getTermModel,
-  getRelationshipModel
+  getRelationshipModel,
+  getGamePhotoModelByCode
 } = require('../../../helpers/model')
 
 
@@ -37,14 +38,48 @@ export default class post {
         post_id:post.id
       }
     })
-    let term=[]
+
+    let terms = new Array()
     for(var i=0;i<termids.length;i++){
-      term.push(termids[i].term_id)
+      let TermModel = getTermModel()
+      let term = await TermModel.findOne({
+        where:{
+          id:termids[i].term_id
+        }
+      })
+      terms.push(term)
     }
+console.log('terms,',terms);
+
+
+    let termList = new Array()
+    for(var i=0;i<terms.length;i++){
+      let term ={
+        key:terms[i].id,
+        value:terms[i].id,
+        label:terms[i].name
+      }
+      termList.push(term)
+    }
+    console.log('22222222termList,',termList);
+
+    // :key="term.id"
+    // :label="term.name"
+    // :value="term.id"
+
+    let Photo = getGamePhotoModelByCode('ztoupiao')
+
+    let cover = await Photo.findOne({
+      where:{
+        viewable_id:id,
+        viewable_type:'cover'
+      }
+    })
 
     ctx.body = {
       post:post,
-      term:term
+      term:termList,
+      cover:cover
     }
   }
 
@@ -94,6 +129,21 @@ export default class post {
     let res = await PostModel.destroy({
       where: {
         id: id
+      }
+    })
+    ctx.body = res
+  }
+
+  static async removeCover(ctx) {
+    let body = ctx.request.body;
+    console.log('body---:', body);
+    let id = body.id
+
+    let Photo = getGamePhotoModelByCode('ztoupiao')
+    let res = await Photo.destroy({
+      where: {
+        viewable_id: id,
+        viewable_type: 'cover'
       }
     })
     ctx.body = res

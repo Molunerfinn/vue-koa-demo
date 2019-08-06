@@ -122,6 +122,9 @@ import ztoupiao from './routes/gapi/game/ztoupiao.js'
 router.use('/gapi/ztoupiao', ztoupiao.routes())
 
 
+import handleUpload from './routes/handle_upload.js'
+router.use('/handleupload', handleUpload.routes())
+
 
 //===============================================================
 // backend 使用api

@@ -28,6 +28,7 @@ router.post('/base/modifyDesc', base.modifyDesc)
 router.post('/base/addPost', post.addPost)
 router.post('/base/getPostInfo', post.getPostInfo)
 router.post('/base/removePost', post.removePost)
+router.post('/base/removeCover', post.removeCover)
 router.post('/base/getPostDetail', post.getPostDetail)
 router.post('/base/modifyPost', post.modifyPost)
 

@@ -25,40 +25,46 @@ export default class PhotosController {
   static async createBeforeDirectUpload(ctx) {
     //try {
     console.log('==================createBeforeDirectUpload===============');
+    console.log('ctx.request.body--:', ctx.request.body);
     let code = ctx.params.code
     let number = ctx.request.body.number
     let photoParam = ctx.request.body.photo
+    let type = ctx.request.body.type
+    let  id = ctx.request.body.id
 
-    let Round = getGameRoundModelByCode(code)
-    //try{
+    let Photo = getGamePhotoModelByCode(code)
+
+    let photoOptions = {
+      fields: ['album_id', 'file_name', 'file_size', 'content_type', 'checksum', 'okey', 'viewable_id', 'viewable_type']
+    }
+
+    if(number){
+      let Round = getGameRoundModelByCode(code)
+      //try{
       let round = await Round.findOne({
         //attributes: ['id', 'name', 'state', 'start_at', 'end_at'],
         where: {
           number
         }
       })
-
-      let Photo = getGamePhotoModelByCode(code)
-
-      let photoOptions = {
-        fields: ['album_id', 'file_name', 'file_size', 'content_type', 'checksum', 'okey', 'viewable_id', 'viewable_type']
-      }
-
       photoParam.viewable_id = round.id
-      photoParam.viewable_type = 'slide'
+    }else if (id) {
+      photoParam.viewable_id = id
+    }
+    photoParam.viewable_type = type
 
-      let photo  = await Photo.create( photoParam, photoOptions )
-      let url = urlForDirectUpload(photo.okey)
-      let headers = headersForDirectUpload(photo.okey, photo.content_type, photo.checksum)
+    let photo = await Photo.create(photoParam, photoOptions)
+    let url = urlForDirectUpload(photo.okey)
+    let headers = headersForDirectUpload(photo.okey, photo.content_type, photo.checksum)
 
 
-      ctx.body = {
-        directUploadData:{
-          url,
-          headers
-        },
-        photo
-      }
+    ctx.body = {
+      directUploadData: {
+        url,
+        headers
+      },
+      photo
+    }
     // } catch (error) {
     //
     //     ctx.throw(messageContent.ResponeStatus.CommonError, `show round ${code}:${number} fail: ` + error, { expose: true })
@@ -67,7 +73,7 @@ export default class PhotosController {
 
   static async getPoster(ctx) {
     console.log('==================getPoster===============');
-    console.log('ctx.request.body====:',ctx.request.body);
+    console.log('ctx.request.body====:', ctx.request.body);
     let number = ctx.request.body.number
     let code = ctx.request.body.code
     let PhotoModel = getGamePhotoModelByCode(code)
@@ -121,7 +127,7 @@ export default class PhotosController {
     })
 
     let photoOptions = {
-      fields: ['album_id', 'file_name', 'file_size', 'content_type', 'checksum', 'okey','viewable_id','viewable_type']
+      fields: ['album_id', 'file_name', 'file_size', 'content_type', 'checksum', 'okey', 'viewable_id', 'viewable_type']
     }
 
     let promises = photoParams.map((param) => {

@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(64),
       validate: {
         isIn: {
-           args: [['photo', 'slide', 'poster']],
+           args: [['photo', 'slide', 'poster','cover']],
            msg: "Must be photo, slide, poster."
          }
       }
