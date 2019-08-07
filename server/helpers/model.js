@@ -16,7 +16,7 @@ export function getTermRelationshipModel(){
 }
 
 export function getPhotoRelationshipModel(){
-  let basename = 'photo_relationship'
+  let basename = 'PhotoRelationship'
   return getModel(basename)
 }
 

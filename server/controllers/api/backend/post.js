@@ -4,6 +4,7 @@ const {
   getPostModel,
   getTermModel,
   getTermRelationshipModel,
+  getPhotoRelationshipModel,
   getGamePhotoModelByCode
 } = require('../../../helpers/model')
 
@@ -57,14 +58,17 @@ export default class Posts {
     let post = await PostModel.findOne({
       where:{
         id:id
-      }
+      },
+      include: [{association: 'Covers'}]
     })
+    console.log('post-----:',post);
 
     let RelationshipModel = getTermRelationshipModel()
     let termids = await RelationshipModel.findAll({
       attributes: ['term_id'],
       where:{
-        post_id:post.id
+        viewable_type:'post',
+        viewable_id:post.id
       }
     })
 
@@ -78,8 +82,6 @@ export default class Posts {
       })
       terms.push(term)
     }
-console.log('terms,',terms);
-
 
     let termList = new Array()
     for(var i=0;i<terms.length;i++){
@@ -90,7 +92,6 @@ console.log('terms,',terms);
       }
       termList.push(term)
     }
-    console.log('22222222termList,',termList);
 
     // :key="term.id"
     // :label="term.name"
@@ -138,8 +139,8 @@ console.log('terms,',terms);
 
     for (var i = 0; i < termList.length; i++) {
       let relationship = {
-        type: 'post',
-        post_id: post.id,
+        viewable_type: 'post',
+        viewable_id: post.id,
         term_id: termList[i]
       }
       await RelationshipModel.create(relationship)
@@ -168,8 +169,9 @@ console.log('terms,',terms);
     console.log('body---:', body);
     let id = body.id
 
-    let Photo = getGamePhotoModelByCode('ztoupiao')
-    let res = await Photo.destroy({
+    let PhotoRelationshipModel=getPhotoRelationshipModel()
+
+    let res = await PhotoRelationshipModel.destroy({
       where: {
         viewable_id: id,
         viewable_type: 'cover'
@@ -209,7 +211,8 @@ console.log('terms,',terms);
 
       let res = await RelationshipModel.destroy({
         where: {
-          post_id: id
+          viewable_type:'post',
+          viewable_id: id
         }
       })
 
