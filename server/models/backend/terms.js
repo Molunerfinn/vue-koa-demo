@@ -15,12 +15,10 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: ''
     },
     parent: {
-      type: DataTypes.STRING(255),
-      defaultValue: ''
+      type: DataTypes.BIGINT(11)
     },
     group: {
-      type: DataTypes.STRING(255),
-      defaultValue: ''
+      type: DataTypes.BIGINT(11)
     }
   }, {
     createdAt: 'created_at',
