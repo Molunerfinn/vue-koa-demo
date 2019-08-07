@@ -2,21 +2,14 @@ var moment = require('moment')
 
 module.exports = (sequelize, DataTypes) => {
   const model = sequelize.define('TermRelationship', {
-    type: {
+    viewable_type: {
       type: DataTypes.STRING(255),
-      defaultValue: ''
     },
-    post_id: {
-      type: DataTypes.STRING(255),
-      defaultValue: ''
-    },
-    round_id: {
-      type: DataTypes.STRING(255),
-      defaultValue: ''
+    viewable_id: {
+      type: DataTypes.BIGINT(11),
     },
     term_id: {
-      type: DataTypes.STRING(255),
-      defaultValue: ''
+      type: DataTypes.BIGINT(11),
     }
   }, {
     createdAt: 'created_at',

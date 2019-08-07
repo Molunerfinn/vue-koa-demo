@@ -38,7 +38,8 @@ export default class post {
     let termids = await RelationshipModel.findAll({
       attributes: ['term_id'],
       where:{
-        post_id:post.id
+        viewable_type:'post',
+        viewable_id:post.id
       }
     })
 
@@ -109,8 +110,8 @@ export default class post {
 
     for (var i = 0; i < termList.length; i++) {
       let relationship = {
-        type: 'post',
-        post_id: post.id,
+        viewable_type: 'post',
+        viewable_id: post.id,
         term_id: termList[i]
       }
       await RelationshipModel.create(relationship)
@@ -181,7 +182,8 @@ export default class post {
 
       let res = await RelationshipModel.destroy({
         where: {
-          post_id: id
+          viewable_type:'post',
+          viewable_id: id
         }
       })
 

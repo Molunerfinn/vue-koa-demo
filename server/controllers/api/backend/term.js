@@ -36,13 +36,13 @@ export default class term {
     let body = ctx.request.body;
     console.log('body---:', body);
     let name = body.name;
-    let alias = body.alias;
+    let slug = body.slug;
     let desc = body.desc;
     let parent = body.parent
 
     let term = {
       name: name,
-      alias: alias,
+      slug: slug,
       desc: desc,
       parent: parent,
     }
@@ -82,7 +82,7 @@ export default class term {
       console.log('body---:', body);
       let id = body.id
       let name = body.name;
-      let alias = body.alias;
+      let slug = body.slug;
       let desc = body.desc;
       let parent = body.parent
 

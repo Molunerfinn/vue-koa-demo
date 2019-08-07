@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(255),
       defaultValue: ''
     },
-    alias: {
+    slug: {
       type: DataTypes.STRING(255),
       defaultValue: ''
     },
