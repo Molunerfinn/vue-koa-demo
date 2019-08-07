@@ -2,21 +2,21 @@ var moment = require('moment')
 
 module.exports = (sequelize, DataTypes) => {
   const model = sequelize.define('Post', {
-    name: {
-      type: DataTypes.STRING(255),
+    author: {
+      type: DataTypes.STRING(24),
       defaultValue: ''
     },
     title: {
       type: DataTypes.STRING(255),
       defaultValue: ''
     },
-    desc: {
+    excerpt: {
       type: DataTypes.STRING(255),
       defaultValue: ''
     },
-    creator: {
-      type: DataTypes.STRING(255),
-      defaultValue: ''
+    created_by: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0
     },
     type: {
       type: DataTypes.STRING(255),
