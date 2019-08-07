@@ -4,6 +4,7 @@ const {
   getPostModel,
   getTermModel,
   getTermRelationshipModel,
+  getPhotoRelationshipModel,
   getGamePhotoModelByCode
 } = require('../../../helpers/model')
 
@@ -28,8 +29,10 @@ export default class post {
     let post = await PostModel.findOne({
       where:{
         id:id
-      }
+      },
+      include: [{association: 'Covers'}]
     })
+    console.log('post-----:',post);
 
     let RelationshipModel = getTermRelationshipModel()
     let termids = await RelationshipModel.findAll({
@@ -49,8 +52,6 @@ export default class post {
       })
       terms.push(term)
     }
-console.log('terms,',terms);
-
 
     let termList = new Array()
     for(var i=0;i<terms.length;i++){
@@ -61,7 +62,6 @@ console.log('terms,',terms);
       }
       termList.push(term)
     }
-    console.log('22222222termList,',termList);
 
     // :key="term.id"
     // :label="term.name"
@@ -139,8 +139,9 @@ console.log('terms,',terms);
     console.log('body---:', body);
     let id = body.id
 
-    let Photo = getGamePhotoModelByCode('ztoupiao')
-    let res = await Photo.destroy({
+    let PhotoRelationshipModel=getPhotoRelationshipModel()
+
+    let res = await PhotoRelationshipModel.destroy({
       where: {
         viewable_id: id,
         viewable_type: 'cover'
