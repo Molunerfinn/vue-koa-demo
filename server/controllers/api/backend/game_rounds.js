@@ -4,6 +4,9 @@ const {
 const {
   getPagination
 } = require('../../../helpers/pagination')
+const {
+  getPhotoRelationshipModel
+} = require('../../../helpers/model')
 
 
 
@@ -126,6 +129,24 @@ export default class GameRounds {
     let res = await GameRoundModel.destroy({
       where: {
         number: number
+      }
+    })
+    ctx.body = res
+  }
+
+  static async removeSlide(ctx){
+    let body = ctx.request.body;
+    console.log('body---:', body);
+    let photo_id = body.photo_id
+    let round_id = body.round_id
+
+    let PhotoRelationshipModel=getPhotoRelationshipModel()
+
+    let res = await PhotoRelationshipModel.destroy({
+      where: {
+        photo_id:photo_id,
+        viewable_id: round_id,
+        viewable_type: 'slide'
       }
     })
     ctx.body = res

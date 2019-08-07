@@ -161,7 +161,7 @@ export default class base {
 
   static async getGameRoundInfo(ctx) {
     console.log('=============getGameRoundInfo===========');
-    let params = ctx.request.body
+    let params = ctx.query
     let userId = params.id
     let gameRoundModel = getGameRoundModelByCode('backend');
 
@@ -199,7 +199,7 @@ export default class base {
     ctx.body = gameRound
   }
 
-  
+
 
   static async removeGameRound(ctx) {
     let body = ctx.request.body;
@@ -218,7 +218,7 @@ export default class base {
 
   static async getWxMpUsers(ctx){
     console.log('==================getWxMpUsers================');
-    let body = ctx.request.body;
+    let body = ctx.query;
     let user_id = body.user_id
 
     let UsersModel = getUsersModel()

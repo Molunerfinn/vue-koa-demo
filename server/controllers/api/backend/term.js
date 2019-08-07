@@ -4,15 +4,25 @@ const {
   getWxMpUsersModel,
   getPostModel,
   getTermModel,
-  getRelationshipModel
+  getTermRelationshipModel
 } = require('../../../helpers/model')
+const {
+  getPagination
+} = require('../../../helpers/pagination')
 export default class term {
 
   static async getTermInfo(ctx) {
     console.log('=============getTermInfo===========');
+    let pagination = getPagination( ctx.query)
+    // TODO suport other query
+    let options =Object.assign( {}, pagination )
     let TermModel = getTermModel()
 
-    let terms = await TermModel.findAll({})
+    let {rows, count} = await TermModel.findAndCount(options)
+    pagination.total = count
+
+    let res = Object.assign(pagination, {  terms: rows } )
+    let terms = res.terms
 
     ctx.body = terms
   }
@@ -51,7 +61,7 @@ export default class term {
       }
     })
 
-    let RelationshipModel = getRelationshipModel()
+    let RelationshipModel = getTermRelationshipModel()
 
     await RelationshipModel.destroy({
       where: {
@@ -72,7 +82,8 @@ export default class term {
 
   static async getTermDetail(ctx) {
     console.log('=============getTermDetail===========');
-    let body = ctx.request.body;
+    console.log('ctx:',ctx.query);
+    let body = ctx.query;
     let id = body.id
     let TermModel = getTermModel()
 
