@@ -8,14 +8,43 @@ const {
   getGamePhotoModelByCode
 } = require('../../../helpers/model')
 
+const {
+  Post
+} = require('../../../models')
+const {
+  getPagination
+} = require('../../../helpers/pagination')
 
-export default class post {
+
+
+export default class Posts {
+
+
+  /**
+   * 根据条件取得文章信息列表
+   * @param {*}
+   * @return {*}  { posts, total, page, pageSize }
+   */
+  static async index(ctx) {
+
+    let pagination = getPagination( ctx.query)
+
+    // TODO suport other query 
+    let options =Object.assign( {}, pagination )
+
+    let {rows, count} = await Post.findAndCount(options)
+
+    pagination.total = count
+
+    let res = Object.assign(pagination, {  posts: rows } )
+
+    ctx.body = res
+  }
 
   static async getPostInfo(ctx) {
     console.log('=============getTermInfo===========');
-    let PostModel = getPostModel()
 
-    let post = await PostModel.findAll({})
+    let post = await Post.findAll({})
 
     ctx.body = post
   }
