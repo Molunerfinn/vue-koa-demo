@@ -29,7 +29,7 @@ export default class Posts {
 
     let pagination = getPagination( ctx.query)
 
-    // TODO suport other query 
+    // TODO suport other query
     let options =Object.assign( {}, pagination )
 
     let {rows, count} = await Post.findAndCount(options)
@@ -51,8 +51,8 @@ export default class Posts {
 
   static async getPostDetail(ctx) {
     console.log('=============getPostDetail===========');
-    let body = ctx.request.body;
-    let id = body.id
+    let id = ctx.params.id;
+
     let PostModel = getPostModel()
 
     let post = await PostModel.findOne({
