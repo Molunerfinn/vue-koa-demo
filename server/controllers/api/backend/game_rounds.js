@@ -66,7 +66,7 @@ export default class GameRounds {
   /**
    * 根据条件取得游戏信息列表
    * @param {*}
-   * @return {*}
+   * @return {*}  { gameRounds, total, page, pageSize }
    */
   static async index(ctx) {
     console.log('=============getGameRoundInfo===========');
@@ -77,7 +77,8 @@ export default class GameRounds {
 
     let {rows, count} = await ZTouPiaoGameRound.findAndCount(options)
     pagination.total = count
-    ctx.body = { gameRounds: rows, pagination }
+    let res = Object.assign(pagination, {  gameRounds: rows } )
+    ctx.body = res
   }
 
   static async addGameRound(ctx) {
@@ -111,7 +112,7 @@ export default class GameRounds {
 
     // let GameRoundModel = getGameRoundModelByCode(code)
     let gameRound = await ZTouPiaoGameRound.findByPk(gid, { include: [{association: 'Slides'}]})
-  
+
     ctx.body = gameRound
   }
 
