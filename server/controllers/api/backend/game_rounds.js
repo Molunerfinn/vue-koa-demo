@@ -5,7 +5,8 @@ const {
   getPagination
 } = require('../../../helpers/pagination')
 const {
-  getPhotoRelationshipModel
+  getPhotoRelationshipModel,
+  getPhotoModel
 } = require('../../../helpers/model')
 
 
@@ -149,6 +150,28 @@ export default class GameRounds {
         viewable_type: 'slide'
       }
     })
+    ctx.body = res
+  }
+
+  static async bindPhotoRelationship(ctx){
+    console.log('==========bindPhotoRelationship=========');
+    console.log(require('../../../models'));
+    console.log('ctx.request.body',ctx.request.body);
+    let body = ctx.request.body;
+    let newImg = body.newImg;
+    let round_id = body.round_id;
+
+    let gameRound = await ZTouPiaoGameRound.findByPk(round_id)
+    console.log('gameRound:',gameRound);
+    let SharedPhoto = getPhotoModel()
+    let Photo = await SharedPhoto.findOne({
+      where:{
+        id:newImg.id
+      }
+    })
+    console.log('Photo:',Photo);
+    let res = await gameRound.addSlides(Photo)
+    console.log('res',res);
     ctx.body = res
   }
 

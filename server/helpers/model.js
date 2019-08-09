@@ -20,10 +20,12 @@ export function getPhotoRelationshipModel(){
   return getModel(basename)
 }
 
-
 export function getTermModel(){
-  let basename = 'SharedTerm'
-  return getModel(basename)
+  return db.SharedTerm
+}
+
+export function getPhotoModel(){
+  return db.SharedPhoto
 }
 
 export function getWxMpUsersModel(){

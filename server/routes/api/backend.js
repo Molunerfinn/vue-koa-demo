@@ -18,6 +18,7 @@ router.get('/game_rounds', GameRounds.index)
 router.get('/game_rounds/:id', GameRounds.show)
 
 router.post('/base/removeSlide', GameRounds.removeSlide)
+router.post('/base/bindPhotoRelationship', GameRounds.bindPhotoRelationship)
 router.post('/photos/:code/create', Photos.createBeforeDirectUpload)
 router.post('/photos/search', Photos.search)
 

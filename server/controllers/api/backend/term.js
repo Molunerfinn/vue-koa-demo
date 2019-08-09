@@ -28,6 +28,7 @@ export default class term {
   }
 
   static async addTerm(ctx) {
+    console.log('===========addTerm==========');
     let body = ctx.request.body;
     console.log('body---:', body);
     let name = body.name;

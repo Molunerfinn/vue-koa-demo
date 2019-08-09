@@ -94,7 +94,7 @@ export default class Posts {
       content: content
     }
 
-    post = await PostModel.create(postAttributes)
+    let post = await PostModel.create(postAttributes)
 
     let RelationshipModel = getTermRelationshipModel()
 
