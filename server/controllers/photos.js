@@ -56,6 +56,7 @@ export default class PhotosController {
     let number = ctx.request.body.number
     let post_id = ctx.request.body.post_id
     let photoParam = ctx.request.body.photo
+    let viewable_type = ctx.request.body.viewable_type
 
 
 
@@ -69,29 +70,30 @@ export default class PhotosController {
     //   fields: ['photo_id', 'viewable_id', 'viewable_type']
     // }
 
+    photoParam.viewable_type = viewable_type
     let photo = await Photo.create(photoParam, photoOptions)
 
-    if (number) {
-      let Round = getGameRoundModelByCode(code)
-      //try{
-      let round = await Round.findOne({
-        //attributes: ['id', 'name', 'state', 'start_at', 'end_at'],
-        where: {
-          number
-        }
-      })
-      let PhotoRelationship = await round.addSlide(photo)
-    } else if (post_id) {
-      let PostModel = getPostModel()
-
-      let post = await PostModel.findOne({
-        //attributes: ['id', 'name', 'state', 'start_at', 'end_at'],
-        where: {
-          id: post_id
-        }
-      })
-      let PhotoRelationship = await post.addCover(photo)
-    }
+    // if (viewable_type=="slide") {
+    //   let Round = getGameRoundModelByCode(code)
+    //   //try{
+    //   let round = await Round.findOne({
+    //     //attributes: ['id', 'name', 'state', 'start_at', 'end_at'],
+    //     where: {
+    //       number
+    //     }
+    //   })
+    //   let PhotoRelationship = await round.addSlide(photo)
+    // } else if (viewable_type=="cover") {
+    //   let PostModel = getPostModel()
+    //
+    //   let post = await PostModel.findOne({
+    //     //attributes: ['id', 'name', 'state', 'start_at', 'end_at'],
+    //     where: {
+    //       id: post_id
+    //     }
+    //   })
+    //   let PhotoRelationship = await post.addCover(photo)
+    // }
 
 
 
