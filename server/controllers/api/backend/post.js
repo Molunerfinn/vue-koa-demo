@@ -9,14 +9,15 @@ const {
 } = require('../../../helpers/model')
 const messageContent = require('../../constant')
 
+
 const {
-  SharedPost, SharedTerm
+  Sequelize, SharedPost, SharedTerm, SharedPhoto
 } = require('../../../models')
 const {
   getPagination
 } = require('../../../helpers/pagination')
 
-
+const Op = Sequelize.Op;
 const PostModel = SharedPost
 
 export default class Posts {
@@ -55,19 +56,12 @@ export default class Posts {
     console.log('=============getPostDetail===========');
     let id = ctx.params.id;
     console.log('body---:', ctx.params);
-    let post = null
-    try{
-      post = await PostModel.findByPk(id,
+    let post = await PostModel.findByPk(id,
         {include: [{association: 'Covers'}, {association: 'Terms'}] })
-
-    }catch(e){
-      ctx.throw( messageContent.ResponeStatus.UnprocessableEntity, 'Can not find post.')
-    }
 
     if( post == null ){
       ctx.throw( messageContent.ResponeStatus.UnprocessableEntity, 'Can not find post.')
     }
-
 
     ctx.body = {
       post: post,
@@ -76,37 +70,32 @@ export default class Posts {
     }
   }
 
+  /**
+   * 添加文章信息
+   * @param {Object} post { created_by, name, desc, title, content}
+   * @param {Array} terms { term_id }
+   * @param {Integer} photo_id
+   * @return {*}  { posts, total, page, pageSize }
+   */
   static async addPost(ctx) {
     let body = ctx.request.body;
     console.log('body---:', body);
-    let name = body.name;
-    let desc = body.desc;
-    let title = body.title;
-    let content = body.content
-    let user_id = body.user_id
-    let termList = body.term
-
-    let postAttributes = {
-      creator: user_id,
-      name: name,
-      desc: desc,
-      title: title,
-      content: content
-    }
+    // { }
+    let postAttributes = body.post;
+    let photo_id = body.photo_id
+    let termList = body.terms
 
     let post = await PostModel.create(postAttributes)
 
-    let RelationshipModel = getTermRelationshipModel()
-
-    for (var i = 0; i < termList.length; i++) {
-      let relationship = {
-        viewable_type: 'post',
-        viewable_id: post.id,
-        term_id: termList[i]
-      }
-      await RelationshipModel.create(relationship)
+    if( termList.length>0 ){
+      let terms = await SharedTerm.findAll( { where:{ id: { [Op.in]: termList } }})
+      post.addTerms(terms)
     }
 
+    if( photo_id > 0 ){
+      let photo = await SharedPhoto.findByPk( photo_id )
+      post.addCover(photo)
+    }
 
     ctx.body = post
   }
