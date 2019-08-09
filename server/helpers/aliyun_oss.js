@@ -44,6 +44,13 @@ export function getObjectUrl(key, params = {}){
   return url
 }
 
+export function getImageUrlForStyle(key, style) {
+  let url = getObjectUrl( key )
+  style = style || 'w600'
+  return `${url}?x-oss-process=style/${style}`
+}
+
+
 function authorization(key, content_type, checksum, date){
   let bucketName =  config.ossBucket
   let filename = `/${bucketName}/${path_for(key)}`

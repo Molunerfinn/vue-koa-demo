@@ -16,15 +16,25 @@ class Pagination{
     this.pageSize = 25
     this.total = 0
   }
-  
+
 }
 
+/**
+
+  @param query {String} The query is koa.query like { page: 1,  limit: 20 }
+  @return {String} An object with `current`, `prev` and `next` page numbers
+*/
 function getPagination( query ) {
   // Request params come through as strings: convert to integers
   // If "current" is undefined, assume we're on the first page
   let limit = 10
   let offset = 0
-
+  if( query.limit ){
+    limit = parseInt(query.limit)
+  }
+  if( query.page ){
+    offset = (parseInt(query.page) - 1) * limit
+  }
   return {
     limit,
     offset

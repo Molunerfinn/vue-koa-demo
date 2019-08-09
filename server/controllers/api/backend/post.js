@@ -7,15 +7,17 @@ const {
   getPhotoRelationshipModel,
   getGamePhotoModelByCode
 } = require('../../../helpers/model')
+const messageContent = require('../../constant')
 
 const {
-  Post
+  SharedPost, SharedTerm
 } = require('../../../models')
 const {
   getPagination
 } = require('../../../helpers/pagination')
 
 
+const PostModel = SharedPost
 
 export default class Posts {
 
@@ -30,9 +32,9 @@ export default class Posts {
     let pagination = getPagination( ctx.query)
 
     // TODO suport other query
-    let options =Object.assign( {}, pagination )
+    let options = Object.assign( {}, pagination )
 
-    let {rows, count} = await Post.findAndCount(options)
+    let {rows, count} = await PostModel.findAndCountAll(options)
 
     pagination.total = count
 
@@ -44,7 +46,7 @@ export default class Posts {
   static async getPostInfo(ctx) {
     console.log('=============getTermInfo===========');
 
-    let post = await Post.findAll({})
+    let post = await PostModel.findAll({})
 
     ctx.body = post
   }
@@ -52,64 +54,25 @@ export default class Posts {
   static async getPostDetail(ctx) {
     console.log('=============getPostDetail===========');
     let id = ctx.params.id;
+    console.log('body---:', ctx.params);
+    let post = null
+    try{
+      post = await PostModel.findByPk(id,
+        {include: [{association: 'Covers'}, {association: 'Terms'}] })
 
-    let PostModel = getPostModel()
-
-    let post = await PostModel.findOne({
-      where:{
-        id:id
-      },
-      include: [{association: 'Covers'}]
-    })
-    console.log('post-----:',post);
-
-    let RelationshipModel = getTermRelationshipModel()
-    let termids = await RelationshipModel.findAll({
-      attributes: ['term_id'],
-      where:{
-        viewable_type:'post',
-        viewable_id:post.id
-      }
-    })
-
-    let terms = new Array()
-    for(var i=0;i<termids.length;i++){
-      let TermModel = getTermModel()
-      let term = await TermModel.findOne({
-        where:{
-          id:termids[i].term_id
-        }
-      })
-      terms.push(term)
+    }catch(e){
+      ctx.throw( messageContent.ResponeStatus.UnprocessableEntity, 'Can not find post.')
     }
 
-    let termList = new Array()
-    for(var i=0;i<terms.length;i++){
-      let term ={
-        key:terms[i].id,
-        value:terms[i].id,
-        label:terms[i].name
-      }
-      termList.push(term)
+    if( post == null ){
+      ctx.throw( messageContent.ResponeStatus.UnprocessableEntity, 'Can not find post.')
     }
 
-    // :key="term.id"
-    // :label="term.name"
-    // :value="term.id"
-
-    let Photo = getGamePhotoModelByCode('ztoupiao')
-
-    let cover = await Photo.findOne({
-      where:{
-        viewable_id:id,
-        viewable_type:'cover'
-      }
-    })
 
     ctx.body = {
-      post:post,
-      term:termList,
-      cover:cover
+      post: post,
+      terms: post.Terms,
+      cover: post.Covers[0]
     }
   }
 
@@ -123,7 +86,7 @@ export default class Posts {
     let user_id = body.user_id
     let termList = body.term
 
-    let post = {
+    let postAttributes = {
       creator: user_id,
       name: name,
       desc: desc,
@@ -131,9 +94,7 @@ export default class Posts {
       content: content
     }
 
-    let PostModel = getPostModel()
-    post = await PostModel.create(post)
-    console.log('post----:', post);
+    post = await PostModel.create(postAttributes)
 
     let RelationshipModel = getTermRelationshipModel()
 
@@ -193,7 +154,6 @@ export default class Posts {
       let user_id = body.user_id
       let termList = body.term
 
-      let PostModel = getPostModel()
       let post = await PostModel.findOne({
         where: {
           id: id

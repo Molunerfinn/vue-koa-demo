@@ -19,8 +19,11 @@ router.get('/game_rounds/:id', GameRounds.show)
 
 router.post('/base/removeSlide', GameRounds.removeSlide)
 router.post('/photos/:code/create', Photos.createBeforeDirectUpload)
+router.post('/photos/search', Photos.search)
+
 router.get('/posts', Posts.index)
 router.get('/posts/:id', Posts.getPostDetail)
+
 
 router.get('/base/getGameRoundInfo', base.getGameRoundInfo)
 router.post('/base/addGameRound', base.addGameRound)

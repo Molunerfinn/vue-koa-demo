@@ -1,5 +1,5 @@
 const {
-  ZTouPiaoGameRound
+  ZTouPiaoGameRound, SharedPhotoRelationship
 } = require('../../../models')
 const {
   getPagination

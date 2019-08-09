@@ -7,7 +7,9 @@ const {
   getGamePhotoModelByCode,
   getPostModel
 } = require('../helpers/model')
-
+const {
+  getPagination
+} = require('../helpers/pagination')
 const {
   headersForDirectUpload,
   urlForDirectUpload
@@ -16,6 +18,28 @@ const {
 // route  /gapi/photos
 
 export default class PhotosController {
+
+  /**
+   *  取得图片列表信息
+   * @param {Object} q { viewable_type }
+   * @return {*}
+   */
+  static async search(ctx) {
+    let pagination = getPagination( ctx.query)
+    let q = ctx.request.query.q
+    console.log('==================list===============q', q);
+
+    let code = ctx.request.body.code
+    let PhotoModel = getGamePhotoModelByCode(code)
+    let options = Object.assign( { where: q }, pagination )
+
+    let { rows, count} = await PhotoModel.findAndCountAll(options)
+
+    let res = Object.assign(pagination, {  photos: rows, total: count } )
+
+    ctx.body = res
+
+  }
 
   /**
    *  阿里云直传时，先创建photo对象，再返回云服务请求参数
@@ -29,9 +53,9 @@ export default class PhotosController {
     console.log('ctx.request.body--:', ctx.request.body);
     let code = ctx.params.code
     let number = ctx.request.body.number
+    let post_id = ctx.request.body.post_id
     let photoParam = ctx.request.body.photo
-    let type = ctx.request.body.type
-    let id = ctx.request.body.id
+
 
 
     let Photo = getGamePhotoModelByCode(code)
@@ -56,13 +80,13 @@ export default class PhotosController {
         }
       })
       let PhotoRelationship = await round.addSlide(photo)
-    } else if (id) {
+    } else if (post_id) {
       let PostModel = getPostModel()
 
       let post = await PostModel.findOne({
         //attributes: ['id', 'name', 'state', 'start_at', 'end_at'],
         where: {
-          id: id
+          id: post_id
         }
       })
       let PhotoRelationship = await post.addCover(photo)
@@ -172,4 +196,7 @@ export default class PhotosController {
     //     ctx.throw(messageContent.ResponeStatus.CommonError, `show round ${ctx.params.id} fail: ` + error, { expose: true })
     // }
   }
+
+
+
 }

@@ -1,21 +1,53 @@
 export function buildGameAssociations(db) {
-  // add association
+  // 为公共模型添加关系
+  let SharedPost = db.SharedPost
+  let SharedPhoto = db.SharedPhoto
+  let SharedTerm = db.SharedTerm
+  let SharedPhotoRelationship = db.SharedPhotoRelationship
+  let SharedTermRelationship = db.SharedTermRelationship
+
+  SharedPost.belongsToMany(SharedPhoto, {
+    through:{
+      model: SharedPhotoRelationship,
+      scope: {
+          viewable_type: 'cover'
+      }
+    },
+    foreignKey: 'viewable_id',
+    otherKey: 'photo_id',
+    as: 'Covers'
+  })
+
+  SharedPost.belongsToMany(SharedTerm, {
+    through:{
+      model: SharedTermRelationship,
+      scope: {
+          viewable_type: 'post'
+      }
+    },
+    foreignKey: 'viewable_id',
+    otherKey: 'term_id',
+    as: 'Terms'
+  })
+
+  // 为每种游戏添加关系，游戏可能使用了公共模型，如 投票游戏使用 图片，文章
+
   let models = Object.values(db)
   models.forEach((model) => {
     let rex = /([\w]+)GameRound$/
     let matches = rex.exec(model.name)
     if (Array.isArray(matches)) {
+      // 为每个游戏添加关系
       let code = matches[1]
 
       let playerModel = models.find((m) => m.name == (code + "GamePlayer"))
       let resultModel = models.find((m) => m.name == (code + "GameResult"))
       let albumModel = models.find((m) => m.name == (code + "Album"))
-      let photoModel = models.find((m) => m.name == (code + "Photo"))
+      //let photoModel = models.find((m) => m.name == (code + "Photo"))
 
-      let PhotoRelationship = db.PhotoRelationship
-      let postModel = db.Post
 
-      if (albumModel && playerModel && photoModel) {
+      // 投票类游戏 有Album
+      if (albumModel && playerModel) {
         console.log("buildGameAssociations " + code + "Album," + code + "GamePlayers")
         // album and player
         albumModel.belongsTo(playerModel, {
@@ -28,18 +60,22 @@ export function buildGameAssociations(db) {
         })
 
         // album and photo
-        photoModel.belongsTo(albumModel, {
+        SharedPhoto.belongsTo(albumModel, {
           foreignKey: 'album_id',
+          // Should on update and on delete constraints be enabled on the foreign key.
+          // we should move album to viewable_id, viewable_type album
+          constraints: false,
           as: 'Album'
         })
-        albumModel.hasMany(photoModel, {
+        albumModel.hasMany(SharedPhoto, {
           foreignKey: 'album_id',
+          constraints: false,
           as: 'Photos'
         })
         // round and slide
-        model.belongsToMany(photoModel, {
+        model.belongsToMany(SharedPhoto, {
           through:{
-            model: PhotoRelationship,
+            model: SharedPhotoRelationship,
             scope: {
                 viewable_type: 'slide'
             }
@@ -47,18 +83,6 @@ export function buildGameAssociations(db) {
           foreignKey: 'viewable_id',
           otherKey: 'photo_id',
           as: 'Slides'
-        })
-
-        postModel.belongsToMany(photoModel, {
-          through:{
-            model: PhotoRelationship,
-            scope: {
-                viewable_type: 'cover'
-            }
-          },
-          foreignKey: 'viewable_id',
-          otherKey: 'photo_id',
-          as: 'Covers'
         })
 
 

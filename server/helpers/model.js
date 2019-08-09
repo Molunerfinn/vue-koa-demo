@@ -22,7 +22,7 @@ export function getPhotoRelationshipModel(){
 
 
 export function getTermModel(){
-  let basename = 'Terms'
+  let basename = 'SharedTerm'
   return getModel(basename)
 }
 
@@ -63,8 +63,9 @@ export function getGameAlbumModelByCode(code) {
 
 export function getGamePhotoModelByCode(code) {
 
-  let basename = 'Photo'
-  return getModelByCode(code, basename)
+  //let basename = 'Photo'
+  //return getModelByCode(code, basename)
+  return db.SharedPhoto
 }
 
 export function getModelByCode(code, basename) {
