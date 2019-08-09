@@ -6,6 +6,9 @@ const {
   getTermModel,
   getRelationshipModel
 } = require('../../../helpers/model')
+const {
+  ZTouPiaoGameRound, SharedPhotoRelationship
+} = require('../../../models')
 // const {
 //   getWxJsConfig
 // } = require('../../helpers/weixin')
@@ -204,13 +207,12 @@ export default class base {
   static async removeGameRound(ctx) {
     let body = ctx.request.body;
     console.log('body---:', body);
-    let number = body.number
-    let code = body.code
+    let round_id = body.round_id
 
-    let GameRoundModel = getGameRoundModelByCode(code)
+    let GameRoundModel = ZTouPiaoGameRound
     let res = await GameRoundModel.destroy({
       where: {
-        number: number
+        id: round_id
       }
     })
     ctx.body = res
