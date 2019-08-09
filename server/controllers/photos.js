@@ -22,16 +22,17 @@ export default class PhotosController {
   /**
    *  取得图片列表信息
    * @param {Object} q { viewable_type }
+   * @param {Array} o [['created_at', 'DESC']]
    * @return {*}
    */
   static async search(ctx) {
     let pagination = getPagination( ctx.query)
-    let q = ctx.request.query.q
-    console.log('==================list===============q', q);
+    let q = ctx.request.body.q
+    let o = ctx.request.body.o
 
     let code = ctx.request.body.code
     let PhotoModel = getGamePhotoModelByCode(code)
-    let options = Object.assign( { where: q }, pagination )
+    let options = Object.assign( { where: q, order: o }, pagination )
 
     let { rows, count} = await PhotoModel.findAndCountAll(options)
 
