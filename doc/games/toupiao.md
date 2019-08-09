@@ -1,3 +1,7 @@
+#0 游戏入口
+/ztoupiao/:number/entry
+
+
 #1. 页面
 
 首页介绍活动  /
