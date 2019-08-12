@@ -16,6 +16,7 @@ const router = new Router()
 router.get('/users/show', Users.show)
 router.get('/game_rounds', GameRounds.index)
 router.get('/game_rounds/:id', GameRounds.show)
+router.put('/game_rounds/:id', GameRounds.update)
 
 router.post('/base/removeSlide', GameRounds.removeSlide)
 router.post('/base/bindPhotoRelationship', GameRounds.bindPhotoRelationship)

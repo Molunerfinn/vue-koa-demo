@@ -88,6 +88,9 @@ module.exports = (sequelize, DataTypes) => {
     number: {
       type: DataTypes.STRING(45), // get game_round by number
       unique: true // add unique index
+    },
+    color: {
+      type: DataTypes.STRING(16), // Hex + opacity
     }
 
   }, {

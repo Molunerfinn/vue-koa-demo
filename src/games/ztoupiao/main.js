@@ -13,6 +13,8 @@ Vue.use(VueRouter)
 import 'weui/dist/style/weui.css'
 import '@/assets/common/css/base2.css'
 import '@/assets/game/ztoupiao/css/game.css'
+import '@/assets/game/ztoupiao/css/font.css'
+import '@/assets/game/ztoupiao/css/skin.css'
 
 import router from './router'
 import store from './store'
