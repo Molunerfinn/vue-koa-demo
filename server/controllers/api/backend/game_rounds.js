@@ -9,33 +9,27 @@ const {
   getPhotoModel
 } = require('../../../helpers/model')
 
-
+const GameRoundModel = ZTouPiaoGameRound
 
 export default class GameRounds {
 
 
-  static async modifyGameRound(ctx) {
+  static async update(ctx) {
     try {
       console.log('==================modifyGameRound=================');
       let body = ctx.request.body;
       console.log('body---:', body);
-      let number = body.number
-      let code = body.code
-      let duration = body.duration
-      let gamename = body.name;
-      let gamedesc = body.desc;
-
-      let GameRoundModel = getGameRoundModelByCode(code)
+      let id = body.params.id
+      let gameRoundAttributes = body.gameRound
+  
       let gameRound = await GameRoundModel.findOne({
         where: {
-          number: number
+          id
         }
       })
 
-      gameRound = await gameRound.update({
-        name: gamename,
-        desc: gamedesc,
-        duration: duration
+      gameRound = await gameRound.update(gameRoundAttributes,{
+        fields:['name', 'desc', 'color']
       })
       ctx.body = gameRound
     } catch (e) {

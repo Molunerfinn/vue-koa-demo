@@ -5,31 +5,24 @@
         <router-view class="view"></router-view>
       </div>
       <div class="weui-tabbar footer">
-        <router-link to="/review" class="weui-tabbar__item">
-          <span>
-            <img src="~@/assets/game/ztoupiao/image/icons/review.jpg" alt="" class="weui-tabbar__icon">
-          </span>
-          <p class="weui-tabbar__label">介绍</p>
+        <router-link to="/review" class="c_bg weui-tabbar__item">
+          <i class="iconfont cl-icon-store"></i>
+          <p class="c_bg weui-tabbar__label">介绍</p>
         </router-link>
-        <router-link to="/" class="weui-tabbar__item">
-          <span>
-            <img src="~@/assets/game/ztoupiao/image/icons/home.jpg" alt="" class="weui-tabbar__icon">
-          </span>
-          <p class="weui-tabbar__label">作品</p>
+        <router-link to="/" class="c_bg weui-tabbar__item">
+          <i class="iconfont cl-icon-view-gallery"></i>
+          <p class="c_bg weui-tabbar__label">作品</p>
         </router-link>
 
-        <router-link to="/apply" class="weui-tabbar__item">
-          <span>
-            <img src="~@/assets/game/ztoupiao/image/icons/upload.jpg" alt="" class="weui-tabbar__icon">
-          </span>
-          <p class="weui-tabbar__label">上传</p>
+        <router-link to="/apply" class="c_bg weui-tabbar__item">
+          <i class="iconfont cl-icon-share"></i>
+
+          <p class="c_bg weui-tabbar__label">上传</p>
         </router-link>
 
-        <router-link to="/myaccount" class="weui-tabbar__item">
-          <span>
-            <img src="~@/assets/game/ztoupiao/image/icons/account.jpg" alt="" class="weui-tabbar__icon">
-          </span>
-          <p class="weui-tabbar__label">我的</p>
+        <router-link to="/myaccount" class="c_bg weui-tabbar__item">
+          <i class="iconfont cl-icon-account"></i>
+          <p class="c_bg weui-tabbar__label">我的</p>
         </router-link>
       </div>
     </div>

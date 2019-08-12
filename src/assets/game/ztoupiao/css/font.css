@@ -1,0 +1,45 @@
+@font-face {
+  font-family: "iconfont";
+  src: url('../fonts/iconfont.eot'); /* IE9*/
+  src: url('../fonts/iconfont.eot#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('../fonts/iconfont.woff') format('woff'), /* chrome, firefox */
+  url('../fonts/iconfont.woff2') format('woff2'), /* chrome, firefox */
+  url('../fonts/iconfont.ttf') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+  url('../fonts/iconfont.svg#iconfont') format('svg'); /* iOS 4.1- */
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.cl-icon-index-line:before {
+  content: "\eb97";
+}
+.cl-icon-account:before {
+  content: "\e6b8";
+}
+.cl-icon-view-gallery:before {
+  content: "\e6b4";
+}
+.cl-icon-gift:before {
+  content: "\e6db";
+}
+.cl-icon-pic:before {
+  content: "\e6a8";
+}
+.cl-icon-favorite:before {
+  content: "\e6a0";
+}
+.cl-icon-form:before {
+  content: "\e6a2";
+}
+.cl-icon-share:before {
+  content: "\e71d";
+}
+.cl-icon-store:before {
+  content: "\e722";
+}
