@@ -117,14 +117,12 @@ export default class Posts {
   static async removeCover(ctx) {
     let body = ctx.request.body;
     console.log('body---:', body);
-    let photo_id = body.photo_id
     let post_id = body.post_id
 
     let PhotoRelationshipModel=getPhotoRelationshipModel()
 
     let res = await PhotoRelationshipModel.destroy({
       where: {
-        photo_id:photo_id,
         viewable_id: post_id,
         viewable_type: 'cover'
       }
