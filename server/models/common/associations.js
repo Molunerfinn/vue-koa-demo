@@ -13,6 +13,7 @@ export function buildGameAssociations(db) {
           viewable_type: 'cover'
       }
     },
+    constraints:false,
     foreignKey: 'viewable_id',
     otherKey: 'photo_id',
     as: 'Covers'
@@ -80,12 +81,11 @@ export function buildGameAssociations(db) {
                 viewable_type: 'slide'
             }
           },
+          constraints:false,
           foreignKey: 'viewable_id',
           otherKey: 'photo_id',
           as: 'Slides'
         })
-
-
       }
 
 
