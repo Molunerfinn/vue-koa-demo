@@ -15,6 +15,7 @@ export default class GameRoundController {
    * @param {*} res
    */
   static async entry(ctx) {
+    console.log('================entry================');
     try {
       let code = ctx.params.code
       let number = ctx.params.number
@@ -26,6 +27,7 @@ export default class GameRoundController {
           number
         }
       })
+      console.log('gameRound---:',gameRound);
 
       let UsersModel = getUsersModel()
 
@@ -34,6 +36,7 @@ export default class GameRoundController {
           id: gameRound.user_id
         }
       })
+      console.log('User----:0',User);
 
       async function getUserToken(openid){
         const token = await redis.get('userToken');
@@ -53,8 +56,10 @@ export default class GameRoundController {
       setOpenOauth(options);
       let oauth = getOpenOauth()
 
+
+
       //redirect_url
-      let AuthorizeURL = oauth.getAuthorizeURL("http://testwx.natapp4.cc/ztoupiao/"+number+"/wxopen_oauth/gameshare-done",'','snsapi_userinfo')
+      let AuthorizeURL = oauth.getAuthorizeURL("http://testwx.natapp4.cc/authwx/game?gameurl=http://testwx.natapp4.cc/ztoupiao.html?number="+number,'','snsapi_userinfo')
       console.log('AuthorizeURL***********:',AuthorizeURL);
       ctx.redirect(AuthorizeURL)
     } catch (error) {
