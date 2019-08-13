@@ -94,7 +94,7 @@ export default class Posts {
 
     if( photo_id > 0 ){
       let photo = await SharedPhoto.findByPk( photo_id )
-      post.addCover(photo)
+      post.addCovers(photo)
     }
 
     ctx.body = post
@@ -117,13 +117,13 @@ export default class Posts {
   static async removeCover(ctx) {
     let body = ctx.request.body;
     console.log('body---:', body);
-    let id = body.id
+    let post_id = body.post_id
 
     let PhotoRelationshipModel=getPhotoRelationshipModel()
 
     let res = await PhotoRelationshipModel.destroy({
       where: {
-        viewable_id: id,
+        viewable_id: post_id,
         viewable_type: 'cover'
       }
     })
@@ -135,43 +135,28 @@ export default class Posts {
       console.log('==================modifyPost=================');
       let body = ctx.request.body;
       console.log('body---:', body);
-      let id = body.id
-      let name = body.name;
-      let desc = body.desc;
-      let title = body.title;
-      let content = body.content
-      let user_id = body.user_id
-      let termList = body.term
+      let postAttributes = body.post;
+      let photo_id = body.photo_id
+      let termList = body.terms
 
       let post = await PostModel.findOne({
         where: {
-          id: id
+          id: postAttributes.id
         }
       })
 
-      post = await post.update({
-        name: name,
-        desc: desc,
-        title: title,
-        content:content
+      post = await post.update(postAttributes,{
+        fields:['title', 'desc', 'author','content']
       })
 
-      let RelationshipModel = getTermRelationshipModel()
+      if( termList ){
+        let terms = await SharedTerm.findAll( { where:{ id: { [Op.in]: termList } }})
+        post.addTerms(terms)
+      }
 
-      let res = await RelationshipModel.destroy({
-        where: {
-          viewable_type:'post',
-          viewable_id: id
-        }
-      })
-
-      for (var i = 0; i < termList.length; i++) {
-        let relationship = {
-          type: 'post',
-          post_id: post.id,
-          term_id: termList[i]
-        }
-        await RelationshipModel.create(relationship)
+      if( photo_id > 0 ){
+        let photo = await SharedPhoto.findByPk( photo_id )
+        post.addCover(photo)
       }
 
       ctx.body = post
