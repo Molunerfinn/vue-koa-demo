@@ -47,6 +47,10 @@ module.exports = {
       '/socket':{
         target: `http://localhost:${apiServerPort}`,
         ws: true
+      },
+      '/game':{
+        target: `http://localhost:${apiServerPort}`,
+        changeOrigin: true
       }
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"
