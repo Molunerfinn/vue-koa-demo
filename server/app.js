@@ -142,7 +142,7 @@ router.use('/api/backend', jwt({secret: secret.jwtSecret, getToken:(ctx)=>ctx.qu
 // FIXME
 //===============================================================
 import game_round from './routes/game_round.js'
-router.use('/ztoupiao', game_round.routes())
+router.use('/game', game_round.routes())
 
 import wxopen from './routes/wxopen.js'
 router.use('/api/wxopen', wxopen.routes())
