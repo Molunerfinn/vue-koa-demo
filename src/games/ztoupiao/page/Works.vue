@@ -50,64 +50,9 @@
         </div>
 
       </div>
-      <table class="activity_info" width="100%">
-        <tr>{{gameRound.start_at}}至{{gameRound.end_at}}</tr>
-        <tr>
-          <td>
-            <div id="actionExpBtn" class="poupTitleMune checked" _flag="0" @touchstart="showTab( 0 )">
-              <div class="item">活动介绍</div>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <div id="ranBtn" class="poupTitleMune " _flag="1" @touchstart="showTab( 1 )">
-              <div class="item">投票排名</div>
-            </div>
-          </td>
-        </tr>
-      </table>
-      <div id="ruleBox" class="poupMain" _flag="2" style="-webkit-overflow-scrolling:touch;">
-        <div class="poupMainInfo">
-          <div id="explainBox" class="poupLine" data-sortKey="a">
-            <div class="mainTitle">游戏规则</div>
-            <p id="explaiDrawInfoBox" class="" v-html="gameRound.desc">
-            </p>
-          </div>
-        </div>
-      </div>
-      <div id="rankBox" class="poupMain hide" _flag="1" style="-webkit-overflow-scrolling:touch;">
-        <div class="poupMainInfo">
-          <div id="noRank" class='' v-show="!hasRank">暂无排名</div>
-          <div id="rankMain" class="getRankHeight" v-show="hasRank">
-            <div style="margin-top:0.7rem;margin-left: 0.25rem;">当前排名：<span id="rank"> {{currentPlayerRank}}</span> （只显示前<span id="showRankNum">100</span>名）</div>
-            <div style="padding:0rem 0.5rem">
-              <table class="rankTable" cellspacing="0" cellpadding="0">
-                <thead>
-                  <tr style="line-height: 1rem;">
-                    <th>排行</th>
-                    <th>头像</th>
-                    <th>昵称</th>
-                    <th>成绩</th>
-                  </tr>
-                </thead>
-                <tr class="rankInfo" v-for="(player,i) in gamePlayerRank">
-                  <td>{{i+1}}</td>
-                  <td>
-                    <div><img class="userImg" :src="player.avatar" /> </div>
-                  </td>
-                  <td class="userName"> {{player.nickname}}</td>
-                  <td> {{player.max_score}} 个</td>
-                </tr>
-
-              </table>
-            </div>
-          </div>
-          <div id="rankHeight">
-            <table id="rankInfoBox" class="rankTable" cellspacing="0" cellpadding="0" style="margin-top: 0;"></table>
-          </div>
-        </div>
-
+      <div>
+        <p>开始时间: {{displayStartAt}} </p>
+        <p>结束时间: {{displayEndAt}} </p>
       </div>
     </div>
     <WorksListBox :gameAlbums="gameAlbums" @showPhotosList="showPhotosList"> </WorksListBox>
