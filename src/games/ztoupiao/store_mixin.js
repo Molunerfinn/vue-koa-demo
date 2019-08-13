@@ -5,12 +5,12 @@ export default {
   computed:{
     ...mapState([
       // 箭头函数可使代码更简练
-      'gameRound', 'gameResults', 'gameAlbums'
+      'gameRound', 'gameResults', 'gameAlbums', 'slides', 'playerCount', 'resultCount'
     ])
   },
   methods:{
     ...mapActions([
-      'setGameRound','setGameResults', 'setGameAlbums'
+      'setGameRound','setGameResults', 'setGameAlbums', 'setSlides', 'setResultCount', 'setPlayerCount'
     ])
   }
 }

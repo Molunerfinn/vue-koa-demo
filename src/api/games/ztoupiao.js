@@ -7,7 +7,18 @@ import fetch from '@/config/fetch'
 
 var basePath = '/gapi/ztoupiao'
 
-export const getGameResult = ( number, data) => fetch(basePath + '/' + number + '/getInfo', data, 'POST')
+/**
+ * 取得游戏基本信息
+ * @param {*} number - game_round number
+ * @return {Object} gameRound - number, playPath, state, color, code
+ * @return {Object} gamePlayer - current gamePlayer { openid, nickname, avatar }
+ * @return {Array} gameAlbums - {}
+ * @return {Array} slides - {}
+ * @return {Object} wxJsConfig - { shareUrl }
+ * @return {Number} playerCount -
+ * @return {Number} resultCount -
+ */
+export const getGameInfo = ( number, data) => fetch(basePath + '/' + number + '/getInfo', data, 'POST')
 
 export const postMsg = ( number, data) => fetch(basePath + '/' + number + '/addPlayer', data, 'POST')
 

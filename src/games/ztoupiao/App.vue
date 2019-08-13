@@ -36,7 +36,7 @@
   import HdGame from '@/lib/hdgame'
   // import weui from 'weui.js'
   import queryString from 'query-string'
-  import { getGameResult } from '@/api/games/ztoupiao'
+  import { getGameInfo } from '@/api/games/ztoupiao'
   import storeMixin from './store_mixin'
 
   import skin from '@/assets/game/ztoupiao/css/skin.tmpl'
@@ -47,7 +47,6 @@
     data() {
       return {
         number: null,
-        gameResult: []
       }
     },
     created() {
@@ -58,23 +57,23 @@
         parsed: parsed,
         code: 'ztoupiao'
       }
-      getGameResult(this.number, params).then(data => {
-        console.log('getGameResult data-----:', data)
+      getGameInfo(this.number, params).then(data => {
+        console.log('getGameInfo data-----:', data)
         let gameRound = data.gameRound
         // 先设置skin color
         let originalColor = '#F8B62D'
         let newColor = gameRound.color || '#FFFFFF'
 
-        console.log('getGameResult data-----:', data)
-
+        console.log('getGameInfo data-----:', data)
 
         this.setGameRound( data.gameRound )
         this.setGameAlbums( data.gameAlbums )
-        console.log( "this.skin=", skin)
+        this.setSlides( data.slides )
+        this.setResultCount( data.resultCount )
+        this.setPlayerCount( data.playerCount )
+
         let style = skin.replace(originalColor, newColor )
         this.useTheme( style )
-
-        this.gameResult = data.gameResult
 
         let wxConfig = data.wxConfig
         if (wxConfig) {

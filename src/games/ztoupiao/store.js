@@ -8,7 +8,10 @@ const store = new Vuex.Store({
     count: 0,
     gameRound: {},
     gameResults: [],
-    gameAlbums: []
+    gameAlbums: [],
+    slides: [],
+    playerCount: 0,
+    resultCount: 0
   },
   mutations: {
     setGameRound (state, newGameRound) {
@@ -19,6 +22,15 @@ const store = new Vuex.Store({
     },
     setGameAlbums (state, newGameAlbums) {
       state.gameAlbums = newGameAlbums
+    },
+    setSlides (state, newSlides) {
+      state.slides = newSlides
+    },
+    setResultCount (state, count) {
+      state.resultCount = count
+    },
+    setPlayerCount (state, count) {
+      state.playerCount = count
     }
   },
   actions: {
@@ -30,6 +42,15 @@ const store = new Vuex.Store({
     },
     setGameAlbums (context, newGameAlbums) {
       context.commit('setGameAlbums', newGameAlbums)
+    },
+    setSlides (context, newSlides) {
+      context.commit('setSlides', newSlides)
+    },
+    setResultCount (context, count) {
+      context.commit('setResultCount', count)
+    },
+    setPlayerCount (context, count) {
+      context.commit('setPlayerCount', count)
     }
   }
 })

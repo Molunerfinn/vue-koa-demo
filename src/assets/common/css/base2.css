@@ -13,6 +13,14 @@ pre {
   font-family: "微软雅黑"
 }
 
+.flex{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-direction: row;
+}
+
 .selectText {
   display: inline-block;
   max-width: 10rem;

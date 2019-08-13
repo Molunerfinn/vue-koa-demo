@@ -1,58 +1,33 @@
 <template>
 
   <!-- 锦囊 -->
-  <div class="WorksBox" >
+  <div class="WorksBox">
     <div class="swiper-container swiper-container-initialized swiper-container-horizontal">
       <div class="swiper-wrapper">
-        <div class="swiper-slide" v-for="photo in postersData">
-          <img  :src="photo.originalUrl"/>
+        <div class="swiper-slide" v-for="photo in slides">
+          <img :src="photo.originalUrl" />
         </div>
       </div>
       <div class="swiper-pagination"></div>
     </div>
     <div class="home" v-show="ui.showHome">
-      <div class="weui-grids" style="background-color:#F8B62D;">
-        <table style="width:100%;color:#40220F;">
-          <tr>
-            <td colspan=3>&nbsp;</td>
-          </tr>
-          <tr>
-            <td align="center" style="border-right:solid 1px #40220F;">
-              <table>
-                <tr>
-                  <td align="center">参与选手</td>
-                </tr>
-                <tr>
-                  <td align="center">{{gameRound.playerCount}}</td>
-                </tr>
-              </table>
-            </td>
-            <td align="center" style="border-right:solid 1px #40220F;">
-              <table>
-                <tr>
-                  <td align="center">累计投票</td>
-                </tr>
-                <tr>
-                  <td align="center">{{gameRound.resultCount}}</td>
-                </tr>
-              </table>
-            </td>
-            <td align="center">
-              <table>
-                <tr>
-                  <td align="center">累计浏览</td>
-                </tr>
-                <tr>
-                  <td align="center">0</td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-          <tr>
-            <td colspan=3>&nbsp;</td>
-          </tr>
-        </table>
-      </div>
+      <div class="c_bg flex statis">
+          <div class="item">
+            <p>参与选手</p>
+            <p> {{playerCount}} </p>
+          </div>
+          <div class="item">
+            <p>累计投票</p>
+            <p> {{resultCount}} </p>
+          </div>
+          <div class="item">
+            <p>累计浏览</p>
+            <p> 0 </p>
+          </div>
+
+
+        </div>
+
       <div align="center">
         <div class="countdown-wrap">
           <div class="abg"> </div>
@@ -135,7 +110,7 @@
 
       </div>
     </div>
-    <WorksListBox :gameAlbums="gameAlbums"  @showPhotosList="showPhotosList"> </WorksListBox>
+    <WorksListBox :gameAlbums="gameAlbums" @showPhotosList="showPhotosList"> </WorksListBox>
   </div>
 
 </template>
@@ -146,9 +121,7 @@
   import moment from 'moment'
   import { getRanking } from '@/api/games/zxg'
   import storeMixin from '../store_mixin'
-  import { getRoundState } from '@/api/games/ztoupiao'
   import queryString from 'query-string'
-  import { getPoster } from '@/api/albums.js'
   import WorksListBox from './works/WorksListBox.vue'
   import Swiper from 'swiper'
   export default {
@@ -164,7 +137,7 @@
     data() {
       return {
         postersData: [],
-        getRoundState: {},
+        gameRoundEndAt: null,
         ui: {
           showHome: true
         },
@@ -189,41 +162,8 @@
     },
     created() {
       window.$ = $
-      const parsed = queryString.parse(location.search)
-      var number = parsed.number
-
-      var params = {
-        parsed: parsed,
-        code: 'ztoupiao',
-        number:number
-      }
-
-      getRoundState(number, params).then(data => {
-        console.log('data===:', data)
-        this.getRoundState = data
-        this.countTime()
-      })
-
-      getPoster(number, params).then((data) => {
-        this.postersData = data
-        console.log('this.postersData----:', this.postersData)
-        this.$nextTick(()=> {
-          this.mySwiper = new Swiper('.swiper-container',
-          {
-            direction: 'horizontal',
-            loop : true,
-            autoplay:true,
-            noSwiping: true,
-            pagination: {
-              el: '.swiper-pagination',
-              clickable: true
-            }
-          })
-    })
-      })
     },
-    mounted() {
-    },
+    mounted() {},
     computed: {
       hasRank() {
         return this.gamePlayerRank.length > 0
@@ -249,7 +189,7 @@
         // 获取当前时间
 
         // 设置截止时间
-        var endDate = new Date(this.getRoundState.end_at)
+        var endDate = new Date(this.gameRoundEndAt)
         var end = endDate.getTime()
         // 时间差
         // 定义变量 d,h,m,s保存倒计时的时间
@@ -344,16 +284,34 @@
           .not('#ruleBox')
           .hide()
         $('#ruleBox').show()
+      },
+      initGame() {
+        this.gameRoundEndAt = this.gameRound.end_at
+        this.countTime()
+      },
+      initSwiper() {
+        this.$nextTick(() => {
+          this.mySwiper = new Swiper('.swiper-container', {
+            direction: 'horizontal',
+            loop: true,
+            autoplay: true,
+            noSwiping: true,
+            pagination: {
+              el: '.swiper-pagination',
+              clickable: true
+            }
+          })
+        })
       }
     },
     watch: {
-      command: function(val, oldVal) {
-        //外部触发游戏开始
-        console.log('rulebox', 'watch-command new: %s, old: %s', val, oldVal)
-        if (val == true) {
-          this.ui.showHome = true
-        }
-
+      gameRound: function(val, oldVal) {
+        //初始化游戏
+        this.initGame()
+      },
+      slides: function(val, oldVal) {
+        //初始化游戏
+        this.initSwiper()
       }
     }
   }
@@ -406,19 +364,28 @@
 
   .swiper-container {
     width: 100%;
-    height: 100%;
   }
   .swiper-slide {
     text-align: center;
     font-size: 18px;
-    -webkit-box-pack: center;
-    -ms-flex-pack: center;
-    -webkit-justify-content: center;
     justify-content: center;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    -webkit-align-items: center;
     align-items: center;
+  }
+  .swiper-slide img{
+    width: 100%;
+    height: auto;
+  }
+  .statis{
+    padding: 16px 0;
+  }
+  .flex.statis .item{
+    flex-grow: 1
+  }
+  .flex.statis .item:first-child{
+    border-right: 1px solid #40220F;
+  }
+  .flex.statis .item:last-child{
+    border-left: 1px solid #40220F;
   }
 
 </style>
