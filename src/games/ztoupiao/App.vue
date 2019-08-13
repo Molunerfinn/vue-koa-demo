@@ -39,28 +39,40 @@
   import { getGameResult } from '@/api/games/ztoupiao'
   import storeMixin from './store_mixin'
 
+  import skin from '@/assets/game/ztoupiao/css/skin.tmpl'
+
   export default {
     name: 'app',
     mixins: [storeMixin],
     data() {
       return {
+        number: null,
         gameResult: []
       }
     },
     created() {
       const parsed = queryString.parse(location.search)
-      var number = parsed.number
+      this.number = parsed.number
 
       var params = {
         parsed: parsed,
         code: 'ztoupiao'
       }
-      getGameResult(number, params).then(data => {
+      getGameResult(this.number, params).then(data => {
         console.log('getGameResult data-----:', data)
-        //this.gameRound = data.gameRound
+        let gameRound = data.gameRound
+        // 先设置skin color
+        let originalColor = '#F8B62D'
+        let newColor = gameRound.color || '#FFFFFF'
+
+        console.log('getGameResult data-----:', data)
+
+
         this.setGameRound( data.gameRound )
         this.setGameAlbums( data.gameAlbums )
-        console.log( "this.gameRound=", this.gameRound)
+        console.log( "this.skin=", skin)
+        let style = skin.replace(originalColor, newColor )
+        this.useTheme( style )
 
         this.gameResult = data.gameResult
 
@@ -80,6 +92,17 @@
     },
 
     methods: {
+
+      useTheme( newStyle ){
+        let id = this.number
+        let styleTag = document.getElementById(id)
+        if (!styleTag) {
+          styleTag = document.createElement('style')
+          styleTag.setAttribute('id', id)
+          document.head.appendChild(styleTag)
+        }
+        styleTag.innerHTML = newStyle
+      }
     }
   }
 

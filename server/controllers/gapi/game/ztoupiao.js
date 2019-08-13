@@ -16,7 +16,6 @@ const {
 
 const logger = require('../../../helpers/logger')
 const md5 = require('md5');
-const PromiseFromHash = require('../../../lib/promise_from_hash');
 
 function getClientIP(req) {
   return req.headers['x-forwarded-for'] || // 判断是否有反向代理 IP
@@ -51,7 +50,7 @@ export default class GamesController {
         }
       })
 
-      let gameAlbums = GameAlbum.findAll({
+      let gameAlbumsPromise = GameAlbum.findAll({
         where: {
           game_round_id: gameRound.id,
         },
@@ -61,41 +60,42 @@ export default class GamesController {
         }],
         limit: 2
       })
-      let gamePlayer =  GamePlayer.findOne({
+      let gamePlayerPromise =  GamePlayer.findOne({
         where: {
           openid
         }
       })
-      let playerCount = GameRound.count({
+      let playerCountPromise = GameRound.count({
         where: {
           number
         },
         include: 'GamePlayers'
       })
-      let resultCount = GameRound.count({
+      let resultCountPromise = GameRound.count({
         where: {
           number
         },
         include: 'GameResults'
       })
 
-      const results = await PromiseFromHash({
-        gameAlbums,
-        gamePlayer,
-        playerCount,
-        resultCount,
-        slides: gameRound.getSlides(),
-        wxJsConfig: getWxJsConfig(url, gameRound)
-      })
+      const results = await Promise.all([
+        gameAlbumsPromise,
+        gamePlayerPromise,
+        playerCountPromise,
+        resultCountPromise,
+        gameRound.getSlides(),
+        getWxJsConfig(url, gameRound)
+      ])
+      let [gameAlbums, gamePlayer, playerCount, resultCount, slides, wxJsConfig] = [...results]
 
       if( preview == true){
         let avatar = 'http://wx.qlogo.cn/mmopen/VX7U0xDSUxiaYgiasax2BWhlFuXmDaGvibY27Zknyy2WWrgNQwHvTfrKicupics0tdlFqBWGicy3heHOyRKPrBvEibFZtHCicf8zyKkr/0'
         gamePlayer = { nickname: 'previewer', avatar: avatar }
       }
 
-      results.gameRound = gameRound.getInfo()
+      gameRound = gameRound.getInfo()
 
-      ctx.body = results
+      ctx.body = { gameRound, gameAlbums, gamePlayer, playerCount, resultCount, slides, wxJsConfig }
 
     } catch (error) {
       logger.error("getGameInfo error:", error)

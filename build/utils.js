@@ -22,7 +22,13 @@ exports.cssLoaders = function (options) {
 
   // generate loader string to be used with extract text plugin
   function generateLoaders (loader, loaderOptions) {
+    // 自定义对tmpl文件, modules: true
+    if( loader === 'tmpl'){
+        return ['to-string-loader', cssLoader]
+    }
+
     var loaders = [cssLoader]
+
     if (loader) {
       loaders.push({
         loader: loader + '-loader',
@@ -31,6 +37,7 @@ exports.cssLoaders = function (options) {
         })
       })
     }
+
 
     // Extract CSS when that option is specified
     // (which is the case during production build)
@@ -52,7 +59,8 @@ exports.cssLoaders = function (options) {
     sass: generateLoaders('sass', { indentedSyntax: true }),
     scss: generateLoaders('sass'),
     stylus: generateLoaders('stylus'),
-    styl: generateLoaders('stylus')
+    styl: generateLoaders('stylus'),
+    tmpl: generateLoaders('tmpl') // 处理css模板
   }
 }
 

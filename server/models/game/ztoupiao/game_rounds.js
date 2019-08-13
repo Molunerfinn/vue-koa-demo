@@ -111,7 +111,7 @@ function addHooks(model) {
   })
 }
 
-const permittedAttributes = ['number', 'state', 'name', 'desc', 'award_desc', 'start_at', 'end_at', 'code', 'duration', 'host']
+const permittedAttributes = ['number', 'state', 'name', 'desc', 'award_desc', 'start_at', 'end_at', 'code', 'duration', 'host', 'color']
 
 function bindClassMethods(model) {
   model.getAllInfoByNumber = async function(number) {
@@ -172,6 +172,7 @@ function getInfo() {
     end_at: this.end_at,
     host: this.host,
     code: this.code,
+    color: this.color,
     duration: this.duration,
     playPath
   }

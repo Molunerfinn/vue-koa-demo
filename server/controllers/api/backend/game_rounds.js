@@ -19,9 +19,9 @@ export default class GameRounds {
       console.log('==================modifyGameRound=================');
       let body = ctx.request.body;
       console.log('body---:', body);
-      let id = body.params.id
+      let id = ctx.params.id
       let gameRoundAttributes = body.gameRound
-  
+
       let gameRound = await GameRoundModel.findOne({
         where: {
           id
