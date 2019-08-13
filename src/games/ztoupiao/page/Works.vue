@@ -120,7 +120,6 @@
   import $ from 'jquery'
   import moment from 'moment'
   import { getRanking } from '@/api/games/zxg'
-  import storeMixin from '../store_mixin'
   import queryString from 'query-string'
   import WorksListBox from './works/WorksListBox.vue'
   import Swiper from 'swiper'
@@ -133,7 +132,6 @@
         type: Object
       }
     },
-    mixins: [storeMixin],
     data() {
       return {
         postersData: [],

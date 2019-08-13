@@ -18,8 +18,9 @@ import '@/assets/game/ztoupiao/css/skin.css'
 
 import router from './router'
 import store from './store'
+import storeMixin from './store_mixin'
 
-
+Vue.mixin(storeMixin)
 /* eslint-disable no-new */
 new Vue({
   router,

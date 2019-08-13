@@ -37,13 +37,12 @@
   // import weui from 'weui.js'
   import queryString from 'query-string'
   import { getGameInfo } from '@/api/games/ztoupiao'
-  import storeMixin from './store_mixin'
 
   import skin from '@/assets/game/ztoupiao/css/skin.tmpl'
 
   export default {
     name: 'app',
-    mixins: [storeMixin],
+    //mixins: [storeMixin],
     data() {
       return {
         number: null,
