@@ -16,7 +16,7 @@ export default class GameRounds {
 
   static async update(ctx) {
     try {
-      console.log('==================modifyGameRound=================');
+      console.log('++++++++++++++++++++++modifyGameRound=================');
       let body = ctx.request.body;
       console.log('body---:', body);
       let id = ctx.params.id
@@ -29,7 +29,7 @@ export default class GameRounds {
       })
 
       gameRound = await gameRound.update(gameRoundAttributes,{
-        fields:['name', 'desc', 'color']
+        fields:['name', 'desc', 'color','start_at','end_at']
       })
       ctx.body = gameRound
     } catch (e) {
