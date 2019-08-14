@@ -1,54 +1,14 @@
 <template>
-
   <!-- 锦囊 -->
-  <div class="WorksBox">
-    <SlideBox></SlideBox>
-    <div class="home" v-show="ui.showHome">
-      <div class="c_bg flex statis">
-          <div class="item">
-            <p>参与选手</p>
-            <p> {{playerCount}} </p>
-          </div>
-          <div class="item">
-            <p>累计投票</p>
-            <p> {{resultCount}} </p>
-          </div>
-          <div class="item">
-            <p>累计浏览</p>
-            <p> 0 </p>
-          </div>
-
-
+  <div class="SlideBox">
+    <div class="swiper-container swiper-container-initialized swiper-container-horizontal">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide" v-for="photo in slides">
+          <img :src="photo.originalUrl" />
         </div>
-
-      <div align="center">
-        <div class="countdown-wrap">
-          <div class="abg"> </div>
-          <div class="title"> <span> 距离活动结束还有 </span> </div>
-          <ul class="countdown">
-            <li><span class="time">{{timeToEnd.d1}}</span>
-              <span class="time">{{timeToEnd.d2}}</span>
-              <span> 天 </span>
-            </li>
-            <li> <span class="time">{{timeToEnd.h1}}</span>
-              <span class="time">{{timeToEnd.h2}}</span>
-              <span> 时 </span></li>
-            <li> <span class="time">{{timeToEnd.m1}}</span>
-              <span class="time">{{timeToEnd.m2}}</span>
-              <span> 分 </span></li>
-            <li> <span class="time">{{timeToEnd.s1}}</span>
-              <span class="time">{{timeToEnd.s2}}</span>
-              <span> 秒 </span></li>
-          </ul>
-        </div>
-
       </div>
-      <div>
-        <p>开始时间: {{displayStartAt}} </p>
-        <p>结束时间: {{displayEndAt}} </p>
-      </div>
+      <div class="swiper-pagination"></div>
     </div>
-    <WorksListBox :gameAlbums="gameAlbums" @showPhotosList="showPhotosList"> </WorksListBox>
   </div>
 
 </template>
@@ -57,15 +17,10 @@
 
   import $ from 'jquery'
   import moment from 'moment'
-  import { getRanking } from '@/api/games/zxg'
-  import queryString from 'query-string'
-  import WorksListBox from './works/WorksListBox.vue'
-  import SlideBox from './slide.vue'
+  // import queryString from 'query-string'
   import Swiper from 'swiper'
   export default {
     components: {
-      WorksListBox,
-      SlideBox
     },
     props: {
       gamePlayer: {
@@ -151,25 +106,6 @@
           }
         }, 1000)
       },
-
-      //
-      handleShowPopup(flag) {
-        var silkBag = $('#ruleImg')
-        var popupX = silkBag.offset().left + silkBag.width() / 2 + 'px '
-        var popupY = silkBag.offset().top + silkBag.height() / 2 + 'px'
-        $('#poupInfoBox').css({
-          'transform-origin': popupX + popupY,
-          '-webkit-transform-origin': popupX + popupY
-        })
-
-        this.setSlideBar(true)
-        this.showTab(flag)
-      },
-      handleHidePopup() {
-        var poupInfoBox = $('#poupInfoBox')
-        poupInfoBox.removeClass('enlarge').removeClass('retrans')
-        poupInfoBox.hide()
-      },
       // 点击查看成绩
       setSlideBar(isAnimation) {
         var anFlag = isAnimation
@@ -181,47 +117,6 @@
           $('#poupInfoBox').addClass('retrans')
         }
         //$(".gameBox,.home,.body").addClass("overflow-y-hidden");
-      },
-      showTab(flag) {
-        console.log('showTab', flag)
-        $('#poupInfoBox').show()
-        $('.poupTitleMune').removeClass('checked')
-
-        $('.poupTitleBox .poupTitleMune').each(function(i, value) {
-          if ($.trim($(this).attr('_flag')) == flag) {
-            $(this).addClass('checked')
-          }
-        })
-
-        $('.poupSlideBar .slideBarTip').css('left', (13.25 / this.menuLen) * flag + 'rem')
-
-        if (flag === 0) {
-          this.poupRule()
-        } else if (flag === 1) {
-          this.poupRank()
-        }
-      },
-      poupRank() {
-        const parsed = queryString.parse(location.search)
-        var params = {
-          openid: parsed.openid
-        }
-        getRanking(this.gameRound.number, params).then(data => {
-          var rankInfo = data
-          console.log('rankInfo====:', rankInfo)
-          this.gamePlayerRank = rankInfo['allPlayer']
-          this.currentPlayer = rankInfo['thisPlayer']
-        })
-        $('.poupMain')
-          .not('#rankBox')
-          .hide()
-        $('#rankBox').show()
-      },
-      poupRule() {
-        $('.poupMain')
-          .not('#ruleBox')
-          .hide()
-        $('#ruleBox').show()
       },
       initGame() {
         this.gameRoundEndAt = this.gameRound.end_at

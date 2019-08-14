@@ -1,7 +1,7 @@
 <template>
   <!-- 锦囊 -->
  <div class="MyAccountBox">
-
+<SlideBox></SlideBox>
    <div class="swiper-container swiper-container-initialized swiper-container-horizontal">
      <div class="swiper-wrapper">
        <div class="swiper-slide" v-for="photo in postersData">
@@ -18,9 +18,6 @@
        <div class="weui-navbar__item" @touchend="showWork()">
          我的作品
        </div>
-       <div class="weui-navbar__item" @touchend="showCard()">
-         我的卡券
-       </div>
      </div>
      <div class="myWorks_list" v-show="ui.workVisible">
        我的作品
@@ -29,15 +26,6 @@
          <a>{{work.name}}</a>
          <a>{{work.score}}</a>
          <div class="userImgBox" style="border-color:"><img :src="gamePlayer.avatar" class="userImg" /></div>
-       </li>
-     </div>
-     <div class="myCards_list" v-show="ui.cardVisible">
-       我的卡券
-       <li v-for="card in myCards">
-         <img  :src="card.Photos[0].originalUrl"/>
-         <a>{{card.name}}</a>
-         <a>{{card.score}}</a>
-         <div class="userImgBox" style="border-color:"><img :src="card.GamePlayers.avatar" class="userImg" /></div>
        </li>
      </div>
    </div>
@@ -57,6 +45,7 @@ import queryString from 'query-string'
 import { getMyWorkInfo,getMyCardInfo } from '@/api/games/ztoupiao'
 import { getPoster } from '@/api/albums.js'
 import Swiper from 'swiper'
+import SlideBox from './slide.vue'
 
 export default {
   props: {
@@ -66,6 +55,7 @@ export default {
     }
   },
   components: {
+    SlideBox,
     ModifyBox
   },
   data() {

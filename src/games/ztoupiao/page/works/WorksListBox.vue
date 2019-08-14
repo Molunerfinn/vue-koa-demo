@@ -41,10 +41,6 @@
 
 <script>
 import $ from "jquery"
-import {
-  getRanking
-} from '@/api/games/zxg'
-import moment from 'moment';
 // import { getRoundState } from '@/api/games/ztoupiao'
 
 import queryString from 'query-string'
@@ -58,9 +54,6 @@ export default {
     PhotosListBox
   },
   props: {
-    gameRound: { // 游戏成绩相关数据
-      type: Object
-    },
     ruleIconUrl: String, // 锦囊按钮图片
     command:{
       default: false // 可选值: showResult, showGift
@@ -156,12 +149,6 @@ export default {
     currentPlayerRank(){
       return (this.currentPlayer.rank!=undefined&&this.currentPlayer.rank!=null) && this.currentPlayer.rank>=0 ? this.currentPlayer.rank : '无'
     },
-    displayStartAt(){
-      return moment(this.gameRound.start_at).format('YYYY年MM月DD日 HH时mm分')
-    },
-    displayEndAt(){
-      return moment(this.gameRound.end_at).format('YYYY年MM月DD日 HH时mm分')
-    }
   },
   methods: {
     showPhotosList: function(album){
@@ -264,44 +251,6 @@ export default {
           $("#poupInfoBox").addClass("retrans")
         }
         //$(".gameBox,.home,.body").addClass("overflow-y-hidden");
-    },
-    showTab( flag ){
-      console.log('showTab',flag);
-      $("#poupInfoBox").show();
-      $(".poupTitleMune").removeClass("checked");
-
-      $(".poupTitleBox .poupTitleMune").each(function(i, value) {
-        if ($.trim($(this).attr("_flag")) == flag) {
-          $(this).addClass("checked")
-        }
-      })
-
-      $(".poupSlideBar .slideBarTip").css("left", (13.25 / this.menuLen) * flag + "rem")
-
-      if (flag === 0) {
-        this.poupRule()
-      } else
-      if (flag === 1) {
-        this.poupRank()
-      }
-    },
-    poupRank(){
-
-      var params = {
-        openid: this.gamePlayer.openid
-      }
-      getRanking(this.gameRound.number, params).then(data => {
-        var rankInfo = data
-        console.log('rankInfo====:',rankInfo);
-        this.gamePlayerRank = rankInfo['allPlayer']
-        this.currentPlayer = rankInfo['thisPlayer']
-      })
-      $('.poupMain').not("#rankBox").hide()
-      $("#rankBox").show()
-    },
-    poupRule(){
-      $('.poupMain').not("#ruleBox").hide()
-      $("#ruleBox").show()
     }
   },
   watch: {

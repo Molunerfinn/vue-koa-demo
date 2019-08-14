@@ -1,10 +1,11 @@
 <template>
 
   <div class="PhotographsBox">
+    <SlideBox></SlideBox>
     <div class="weui-toptips weui-toptips_warn js_tooltips"></div>
     <div id="awardUserInfoBox" class="page  input js_show">
       <div class="awardUserInfoForm">
-        <img id="PhotographsTitle" v-bind:src="skinAssets.workstop1ImgPath">
+
         <div class="weui-cells weui-cells_form">
 
           <div class="weui-cells__tips" style="text-align:left;">温馨提示：<br>建议您上传的萌宝照片尺寸不要超过8M，否则可能读取不到照片的参数而造成不能成功上传。</div>
@@ -117,7 +118,7 @@
 </template>
 
 <script>
-
+  import SlideBox from './slide.vue'
   import weui from 'weui.js'
   import $ from 'jquery'
   import queryString from 'query-string'
@@ -130,6 +131,9 @@
   import { FileChecksum } from '@/lib/direct_upload/file_checksum'
   import { BlobUpload } from '@/lib/direct_upload/blob_upload'
   export default {
+    components:{
+      SlideBox
+    },
     props: {
     },
     mixins: [storeMixin],
