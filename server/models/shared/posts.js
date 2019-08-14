@@ -19,8 +19,12 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: 0
     },
     type: {
-      type: DataTypes.STRING(255),
-      defaultValue: ''
+      type: DataTypes.STRING(12),
+      defaultValue: 'page' // 文章类型 'page', 'gamenews'
+    },
+    status: {
+      type: DataTypes.STRING(12),
+       // 文章状态，'public', 'draft'
     },
     content: {
       type: DataTypes.TEXT,
