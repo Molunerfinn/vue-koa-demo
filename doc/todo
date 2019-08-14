@@ -46,3 +46,5 @@
 
 16. 活动介绍里的图片上传，使用better组件
 17. 图片信息维护：
+18. term 集成 sequelize-hierarchy or sequelize-nested-set
+    https://www.npmjs.com/package/sequelize-hierarchy

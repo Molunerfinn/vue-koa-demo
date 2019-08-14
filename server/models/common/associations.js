@@ -6,31 +6,7 @@ export function buildGameAssociations(db) {
   let SharedPhotoRelationship = db.SharedPhotoRelationship
   let SharedTermRelationship = db.SharedTermRelationship
 
-  SharedPost.belongsToMany(SharedPhoto, {
-    through:{
-      model: SharedPhotoRelationship,
-      scope: {
-          viewable_type: 'cover'
-      }
-    },
-    constraints:false,
-    foreignKey: 'viewable_id',
-    otherKey: 'photo_id',
-    as: 'Covers'
-  })
-
-  SharedPost.belongsToMany(SharedTerm, {
-    through:{
-      model: SharedTermRelationship,
-      scope: {
-          viewable_type: 'post'
-      }
-    },
-    foreignKey: 'viewable_id',
-    otherKey: 'term_id',
-    as: 'Terms'
-  })
-
+  buildSharedAssociations( db )
   // 为每种游戏添加关系，游戏可能使用了公共模型，如 投票游戏使用 图片，文章
 
   let models = Object.values(db)
@@ -118,4 +94,43 @@ export function buildGameAssociations(db) {
       }
     }
   })
+}
+
+// copy to zgame_site
+export function buildSharedAssociations(db) {
+  // 为公共模型添加关系
+  let SharedPost = db.SharedPost
+  let SharedPhoto = db.SharedPhoto
+  let SharedTerm = db.SharedTerm
+  let SharedPhotoRelationship = db.SharedPhotoRelationship
+  let SharedTermRelationship = db.SharedTermRelationship
+
+  SharedPost.belongsToMany(SharedPhoto, {
+    through:{
+      model: SharedPhotoRelationship,
+      scope: {
+          viewable_type: 'cover'
+      }
+    },
+    constraints:false,
+    foreignKey: 'viewable_id',
+    otherKey: 'photo_id',
+    as: 'Covers'
+  })
+
+  SharedPost.belongsToMany(SharedTerm, {
+    through:{
+      model: SharedTermRelationship,
+      scope: {
+          viewable_type: 'post'
+      }
+    },
+    foreignKey: 'viewable_id',
+    otherKey: 'term_id',
+    as: 'Terms'
+  })
+
+  //  支持查找分配了几个分类的文章
+  //  findAll( { include:[{association:'TermRelationships', where:{ taxon_id: xxx } }]})
+  SharedPost.hasMany(SharedTermRelationship, { as: 'TermRelationships' });
 }
