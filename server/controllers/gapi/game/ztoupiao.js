@@ -141,7 +141,6 @@ export default class GamesController {
           ['created_at', 'DESC']
         ]
       })
-      console.log('gameAlbums************:', gameAlbums);
 
       ctx.body = gameAlbums
 

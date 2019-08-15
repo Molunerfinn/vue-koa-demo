@@ -57,7 +57,7 @@ export default class PhotosController {
     let post_id = ctx.request.body.post_id
     let photoParam = ctx.request.body.photo
     let viewable_type = ctx.request.body.viewable_type
-
+    let album_id = ctx.request.body.album_id
 
 
     let Photo = getGamePhotoModelByCode(code)
@@ -69,6 +69,9 @@ export default class PhotosController {
     // let photoRelationshipOptions = {
     //   fields: ['photo_id', 'viewable_id', 'viewable_type']
     // }
+    if(album_id){
+      photoParam.album_id = album_id
+    }
 
     photoParam.viewable_type = viewable_type
     let photo = await Photo.create(photoParam, photoOptions)
