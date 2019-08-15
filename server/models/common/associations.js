@@ -132,5 +132,11 @@ export function buildSharedAssociations(db) {
 
   //  支持查找分配了几个分类的文章
   //  findAll( { include:[{association:'TermRelationships', where:{ taxon_id: xxx } }]})
-  SharedPost.hasMany(SharedTermRelationship, { as: 'TermRelationships' });
+  SharedPost.hasMany(SharedTermRelationship, {
+    foreignKey: 'viewable_id',
+    scope: {
+      viewable_type: 'post'
+    },
+    as: 'TermRelationships'
+  })
 }
