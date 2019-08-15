@@ -27,6 +27,10 @@ router.post('/photos/search', Photos.search)
 router.get('/posts', Posts.index)
 router.get('/posts/:id', Posts.getPostDetail)
 
+router.post('/base/createAlbum', Album.createAlbum)
+router.post('/base/getAlbums', Album.getAlbums)
+router.post('/base/removeAlbum', Album.removeAlbum)
+
 
 router.get('/base/getGameRoundInfo', base.getGameRoundInfo)
 router.post('/base/addGameRound', base.addGameRound)
