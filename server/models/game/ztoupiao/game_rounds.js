@@ -1,5 +1,4 @@
 var moment = require('moment')
-const PromiseFromHash = require('../../../lib/promise_from_hash');
 
 module.exports = (sequelize, DataTypes) => {
   const model = sequelize.define('ZTouPiaoGameRound', {

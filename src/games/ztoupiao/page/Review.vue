@@ -160,14 +160,9 @@ export default {
 }
 </script>
 
-<style lang="css" scoped>
-  .ruleBox{
+<style lang="css" >
 
-  }
-  .poupMain{
-    /*display: none;*/
-  }
-  .reviewDesc.img{
+  .reviewDesc img{
     width: 100%;
     height: auto;
   }

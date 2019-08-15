@@ -8,11 +8,10 @@ const client = new OSS({
   accessKeySecret: config.ossSecret,
   bucket:  config.ossBucket
 })
-
 // Headers for Direct Upload
 // https://help.aliyun.com/document_detail/31951.html
 // headers["Date"] is required use x-oss-date instead
-export function headersForDirectUpload(key, content_type, checksum){
+function headersForDirectUpload(key, content_type, checksum){
   let date = (new Date()).toUTCString()
   return {
     "Content-Type": content_type,
@@ -29,13 +28,13 @@ export function headersForDirectUpload(key, content_type, checksum){
 // # Source: *.your.host.com
 // # Allowed Methods: POST, PUT, HEAD
 // # Allowed Headers: *
-export function urlForDirectUpload(key, expires_in, content_type, content_length, checksum){
+function urlForDirectUpload(key, expires_in, content_type, content_length, checksum){
   let generated_url = client.generateObjectUrl(path_for(key))
   return generated_url
 }
 
 // key: photo.okey
-export function getObjectUrl(key, params = {}){
+function getObjectUrl(key, params = {}){
   let filekey = path_for(key)
   let url = client.generateObjectUrl( filekey )
   console.log('url----:',url);
@@ -44,7 +43,7 @@ export function getObjectUrl(key, params = {}){
   return url
 }
 
-export function getImageUrlForStyle(key, style) {
+function getImageUrlForStyle(key, style) {
   let url = getObjectUrl( key )
   style = style || 'w600'
   return `${url}?x-oss-process=style/${style}`
@@ -76,4 +75,12 @@ function path_for(key){
   }
   fullPath.replace(/^\//, "").replace(/[\/]+/, "/")
   return fullPath
+}
+
+module.exports={
+  client,
+  urlForDirectUpload,
+  headersForDirectUpload,
+  getObjectUrl,
+  getImageUrlForStyle
 }
