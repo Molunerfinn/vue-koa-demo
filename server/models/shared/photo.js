@@ -64,6 +64,9 @@ module.exports = (sequelize, DataTypes) => {
       },
       previewUrl(){ // w600
         return getImageUrlForStyle( this.okey)
+      },
+      thumbUrl(){ // wh80 固定宽高，居中裁剪
+        return getImageUrlForStyle( this.okey, 'wh80' )
       }
     }
   })
