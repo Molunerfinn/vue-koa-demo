@@ -26,8 +26,8 @@ module.exports = (sequelize, DataTypes) => {
         isIn: {
           // photo: 参赛作品, cover: post 封面， poster: 海报， slide: gameround 海报，
           // desc: gameround 描述里用图片
-           args: [['photo', 'slide', 'poster','cover']],
-           msg: "Must be photo, slide, poster."
+           args: [['photo', 'slide', 'poster','cover','desc']],
+           msg: "Must be photo, slide, poster,cover,desc."
          }
       }
     },

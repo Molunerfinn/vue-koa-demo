@@ -9,6 +9,7 @@ import term from '../../controllers/api/backend/term.js'
 //import wxOpen from '../../controllers/wxopen.js'
 
 import Photos from '../../controllers/photos.js'
+import Album from '../../controllers/api/backend/album.js'
 
 import Router from 'koa-router'
 const router = new Router()
