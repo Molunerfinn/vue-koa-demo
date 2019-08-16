@@ -45,7 +45,7 @@
 14. 活动设置页，手机预览按钮   ok
 15. 轮播图type               ok
 
-16. 活动介绍里的图片上传，使用better组件
+16. 活动介绍里的图片上传，使用better组件  ok
 17. 图片信息维护：
 18. term 集成 sequelize-hierarchy or sequelize-nested-set
     https://www.npmjs.com/package/sequelize-hierarchy
@@ -55,6 +55,6 @@
 
 支持后台添加选手
 ----------------------------------------------------------------------
-1. 每个选手（album）有对应的 player， 每创建一个album都要创建一个player,
+1. 每个选手（album）有对应的 player， 每创建一个album都要创建一个player,               ok
    这样不会和现有的游戏配置，每个玩家一个作品相冲突。
-2. 后台可以添加，删除选手，能够显示哪些是后台上传的选手
+2. 后台可以添加，删除选手，能够显示哪些是后台上传的选手              ok
