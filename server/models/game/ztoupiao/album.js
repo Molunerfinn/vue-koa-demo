@@ -48,7 +48,15 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     createdAt: 'created_at',
     updatedAt: 'updated_at',
-    tableName: 'game_albums'
+    tableName: 'game_albums',
+    hooks:{
+      beforeCreate: async function(){
+        // handle position
+        let Model = this.Model()
+        let c = await Model.count()
+        console.log( "beforeCreate c = ", c)
+      }
+    }
   })
 
   // bindMethods(model)
