@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="initial-scale=1.0, width=device-width, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <title> 模式对话框示例 </title>
+
+  <style>
+    .share-modal-base {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: auto;
+      min-height: 100%;
+      background-color: rgba(0, 0, 0, .9);
+      z-index: 20;
+      text-align: center;
+      color: #fff;
+      line-height: 1;
+    }
+
+    .share-modal-base .arrow {
+      background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFgAAAC8CAMAAADLnpmSAAAAn1BMV…V2JS1X4gpaoLXdCGausn2qq8dWLnnsRkxNTU1NTU1N/b/+ARSE7jK8qwZ0AAAAAElFTkSuQmCC);
+      background-size: cover;
+      background-repeat: no-repeat;
+      position: absolute;
+      top: .22rem;
+      right: .22rem;
+      width: .88rem;
+      height: 1.88rem;
+    }
+
+    .share-modal-base .arrow.animate {
+      -webkit-animation: arrowAnimation .8s ease-in-out infinite;
+      animation: arrowAnimation .8s ease-in-out infinite;
+    }
+
+    .share-modal-base-v2 .hint-area,
+    .share-modal-base-v2 .native-area {
+      position: absolute;
+      top: 50%;
+      bottom: auto;
+      margin-top: -.32rem;
+      -webkit-transform: translateY(-50%);
+      transform: translateY(-50%);
+      width: 5.8rem;
+      left: 50%;
+      margin-left: -2.9rem;
+      background-color: #fff;
+      font-size: .36rem;
+      color: #151516;
+      line-height: 1;
+      border-radius: .16rem;
+      padding: .78rem 0 .478rem;
+      display: -webkit-box;
+      display: flex;
+      display: -webkit-flex;
+      -webkit-box-pack: center;
+      justify-content: center;
+      -webkit-justify-content: center;
+      -webkit-box-align: center;
+      align-items: center;
+      -webkit-align-items: center;
+      -webkit-box-orient: vertical;
+      -webkit-box-direction: normal;
+      flex-direction: column;
+      -webkit-flex-direction: column;
+
+
+    }
+
+    .share-modal-base .cancel-area {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: transparent;
+    }
+
+    .share-modal-base-v2 .share-img-congratulate {
+      width: 2.12rem;
+      height: 1.37rem;
+      position: absolute;
+      top: -1.11rem;
+      left: 50%;
+      margin-left: -1.06rem;
+    }
+
+    @-webkit-keyframes arrowAnimation {
+      0% {
+        top: .11rem
+      }
+
+      50% {
+        top: .21rem
+      }
+
+      to {
+        top: .11rem
+      }
+    }
+
+    @keyframes arrowAnimation {
+      0% {
+        top: .22rem
+      }
+
+      50% {
+        top: .41rem
+      }
+
+      to {
+        top: .22rem
+      }
+    }
+
+    .share-modal-base .arrow {
+      background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFgAAAC8CAMAAADLnpmSAAAAn1BMVEUAAAD///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8Kd3m4AAAANHRSTlMA1tHa9e7e+evy5eLOBfvoFsvFDbx2LiceSqplW7J+kYhsoplTQDkJjSNxQzNPEZ62g2HAUO6V1wAABJpJREFUeNrk2NtyqkAUBFBEFNSgeMNLPIrmAkFENPv/v+0kJia0mRSIPU/pR4paNUXN7hk1/komgdloD2KPzLpLW06xI5fpDkfylT5x0d6d5FKfstyXpkA6E46bOHIRJ2G4M0t+pPV0u7uwRRFrdqs7FnXsxW1uJL+le3/LWMwRw4wJY6FOQBgLdR4IY6HO3CWMhTJZePVYtKRUBilhLJQxPcJYQKqUXSTXpF227NyNXBcnoYyFVCy7cCDXx9oWw3upklbhd/alWkZVNoS1EIiy84qWrPjCjWdXIN5BAccF8Ll58Ey+gI34J7wqgE25SO19sLrwKDWMY1cuEpXcFFgyeFAP35482oJZF8A7gfz7qEWsutOzrSWQF6MgfTgiPoscu/nj4XMDdkrxwZF7f3l+2FbAht/L1UWJivOb52n6vjp0AP5aQ00+0ytVQ+G49v7uKreIOtwovt8MTh/f3pcu++EEX63BJSi/iNk63qVG5Zgw4QYvfRhxnosN4hDh1zzcI8IjODyJcAZ1p2vFTV3fuK5rV9SIMNyUTZ6Lk3fHc7GE+kS4CacVEW5rgvFoeiXCLbxN8QJnfUaE8UrAc11dcAjwnAenumAP4A0PnuqCfYD3PPgJ4AcevNMFHwFe8eAY4IgHH3TBK4ADHrwB+MCDM4CXPHigC64DPObBji7YBjimuUOBrNmtyYd9hI+aWlN2NPgR4URTucmUBkcIuzR4Dq6jqypMHtwBONM10Xv2PYjf8wnC95puFbKlwWuEJzQ4QDhkn9H8v0FGoulXXl3Xfd7SdA9KdW1jH+H/7dvbcqJAFIXhBgV1EINyFlFRDqLRTJL3f7dZUE13uF+pueHH66927WoorZLqt+4PjwaHI3claH2M4C31Mb/5ld9i1mYDmP9V01sABi3xkgZXiwVohcc0OAOMpDx3afBtMf9BEw9FPges7A8e7MyRsgua267msp6uaPBhtQKtetHgG2BNzwStb7Da3tPcZmlZK3ykfafBtYW0XdHgwpJyD1sN72G8XGIZg74TtAzAmj7R3Pc3sNo+0ODwrUvZLQ3+C1bLJs31/iBt81Zcwh1o2LwVXx2w2k5Yrms6DuhB3/IOm9M3wDca/Gnbjg1Yzp3SNrG27Y6Wtu2z4HQGt6f7ufe8MzHrZIVnLPdlzJC2Wxb8BVXSnf4tWOWGoWhcIcuNDQR7KGLBx55VdsD7Z3BnavvOgu+mYSoaeExym51pgh5sI6edNbNL2xnJdYO1qTJweST4ue7S9ok1cL7djuiKBJdwISs7cDmun+92W9gKLwSnLAiCXWf3OnyP4yb7PM+VDfpTcAov+/3IbjludL1eLpeBhn1jvUdxOkla2hEHTs/nE2htkwZuw+PxPLI5AzdZGIL+YYekRWRFUYzslrOIwyHLMkWjjOL6z7I8wB7GRh7Ddes0TSUt7ZRza9SPqgKt7S+X4SZRVIN+pNpuGe4rjuOOrqtHJe0Hw228JOnofmzQ6OkTXNf3PdCJpOsK204EA4YMehj7HXYkEIV2JS1X4gpaoLXdCGausn2qq8dWLnnsRkxNTU1NTU1N/b/+ARSE7jK8qwZ0AAAAAElFTkSuQmCC");
+      background-size: cover;
+      background-repeat: no-repeat;
+      position: absolute;
+      top: .22rem;
+      right: .22rem;
+      width: .88rem;
+      height: 1.88rem
+    }
+
+    .share-modal-base-v2 .share-img-congratulate {
+      width: 4.24rem;
+      height: 2.74rem;
+      position: absolute;
+      top: -2.22rem;
+      left: 50%;
+      margin-left: -2.12rem;
+    }
+
+    .share-modal-base-v2 .share-img-congratulate img {
+      border: 0;
+      max-width: 100%;
+      width: auto;
+      height: auto;
+      vertical-align: top;
+    }
+
+    .share-combo .share-hint-title .share-hint-amount {
+      display: inline-block;
+      color: #e02e24;
+      font-size: .54rem;
+      line-height: .52rem;
+      font-weight: 700;
+    }
+
+    .share-combo-v2 .share-combo-progress {
+      margin: .54rem auto 0;
+      position: relative;
+      width: 4.48rem;
+      height: .2rem;
+      border-radius: .28rem;
+      background-color: #e7e7e7;
+    }
+
+    .share-combo-v2 .share-combo-progress .progress-current {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      border-radius: inherit;
+      background: -webkit-linear-gradient(top, #ffec2d, #ffe927);
+      background: linear-gradient(180deg, #ffec2d, #ffe927);
+    }
+
+    .share-combo .share-click-right-top {
+      font-size: .36rem;
+      margin-top: .28rem;
+      line-height: .48rem;
+    }
+
+    .share-combo .share-click-right-top .point {
+      font-style: normal;
+      color: #e02e24;
+    }
+  </style>
+
+  <script>
+    setRem();
+    window.addEventListener("orientationchange", setRem, false);
+    window.addEventListener("resize", setRem, false);
+
+    function setRem() {
+      var html = document.getElementsByTagName('html')[0];
+      var pageWidth = html.getBoundingClientRect().width;
+      pageWidth = pageWidth > 750 ? 750 : pageWidth;
+      html.style.fontSize = pageWidth / 7.5 + "px";
+    }
+  </script>
+</head>
+
+<body>
+  <div class="share-modal-base ">
+    <div class="arrow animate"></div>
+    <div class="cancel-area">
+      <div class="share-combo share-combo-v2 share-modal-base-v2" role="button">
+        <div class="hint-area">
+          <div class="share-hint-area">
+            <div class="share-hint-info">
+              <div class="share-hint-title">你已砍了<i class="share-hint-amount"><span class="number-count-money-base" style="min-width: 0.825rem;"><span class="number-count-money-item" style="width: 0.15rem;">4</span><span
+                      class="number-count-money-item" style="width: 0.15rem;">5</span><span class="number-count-money-item" style="width: 0.15rem;">6</span><span class="number-count-money-item" style="width: 0.075rem;">.</span><span
+                      class="number-count-money-item" style="width: 0.15rem;">8</span><span class="number-count-money-item" style="width: 0.15rem;">5</span></span>元</i></div>
+              <div class="share-combo-progress">
+                <div class="progress-current with-prop" style="width: 57.3932%; transition: width 1500ms;"> </div>
+              </div>
+              <div class="share-click-right-top">
+                <div class="top">点击右上角，分享给好友</div>
+                <div class="bottom">
+                  <div class="bottom">可以<i class="point">请他助力</i>哦</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="share-img-congratulate"><img src="./img/hew_congratulate.png"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>
