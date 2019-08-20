@@ -1,4 +1,4 @@
-import { GameConstant } from '../../constant'
+const  { GameConstant } = require('../../constant')
 module.exports = (sequelize, DataTypes) => {
   const Op = sequelize.Op
 

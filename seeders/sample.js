@@ -13,13 +13,17 @@ const {
   client
 } = require('../server/helpers/aliyun_oss')
 
+const {
+  ZTouPiaoGameRound, sequelize
+} = require('../server/models')
+
 const token = jwt.sign({
   id: 0,
   name: 'sample'
 }, jwtSecret) // 签发token
 
-const game_round_id = 1
-const number = '1b6f5289-b467-11e9-9a15-f0def15e0395'
+const game_round_id = process.env.SAMPLE_GAME_ROUND_ID
+
 let url = 'http://127.0.0.1:8080/gapi/photos/ztoupiao/create'
 let createAlbumUrl = 'http://127.0.0.1:8080/api/backend/albums/createAlbum'
 // 创建 album数据
@@ -28,7 +32,6 @@ let image = path.join(__dirname, '/images/album/a.jpg')
 let code = 'ztoupiao'
 let file = new File(image);
 let rand = parseInt(Math.random() * 1000);
-
 console.log(" file = ", file)
 //fields: ['openid', 'nickname', 'avatar', 'game_round_id']
 // 创建 album
@@ -42,7 +45,7 @@ async function init() {
     let photo = await createPhoto(album);
 
   }
-
+  sequelize.close();
 }
 
 try{
@@ -82,15 +85,15 @@ async function createAlbum() {
     }
   }).then(res => res.json());
   //let newAlbum = newAlbum.json()
-  console.log( " newAlbum = ", newAlbum )
   return newAlbum
 }
+let upload = 0;
 
 async function createPhoto(album) {
-
+  let round = await ZTouPiaoGameRound.findByPk( game_round_id )
   // 创建 photo
   let params = {
-    number,
+    number: round.number,
     viewable_type: 'photo',
     photo: {
       album_id: album.id,
@@ -109,7 +112,7 @@ async function createPhoto(album) {
   }).then(res => res.json())
 
   let result = await client.put(jsonRes.photo.okey, image);
-  console.log('result=', result)
 
-
+  upload+=1
+  console.log('upload=', upload)
 }

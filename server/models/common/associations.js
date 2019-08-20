@@ -1,4 +1,4 @@
-export function buildGameAssociations(db) {
+function buildGameAssociations(db) {
   // 为公共模型添加关系
   let SharedPost = db.SharedPost
   let SharedPhoto = db.SharedPhoto
@@ -97,7 +97,7 @@ export function buildGameAssociations(db) {
 }
 
 // copy to zgame_site
-export function buildSharedAssociations(db) {
+function buildSharedAssociations(db) {
   // 为公共模型添加关系
   let SharedPost = db.SharedPost
   let SharedPhoto = db.SharedPhoto
@@ -139,4 +139,10 @@ export function buildSharedAssociations(db) {
     },
     as: 'TermRelationships'
   })
+}
+
+
+module.exports = {
+  buildGameAssociations,
+  buildSharedAssociations
 }

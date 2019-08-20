@@ -1,6 +1,8 @@
-import { generateUniqueSecureToken } from './helper'
+const {
+  generateUniqueSecureToken
+}  = require('./helper')
 
-export function bindPhotoMethods( db ){
+function bindPhotoMethods( db ){
   let models = Object.values(db)
   models.forEach((model)=>{
     let rex = /([\w]+)Photo$/
@@ -17,4 +19,7 @@ function addHooks( model ){
       game.okey =  generateUniqueSecureToken()
   })
 
+}
+module.exports = {
+  bindPhotoMethods
 }

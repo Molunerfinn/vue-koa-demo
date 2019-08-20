@@ -1,6 +1,8 @@
-import { generateCode } from './helper'
+const {
+  generateCode
+}  = require('./helper')
 
-export function bindGameRoundMethods( db ){
+function bindGameRoundMethods( db ){
 
   let models = Object.values(db)
   models.forEach((model)=>{
@@ -43,4 +45,8 @@ function addHooks( model ){
    game.number =  generateCode()
   })
 
+}
+
+module.exports = {
+  bindGameRoundMethods
 }

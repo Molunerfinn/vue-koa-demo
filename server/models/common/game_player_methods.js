@@ -1,11 +1,11 @@
-import Sequelize from 'sequelize'
-import {
+const Sequelize = require('sequelize')
+const {
   generateCode
-} from './helper'
+}  = require('./helper')
 
 const Op = Sequelize.Op
 
-export function bindGamePlayerMethods(db) {
+function bindGamePlayerMethods(db) {
 
   let models = Object.values(db)
   models.forEach((model) => {
@@ -137,5 +137,8 @@ function addHooks(model) {
 
     game.token = generateCode()
   })
+}
 
+module.exports = {
+  bindGamePlayerMethods
 }
