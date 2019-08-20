@@ -1,7 +1,7 @@
 {
-  "name": "vue-koa-demo",
+  "name": "zgame",
   "version": "1.0.0",
-  "description": "A Vue.js & Koa project",
+  "description": "A h5 game project",
   "author": "Molunerfinn <marksz@teamsz.xyz>",
   "private": true,
   "scripts": {

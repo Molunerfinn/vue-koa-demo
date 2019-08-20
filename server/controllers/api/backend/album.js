@@ -43,7 +43,7 @@ export default class album {
 
     let GameAlbumModel = getGameAlbumModelByCode(code)
     let albumOptions = {
-      fields: ['name', 'desc', 'game_player_id','game_round_id', 'type']
+      fields: ['name', 'desc', 'game_player_id','game_round_id', 'type', 'position']
     }
 
     let albumParam = ctx.request.body.album

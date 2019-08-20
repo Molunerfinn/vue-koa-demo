@@ -1,2 +1,4 @@
 
 ALTER TABLE `shared_posts` ADD COLUMN `status` VARCHAR(12) NULL AFTER `type`;
+
+ALTER TABLE `game_albums` ADD COLUMN `position` INT(11) NOT NULL DEFAULT 0 AFTER `type`;

@@ -1,6 +1,6 @@
-import user from '../models/user.js'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
+import {jwtSecret} from '../config/secret.js'
 
 const getUserInfo = async function (ctx) {
   const id = ctx.params.id // 获取url里传过来的参数里的id
@@ -22,7 +22,7 @@ const postUserAuth = async function (ctx) {
         name: userInfo.user_name,
         id: userInfo.id
       }
-      const secret = 'vue-koa-demo' // 指定密钥
+      const secret = jwtSecret // 指定密钥
       const token = jwt.sign(userToken, secret) // 签发token
       ctx.body = {
         success: true,
