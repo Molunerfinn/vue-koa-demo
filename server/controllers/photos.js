@@ -8,6 +8,9 @@ const {
   getPostModel
 } = require('../helpers/model')
 const {
+  SharedPhotoRelationship
+} = require('../models')
+const {
   getPagination
 } = require('../helpers/pagination')
 const {
@@ -39,6 +42,33 @@ export default class PhotosController {
     let res = Object.assign(pagination, {  photos: rows, total: count } )
 
     ctx.body = res
+
+  }
+
+  static async removePhoto(ctx) {
+    let photos = ctx.request.body.selectedImages
+
+    let relationship = {}
+    for(var i=0;i<photos.length;i++){
+      let photo_id = photos[i].id;
+      relationship = await SharedPhotoRelationship.findOne({
+        where:{
+          photo_id:photo_id
+        }
+      })
+    }
+
+    if(relationship){
+        ctx.body = {
+          res:'photo has been used'
+        }
+    }else{
+      ctx.body = {
+        res:'photo has been destroy'
+      }
+    }
+
+
 
   }
 
