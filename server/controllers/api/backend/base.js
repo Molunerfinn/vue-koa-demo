@@ -4,7 +4,10 @@ const {
   getWxMpUsersModel,
   getPostModel,
   getTermModel,
-  getRelationshipModel
+  getRelationshipModel,
+  getGameAlbumModelByCode,
+  getGameResultModelByCode,
+  getGamePlayerModelByCode
 } = require('../../../helpers/model')
 const {
   ZTouPiaoGameRound, SharedPhotoRelationship
@@ -243,4 +246,41 @@ export default class base {
       ctx.body = WxMpUsers
     }
   }
+  static async clearData(ctx){
+    console.log('=============clearData==============');
+    let code = ctx.request.body.code
+    let gameRoundId = ctx.request.body.gameRoundId
+    let AlbumModel = getGameAlbumModelByCode(code)
+    let PlayerModel = getGamePlayerModelByCode(code)
+    let ResultModel = getGameResultModelByCode(code)
+
+    await AlbumModel.destroy({
+      where:{
+        game_round_id:gameRoundId
+      }
+    })
+
+    await PlayerModel.destroy({
+      where:{
+        game_round_id:gameRoundId
+      }
+    })
+
+    await ResultModel.destroy({
+      where:{
+        game_round_id:gameRoundId
+      }
+    })
+
+    await SharedPhotoRelationship.destroy({
+      where:{
+        viewable_id:gameRoundId,
+        viewable_type:'slide'
+      }
+    })
+    ctx.body = {
+      res:'clear over!'
+    }
+  }
+
 }

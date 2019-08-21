@@ -1,6 +1,7 @@
 <template>
   <!-- 锦囊 -->
  <div class="PhotosListBox">
+   <span v-on:click="back">返回</span>
    <div class="title">
      <div class="headImg">
        <img id="PhotographsTitle" v-bind:src="album.Photos[0].originalUrl">
@@ -62,6 +63,9 @@ export default {
   computed:{
   },
   methods: {
+    back(){
+        this.$router.go(-1);//返回上一层
+    },
     thumb_up: function(id){
       const parsed = queryString.parse(location.search)
 

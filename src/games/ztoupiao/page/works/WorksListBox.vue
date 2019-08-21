@@ -130,7 +130,7 @@ export default {
       console.log('getNewAlbumInfo---:',data);
       let Albums = data
       for(var i=0;i<Albums.length;i++){
-        Albums[i].link = 'photos='+Albums[i].id;
+        Albums[i].link = '/albums/'+Albums[i].id;
       }
       console.log('Albums----:',Albums);
       this.newGameAlbums = Albums;

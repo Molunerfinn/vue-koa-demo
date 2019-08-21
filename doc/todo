@@ -51,7 +51,7 @@
     https://www.npmjs.com/package/sequelize-hierarchy
 19. 投票设置： 固定次数 活动期间n次 /周期次数 1天n次
 20. 关闭活动，活动无法访问，只能预览
-21. 添加清空数据功能
+21. 添加清空数据功能     ok
 22. slider、desc等图片删除
 
 支持后台添加选手
