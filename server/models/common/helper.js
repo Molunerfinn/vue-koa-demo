@@ -1,4 +1,5 @@
 const crypto = require('crypto')
+const {encode} = require('b36')
 
 function generateCode(){
  var buf = crypto.randomBytes(16)
@@ -14,8 +15,7 @@ function generateCode(){
 function generateUniqueSecureToken(){
   //SecureRandom.base36(28)
   let buf = crypto.randomBytes(24)
-  // buffer do not support base36
-  return buf.toString('base64')
+  return encode(buf)
 }
 
 module.exports = {

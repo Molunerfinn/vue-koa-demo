@@ -29,13 +29,13 @@ function headersForDirectUpload(key, content_type, checksum){
 // # Allowed Methods: POST, PUT, HEAD
 // # Allowed Headers: *
 function urlForDirectUpload(key, expires_in, content_type, content_length, checksum){
-  let generated_url = client.generateObjectUrl(path_for(key))
+  let generated_url = client.generateObjectUrl(pathFor(key))
   return generated_url
 }
 
 // key: photo.okey
 function getObjectUrl(key, params = {}){
-  let filekey = path_for(key)
+  let filekey = pathFor(key)
   let url = client.generateObjectUrl( filekey )
   // let query = {}.merge( params )
   // return [url, query.to_query].join('?')
@@ -51,7 +51,7 @@ function getImageUrlForStyle(key, style) {
 
 function authorization(key, content_type, checksum, date){
   let bucketName =  config.ossBucket
-  let filename = `/${bucketName}/${path_for(key)}`
+  let filename = `/${bucketName}/${pathFor(key)}`
   let addition_headers = `x-oss-date:${date}`
   let sign = ["PUT", checksum, content_type, date, addition_headers, filename].join("\n")
   let signature = client.signature(sign)
@@ -64,13 +64,13 @@ function endpoint(){
 }
 
 
-function path_for(key){
+function pathFor(key){
   let rootPath = config.ossPath
   let fullPath = key
   if( rootPath==null || rootPath == "/"){
     fullPath = key
   } else{
-    fullPath = path.join(rootPath, key)
+    fullPath = rootPath + '/' + key
   }
   fullPath.replace(/^\//, "").replace(/[\/]+/, "/")
   return fullPath
@@ -81,5 +81,6 @@ module.exports={
   urlForDirectUpload,
   headersForDirectUpload,
   getObjectUrl,
+  pathFor,
   getImageUrlForStyle
 }

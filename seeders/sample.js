@@ -10,7 +10,7 @@ const jwt = require('jsonwebtoken')
 const File = require('../server/lib/node-html5-file')
 
 const {
-  client
+  client, pathFor
 } = require('../server/helpers/aliyun_oss')
 
 const {
@@ -24,7 +24,7 @@ const token = jwt.sign({
 
 const game_round_id = process.env.SAMPLE_GAME_ROUND_ID
 
-let url = 'http://127.0.0.1:8080/gapi/photos/ztoupiao/create'
+let createPhotoUrl = 'http://127.0.0.1:8080/gapi/photos/ztoupiao/create'
 let createAlbumUrl = 'http://127.0.0.1:8080/api/backend/albums/createAlbum'
 // 创建 album数据
 let image = path.join(__dirname, '/images/album/a.jpg')
@@ -36,7 +36,8 @@ console.log(" file = ", file)
 //fields: ['openid', 'nickname', 'avatar', 'game_round_id']
 // 创建 album
 async function init() {
-  for(let i=0; i<10; i++){
+
+  for(let i=0; i<1; i++){
     // http://iph.href.lu/800x600
     image = path.join(__dirname, `/images/album/${i}.jpg`)
     file = new File(image);
@@ -45,6 +46,7 @@ async function init() {
     let photo = await createPhoto(album);
 
   }
+
   sequelize.close();
 }
 
@@ -87,6 +89,7 @@ async function createAlbum() {
   //let newAlbum = newAlbum.json()
   return newAlbum
 }
+
 let upload = 0;
 
 async function createPhoto(album) {
@@ -103,7 +106,7 @@ async function createPhoto(album) {
     }
   }
 
-  let jsonRes = await fetch(url, {
+  let jsonRes = await fetch(createPhotoUrl, {
     method: 'POST',
     body: JSON.stringify(params),
     headers: {
@@ -111,8 +114,10 @@ async function createPhoto(album) {
     }
   }).then(res => res.json())
 
-  let result = await client.put(jsonRes.photo.okey, image);
+  let path = `${pathFor(jsonRes.photo.okey )}`
+  console.log( "path=", path)
+  let result = await client.put(path, image);
 
   upload+=1
-  console.log('upload=', upload)
+  console.log('upload=', upload, result)
 }

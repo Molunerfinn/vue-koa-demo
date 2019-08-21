@@ -11,11 +11,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.BIGINT(11),
       allowNull: false,
       defaultValue: '0',
-      unique:"uk_game_albums"
+      unique:"uk_game_albums_round_position"
     },
     position: {
       type: DataTypes.BIGINT(11),
-      unique:"uk_game_albums"
+      unique:"uk_game_albums_round_position"
     },
     type: {
       type: DataTypes.STRING(300),
@@ -58,7 +58,7 @@ module.exports = (sequelize, DataTypes) => {
       beforeCreate: async function(instance){
         // handle position
         let Model = this
-        let c = await Model.count()
+        let c = await Model.count( {where:{ game_round_id: instance.game_round_id }})
         instance.position = c + 1
         console.log( "beforeCreate c = ", c,"instance=",instance,  "Model=", Model )
       }
