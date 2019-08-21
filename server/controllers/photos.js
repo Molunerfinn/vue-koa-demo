@@ -48,28 +48,30 @@ export default class PhotosController {
   static async removePhoto(ctx) {
     let photos = ctx.request.body.selectedImages
 
-    let relationship = {}
     for(var i=0;i<photos.length;i++){
       let photo_id = photos[i].id;
-      relationship = await SharedPhotoRelationship.findOne({
+      let relationship = await SharedPhotoRelationship.findOne({
         where:{
           photo_id:photo_id
         }
       })
-    }
 
-    if(relationship){
+      if(relationship){
+          ctx.body = {
+            res:'photo has been used'
+          }
+      }else{
+        let PhotoModel = getGamePhotoModelByCode('ztoupiao')
+        await PhotoModel.destroy({
+          where:{
+            id:photo_id
+          }
+        })
         ctx.body = {
-          res:'photo has been used'
+          res:'photo has been destroy'
         }
-    }else{
-      ctx.body = {
-        res:'photo has been destroy'
       }
     }
-
-
-
   }
 
   /**
