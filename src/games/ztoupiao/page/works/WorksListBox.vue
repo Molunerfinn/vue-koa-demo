@@ -12,17 +12,34 @@
      </div>
      <div class="works_list new" v-show="ui.newAlbumsVisible">
        最新
-       <li v-for="album in newGameAlbums">
-         <router-link :to="album.link" class="weui-tabbar__item">
-           <span>
-             <img :src="album.Photos[0].originalUrl" alt="" class="weui-tabbar__icon">
-           </span>
-         </router-link>
-         <a>{{album.name}}</a>
-         <a>{{album.score}}</a>
-         <a class="weui-btn weui-btn_primary userSubmitBtn" @click="thumb_up(album.id)" href="javascript:" id="showTooltips">点赞</a>
-         <div class="userImgBox" style="border-color:"><img :src="album.GamePlayer.avatar" class="userImg" /></div>
-       </li>
+       <vue-waterfall-easy :imgsArr="newGameAlbums" @scrollReachBottom="getData">
+         <div class="img-info" slot-scope="props">
+           <router-link :to="props.value.link" class="item">
+             <span>
+               <img :src="props.value.Photos[0].previewUrl" alt="">
+             </span>
+           </router-link>
+           <a>{{props.value.name}}</a>
+           <a>{{props.value.score}}</a>
+           <a class="weui-btn weui-btn_primary userSubmitBtn" @click="thumb_up(props.value.id)" href="javascript:" id="showTooltips">点赞</a>
+           <div class="userImgBox" style="border-color:"><img :src="props.value.GamePlayer.avatar" class="userImg" /></div>
+
+          </div>
+       </vue-waterfall-easy>
+
+       <ul  >
+         <li v-for="album in newGameAlbums">
+           <router-link :to="album.link" class="item">
+             <span>
+               <img :src="album.Photos[0].previewUrl" alt="">
+             </span>
+           </router-link>
+           <a>{{album.name}}</a>
+           <a>{{album.score}}</a>
+           <a class="weui-btn weui-btn_primary userSubmitBtn" @click="thumb_up(album.id)" href="javascript:" id="showTooltips">点赞</a>
+           <div class="userImgBox" style="border-color:"><img :src="album.GamePlayer.avatar" class="userImg" /></div>
+         </li>
+       </ul>
      </div>
      <div class="works_list hot" v-show="ui.hotAlbumsVisible">
        最热
@@ -44,6 +61,8 @@ import $ from "jquery"
 // import { getRoundState } from '@/api/games/ztoupiao'
 
 import queryString from 'query-string'
+import vueWaterfallEasy from 'vue-waterfall-easy'
+
 import { getNewAlbumInfo,getHotAlbumInfo,thumbUp } from '@/api/games/ztoupiao'
 
 import PhotosListBox from './PhotosListBox.vue'
@@ -51,7 +70,7 @@ import HdGame from '@/lib/hdgame'
 
 export default {
   components: {
-    PhotosListBox
+    PhotosListBox, vueWaterfallEasy
   },
   props: {
     ruleIconUrl: String, // 锦囊按钮图片
@@ -285,5 +304,9 @@ export default {
 <style lang="css" scoped>
   .weui-navbar.works{
     position: relative;
+  }
+  .works_list li{
+    padding: 6px;
+    width: 50%;
   }
 </style>
