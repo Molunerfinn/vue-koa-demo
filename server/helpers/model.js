@@ -44,6 +44,11 @@ export function getGameRoundModelByCode(code) {
   return getModelByCode(code, basename)
 }
 
+export function getVoteStyleModelByCode(code) {
+  let basename = 'votestyle'
+  return getModelByCode(code, basename)
+}
+
 export function getGamePlayerModelByCode(code) {
 
   let basename = 'gameplayer'

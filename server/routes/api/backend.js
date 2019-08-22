@@ -19,6 +19,10 @@ router.get('/game_rounds', GameRounds.index)
 router.get('/game_rounds/:id', GameRounds.show)
 router.put('/game_rounds/:id', GameRounds.update)
 
+router.get('/game_rounds/getVoteStyle/:id', GameRounds.getVoteStyle)
+router.post('/game_rounds/setVoteStyle', GameRounds.setVoteStyle)
+
+
 router.del('/slides/removeSlide', GameRounds.removeSlide)
 router.post('/photos/bindPhotoRelationship', GameRounds.bindPhotoRelationship)
 router.post('/photos/:code/create', Photos.createBeforeDirectUpload)
