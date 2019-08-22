@@ -73,7 +73,6 @@ export default {
     //mixins: [storeMixin],
     data() {
         return {
-            number: null,
             showDialog:false,
             warnStr:'',
             preview:'no'
