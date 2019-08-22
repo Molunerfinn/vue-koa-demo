@@ -1,0 +1,18 @@
+.flex{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-direction: row;
+}
+.flex-column{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  justify-content: flex-start;
+  flex-direction: column;
+
+}
+.flex-item-2{
+  flex-grow: 2;
+}

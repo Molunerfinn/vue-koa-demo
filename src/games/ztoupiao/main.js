@@ -12,6 +12,7 @@ Vue.use(VueRouter)
 // import 'element-ui/lib/theme-default/index.css'
 import 'weui/dist/style/weui.css'
 import '@/assets/common/css/base2.css'
+import '@/assets/common/css/flex.css'
 import '@/assets/game/ztoupiao/css/game.css'
 import '@/assets/game/ztoupiao/css/font.css'
 import '@/assets/game/ztoupiao/css/skin.css'

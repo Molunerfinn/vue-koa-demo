@@ -36,13 +36,6 @@ body {
   position: relative
 }
 
-img {
-  -ms-interpolation-mode: bicubic;
-  vertical-align: middle;
-  height: 100%;
-  width: auto;
-}
-
 .hide {
   display: none
 }

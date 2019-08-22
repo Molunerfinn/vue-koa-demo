@@ -139,6 +139,12 @@ function buildSharedAssociations(db) {
     },
     as: 'TermRelationships'
   })
+
+  // 支持图片查找关系，以便删除图片时，删除关系
+  SharedPhoto.hasMany(SharedPhotoRelationship, {
+    foreignKey: 'photo_id',   
+    as: 'PhotoRelationship'
+  })
 }
 
 

@@ -16,4 +16,5 @@
 活动参与者描述 /my
 
 
-#
+# 图片瀑布流组件
+https://www.npmjs.com/package/vue-waterfall-adaptive

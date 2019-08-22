@@ -1,9 +1,9 @@
 <template>
 
   <!-- 锦囊 -->
-  <div class="WorksBox">
+  <div class="works-wrap ">
     <SlideBox></SlideBox>
-    <div class="home" v-show="ui.showHome">
+    <div >
       <div class="c_bg flex statis">
           <div class="item">
             <p>参与选手</p>
@@ -48,7 +48,7 @@
         <p>结束时间: {{displayEndAt}} </p>
       </div>
     </div>
-    <WorksListBox :gameAlbums="gameAlbums" @showPhotosList="showPhotosList"> </WorksListBox>
+    <WorksListBox  class=" " > </WorksListBox>
   </div>
 
 </template>
@@ -76,9 +76,7 @@
       return {
         postersData: [],
         gameRoundEndAt: null,
-        ui: {
-          showHome: true
-        },
+
         timeToEnd: {
           d1: 0,
           d2: 0,
@@ -119,9 +117,7 @@
       }
     },
     methods: {
-      showPhotosList: function() {
-        this.ui.showHome = false
-      },
+
       countTime: function() {
         var that = this
         // 获取当前时间
@@ -258,10 +254,8 @@
 
 <style lang="css" scoped>
 
-  .ruleBox {
-  }
-  .poupMain {
-    /*display: none;*/
+  .works-wrap {
+    height: 100%;
   }
   ul.countdown {
     display: flex;
@@ -314,6 +308,7 @@
     height: auto;
   }
   .statis{
+    text-align: center;
     padding: 16px 0;
   }
   .flex.statis .item{

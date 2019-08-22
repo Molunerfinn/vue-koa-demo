@@ -37,7 +37,7 @@ console.log(" file = ", file)
 // 创建 album
 async function init() {
 
-  for(let i=0; i<1; i++){
+  for(let i=0; i<10; i++){
     // http://iph.href.lu/800x600
     image = path.join(__dirname, `/images/album/${i}.jpg`)
     file = new File(image);

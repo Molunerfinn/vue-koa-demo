@@ -1,59 +1,26 @@
 <template>
   <!-- 锦囊 -->
- <div class="WorksBox" >
-   <div class="works_list" v-show="!ui.PhotosListBoxVisible">
-     <div class="weui-navbar works">
-       <div class="weui-navbar__item" @touchend="showNew()">
-         最新
-       </div>
-       <div class="weui-navbar__item" @touchend="showHot()">
-         最热
-       </div>
-     </div>
-     <div class="works_list new" v-show="ui.newAlbumsVisible">
-       最新
-       <vue-waterfall-easy :imgsArr="newGameAlbums" @scrollReachBottom="getData">
-         <div class="img-info" slot-scope="props">
-           <router-link :to="props.value.link" class="item">
-             <span>
-               <img :src="props.value.Photos[0].previewUrl" alt="">
-             </span>
-           </router-link>
-           <a>{{props.value.name}}</a>
-           <a>{{props.value.score}}</a>
-           <a class="weui-btn weui-btn_primary userSubmitBtn" @click="thumb_up(props.value.id)" href="javascript:" id="showTooltips">点赞</a>
-           <div class="userImgBox" style="border-color:"><img :src="props.value.GamePlayer.avatar" class="userImg" /></div>
+ <div class="works" >
 
-          </div>
-       </vue-waterfall-easy>
-
-       <ul  >
-         <li v-for="album in newGameAlbums">
-           <router-link :to="album.link" class="item">
-             <span>
-               <img :src="album.Photos[0].previewUrl" alt="">
-             </span>
-           </router-link>
-           <a>{{album.name}}</a>
-           <a>{{album.score}}</a>
-           <a class="weui-btn weui-btn_primary userSubmitBtn" @click="thumb_up(album.id)" href="javascript:" id="showTooltips">点赞</a>
-           <div class="userImgBox" style="border-color:"><img :src="album.GamePlayer.avatar" class="userImg" /></div>
-         </li>
-       </ul>
-     </div>
-     <div class="works_list hot" v-show="ui.hotAlbumsVisible">
-       最热
-       <li v-for="album in hotGameAlbums">
-         <img  :src="album.Photos[0].originalUrl"/>
+   <waterfall>
+     <waterfallSilde v-for="album in newGameAlbums" :key="album.id" :prefetch="true" :imgs="[album.Photos[0].previewUrl]" >
+       <div class="img-info"  >
+         <router-link :to="album.link" class="item">
+             <img :src="album.Photos[0].previewUrl" alt="">
+         </router-link>
          <a>{{album.name}}</a>
          <a>{{album.score}}</a>
          <a class="weui-btn weui-btn_primary userSubmitBtn" @click="thumb_up(album.id)" href="javascript:" id="showTooltips">点赞</a>
          <div class="userImgBox" style="border-color:"><img :src="album.GamePlayer.avatar" class="userImg" /></div>
-       </li>
-     </div>
-   </div>
 
- </div>
+        </div>
+
+     </waterfallSilde>
+
+   </waterfall>
+
+
+  </div>
 </template>
 
 <script>
@@ -61,16 +28,15 @@ import $ from "jquery"
 // import { getRoundState } from '@/api/games/ztoupiao'
 
 import queryString from 'query-string'
-import vueWaterfallEasy from 'vue-waterfall-easy'
+import { waterfall, waterfallSilde } from '@/lib/vue-waterfall';
 
 import { getNewAlbumInfo,getHotAlbumInfo,thumbUp } from '@/api/games/ztoupiao'
 
 import PhotosListBox from './PhotosListBox.vue'
-import HdGame from '@/lib/hdgame'
 
 export default {
   components: {
-    PhotosListBox, vueWaterfallEasy
+    PhotosListBox, waterfall, waterfallSilde
   },
   props: {
     ruleIconUrl: String, // 锦囊按钮图片
@@ -116,50 +82,9 @@ export default {
     }
   },
   created() {
-    window.$ = $
-
-    const parsed = queryString.parse(location.search)
-    var number = parsed.number
-
-    var params = {
-      parsed: parsed,
-      code:'ztoupiao'
-    }
-
-    getNewAlbumInfo(number, params).then(data => {
-      console.log('getNewAlbumInfo---:',data);
-      let Albums = data
-      for(var i=0;i<Albums.length;i++){
-        Albums[i].link = '/albums/'+Albums[i].id;
-      }
-      console.log('Albums----:',Albums);
-      this.newGameAlbums = Albums;
-    });
-    getHotAlbumInfo(number, params).then(data => {
-      console.log('getHotAlbumInfo---:',data);
-      let Albums = data
-      for(var i=0;i<Albums.length;i++){
-        Albums[i].link = 'photos='+Albums[i].id;
-      }
-      this.newGameAlbums = Albums;
-    });
-
+    this.initData()
   },
   mounted(){
-    // mounted 之后 document 才有ruleIme，可以设置css
-    HdGame.imgReady(this.ruleIconUrl, (img)=>{
-      console.log( "imgReady", this.ruleIconUrl)
-      $("#ruleImg").css({
-        "background-size": "100% 100%",
-        "background-image":"url("+this.ruleIconUrl+")",
-      })
-      //this.ui.iconVisible = true // 如果是用户注册界面，不应显示icon
-    })
-
-    $(".poupTitleBox .poupTitleMune,.poupTitleBox .slideBarTip").css("width", 13.25 / this.menuLen + "rem");
-    $("#poupInfoBox .poupMain").height($("#poupInfoBox").height() - $(".poupHead").outerHeight()  );
-
-
   },
   computed:{
     hasRank(){
@@ -170,12 +95,26 @@ export default {
     },
   },
   methods: {
-    showPhotosList: function(album){
-      console.log('===============showPhotosList==============');
-      this.showAlbum = album;
-      this.ui.PhotosListBoxVisible = true;
-      this.$emit('showPhotosList')
+    initData(){
+
+      const parsed = queryString.parse(location.search)
+      var number = parsed.number
+
+      var params = {
+        parsed: parsed,
+        code:'ztoupiao'
+      }
+      getNewAlbumInfo(number, params).then(data => {
+        console.log('getNewAlbumInfo---:',data);
+        let Albums = data
+        for(var i=0;i<Albums.length;i++){
+          Albums[i].link = '/albums/'+Albums[i].id;
+        }
+        console.log('Albums----:',Albums);
+        this.newGameAlbums = Albums;
+      });
     },
+
     thumb_up: function(id){
       const parsed = queryString.parse(location.search)
       var number = parsed.number
@@ -306,7 +245,13 @@ export default {
     position: relative;
   }
   .works_list li{
-    padding: 6px;
     width: 50%;
   }
+  .works{
+   }
+   .waterfall-silde{
+     width: 50%;
+     padding: 6px;
+     box-sizing: border-box;
+   }
 </style>
