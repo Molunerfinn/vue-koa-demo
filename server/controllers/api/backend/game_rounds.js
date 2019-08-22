@@ -6,7 +6,8 @@ const {
 } = require('../../../helpers/pagination')
 const {
   getPhotoRelationshipModel,
-  getPhotoModel
+  getPhotoModel,
+  getVoteStyleModelByCode
 } = require('../../../helpers/model')
 
 const GameRoundModel = ZTouPiaoGameRound
@@ -192,5 +193,56 @@ export default class GameRounds {
       console.log('WxMpUsers=============:',WxMpUsers);
       ctx.body = WxMpUsers
     }
+  }
+
+  static async getVoteStyle(ctx){
+    let game_round_id = ctx.params.id;
+    let voteStyleModel = getVoteStyleModelByCode('ztoupiao')
+    let voteStyle = await voteStyleModel.findOne({
+      where:{
+        game_round_id:game_round_id
+      }
+    })
+
+    if(voteStyle){
+      ctx.body = voteStyle
+    }else{
+      ctx.body = {
+        style:'sum',
+        sum: 1,
+        day: 1,
+        times: 1
+      }
+    }
+  }
+
+  static async setVoteStyle(ctx){
+    console.log('==========setVoteStyle=========');
+    let param = ctx.request.body
+    let code = param.code
+    let game_round_id = param.game_round_id
+    let voteStyleData = param.voteStyleData
+    console.log('voteStyleData---:',voteStyleData);
+
+    let voteStyleModel = getVoteStyleModelByCode(code)
+
+    let voteStyle = await voteStyleModel.findOne({
+      where:{
+        game_round_id:game_round_id
+      }
+    })
+
+    if(voteStyle){
+      voteStyle = await voteStyle.update(voteStyleData,{
+        fields:['game_round_id', 'style', 'sum','day','times','start_at','end_at']
+      })
+    }else{
+      voteStyle = await voteStyleModel.create(voteStyleData,
+        {
+          fields:['game_round_id', 'style', 'sum','day','times','start_at','end_at']
+        })
+    }
+
+    ctx.body = voteStyle
   }
 }
