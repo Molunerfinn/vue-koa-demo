@@ -1,3 +1,4 @@
+// copy frin https://github.com/geng452654716/vue-waterfall
 import waterfallSilde from './waterfall-silde.vue'
 import waterfall from './waterfall.vue'
 const install = function (Vue) {

@@ -45,12 +45,11 @@
     //mixins: [storeMixin],
     data() {
       return {
-        number: null,
       }
     },
     created() {
       const parsed = queryString.parse(location.search)
-      this.number = parsed.number
+      this.setNumber( parsed.number )
 
       var params = {
         parsed: parsed,

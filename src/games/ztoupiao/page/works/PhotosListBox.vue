@@ -40,27 +40,30 @@ export default {
         }]
       },
       gamePlayer:{},
-      getRoundState:{},
-      ui:{
-        photosListVisible:false
-      },
+      getRoundState:{}
+
     }
   },
   created() {
-    let parsed =  JSON.parse(JSON.stringify(queryString.parse(location.hash)).replace('/',''));
+
+    
     var params = {
-        parsed: parsed,
+        id: this.albumId,
         code:'ztoupiao'
       }
-    getAlbumInfo(queryString.parse(location.search).number, params).then(data => {
+    getAlbumInfo(this.number, params).then(data => {
       console.log('getAlbumInfo---:',data);
       this.album = data
     });
 
   },
-  mounted(){
+  computed: {
+    albumId() {
+      return this.$route.params.id
+    }
   },
-  computed:{
+  watch: {
+    '$route': 'initData'
   },
   methods: {
     back(){
@@ -82,18 +85,7 @@ export default {
       });
     },
   },
-  watch: {
-    command: function (val, oldVal) {
-      //外部触发游戏开始
-      console.log('rulebox','watch-command new: %s, old: %s', val, oldVal)
-      if( val == true){
-        this.ui.photosListVisible = true
-      }
-      if( val == false){
-        this.ui.photosListVisible = false
-      }
-    }
-  }
+
 }
 </script>
 

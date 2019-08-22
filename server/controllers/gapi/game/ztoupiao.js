@@ -199,13 +199,14 @@ export default class GamesController {
   }
 
   static async getAlbumInfo(ctx){
-    let parsed = ctx.request.body.parsed || {}
+    console.log( "getAlbumInfo= ", ctx.request.body)
+    let id = ctx.request.body.id
     let code = ctx.request.body.code
     let GameAlbum = getGameAlbumModelByCode(code)
 
       let gameAlbums = await GameAlbum.findOne({
         where: {
-          id: parsed.photos
+          id
         },
         include: [{
           association: 'Photos'

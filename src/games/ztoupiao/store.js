@@ -5,6 +5,7 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
+    number: null,
     count: 0,
     gameRound: {},
     gameResults: [],
@@ -14,6 +15,9 @@ const store = new Vuex.Store({
     resultCount: 0
   },
   mutations: {
+    setNumber (state, number) {
+      state.number = number
+    },
     setGameRound (state, newGameRound) {
       state.gameRound = newGameRound
     },
@@ -34,6 +38,9 @@ const store = new Vuex.Store({
     }
   },
   actions: {
+    setNumber (context, number) {
+      context.commit('setNumber', number)
+    },
     setGameRound (context, newGameRound) {
       context.commit('setGameRound', newGameRound)
     },
