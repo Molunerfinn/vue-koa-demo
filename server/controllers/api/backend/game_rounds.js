@@ -30,7 +30,7 @@ export default class GameRounds {
       })
 
       gameRound = await gameRound.update(gameRoundAttributes,{
-        fields:['name', 'desc', 'color','start_at','end_at']
+        fields:['name', 'desc', 'color','state','start_at','end_at']
       })
       ctx.body = gameRound
     } catch (e) {
