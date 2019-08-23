@@ -39,6 +39,10 @@ export default {
     }
   },
   props: {
+    searchStr:{
+      type: String,
+      default: ''
+    },
     // 起始top值
     top: {
       type: Number,
@@ -191,7 +195,9 @@ export default {
       let waterfallButtom =
         waterfall.offsetTop + this.scrollMinHeight - this.offset - innerHeight
       if (scrollTop > waterfallButtom) {
-        this.$emit('load')
+        if(this.searchStr==''){
+          this.$emit('load')
+        }
         this.mount = false
       }
     }
@@ -211,7 +217,10 @@ export default {
     }
   },
   watch: {
-    // 监听瀑布流子级变化
+    // // 监听瀑布流子级变化
+    // searchStr(){
+    //   this._initWaterfall()
+    // },
     childrens(val) {
       if (!val.length) return
       if (!this.initData) {

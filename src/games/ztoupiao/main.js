@@ -10,6 +10,7 @@ Vue.use(VueRouter)
 
 // import ElementUI from 'element-ui'
 // import 'element-ui/lib/theme-default/index.css'
+import 'mint-ui/lib/style.css'
 import 'weui/dist/style/weui.css'
 import '@/assets/common/css/base2.css'
 import '@/assets/common/css/flex.css'

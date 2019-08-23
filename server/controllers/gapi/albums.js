@@ -61,7 +61,7 @@ export default class AlbumsController {
       fields: ['name', 'desc', 'game_player_id', 'game_round_id']
     }
     let photoOptions = {
-      fields: ['album_id', 'file_name', 'file_size', 'content_type', 'checksum', 'okey']
+      fields: ['album_id', 'file_name', 'file_size', 'content_type', 'checksum', 'okey','position']
     }
     let album = await Album.create(albumParam, albumOptions)
 

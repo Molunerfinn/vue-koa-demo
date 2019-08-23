@@ -754,6 +754,63 @@ export default class GamesController {
     }
   }
 
+  static async searchAlbums(ctx) {
+    let code = ctx.request.body.code
+    let GameRound = getGameRoundModelByCode(code)
+    let number = ctx.params.number
+    let searchStr = ctx.request.body.searchStr
+
+    let GameAlbum = getGameAlbumModelByCode(code)
+
+    // 取得游戏信息
+    let gameRound = await GameRound.findOne({
+      where: {
+        number
+      }
+    })
+    let gameAlbums = {}
+    if(searchStr == ''){
+      gameAlbums = await GameAlbum.findAll({
+        where:{
+          game_round_id: gameRound.id
+        },
+        include: [{
+          attributes: ['okey'],
+          association: 'Photos'
+        }, {
+          attributes: ['avatar'],
+          association: 'GamePlayer'
+        }],
+        limit: 6,
+        order: [
+          ['score', 'DESC']
+        ]
+      })
+    }else{
+      gameAlbums = await GameAlbum.findAll({
+        where:{
+          game_round_id: gameRound.id,
+          [Op.or]:[{ name: searchStr }, { position: searchStr }]
+        },
+        include: [{
+          attributes: ['okey'],
+          association: 'Photos'
+        }, {
+          attributes: ['avatar'],
+          association: 'GamePlayer'
+        }],
+        limit: 6,
+        order: [
+          ['score', 'DESC']
+        ]
+      })
+    }
+
+
+    ctx.body = gameAlbums
+
+  }
+
   static async getRoundState(ctx) {
     let code = ctx.request.body.code
     let GameRound = getGameRoundModelByCode(code)

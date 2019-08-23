@@ -7,7 +7,18 @@
            <a @click="closeDialog()" class="weui-dialog__btn weui-dialog__btn_primary">知道了</a>
        </div>
    </div>
-   <waterfall @load="initData"  >
+    <form action="" v-on:submit.prevent="">
+      <mt-search
+      v-model="searchStr"
+      cancel-text="取消"
+      placeholder="请输入收件人的姓名"
+      @keyup.enter.native="search"
+      class="font-size-8"
+      style="width:100%;height:auto;"
+      >
+      </mt-search>
+    </form>
+   <waterfall ref="waterfall" @load="initData" :searchStr="searchStr" >
      <waterfallSilde v-for="album in newGameAlbums" :key="album.id" :prefetch="true" :imgs="[album.Photos[0].previewUrl]" >
        <div class="img-info"  >
          <router-link :to="{ name: 'album', params:{id: album.id}}" class="item">
@@ -32,14 +43,15 @@
 // import { getRoundState } from '@/api/games/ztoupiao'
 import queryString from 'query-string'
 import { waterfall, waterfallSilde } from '@/lib/vue-waterfall';
+import { Search } from 'mint-ui';
 
-import { getNewAlbumInfo,thumbUp } from '@/api/games/ztoupiao'
+import { getNewAlbumInfo,thumbUp,searchAlbums } from '@/api/games/ztoupiao'
 
 import PhotosListBox from './PhotosListBox.vue'
 
 export default {
   components: {
-    PhotosListBox, waterfall, waterfallSilde
+    PhotosListBox, waterfall, waterfallSilde,[Search.name]: Search, Search
   },
   props: {
     ruleIconUrl: String, // 锦囊按钮图片
@@ -68,14 +80,21 @@ export default {
       pageSize: 0,
       isDataLoaded: false,
       warnStr:'',
-      showDialog:false
+      showDialog:false,
+      userList:[],
+      searchStr:''
 
     }
   },
   created() {
     this.initData()
   },
-  mounted(){
+  mounted() {},
+  watch:{
+    searchStr: function(val,oldVal){
+      this.newGameAlbums = []
+      this.searchName()
+    }
   },
   computed:{
     hasRank(){
@@ -102,6 +121,27 @@ export default {
     },
     closeDialog(){
       this.showDialog = false
+    },
+    searchName() {
+      console.log('searchStr----:',this.searchStr);
+      const parsed = queryString.parse(location.search)
+      var number = parsed.number
+      var param = {
+        code:'ztoupiao',
+        searchStr:this.searchStr
+      }
+      searchAlbums(number,param).then((res)=>{
+        let Albums = res
+        for(var i=0;i<Albums.length;i++){
+          Albums[i].link = '/albums/'+Albums[i].id;
+        }
+        console.log('Albums----:',Albums);
+        this.newGameAlbums = Albums;
+
+        this.$refs.waterfall.allChildren=[]
+        this.$refs.waterfall._initWaterfall()
+      })
+
     },
 
     thumb_up: function(id){

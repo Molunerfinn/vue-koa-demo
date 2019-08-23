@@ -28,6 +28,8 @@ export const getRanking = ( number, data) => fetch(basePath + '/' + number + '/g
 
 export const getRoundState = ( number, data) => fetch(basePath + '/' + number + '/getRoundState', data, 'POST')
 
+export const searchAlbums = ( number, data) => fetch(basePath + '/' + number + '/searchAlbums', data, 'POST')
+
 export const getNewAlbumInfo = ( number, data) => fetch(basePath + '/' + number + '/getNewAlbumInfo', data, 'POST')
 
 export const getHotAlbumInfo = ( number, data) => fetch(basePath + '/' + number + '/getHotAlbumInfo', data, 'POST')
