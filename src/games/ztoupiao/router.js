@@ -19,7 +19,7 @@ const routes = [
   { path: '/review', component: Review },
   { path: '/myaccount', component: MyAccount },
   { path: '/photos=:album_id', component: PhotosList },
-  { path: '/albums/:id', component: PhotosList }
+  { path: '/albums/:id', component: PhotosList, name: 'album' }
 ]
 
 // 3. Create the router instance and pass the `routes` option

@@ -185,6 +185,8 @@ export default {
     },
     // 滚动判断，加载更多
     handleScroll() {
+      console.log( "handleScroll。。。")
+
       let waterfall = this.$refs.waterfall
       if (!waterfall || !this.mount || this.finished) return
       let scrollTop = document.scrollingElement.scrollTop

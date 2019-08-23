@@ -25,8 +25,8 @@
         </div>
     </div>
     <div class="weui-tab">
-        <div class="weui-tab__panel">
-            <router-view class="view"></router-view>
+        <div class="weui-tab__panel view">
+            <router-view  ></router-view>
         </div>
         <div class="weui-tabbar footer">
             <router-link to="/review" class="c_bg weui-tabbar__item">
@@ -152,3 +152,12 @@ export default {
 }
 
 </script>
+
+<style>
+.weui-tabbar.footer{
+  position: fixed;
+}
+.weui-tab__panel.view{
+  overflow: visible; /* 瀑布流需要 window 接收onscroll 事件*/
+}
+</style>

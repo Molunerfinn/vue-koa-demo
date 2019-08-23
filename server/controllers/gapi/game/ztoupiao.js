@@ -109,9 +109,8 @@ export default class GamesController {
     try {
       console.log('=================getinfo================');
       let number = ctx.params.number
-      let parsed = ctx.request.body.parsed || {}
-      console.log('parsed---:', parsed);
       let code = ctx.request.body.code
+      let pageSize = ctx.request.body.pageSize || 6
 
       let GameRound = getGameRoundModelByCode(code)
       let GamePlayer = getGamePlayerModelByCode(code)
@@ -136,7 +135,7 @@ export default class GamesController {
           attributes: ['avatar'],
           association: 'GamePlayer'
         }],
-        limit: 6,
+        limit: pageSize,
         order: [
           ['created_at', 'DESC']
         ]
@@ -198,13 +197,18 @@ export default class GamesController {
     }
   }
 
+  /**
+   * 取得album信息, 包括 Photos,GamePlayer
+   * @param {Integer} id
+   * @return {Object} { id, name, desc, score, rank, Photos, GamePlayer }
+   */
   static async getAlbumInfo(ctx){
     console.log( "getAlbumInfo= ", ctx.request.body)
     let id = ctx.request.body.id
     let code = ctx.request.body.code
     let GameAlbum = getGameAlbumModelByCode(code)
 
-      let gameAlbums = await GameAlbum.findOne({
+      let gameAlbum = await GameAlbum.findOne({
         where: {
           id
         },
@@ -214,7 +218,10 @@ export default class GamesController {
           association: 'GamePlayer'
         }],
       })
-      ctx.body = gameAlbums
+      // 取得作品的排名, 取得与前一名相差票数
+
+      gameAlbum.rank = 99
+      ctx.body = gameAlbum
   }
 
 

@@ -2,6 +2,25 @@
   <!-- 锦囊 -->
  <div class="PhotosListBox">
    <span v-on:click="back">返回</span>
+   <div>
+     <p> {{album.position}} 号 {{ album.name}}</p>
+     <p>{{album.desc}} </p>
+   </div>
+
+   <div class="c_bg flex statis">
+     <div class="flex-item">
+       <p>1</p>
+       <p>排名</p>
+     </div>
+     <div class="flex-item">
+       <p>2</p>
+       <p>票数</p>
+     </div>
+     <div class="flex-item">
+       <p> 2 票</p>
+       <p >距前一名</p>
+     </div>
+   </div>
    <div class="title">
      <div class="headImg">
        <img id="PhotographsTitle" v-bind:src="album.Photos[0].originalUrl">
@@ -24,7 +43,7 @@
 // import { getRoundState } from '@/api/games/ztoupiao'
 
 import queryString from 'query-string'
-import {thumbUp,getAlbumInfo } from '@/api/games/ztoupiao'
+import {thumbUp, getAlbumInfo } from '@/api/games/ztoupiao'
 
 export default {
   props: {
@@ -46,7 +65,7 @@ export default {
   },
   created() {
 
-    
+
     var params = {
         id: this.albumId,
         code:'ztoupiao'
@@ -100,5 +119,15 @@ export default {
     position: relative;
     height: 10vh;
     background-repeat: no-repeat;
+  }
+  .statis{
+    text-align: center;
+    padding: 16px 0;
+  }
+  .statis .item:first-child{
+    border-right: 1px solid #fff;
+  }
+  .statis .item:last-child{
+    border-left: 1px solid #fff;
   }
 </style>

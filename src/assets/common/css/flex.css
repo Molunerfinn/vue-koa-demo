@@ -13,6 +13,10 @@
   flex-direction: column;
 
 }
+
+.flex-item {
+  flex-grow: 1;
+}
 .flex-item-2{
   flex-grow: 2;
 }
