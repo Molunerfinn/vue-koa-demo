@@ -38,7 +38,9 @@ module.exports = (sequelize, DataTypes) => {
   })
 
   function computeGameRoundResultCount(instance){
+    // 更新 album.score
     //instance.
+
   }
   // Method 2
   Model.hook('afterDestroy', 'RecomputeGameRoundResultCount', computeGameRoundResultCount)
