@@ -1,10 +1,12 @@
 const messageContent = require('../../constant')
+const moment = require('moment');
 const {
   getGameRoundModelByCode,
   getGamePlayerModelByCode,
   getGameResultModelByCode,
   getGameAlbumModelByCode,
-  getGamePhotoModelByCode
+  getGamePhotoModelByCode,
+  getVoteStyleModelByCode
 } = require('../../../helpers/model')
 const {
   getWxJsConfig
@@ -16,6 +18,8 @@ const {
 
 const logger = require('../../../helpers/logger')
 const md5 = require('md5');
+import { Sequelize } from '../../../models'
+const Op = Sequelize.Op;
 
 function getClientIP(req) {
   return req.headers['x-forwarded-for'] || // 判断是否有反向代理 IP
@@ -60,7 +64,7 @@ export default class GamesController {
         }],
         limit: 2
       })
-      let gamePlayerPromise =  GamePlayer.findOne({
+      let gamePlayerPromise = GamePlayer.findOne({
         where: {
           openid
         }
@@ -88,14 +92,25 @@ export default class GamesController {
       ])
       let [gameAlbums, gamePlayer, playerCount, resultCount, slides, wxJsConfig] = [...results]
 
-      if( preview == true){
+      if (preview == true) {
         let avatar = 'http://wx.qlogo.cn/mmopen/VX7U0xDSUxiaYgiasax2BWhlFuXmDaGvibY27Zknyy2WWrgNQwHvTfrKicupics0tdlFqBWGicy3heHOyRKPrBvEibFZtHCicf8zyKkr/0'
-        gamePlayer = { nickname: 'previewer', avatar: avatar }
+        gamePlayer = {
+          nickname: 'previewer',
+          avatar: avatar
+        }
       }
 
       gameRound = gameRound.getInfo()
 
-      ctx.body = { gameRound, gameAlbums, gamePlayer, playerCount, resultCount, slides, wxJsConfig }
+      ctx.body = {
+        gameRound,
+        gameAlbums,
+        gamePlayer,
+        playerCount,
+        resultCount,
+        slides,
+        wxJsConfig
+      }
 
     } catch (error) {
       logger.error("getGameInfo error:", error)
@@ -198,23 +213,23 @@ export default class GamesController {
     }
   }
 
-  static async getAlbumInfo(ctx){
-    console.log( "getAlbumInfo= ", ctx.request.body)
+  static async getAlbumInfo(ctx) {
+    console.log("getAlbumInfo= ", ctx.request.body)
     let id = ctx.request.body.id
     let code = ctx.request.body.code
     let GameAlbum = getGameAlbumModelByCode(code)
 
-      let gameAlbums = await GameAlbum.findOne({
-        where: {
-          id
-        },
-        include: [{
-          association: 'Photos'
-        }, {
-          association: 'GamePlayer'
-        }],
-      })
-      ctx.body = gameAlbums
+    let gameAlbums = await GameAlbum.findOne({
+      where: {
+        id
+      },
+      include: [{
+        association: 'Photos'
+      }, {
+        association: 'GamePlayer'
+      }],
+    })
+    ctx.body = gameAlbums
   }
 
 
@@ -352,7 +367,7 @@ export default class GamesController {
   static async addPlayer(ctx) {
     try {
       console.log('===========addPlayer===========');
-      console.log('ctx.request.body-----:',ctx.request.body);
+      console.log('ctx.request.body-----:', ctx.request.body);
       let code = ctx.request.body.code
       let number = ctx.params.number
       let openid = ctx.request.body.parsed.openid
@@ -368,7 +383,7 @@ export default class GamesController {
           number
         }
       })
-      console.log('gameRound__:',gameRound);
+      console.log('gameRound__:', gameRound);
 
       let gamePlayer = await GamePlayer.findOne({
         where: {
@@ -376,7 +391,7 @@ export default class GamesController {
           openid: openid,
         }
       })
-      console.log('gamePlayer///////:',gamePlayer);
+      console.log('gamePlayer///////:', gamePlayer);
 
       if (gamePlayer == null) {
         gamePlayer = {
@@ -395,7 +410,7 @@ export default class GamesController {
         }
         gamePlayer = await GamePlayer.create(gamePlayer)
       }
-      console.log('gamePlayer__:',gamePlayer);
+      console.log('gamePlayer__:', gamePlayer);
       let realname = ctx.request.body.realname
       let cellphone = ctx.request.body.tel
 
@@ -404,7 +419,7 @@ export default class GamesController {
         cellphone: cellphone
       })
 
-      console.log('gamePlayer123+++++:',gamePlayer);
+      console.log('gamePlayer123+++++:', gamePlayer);
       ctx.body = {
         gamePlayer: gamePlayer
       }
@@ -419,7 +434,6 @@ export default class GamesController {
 
   static async thumbUp(ctx) {
     console.log('thumbUp');
-    ctx.body = 'ok'
     let code = ctx.request.body.code
     let number = ctx.params.number
     let openid = ctx.request.body.parsed.openid
@@ -428,11 +442,17 @@ export default class GamesController {
     let GamePlayer = getGamePlayerModelByCode(code)
     let GameResult = getGameResultModelByCode(code)
     let GameAlbum = getGameAlbumModelByCode(code)
-    let GamePhoto = getGamePhotoModelByCode(code)
+    let voteStyleModel = getVoteStyleModelByCode(code)
 
     let gameRound = await GameRound.findOne({
       where: {
         number
+      }
+    })
+
+    let voteStyle = await voteStyleModel.findOne({
+      where: {
+        game_round_id: gameRound.id
       }
     })
 
@@ -443,33 +463,105 @@ export default class GamesController {
       }
     })
 
-    let gameResult = {
-      game_player_id: gamePlayer.id,
-      to_game_player_id: album_id,
-      game_round_id: gameRound.id
+    if (voteStyle) {
+      if (voteStyle.style == 'sum') {
+
+      } else if (voteStyle.style == 'times') {
+        let now_ms = new Date();
+        let start_at_ms = (new Date(gameRound.start_at)).getTime(); //得到毫秒数
+        let df_time_ms = now_ms - start_at_ms;
+        let df_time_d = Math.ceil(df_time_ms / 86400000);
+        let key_time_d = df_time_d % voteStyle.day;
+        if(voteStyle.day == 1){
+          key_time_d = 1
+        }
+        console.log('key_time_d----:', key_time_d);
+
+        moment.locale('zh-cn');
+        let today = {};
+        today.date = moment().format('YYYY-MM-DD'); /*现在的时间*/
+        today.yesterday = moment().subtract(key_time_d, 'days').format('YYYY-MM-DD');
+        console.log('today----:',today);
+
+        let gameResult = await GameResult.findAndCountAll({
+          where: {
+            created_at: {
+              [Op.lt]: today.date,
+              [Op.gt]: today.yesterday
+            }
+          }
+        })
+
+        let count = gameResult.count
+
+        if (count < voteStyle.times) {
+          let gameResult = {
+            game_player_id: gamePlayer.id,
+            to_game_player_id: album_id,
+            game_round_id: gameRound.id
+          }
+          gameResult = await GameResult.create(gameResult)
+
+          let allResult = await GameResult.findAndCountAll({
+            where: {
+              to_game_player_id: album_id
+            }
+          })
+
+          let Result_count = allResult.count
+
+          let gameAlbum = await GameAlbum.findOne({
+            where: {
+              id: album_id
+            }
+          })
+
+          await gameAlbum.update({
+            score: Result_count
+          })
+
+          ctx.body = {
+            res: {
+              isSuccess: true,
+              gameResult: gameResult
+            }
+          }
+        } else {
+          ctx.body = {
+            res: {
+              isSuccess: false
+            }
+          }
+        }
+      }
+    } else {
+      let gameResult = {
+        game_player_id: gamePlayer.id,
+        to_game_player_id: album_id,
+        game_round_id: gameRound.id
+      }
+      gameResult = await GameResult.create(gameResult)
+
+      let allResult = await GameResult.findAndCountAll({
+        where: {
+          to_game_player_id: album_id
+        }
+      })
+
+      let Result_count = allResult.count
+
+      let gameAlbum = await GameAlbum.findOne({
+        where: {
+          id: album_id
+        }
+      })
+
+      await gameAlbum.update({
+        score: Result_count
+      })
+
+      ctx.body = gameResult
     }
-    gameResult = await GameResult.create(gameResult)
-
-    let allResult = await GameResult.findAndCountAll({
-      where: {
-        to_game_player_id: album_id
-      }
-    })
-
-    let Result_count = allResult.count
-
-    let gameAlbum = await GameAlbum.findOne({
-      where: {
-        id: album_id
-      }
-    })
-
-    await gameAlbum.update({
-      score: Result_count
-    })
-
-    ctx.body = gameResult
-
   }
 
   static async setAchieve(ctx) {

@@ -20,9 +20,9 @@ import queryString from 'query-string'
 
 export default {
   props: {
-    gameRound: { // 游戏成绩相关数据
-      type: Object
-    },
+    // gameRound: { // 游戏成绩相关数据
+    //   type: Object
+    // },
     ruleIconUrl: String, // 锦囊按钮图片
     gamePlayer:{
       type: Object

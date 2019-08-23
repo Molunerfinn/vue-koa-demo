@@ -127,12 +127,12 @@ export default {
 
       thumbUp(number, params).then(data => {
         getNewAlbumInfo(number, params).then(data => {
-          console.log('getNewAlbumInfo---:',data);
-          this.newGameAlbums = data;
-        });
-        getHotAlbumInfo(number, params).then(data => {
-          console.log('getHotAlbumInfo---:',data);
-          this.hotGameAlbums = data;
+          let Albums = data
+          for(var i=0;i<Albums.length;i++){
+            Albums[i].link = '/albums/'+Albums[i].id;
+          }
+          console.log('Albums----:',Albums);
+          this.newGameAlbums = Albums;
         });
       });
     },
