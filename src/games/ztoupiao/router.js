@@ -12,9 +12,8 @@ import PhotosList from './page/works/PhotosListBox.vue'
 // `Vue.extend()`, or just a component options object.
 // We'll talk about nested routes later.
 const routes = [
-  { path: '/', component: Works },
+  { path: '/', component: Works, name: 'works' }, /* css 使用 name*/
   { path: '/account', component: Account },
-  { path: '/works', component: Works },
   { path: '/apply', component: CreateAlbum },
   { path: '/review', component: Review },
   { path: '/myaccount', component: MyAccount },

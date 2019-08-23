@@ -153,7 +153,6 @@ export default {
       for (let i = 0; i < children.length; i++) {
         await children[i].getHeight(i)
       }
-      console.log( " this.initData ", this.initData, children )
       children.forEach((item, index) => {
         item.top = this.initData[0].top
         item.left = this.initData[0].left
@@ -185,7 +184,6 @@ export default {
     },
     // 滚动判断，加载更多
     handleScroll() {
-      console.log( "handleScroll。。。")
 
       let waterfall = this.$refs.waterfall
       if (!waterfall || !this.mount || this.finished) return

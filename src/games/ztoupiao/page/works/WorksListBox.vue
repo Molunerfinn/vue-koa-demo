@@ -128,7 +128,8 @@ export default {
   .works_list li{
     width: 50%;
   }
-  .works{
+   .waterfall{
+      padding-bottom: 50px;
    }
    .waterfall-silde{
      width: 50%;
