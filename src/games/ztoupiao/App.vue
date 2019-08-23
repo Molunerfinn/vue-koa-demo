@@ -25,27 +25,27 @@
         </div>
     </div>
     <div class="weui-tab">
-        <div class="weui-tab__panel">
-            <router-view class="view"></router-view>
+        <div :class="['weui-tab__panel view', $route.name]">
+            <router-view  ></router-view>
         </div>
         <div class="weui-tabbar footer">
             <router-link to="/review" class="c_bg weui-tabbar__item">
-                <i class="iconfont cl-icon-store"></i>
+                <i class="iconfont icon-store"></i>
                 <p class="c_bg weui-tabbar__label">介绍</p>
             </router-link>
             <router-link to="/" class="c_bg weui-tabbar__item">
-                <i class="iconfont cl-icon-view-gallery"></i>
+                <i class="iconfont icon-viewgallery"></i>
                 <p class="c_bg weui-tabbar__label">作品</p>
             </router-link>
 
             <router-link to="/apply" class="c_bg weui-tabbar__item">
-                <i class="iconfont cl-icon-share"></i>
+                <i class="iconfont icon-share"></i>
 
                 <p class="c_bg weui-tabbar__label">上传</p>
             </router-link>
 
             <router-link to="/myaccount" class="c_bg weui-tabbar__item">
-                <i class="iconfont cl-icon-account"></i>
+                <i class="iconfont icon-account"></i>
                 <p class="c_bg weui-tabbar__label">我的</p>
             </router-link>
         </div>
@@ -152,3 +152,13 @@ export default {
 }
 
 </script>
+
+<style>
+.weui-tabbar.footer{
+  position: fixed;
+}
+.weui-tab__panel.works{
+  overflow: visible; /* 瀑布流需要 window 接收onscroll 事件*/
+  /*padding-bottom: 40px;*/
+}
+</style>

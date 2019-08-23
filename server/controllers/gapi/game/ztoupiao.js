@@ -18,7 +18,9 @@ const {
 
 const logger = require('../../../helpers/logger')
 const md5 = require('md5');
-import { Sequelize } from '../../../models'
+import {
+  Sequelize
+} from '../../../models'
 const Op = Sequelize.Op;
 
 function getClientIP(req) {
@@ -124,9 +126,8 @@ export default class GamesController {
     try {
       console.log('=================getinfo================');
       let number = ctx.params.number
-      let parsed = ctx.request.body.parsed || {}
-      console.log('parsed---:', parsed);
       let code = ctx.request.body.code
+      let pageSize = ctx.request.body.pageSize || 6
 
       let GameRound = getGameRoundModelByCode(code)
       let GamePlayer = getGamePlayerModelByCode(code)
@@ -151,7 +152,7 @@ export default class GamesController {
           attributes: ['avatar'],
           association: 'GamePlayer'
         }],
-        limit: 6,
+        limit: pageSize,
         order: [
           ['created_at', 'DESC']
         ]
@@ -213,13 +214,18 @@ export default class GamesController {
     }
   }
 
+  /**
+   * 取得album信息, 包括 Photos,GamePlayer
+   * @param {Integer} id
+   * @return {Object} { id, name, desc, score, rank, Photos, GamePlayer }
+   */
   static async getAlbumInfo(ctx) {
     console.log("getAlbumInfo= ", ctx.request.body)
     let id = ctx.request.body.id
     let code = ctx.request.body.code
     let GameAlbum = getGameAlbumModelByCode(code)
 
-    let gameAlbums = await GameAlbum.findOne({
+    let gameAlbum = await GameAlbum.findOne({
       where: {
         id
       },
@@ -229,7 +235,10 @@ export default class GamesController {
         association: 'GamePlayer'
       }],
     })
-    ctx.body = gameAlbums
+    // 取得作品的排名, 取得与前一名相差票数
+
+    gameAlbum.rank = 99
+    ctx.body = gameAlbum
   }
 
 
@@ -465,26 +474,65 @@ export default class GamesController {
 
     if (voteStyle) {
       if (voteStyle.style == 'sum') {
+        let gameResult = await GameResult.findAndCountAll({
+          where: {
+            game_player_id: gamePlayer.id
+          }
+        })
+        let count = gameResult.count
+        if (count < voteStyle.sum) {
+          let gameResult = {
+            game_player_id: gamePlayer.id,
+            to_game_player_id: album_id,
+            game_round_id: gameRound.id
+          }
+          gameResult = await GameResult.create(gameResult)
 
+          let allResult = await GameResult.findAndCountAll({
+            where: {
+              to_game_player_id: album_id
+            }
+          })
+
+          let Result_count = allResult.count
+
+          let gameAlbum = await GameAlbum.findOne({
+            where: {
+              id: album_id
+            }
+          })
+
+          await gameAlbum.update({
+            score: Result_count
+          })
+
+          ctx.body = {
+            isSuccess: true,
+            gameResult: gameResult
+          }
+        } else {
+          ctx.body = {
+            isSuccess: false
+          }
+        }
       } else if (voteStyle.style == 'times') {
         let now_ms = new Date();
         let start_at_ms = (new Date(gameRound.start_at)).getTime(); //得到毫秒数
         let df_time_ms = now_ms - start_at_ms;
         let df_time_d = Math.ceil(df_time_ms / 86400000);
         let key_time_d = df_time_d % voteStyle.day;
-        if(voteStyle.day == 1){
+        if (voteStyle.day == 1) {
           key_time_d = 1
         }
         console.log('key_time_d----:', key_time_d);
 
         moment.locale('zh-cn');
         let today = {};
-        today.date = moment().format('YYYY-MM-DD'); /*现在的时间*/
+        today.date = moment().add(1, 'days').format('YYYY-MM-DD'); /*现在的时间*/
         today.yesterday = moment().subtract(key_time_d, 'days').format('YYYY-MM-DD');
-        console.log('today----:',today);
-
         let gameResult = await GameResult.findAndCountAll({
           where: {
+            game_player_id: gamePlayer.id,
             created_at: {
               [Op.lt]: today.date,
               [Op.gt]: today.yesterday
@@ -521,16 +569,12 @@ export default class GamesController {
           })
 
           ctx.body = {
-            res: {
-              isSuccess: true,
-              gameResult: gameResult
-            }
+            isSuccess: true,
+            gameResult: gameResult
           }
         } else {
           ctx.body = {
-            res: {
-              isSuccess: false
-            }
+            isSuccess: false
           }
         }
       }

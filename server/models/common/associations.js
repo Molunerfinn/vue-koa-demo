@@ -24,13 +24,19 @@ function buildGameAssociations(db) {
 
 
       // 投票类游戏 有Album
-      if (albumModel && playerModel) {
+      if (albumModel && playerModel && resultModel) {
         console.log("buildGameAssociations " + code + "Album," + code + "GamePlayers")
         // album and player
         albumModel.belongsTo(playerModel, {
           foreignKey: 'game_player_id',
           as: 'GamePlayer'
         })
+        // 作品有多个投票
+        albumModel.hasMany(resultModel, {
+          foreignKey: 'to_game_player_id',
+          as: 'GameResults'
+        })
+        // 玩家有多个作品
         playerModel.hasMany(albumModel, {
           foreignKey: 'game_player_id',
           as: 'Albums'
@@ -142,7 +148,7 @@ function buildSharedAssociations(db) {
 
   // 支持图片查找关系，以便删除图片时，删除关系
   SharedPhoto.hasMany(SharedPhotoRelationship, {
-    foreignKey: 'photo_id',   
+    foreignKey: 'photo_id',
     as: 'PhotoRelationship'
   })
 }

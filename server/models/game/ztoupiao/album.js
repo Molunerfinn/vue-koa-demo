@@ -39,7 +39,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: '0'
     },
-    score: {
+    score: {// 作品投票数量总和
       type: DataTypes.BIGINT(11),
       allowNull: false,
       defaultValue: '0'

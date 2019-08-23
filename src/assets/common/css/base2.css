@@ -25,7 +25,7 @@ img{
   word-wrap: break-word;
   -webkit-user-select: text
 }
-
+/* 常用 css类 */
 .hide {
   display: none
 }
@@ -52,7 +52,28 @@ img{
   text-overflow: ellipsis;
   white-space: nowrap
 }
+.pointer{
+  cursor: pointer;
+}
 
+.pd6 {
+  padding: 6px;
+}
+.pd12 {
+  padding: 12px;
+}
+.pd-tb6 {
+  padding: 6px 0;
+}
+.mg6{
+  margin: 6px;
+}
+.mg-rl6{
+  margin: 0 6px;
+}
+.tac{
+  text-align: center;
+}
 .alignCenter {
   position: absolute;
   top: 50%;
