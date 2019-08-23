@@ -236,14 +236,8 @@ export default class GamesController {
       }],
     })
     // 取得作品的排名, 取得与前一名相差票数
-
-<<<<<<< HEAD
-    gameAlbum.rank = 99
+    gameAlbum.rank = await gameAlbum.getRank()
     ctx.body = gameAlbum
-=======
-      gameAlbum.rank = await gameAlbum.getRank()
-      ctx.body = gameAlbum
->>>>>>> f30fefad9e33c49b7d37d1fc01817123a4787048
   }
 
 
