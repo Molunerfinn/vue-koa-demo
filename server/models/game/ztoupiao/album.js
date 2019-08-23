@@ -64,35 +64,39 @@ module.exports = (sequelize, DataTypes) => {
       }
     }
   })
+  bindMethods(model, Op)
 
-  // bindMethods(model)
+
   return model
 
 }
 
-// function bindMethods(model) {
-//   model.prototype.getInfo = getInfo
-// }
-//
-// // 返回到游戏端的信息, 用于显示游戏成绩信息
-// async function getInfo() {
-//
-//   let isSuc = this.score < this.max_score
-//   let score = this.score
-//   let bestScore = this.max_score //bestScore
-//   let rank = await this.currentPositionDesc()
-//   let beat = await this.beat()
-//
-//   return {
-//     id: this.id,
-//     token: this.token,
-//     openid: this.openid,
-//     avatar: this.avatar,
-//     nickname: this.nickname,
-//     isSuc,
-//     score,
-//     bestScore,
-//     rank,
-//     beat
-//   }
-// }
+function bindMethods(model, Op) {
+  // 取得当前排名
+  model.prototype.getRank = async function () {
+
+    let gtcount = await model.count({
+      where: {
+        game_round_id: this.game_round_id,
+        score: {
+          [Op.gt]: this.score
+        }
+      }
+    })
+    //成绩相同，但是先玩的
+    let eqcount = await model.count({
+      where: {
+        game_round_id: this.game_round_id,
+        score: this.score,
+        created_at: {
+          [Op.lt]: this.created_at
+        },
+        id: {
+          [Op.ne]: this.id
+        }
+      }
+    })
+    return (gtcount + eqcount + 1)
+  }
+
+}

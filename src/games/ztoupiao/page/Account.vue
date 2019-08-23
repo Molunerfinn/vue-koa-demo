@@ -19,15 +19,15 @@
          我的作品
        </div>
      </div>
-     <div class="myWorks_list" v-show="ui.workVisible">
-       我的作品
+     <ul class="myWorks_list pd6" >
        <li v-for="work in myWorks">
          <img :src="work.Photos[0].originalUrl" @touchend="modifyAlbum(work)"/>
-         <a>{{work.name}}</a>
-         <a>{{work.score}}</a>
-         <div class="userImgBox" style="border-color:"><img :src="gamePlayer.avatar" class="userImg" /></div>
+         <p> <span>{{work.name}}</span>
+           <span>{{work.score}}</span>
+         </p>
+         <div class="userImgBox" ><img :src="gamePlayer.avatar" class="userImg" /></div>
        </li>
-     </div>
+     </ul>
    </div>
      <ModifyBox :gamePlayer="gamePlayer" :album="album" :command="ui.modifyBoxVisible" @gotoMyAccountBox="gotoMyAccountBox"> </ModifyBox>
 
