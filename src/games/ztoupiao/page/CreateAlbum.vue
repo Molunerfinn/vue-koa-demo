@@ -93,7 +93,7 @@
 </template>
 
 <script>
-import SlideBox from './slide.vue'
+import SlideBox from './slider.vue'
 import weui from 'weui.js'
 import $ from 'jquery'
 import queryString from 'query-string'

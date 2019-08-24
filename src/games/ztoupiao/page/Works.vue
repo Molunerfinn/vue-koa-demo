@@ -24,7 +24,7 @@
           <div class="title tac"> <span> 距离活动结束还有 </span> </div>
           <ul class="countdown">
             <li><span class="c_bg time">{{timeToEnd.d1}}</span>
-              <span class="time">{{timeToEnd.d2}}</span>
+              <span class="c_bg time">{{timeToEnd.d2}}</span>
               <span> 天 </span>
             </li>
             <li> <span class="c_bg time">{{timeToEnd.h1}}</span>
@@ -55,7 +55,7 @@
   import $ from 'jquery'
   import moment from 'moment'
   import WorksListBox from './works/WorksListBox.vue'
-  import SlideBox from './slide.vue'
+  import SlideBox from './slider.vue'
   export default {
     components: {
       WorksListBox,
