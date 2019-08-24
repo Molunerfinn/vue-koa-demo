@@ -6,6 +6,7 @@
     color: #2c3e50;
     height: 100%;
     width: 100%;
+    font-size: 14px;
 }
 
 .footer .weui-tabbar__item span {
@@ -13,6 +14,16 @@
     position: relative;
 }
 
+.weui-tabbar.footer{
+  position: fixed;
+}
+.weui-tab__panel.works{
+  overflow: visible; /* 瀑布流需要 window 接收onscroll 事件*/
+  /*padding-bottom: 40px;*/
+}
+.weui-tab__panel.album{
+  background-color: #f2f2f2;
+}
 </style>
 
 <template>
@@ -152,13 +163,3 @@ export default {
 }
 
 </script>
-
-<style>
-.weui-tabbar.footer{
-  position: fixed;
-}
-.weui-tab__panel.works{
-  overflow: visible; /* 瀑布流需要 window 接收onscroll 事件*/
-  /*padding-bottom: 40px;*/
-}
-</style>

@@ -19,7 +19,7 @@
          我的作品
        </div>
      </div>
-     <ul class="myWorks_list pd6" >
+     <ul class="myWorks_list pd12" >
        <li v-for="work in myWorks">
          <img :src="work.Photos[0].originalUrl" @touchend="modifyAlbum(work)"/>
          <p> <span>{{work.name}}</span>

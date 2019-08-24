@@ -86,7 +86,7 @@
       注:若因未填写资料或资料填写错误导致无法兑奖，主办方不承担相关法律责任;
     </div>
     <div class="weui-btn-area">
-      <a class="weui-btn weui-btn_primary userSubmitBtn" @click="post_msg" href="javascript:" id="showTooltips">提交</a>
+      <a class="c_bg weui-btn weui-btn_primary" @click="post_msg"  >提交</a>
     </div>
   </div>
 </div>

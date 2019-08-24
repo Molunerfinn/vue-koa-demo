@@ -1,6 +1,6 @@
 <template>
 <!-- 锦囊 -->
-<div class="PhotosListBox c_bg">
+<div class="PhotosListBox">
   <div class="back pd6"><a v-on:click="back"> <span class="iconfont icon-round-left-fill " > </span></a>
   </div>
   <div class="player  mg-rl6">
@@ -27,7 +27,7 @@
       <div class="">
         <img id="PhotographsTitle" v-bind:src="album.Photos[0].originalUrl">
         <div class="thumbup pd-tb6">
-          <a class="weui-btn weui-btn_primary" @click="thumb_up(album.id)" href="javascript:" id="showTooltips">点赞</a>
+          <a class="c_bg weui-btn weui-btn_primary" @click="thumb_up(album.id)" href="javascript:" id="showTooltips">投票</a>
         </div>
       </div>
     </div>
@@ -140,10 +140,8 @@ export default {
     background-color: #fff;
   }
   .back .iconfont{
-    font-size: 180%;
+    font-size: 28px;
     color: rgba(0, 0, 0, 0.3);
   }
-  .c_bg{
-    background-color: #f2f2f2;
-  }
+
 </style>

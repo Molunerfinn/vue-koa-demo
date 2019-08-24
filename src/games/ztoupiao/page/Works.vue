@@ -3,8 +3,8 @@
   <!-- 锦囊 -->
   <div class="works-wrap " >
     <SlideBox></SlideBox>
-    <div >
-      <div class="c_bg flex statis">
+    <div class="widgets ">
+      <div class="c_bg flex statis pd6">
           <div class="flex-item">
             <p>参与选手</p>
             <p> {{playerCount}} </p>
@@ -17,33 +17,30 @@
             <p>累计浏览</p>
             <p> 0 </p>
           </div>
-
-
         </div>
-
-      <div align="center">
+      <div class="pd6">
         <div class="countdown-wrap">
           <div class="abg"> </div>
-          <div class="title"> <span> 距离活动结束还有 </span> </div>
+          <div class="title tac"> <span> 距离活动结束还有 </span> </div>
           <ul class="countdown">
-            <li><span class="time">{{timeToEnd.d1}}</span>
+            <li><span class="c_bg time">{{timeToEnd.d1}}</span>
               <span class="time">{{timeToEnd.d2}}</span>
               <span> 天 </span>
             </li>
-            <li> <span class="time">{{timeToEnd.h1}}</span>
-              <span class="time">{{timeToEnd.h2}}</span>
+            <li> <span class="c_bg time">{{timeToEnd.h1}}</span>
+              <span class="c_bg time">{{timeToEnd.h2}}</span>
               <span> 时 </span></li>
-            <li> <span class="time">{{timeToEnd.m1}}</span>
-              <span class="time">{{timeToEnd.m2}}</span>
+            <li> <span class="c_bg time">{{timeToEnd.m1}}</span>
+              <span class="c_bg time">{{timeToEnd.m2}}</span>
               <span> 分 </span></li>
-            <li> <span class="time">{{timeToEnd.s1}}</span>
-              <span class="time">{{timeToEnd.s2}}</span>
+            <li> <span class="c_bg time">{{timeToEnd.s1}}</span>
+              <span class="c_bg time">{{timeToEnd.s2}}</span>
               <span> 秒 </span></li>
           </ul>
         </div>
 
       </div>
-      <div>
+      <div class="pd6">
         <p>开始时间: {{displayStartAt}} </p>
         <p>结束时间: {{displayEndAt}} </p>
       </div>
@@ -174,8 +171,6 @@
     padding: 5px;
   }
   ul.countdown li .time {
-    background-color: #1aad19;
-    color: #ffffff;
     border-radius: 5px;
     padding: 2px 8px;
     font-size: 18px;
@@ -193,10 +188,10 @@
 
   .countdown-wrap .abg {
     position: absolute;
-    top: 8px;
+    top: 24px;
     bottom: 16px;
-    left: 5px;
-    right: 5px;
+    left: 1px;
+    right: 1px;
     border: 1px solid gray;
     z-index: -1;
   }
