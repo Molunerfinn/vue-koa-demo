@@ -20,12 +20,12 @@
     </form>
    <waterfall ref="waterfall" @load="initData" :searchStr="searchStr" >
      <waterfallSilde v-for="album in newGameAlbums" :key="album.id" :prefetch="true" :imgs="[album.Photos[0].previewUrl]" >
-       <div class="img-info"  >
+       <div class="info"  >
          <router-link :to="{ name: 'album', params:{id: album.id}}" class="item">
              <img :src="album.Photos[0].previewUrl" alt="">
          </router-link>
          <a>{{album.name}}</a>
-         <p> 票数<span>{{album.score}}</span></p>
+         <p> <span>{{album.score}}</span><span>票</span></p>
          <a class="weui-btn weui-btn_mini weui-btn_primary userSubmitBtn" @click="thumb_up(album.id)" href="javascript:" id="showTooltips">点赞</a>
          <div class="userImgBox" style="border-color:"><img :src="album.GamePlayer.avatar" class="userImg" /></div>
 
@@ -192,5 +192,9 @@ export default {
      width: 50%;
      padding: 6px;
      box-sizing: border-box;
+   }
+   .waterfall-silde .info{
+     background-color: #f2f2f2;
+     text-align: center;
    }
 </style>
