@@ -87,7 +87,7 @@ date: 2017-05-03 14:09:00
 
 Nodejs与npm的安装不再叙述（希望大家装上的node版本大于等于6.x，不然还需要加上--harmony标志才可以开启es6），默认读者已经掌握npm安装依赖的方法。首先全局安装`npm i vue-cli -g`，当然本项目基本上是采用`yarn`，所以也可以`yarn global add vue-cli`。
 
-> Tips: 可以给yarn换上淘宝源，速度更快: `yarn config set registry "https://registry.npm.taobao.org"`
+> Tips: 可以给yarn换上淘宝源，速度更快: `yarn config set registry "https://registry.npmmirror.com"`
 
 然后我们初始化一个`Vue2的webpack`的模板：
 
